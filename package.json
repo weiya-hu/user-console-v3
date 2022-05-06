@@ -1,0 +1,39 @@
+{
+  "name": "user-console-v3",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --fix --ext .ts,.tsx,.vue,.js,.jsx",
+    "prettier": "prettier --write ."
+  },
+  "dependencies": {
+    "@tinymce/tinymce-vue": "^5.0.0",
+    "axios": "^0.27.2",
+    "element-plus": "^2.1.11",
+    "mitt": "^3.0.0",
+    "pinia": "^2.0.14",
+    "tinymce": "^6.0.2",
+    "vue": "^3.2.25",
+    "vue-router": "^4.0.15"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.31",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
+    "@vitejs/plugin-vue": "^2.3.1",
+    "eslint": "^8.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-vue": "^8.7.1",
+    "prettier": "^2.6.2",
+    "sass": "^1.51.0",
+    "typescript": "^4.5.4",
+    "vite": "^2.9.7",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-eslint": "^1.6.0",
+    "vue-tsc": "^0.34.7"
+  }
+}

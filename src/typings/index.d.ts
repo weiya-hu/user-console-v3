@@ -1,0 +1,25 @@
+/**
+ * @name 接口返回数据类型
+ */
+interface IRes {
+  status: number
+  body: any
+  errno?: number
+  message?: string
+}
+
+interface INavitem {
+  path: string
+  name: string
+  [propName: string]: any
+}
+
+/**
+ * @name 分页类型
+ */
+interface IPageParams {
+  size: number
+  current: number
+  source?: number
+  [propName: string]: any
+}
