@@ -144,11 +144,6 @@ img {
     }
   }
 }
-.kf_dialog {
-  .el-dialog__header {
-    border-bottom: none;
-  }
-}
 
 .fade-leave-from {
   display: none; //解决页面过渡抖动
@@ -225,7 +220,7 @@ img {
   cursor: url('@/assets/images/imagelook.cur'), pointer;
 }
 
-.status_dot {
+.status_dot { // 状态点
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -245,5 +240,12 @@ img {
   &.sdot_9 {
     background-color: $color999;
   }
+}
+
+.vline{ // 竖着的短线
+  width: 1px;
+  height: 14px;
+  background-color: $bdcolor;
+  margin: 0 20px;
 }
 </style>

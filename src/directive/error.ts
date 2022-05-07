@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { addClass, removeClass } from '@/utils/dom.js'
-import Error from '@/components/Error.vue'
+import KzError from '@/components/KzError.vue'
 /**
  * 自定义指令v-error
  * @author chn
@@ -57,4 +57,4 @@ function createStatusDirective(Comp: any, className?: any) {
   }
 }
 
-export default createStatusDirective(Error)
+export default createStatusDirective(KzError)

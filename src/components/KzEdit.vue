@@ -161,12 +161,12 @@ const upImages = async () => {
           const upData = {
             key: res.body.dir + '/' + res.body.uuid + exname,
             OSSAccessKeyId: res.body.accessid,
-            success_action_status: 200,
+            success_action_status: '200',
             policy: res.body.policy,
             signature: res.body.signature,
           }
           for (const [key, value] of Object.entries(upData)) {
-            fd.append(key, value as string)
+            fd.append(key, value)
           }
           fd.append('file', fileObj.fileObj)
           const response = await axios({
