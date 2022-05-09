@@ -31,7 +31,8 @@
       <el-col class="layout_nav" :class="isSmall && 'no_sec'">
         <KzLeftNav @change="onChangeLeftNav" ref="leftNavRef"/>
       </el-col>
-      <el-col class="layout_content">
+      <el-col class="layout_content" :class="$route.meta.father && 'layout_details_page'">
+        <KzDetailsHeader v-if="$route.meta.father"/>
         <el-scrollbar wrap-class="layout_content_box" :noresize="true">
           <router-view v-slot="{ Component }">
             <transition name="fade">
@@ -71,6 +72,7 @@ import logo_i from '@/assets/images/logo.png'
 import df_avatar_i from '@/assets/images/dfavatar.png'
 import { ArrowDownBold } from '@element-plus/icons-vue'
 import KzLeftNav from '@/components/KzLeftNav.vue';
+import KzDetailsHeader from '@/components/KzDetailsHeader.vue';
 
 const store = mainStore()
 store.setTypeList()
@@ -163,7 +165,7 @@ emiter.on('lookVideo', (video: string) => {
     .layout_content{
       height: 100%;
       flex:1;
-      background-color: #F3F4F8;
+      background-color: $bgcolor;
       position: relative;
       :deep(.layout_content_box){
         padding: 16px;
@@ -180,6 +182,9 @@ emiter.on('lookVideo', (video: string) => {
         z-index: 0;
         font-size: 11px;
         color: #C0C4CC;
+      }
+      &.layout_details_page{
+        padding-top: 40px;
       }
     }
   }

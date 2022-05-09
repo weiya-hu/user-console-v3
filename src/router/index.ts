@@ -124,6 +124,12 @@ export const routes: RouteRecordRaw[] = [
                 meta: { title: '企业信息' },
               },
               {
+                path: '/manage/company/authentication',
+                name: 'Authentication',
+                component: () => import('@/views/layout/manage/company/authentication.vue'),
+                meta: { title: '企业认证', father: '/manage/company/companyinfo' },
+              },
+              {
                 path: '/manage/company/companyservice',
                 name: 'CompanyService',
                 component: () => import('@/views/layout/manage/company/companyService.vue'),

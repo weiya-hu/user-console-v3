@@ -1,6 +1,6 @@
 <template>
-  <div @click="$router.push('authentication')">
-    企业信息
+  <div>
+    企业认证
   </div>
 </template>
 

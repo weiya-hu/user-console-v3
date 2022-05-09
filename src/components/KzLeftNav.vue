@@ -40,13 +40,13 @@
     </div>
     <div class="kz_sec_nav" v-show="flag" v-if="secNav">
       <div class="sec_title fcs">{{secNav.meta.title}}</div>
-      <el-menu router :default-active="$route.path" v-if="secNav.children">
+      <el-menu router :default-active="nowPath" v-if="secNav.children">
         <template v-for="v in secNav.children" :key="v.path">
           <el-sub-menu :index="v.path" v-if="v.children">
             <template #title>{{v.meta!.title}}</template>
             <el-menu-item v-for="j in v.children" :index="j.path" :key="j.path">{{j.meta!.title}}</el-menu-item>
           </el-sub-menu>
-          <el-menu-item :index="v.path" v-else>{{v.meta!.title}}</el-menu-item>
+          <el-menu-item :index="v.path" v-if="!v.children && !v.meta!.father">{{v.meta!.title}}</el-menu-item>
         </template>
       </el-menu>
     </div>
