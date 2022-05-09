@@ -1,6 +1,6 @@
 <template>
   <div>
-    企业
+    企业信息
   </div>
 </template>
 

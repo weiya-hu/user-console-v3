@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteLocation } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 /**
  * @path 全小写 
@@ -8,7 +8,7 @@ import { createRouter, createWebHistory, RouteLocation } from 'vue-router'
  * @meta title：导航标题
  * @ 子页面都必须写在Layout的children下，因为左侧导航是直接取routes[1]即Layout
  */
-export const routes = [
+export const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
@@ -19,7 +19,7 @@ export const routes = [
     path: '/',
     name: 'Layout',
     component: () => import('@/views/layout.vue'),
-    redirect: (to: RouteLocation) => {
+    redirect: (to) => {
       return '/console'
       if (localStorage.getItem('islogin')) {
         return '/index'
@@ -59,13 +59,23 @@ export const routes = [
         path: '/report',
         name: 'Report',
         component: () => import('@/views/layout/rView.vue'),
+        redirect: '/report/reportcenter',
         meta: { title: '数据报表' },
         children: [
           {
             path: '/report/reportcenter',
-            name: 'Dmp',
-            component: () => import('@/views/layout/report/reportCenter.vue'),
+            name: 'Reportcenter',
+            component: () => import('@/views/layout/rView.vue'),
+            redirect: '/report/reportcenter/overview',
             meta: { title: '报表中心' },
+            children: [
+              {
+                path: '/report/reportcenter/overview',
+                name: 'Overview',
+                component: () => import('@/views/layout/report/reportCenter/overview.vue'),
+                meta: { title: '概览' },
+              },
+            ]
           },
         ]
       },
@@ -79,14 +89,47 @@ export const routes = [
           {
             path: '/manage/user',
             name: 'User',
-            component: () => import('@/views/layout/manage/user.vue'),
+            component: () => import('@/views/layout/rView.vue'),
+            redirect: '/manage/user/product',
             meta: { title: '用户中心' },
+            children: [
+              {
+                path: '/manage/user/product',
+                name: 'UserProduct',
+                component: () => import('@/views/layout/rView.vue'),
+                redirect: '/manage/user/product/myproduct',
+                meta: { title: '产品与服务' },
+                children: [
+                  {
+                    path: '/manage/user/product/myproduct',
+                    name: 'MyProduct',
+                    component: () => import('@/views/layout/manage/user/product/myProduct.vue'),
+                    meta: { title: '我的产品与服务' },
+                  },
+                ]
+              },
+            ]
           },
           {
             path: '/manage/company',
             name: 'Company',
-            component: () => import('@/views/layout/manage/company.vue'),
+            component: () => import('@/views/layout/rView.vue'),
+            redirect: '/manage/company/companyinfo',
             meta: { title: '企业管理' },
+            children: [
+              {
+                path: '/manage/company/companyinfo',
+                name: 'CompanyInfo',
+                component: () => import('@/views/layout/manage/company/companyInfo.vue'),
+                meta: { title: '企业信息' },
+              },
+              {
+                path: '/manage/company/companyservice',
+                name: 'CompanyService',
+                component: () => import('@/views/layout/manage/company/companyService.vue'),
+                meta: { title: '企业服务' },
+              },
+            ]
           },
         ]
       },

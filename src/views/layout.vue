@@ -28,8 +28,8 @@
       </div>
     </el-row>
     <el-row class="layout_container">
-      <el-col class="layout_nav">
-        <KzLeftNav/>
+      <el-col class="layout_nav" :class="isSmall && 'no_sec'">
+        <KzLeftNav @change="onChangeLeftNav" ref="leftNavRef"/>
       </el-col>
       <el-col class="layout_content">
         <el-scrollbar wrap-class="layout_content_box" :noresize="true">
@@ -63,8 +63,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 import { mainStore } from '@/store/index'
 import emiter from '@/utils/bus'
 import logo_i from '@/assets/images/logo.png'
@@ -79,6 +79,17 @@ store.setAddressList()
 const route = useRoute()
 const router = useRouter()
 const routers = router.getRoutes()
+const leftNavRef = ref()
+onBeforeRouteUpdate((to, from) => {
+  leftNavRef.value.getSecNav(to.meta.father || to.path)
+})
+onMounted(() => {
+  leftNavRef.value && leftNavRef.value.getSecNav()
+})
+const isSmall = ref(false)
+const onChangeLeftNav = (flag: boolean) => {
+  isSmall.value = flag
+}
 
 //获取跳转地址
 const urlInfo = ref<any>({})
@@ -142,6 +153,12 @@ emiter.on('lookVideo', (video: string) => {
     .layout_nav{
       width: 220px;
       flex: 0 0 220px;
+      background-color: #fff;
+      transition: all var(--el-transition-duration);
+      &.no_sec{
+        width: 64px;
+        flex: 0 0 64px;
+      }
     }
     .layout_content{
       height: 100%;
