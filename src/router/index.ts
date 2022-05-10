@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 /**
- * @path 全小写 
+ * @path 全小写，详情页和父级同级，详情页在meta里添加father字段为父级的path
  * @name 保证唯一 大驼峰 例如 UserInfo
  * @component 需要重定向的空路由页面统一用rView.vue
  * @redirect 重定向 非必写
- * @meta title：导航标题
+ * @meta title：导航标题；father：在导航中不出现的详情页需要此属性，值为在此页面时需要激活的导航的path
  * @ 子页面都必须写在Layout的children下，因为左侧导航是直接取routes[1]即Layout
  */
 export const routes: RouteRecordRaw[] = [
@@ -53,7 +53,7 @@ export const routes: RouteRecordRaw[] = [
             component: () => import('@/views/layout/rView.vue'),
             meta: { title: 'CMS内容管理中心' },
           },
-        ]
+        ],
       },
       {
         path: '/report',
@@ -75,9 +75,9 @@ export const routes: RouteRecordRaw[] = [
                 component: () => import('@/views/layout/report/reportCenter/overview.vue'),
                 meta: { title: '概览' },
               },
-            ]
+            ],
           },
-        ]
+        ],
       },
       {
         path: '/manage',
@@ -106,9 +106,43 @@ export const routes: RouteRecordRaw[] = [
                     component: () => import('@/views/layout/manage/user/product/myProduct.vue'),
                     meta: { title: '我的产品与服务' },
                   },
-                ]
+                  {
+                    path: '/manage/user/product/productdetails',
+                    name: 'ProductDetails',
+                    component: () =>
+                      import('@/views/layout/manage/user/product/productDetails.vue'),
+                    meta: { title: '我的产品与服务详情', father: '/manage/user/product/myproduct' },
+                  },
+                  {
+                    path: '/manage/user/product/order',
+                    name: 'Order',
+                    component: () => import('@/views/layout/manage/user/product/order.vue'),
+                    meta: { title: '订购产品' },
+                  },
+                ],
               },
-            ]
+              {
+                path: '/manage/user/settings',
+                name: 'Settings',
+                component: () => import('@/views/layout/rView.vue'),
+                redirect: '/manage/user/product/myproduct',
+                meta: { title: '账号设置' },
+                children: [
+                  {
+                    path: '/manage/user/settings/myinfo',
+                    name: 'MyInfo',
+                    component: () => import('@/views/layout/manage/user/settings/myInfo.vue'),
+                    meta: { title: '我的资料' },
+                  },
+                  {
+                    path: '/manage/user/settings/safe',
+                    name: 'Safe',
+                    component: () => import('@/views/layout/manage/user/settings/safe.vue'),
+                    meta: { title: '账号安全' },
+                  },
+                ],
+              },
+            ],
           },
           {
             path: '/manage/company',
@@ -135,9 +169,9 @@ export const routes: RouteRecordRaw[] = [
                 component: () => import('@/views/layout/manage/company/companyService.vue'),
                 meta: { title: '企业服务' },
               },
-            ]
+            ],
           },
-        ]
+        ],
       },
     ],
   },

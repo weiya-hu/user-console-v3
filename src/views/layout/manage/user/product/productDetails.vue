@@ -1,5 +1,5 @@
 <template>
-  <div>企业服务</div>
+  <div>我的服务详情</div>
 </template>
 
 <script setup lang="ts"></script>

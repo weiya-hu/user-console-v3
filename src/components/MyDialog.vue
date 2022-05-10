@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    v-model="modelValue"
+    v-model="show"
     :title="title"
     :width="type == 'kf' ? '280px' : '400px'"
     :show-close="type != 'kf'"
@@ -40,6 +40,7 @@
  * @author chn
  */
 import kf_code_i from '@/assets/images/kf_code.png'
+import { computed } from 'vue'
 const props = withDefaults(
   defineProps<{
     modelValue: boolean // 是否显示
@@ -55,6 +56,13 @@ const props = withDefaults(
     btn: 2,
   }
 )
+
+const show = computed({
+  get: () => props.modelValue,
+  set: (val) => {
+    emit('update:modelValue', val)
+  },
+})
 
 //sure 点击确认时
 const emit = defineEmits(['update:modelValue', 'sure'])

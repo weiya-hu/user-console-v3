@@ -1,5 +1,5 @@
 <template>
-  <div>企业服务</div>
+  <div>账号安全</div>
 </template>
 
 <script setup lang="ts"></script>

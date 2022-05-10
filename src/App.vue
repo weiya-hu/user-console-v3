@@ -13,7 +13,7 @@ html,
 body {
   height: 100%;
   width: 100%;
-  --el-color-primary: #2150EC;
+  --el-color-primary: #2150ec;
   --el-color-danger: #e40000;
   --el-color-success: #24bd13;
   --el-color-warning: #ffb700;
@@ -21,16 +21,16 @@ body {
 }
 body {
   .el-button--primary {
-    --el-button-bg-color: #2150EC;
-    --el-button-border-color: #2150EC;
+    --el-button-bg-color: #2150ec;
+    --el-button-border-color: #2150ec;
     --el-button-hover-bg-color: rgba(45, 104, 235, 0.85);
     --el-button-hover-border-color: rgba(45, 104, 235, 0.85);
     --el-button-active-bg-color: #245bd6;
     --el-button-active-border-color: #245bd6;
   }
   .bdc_btn {
-    --el-button-text-color: #2150EC;
-    --el-button-border-color: #2150EC;
+    --el-button-text-color: #2150ec;
+    --el-button-border-color: #2150ec;
     --el-button-hover-text-color: #245bd6;
     --el-button-hover-bg-color: rgba(45, 104, 235, 0.1);
     --el-button-hover-border-color: #245bd6;
@@ -220,7 +220,8 @@ img {
   cursor: url('@/assets/images/imagelook.cur'), pointer;
 }
 
-.status_dot { // 状态点
+.status_dot {
+  // 状态点
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -242,7 +243,8 @@ img {
   }
 }
 
-.vline{ // 竖着的短线
+.vline {
+  // 竖着的短线
   width: 1px;
   height: 14px;
   background-color: $bdcolor;

@@ -1,13 +1,7 @@
 <template>
-  <div @click="$router.push('authentication')">
-    企业信息
-  </div>
+  <div @click="$router.push('authentication')">企业信息</div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts"></script>
 
-</script>
-
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

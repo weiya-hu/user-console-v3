@@ -142,13 +142,10 @@ export function getHashStr(
     switch (type) {
       case 'arr':
         return strArr
-        break
       case 'last':
         return strArr[strArr.length - 1] ? strArr[strArr.length - 1] : ''
-        break
       default:
         return strArr.join('，')
-        break
     }
   }
   let i = 0

@@ -176,8 +176,7 @@ const clear = () => {
   // (document.querySelector('.el-upload--picture-card') as HTMLElement).style.display = 'inline-flex'
 }
 const handleExceed = (files: UploadFile[]) => {
-  if (props.max > 1) {
-  } else {
+  if (props.max === 1) {
     upload.value.clearFiles()
     upload.value.handleStart(files[0])
   }

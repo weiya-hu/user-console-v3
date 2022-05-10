@@ -1,13 +1,7 @@
 <template>
-  <div>
-    企业认证
-  </div>
+  <div>企业认证</div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts"></script>
 
-</script>
-
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
