@@ -74,10 +74,11 @@
  * 左侧导航
  * @author chn
  */
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, computed } from 'vue'
 import { useRouter, useRoute, RouteRecordRaw } from 'vue-router'
 import { routes } from '@/router/index'
 import { Menu as MyIconMenu } from '@element-plus/icons-vue'
+import { mainStore } from '@/store/index'
 
 const navRoutes = routes[1].children!.filter((v) => v.name !== 'Console')
 const flag = ref(false)
@@ -111,11 +112,23 @@ const getSecNav = (path?: string) => {
 }
 
 const router = useRouter()
-const goRoute = (path: string, hasSec: boolean) => {
-  router.push(path)
-  if (flag.value) {
-    emit('change', hasSec)
+const store = mainStore()
+const yxtUrl = computed(() => store.state.yxtUrl)
+const goRoute = (path: string, isSmall: boolean) => {
+  if(path === '/product/dmp'){
+    window.open( '//' + yxtUrl.value.dmp, '_blank')
+    return
   }
+  if(path === '/product/cms'){
+    window.open( '//' + yxtUrl.value.cms, '_blank')
+    return
+  }
+  if (flag.value) {
+    emit('change', isSmall)
+  }
+  router.push(path).then(() => {
+    !isSmall && (flag.value = true)
+  })
 }
 
 const leftLine = ref()

@@ -138,7 +138,7 @@ const upImages = async () => {
   // const content = props.modelValue
   const content = editvalue.value
   const imgReg = /<img [^>]*src=['"]blob:([^'"]+)[^>]*>/gi
-  const srcReg = /src=[\'\"]?(blob:[^\'\"]*)[\'\"]?/gi
+  const srcReg = /src=[\'\"]?(blob:[^\'\"]*)[\'\"]?/gi // eslint-disable-line
   const imgArr = content.match(imgReg)
   let t = content
   if (imgArr) {

@@ -81,6 +81,7 @@ export const mainStore = defineStore('mainStore', () => {
       getYxtUrl_api()
         .then((res: IRes) => {
           if (res.status == 1) {
+            localStorage.setItem('yxtUrl', JSON.stringify(res.body))
             state.yxtUrl = res.body
             resolve(res.body)
           } else {

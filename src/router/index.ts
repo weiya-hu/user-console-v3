@@ -22,7 +22,7 @@ export const routes: RouteRecordRaw[] = [
     redirect: (to) => {
       return '/console'
       if (localStorage.getItem('islogin')) {
-        return '/index'
+        return '/console'
       }
       return '/login'
     },
@@ -44,13 +44,21 @@ export const routes: RouteRecordRaw[] = [
           {
             path: '/product/dmp',
             name: 'Dmp',
-            component: () => import('@/views/layout/rView.vue'),
+            redirect: (to) => {
+              const yxtUrl = localStorage.getItem('yxtUrl')
+              window.open( yxtUrl ? ('//' + JSON.parse(yxtUrl).dmp) : 'https://dmp-dev.kzszh.com/index', '_blank') // 会被浏览器阻止
+              return '/console'
+            },
             meta: { title: 'DMP数据系统' },
           },
           {
             path: '/product/cms',
             name: 'Cms',
-            component: () => import('@/views/layout/rView.vue'),
+            redirect: (to) => {
+              const yxtUrl = localStorage.getItem('yxtUrl')
+              window.open(yxtUrl ? ('//' + JSON.parse(yxtUrl).cms) : 'https://cms-dev.kzszh.com/index', '_blank') // 会被浏览器阻止
+              return '/console'
+            },
             meta: { title: 'CMS内容管理中心' },
           },
         ],

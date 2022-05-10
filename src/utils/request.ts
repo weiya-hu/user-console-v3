@@ -58,7 +58,7 @@ axios.interceptors.response.use(
   }
 )
 
-// 封装get请求 isBg 1:后台接口 0:前台接口
+// 封装get请求
 export function get(module: string, url: string, params?: any, showmsg?: boolean) {
   return new Promise<IRes>((resolve, reject) => {
     axios
@@ -81,7 +81,7 @@ export function get(module: string, url: string, params?: any, showmsg?: boolean
   })
 }
 
-// 封装post请求 isBg 0:后台接口 1:前台接口
+// 封装post请求
 export function post(module: string, url: string, params?: any, showmsg?: boolean) {
   return new Promise<IRes>((resolve, reject) => {
     axios
