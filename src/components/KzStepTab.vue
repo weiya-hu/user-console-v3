@@ -1,21 +1,19 @@
 <template>
-  <div class="kz_step_tab_box">
-    <div class="kz_step_tab fc">
-      <div
-        v-for="(v, i) in tabs"
-        :key="i"
-        class="kz_step_item"
-        :class="i === modelValue && 'kz_step_item_active'"
-      >
-        <div class="kz_step_title fcs" @click="change(i)">
-          <div class="kz_step_dot"></div>
-          <div class="kz_step_text">
-            <slot :item="v">{{ v.title }}</slot>
-          </div>
+  <div class="kz_step_tab fc kz_card">
+    <div
+      v-for="(v, i) in tabs"
+      :key="i"
+      class="kz_step_item"
+      :class="i === modelValue && 'kz_step_item_active'"
+    >
+      <div class="kz_step_title fcs" @click="change(i)">
+        <div class="kz_step_dot"></div>
+        <div class="kz_step_text">
+          <slot :item="v">{{ v.title }}</slot>
         </div>
-        <div v-if="i !== tabs.length - 1" class="kz_step_line fcc">
-          <div class="kz_step_line_box"></div>
-        </div>
+      </div>
+      <div v-if="i !== tabs.length - 1" class="kz_step_line fcc">
+        <div class="kz_step_line_box"></div>
       </div>
     </div>
   </div>
@@ -46,16 +44,10 @@ const change = (index: number) => {
 </script>
 
 <style lang="scss" scoped>
-.kz_step_tab_box {
-  width: 160px;
-}
 .kz_step_tab {
   width: 160px;
   padding: 34px 0;
-  background-color: #fff;
-  border-radius: 8px;
   align-items: center;
-  // position: fixed;
   .kz_step_item {
     .kz_step_title {
       cursor: pointer;

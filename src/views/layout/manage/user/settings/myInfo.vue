@@ -7,9 +7,22 @@
     </KzStepTab>
     <div class="info_content f1">
       <el-scrollbar ref="scrollbarRef" :noresize="true" @scroll="scroll">
-        <div class="conten_item conten_item1 mb16">1</div>
+        <div class="conten_item conten_item1 mb16 kz_card">
+          <div class="card_title">嘻嘻嘻</div>
+        </div>
         <div class="conten_item conten_item2 mb16">2</div>
         <div class="conten_item conten_item3">3</div>
+
+        <el-button-group class="btn_tab">
+          <el-button :class="tab == 1 && 'btn_tab_active'" @click="tab = 1">文章</el-button>
+          <el-button :class="tab == 2 && 'btn_tab_active'" @click="tab = 2">视频</el-button>
+          <el-button :class="tab == 3 && 'btn_tab_active'" @click="tab = 3">视频</el-button>
+        </el-button-group>
+        <div class="mt20">
+          <el-button type="info" plain>kkkk</el-button>
+          <el-button class="bdc_btn">kkkk</el-button>
+          <el-button type="primary">kkkk</el-button>
+        </div>
       </el-scrollbar>
     </div>
   </div>
@@ -29,6 +42,7 @@ onMounted(() => {
 const change = (i: number) => {
   scrollbarRef.value!.setScrollTop(el[i].offsetTop)
 }
+const tab = ref(1)
 
 const scrollbarRef = ref()
 const scroll = ({ scrollTop }: { scrollTop: number }) => {

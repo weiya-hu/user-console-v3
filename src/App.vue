@@ -32,13 +32,17 @@ body {
     --el-button-text-color: #2150ec;
     --el-button-border-color: #2150ec;
     --el-button-hover-text-color: #245bd6;
-    --el-button-hover-bg-color: rgba(45, 104, 235, 0.1);
+    --el-button-hover-bg-color: #e8edfd;
     --el-button-hover-border-color: #245bd6;
     --el-button-active-bg-color: rgba(45, 104, 235, 0.2);
     --el-button-active-border-color: #245bd6;
     --el-button-disabled-bg-color: #fff;
     --el-button-disabled-border-color: rgba(45, 104, 235, 0.35);
     --el-disabled-text-color: rgba(45, 104, 235, 0.4);
+  }
+  .el-button--info.is-plain {
+    --el-button-text-color: #666;
+    --el-button-border-color: #666;
   }
 }
 
@@ -249,5 +253,40 @@ img {
   height: 14px;
   background-color: $bdcolor;
   margin: 0 20px;
+}
+.btn_tab {
+  // tab按钮组
+  .el-button {
+    z-index: 1 !important;
+    --el-button-border-color: #ddd;
+    --el-button-hover-text-color: #2d68eb;
+    --el-button-hover-border-color: #999999;
+    --el-button-hover-bg-color: #fff;
+    --el-button-active-border-color: #2d68eb;
+    &:hover {
+      z-index: 10 !important;
+    }
+  }
+  .el-button.btn_tab_active {
+    --el-button-text-color: #2d68eb;
+    --el-button-border-color: #2d68eb;
+    --el-button-bg-color: #e8edfd;
+    --el-button-hover-border-color: #2d68eb;
+    --el-button-hover-bg-color: #e8edfd;
+    z-index: 11 !important;
+  }
+}
+.kz_card {
+  background-color: #fff;
+  border-radius: 8px;
+  .card_title {
+    box-sizing: content-box;
+    padding: 22px 24px;
+    font-size: 18px;
+    height: 24px;
+    line-height: 24px;
+    font-weight: bold;
+    color: $color333;
+  }
 }
 </style>
