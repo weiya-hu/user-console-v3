@@ -112,8 +112,6 @@ store.getYxtUrl().then((url: any) => {
   urlInfo.value = url
 })
 
-const scrollbarRef = ref()
-
 const showImgs = ref<string[]>([]) //预览图片列表
 const imgShow = ref(false) //预览是否显示
 const showImgIndex = ref(0) //首张预览图片

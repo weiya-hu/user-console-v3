@@ -19,6 +19,6 @@ app
   .directive('error', ErrorDirective)
 
 const store = mainStore()
-store.setUserinfo().then(() => {
+store.setUserinfo().finally(() => {
   app.use(router).mount('#app')
 })

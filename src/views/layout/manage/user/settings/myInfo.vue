@@ -6,7 +6,7 @@
       </template>
     </KzStepTab>
     <div class="info_content f1">
-      <el-scrollbar ref="scrollbarRef" :noresize="true">
+      <el-scrollbar ref="scrollbarRef" :noresize="true" @scroll="scroll">
         <div class="conten_item conten_item1 mb16">1</div>
         <div class="conten_item conten_item2 mb16">2</div>
         <div class="conten_item conten_item3">3</div>
@@ -17,13 +17,31 @@
 
 <script setup lang="ts">
 import KzStepTab from '@/components/KzStepTab.vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 const tabs = ref([{ title: '哈哈哈哈' }, { title: '嘻嘻嘻嘻' }, { title: '啊啊啊啊' }])
 const active = ref(0)
+let boxHeight: number
+let el: NodeListOf<HTMLElement>
+onMounted(() => {
+  boxHeight = (document.querySelector('.layout_page') as HTMLElement).offsetHeight / 2
+  el = document.querySelectorAll('.conten_item')
+})
 const change = (i: number) => {
-  console.log(i)
-  const el = document.querySelectorAll('.conten_item') as NodeListOf<HTMLElement>
-  console.log(el[i].offsetTop)
+  scrollbarRef.value!.setScrollTop(el[i].offsetTop)
+}
+
+const scrollbarRef = ref()
+const scroll = ({ scrollTop }: { scrollTop: number }) => {
+  if (el[1].getBoundingClientRect().y > boxHeight) {
+    active.value = 0
+  } else if (
+    el[1].getBoundingClientRect().y < boxHeight &&
+    el[2].getBoundingClientRect().y > boxHeight
+  ) {
+    active.value = 1
+  } else if (el[2].getBoundingClientRect().y < boxHeight) {
+    active.value = 2
+  }
 }
 </script>
 
