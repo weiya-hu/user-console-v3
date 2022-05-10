@@ -34,3 +34,38 @@ export const getYxtUrl_api = (): Promise<IRes> => {
 export const getUserInfo = (): Promise<IRes> => {
   return get('user', '/public/uinfo.get')
 }
+
+/**
+ * @name 发送登录短信
+ */
+export const sendSms = (data: { acode: string; mobile: string }): Promise<IRes> => {
+  return post('user', '/login/sms/send.do', data)
+}
+
+/**
+ * @name 发送注册短信
+ */
+export const sendRegsms = (data: { acode: string; mobile: string }): Promise<IRes> => {
+  return post('user', '/login/regsms/send.do', data)
+}
+
+/**
+ * @name 重置密码发送短信
+ */
+export const sendResetsms = (data: { acode: string; mobile: string }): Promise<IRes> => {
+  return post('user', '/login/resetsms/send.do', data)
+}
+
+/**
+ * @name 登录
+ */
+export const doLogin = (data: { acode: string; mobile: string }): Promise<IRes> => {
+  return post('user', '/login/login.do', data)
+}
+
+/**
+ * @name 获取图形验证码
+ */
+export const captchaGet = (): Promise<IRes> => {
+  return get('user ', '/public/captcha.get')
+}
