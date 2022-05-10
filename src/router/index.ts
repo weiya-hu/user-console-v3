@@ -12,8 +12,20 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/login.vue'),
+    component: () => import('@/views/login/login.vue'),
     meta: { title: '登录' },
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/views/login/register.vue'),
+    meta: { title: '注册' },
+  },
+  {
+    path: '/forget',
+    name: 'Forget',
+    component: () => import('@/views/login/forget.vue'),
+    meta: { title: '忘记密码' },
   },
   {
     path: '/',

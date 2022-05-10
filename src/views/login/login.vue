@@ -2,11 +2,11 @@
   <div class="login_page">
     <div class="login_main">
       <div class="fleximg logo_img">
-        <img src="@/assets/images/logo-white.svg" alt="">
+        <img src="@/assets/images/logo-white.svg">
       </div>
       <div class="login_main_content">
         <div class="fleximg login_main_img">
-          <img src="@/assets/images/login-main.png" alt="">
+          <img src="@/assets/images/login-main.png">
         </div>
         <div class="login_content">
           <div class="login_top_nav fleximg">
@@ -33,6 +33,17 @@
               <button class="submit_button" type="submit" @click="onSubmit($event)">登录</button>
             </el-form-item>
           </el-form>
+          <div class="fsc to_register">
+            <div>
+              <div v-if="topNavActive === 1">忘记密码？</div>
+            </div>
+            <div>免费注册</div>
+          </div>
+          <div class="fleximg other_login">
+            <div class="fleximg other_login_item"><img src="@/assets/images/wechart.png"></div>
+            <div class="fleximg other_login_item"><img src="@/assets/images/QQ.png"></div>
+            <div class="fleximg other_login_item"><img src="@/assets/images/weibo.png"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -191,6 +202,25 @@ const onSubmit = (event:any) => {
           font-size: 16px;
           color: #fff;
           cursor: pointer;
+        }
+        .to_register{
+          margin-top: 16px;
+          div{
+            font-size: 12px;
+            color: #363636;
+            line-height: 12px;
+            cursor: pointer;
+          }
+        }
+        .other_login{
+          margin-top: 28px;
+          .other_login_item{
+            width: 42px;
+            height: 42px;
+            overflow: hidden;
+            margin: 0 20px;
+            cursor: pointer;
+          }
         }
       }
     }
