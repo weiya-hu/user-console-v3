@@ -7,14 +7,18 @@ import 'element-plus/dist/index.css'
 import '@/assets/css/base.scss'
 import ErrorDirective from '@/directive/error.js'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import { mainStore } from '@/store/index'
 
 const app = createApp(App)
 
 app
-  .use(router)
   .use(createPinia())
   .use(ElementPlus, {
     locale: zhCn,
   })
   .directive('error', ErrorDirective)
-  .mount('#app')
+
+const store = mainStore()
+store.setUserinfo().then(() => {
+  app.use(router).mount('#app')
+})

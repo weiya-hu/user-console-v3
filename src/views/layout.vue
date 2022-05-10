@@ -7,8 +7,8 @@
       </div>
       <div class="rt fcs">
         <div class="top_links fcs">
-          <el-link class="mr20">控制台</el-link>
-          <el-link>官网</el-link>
+          <el-link class="mr20" @click="$router.push('/console')">控制台</el-link>
+          <el-link :href="'//' + urlInfo.offical" target="_blank">官网</el-link>
         </div>
         <div class="vline"></div>
         <div class="user_box fcs">
@@ -33,7 +33,14 @@
       </el-col>
       <el-col class="layout_content" :class="$route.meta.father && 'layout_details_page'">
         <KzDetailsHeader v-if="$route.meta.father" />
-        <el-scrollbar wrap-class="layout_content_box" :noresize="true">
+        <div v-if="$route.meta.scroll" class="layout_content_box" style="height: 100%">
+          <router-view v-slot="{ Component }">
+            <transition name="fade">
+              <component :is="Component" />
+            </transition>
+          </router-view>
+        </div>
+        <el-scrollbar v-else wrap-class="layout_content_box" :noresize="true">
           <router-view v-slot="{ Component }">
             <transition name="fade">
               <component :is="Component" />
@@ -87,6 +94,9 @@ const routers = router.getRoutes()
 const leftNavRef = ref()
 onBeforeRouteUpdate((to, from) => {
   leftNavRef.value.getSecNav(to.meta.father || to.path)
+  if (to.path === '/console') {
+    leftNavRef.value.changeFlag(true)
+  }
 })
 onMounted(() => {
   leftNavRef.value && leftNavRef.value.getSecNav()
@@ -101,6 +111,8 @@ const urlInfo = ref<any>({})
 store.getYxtUrl().then((url: any) => {
   urlInfo.value = url
 })
+
+const scrollbarRef = ref()
 
 const showImgs = ref<string[]>([]) //预览图片列表
 const imgShow = ref(false) //预览是否显示
@@ -178,7 +190,7 @@ emiter.on('lookVideo', (video: string) => {
       .kz_copyright {
         position: absolute;
         left: 50%;
-        bottom: 12px;
+        bottom: 16px;
         transform: translate(-50%, 0);
         word-break: keep-all;
         white-space: nowrap;

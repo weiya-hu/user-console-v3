@@ -217,7 +217,7 @@ img {
 }
 
 .lookhover {
-  cursor: url('@/assets/images/imagelook.cur'), pointer;
+  cursor: url('@/assets/images/imagelook.cur'), zoom-in;
 }
 
 .status_dot {

@@ -5,8 +5,8 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
  * @name 保证唯一 大驼峰 例如 UserInfo
  * @component 需要重定向的空路由页面统一用rView.vue
  * @redirect 重定向 非必写
- * @meta title：导航标题；father：在导航中不出现的详情页需要此属性，值为在此页面时需要激活的导航的path
- * @ 子页面都必须写在Layout的children下，因为左侧导航是直接取routes[1]即Layout
+ * @meta title：导航标题；father：在导航中不出现的详情页需要此属性，值为在此页面时需要激活的导航的path；scroll：页面中是否使用单独的el-scrollbar组件
+ * @ 子页面都必须写在Layout的children下，因为左侧导航是直接取Layout下children
  */
 export const routes: RouteRecordRaw[] = [
   {
@@ -32,8 +32,7 @@ export const routes: RouteRecordRaw[] = [
     name: 'Layout',
     component: () => import('@/views/layout.vue'),
     redirect: (to) => {
-      return '/console'
-      if (localStorage.getItem('islogin')) {
+      if (sessionStorage.getItem('islogin')) {
         return '/console'
       }
       return '/login'
@@ -58,7 +57,10 @@ export const routes: RouteRecordRaw[] = [
             name: 'Dmp',
             redirect: (to) => {
               const yxtUrl = localStorage.getItem('yxtUrl')
-              window.open( yxtUrl ? ('//' + JSON.parse(yxtUrl).dmp) : 'https://dmp-dev.kzszh.com/index', '_blank') // 会被浏览器阻止
+              window.open(
+                yxtUrl ? '//' + JSON.parse(yxtUrl).dmp : 'https://dmp-dev.kzszh.com/index',
+                '_blank'
+              ) // 会被浏览器阻止
               return '/console'
             },
             meta: { title: 'DMP数据系统' },
@@ -68,7 +70,10 @@ export const routes: RouteRecordRaw[] = [
             name: 'Cms',
             redirect: (to) => {
               const yxtUrl = localStorage.getItem('yxtUrl')
-              window.open(yxtUrl ? ('//' + JSON.parse(yxtUrl).cms) : 'https://cms-dev.kzszh.com/index', '_blank') // 会被浏览器阻止
+              window.open(
+                yxtUrl ? '//' + JSON.parse(yxtUrl).cms : 'https://cms-dev.kzszh.com/index',
+                '_blank'
+              ) // 会被浏览器阻止
               return '/console'
             },
             meta: { title: 'CMS内容管理中心' },
@@ -152,7 +157,7 @@ export const routes: RouteRecordRaw[] = [
                     path: '/manage/user/settings/myinfo',
                     name: 'MyInfo',
                     component: () => import('@/views/layout/manage/user/settings/myInfo.vue'),
-                    meta: { title: '我的资料' },
+                    meta: { title: '我的资料', scroll: true },
                   },
                   {
                     path: '/manage/user/settings/safe',

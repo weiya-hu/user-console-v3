@@ -1,59 +1,76 @@
 <template>
   <div>
-    <div v-if="name==='mobile'" class="flexl form_item">
-      <div class="phoneselectpre ">
+    <div v-if="name === 'mobile'" class="flexl form_item">
+      <div class="phoneselectpre">
         <el-form-item prop="acode">
           <el-select v-model="modelValue.acode">
-            <el-option v-for="(item,i) in areaNum" :label="'+' + item.value" :value="item.value"  :key="i">{{item.name + ' +' + item.value}}</el-option>
+            <el-option
+              v-for="(item, i) in areaNum"
+              :key="i"
+              :label="'+' + item.value"
+              :value="item.value"
+              >{{ item.name + ' +' + item.value }}</el-option
+            >
           </el-select>
         </el-form-item>
       </div>
       <div class="login_mobile flexl">
         <div class="flexl login_label">
-          <div class="countrycodetxt">+{{modelValue.acode}}</div>
-          <div class="fleximg login_down_img"><img src="@/assets/images/login_down.png"></div>
+          <div class="countrycodetxt">+{{ modelValue.acode }}</div>
+          <div class="fleximg login_down_img"><img src="@/assets/images/login_down.png" /></div>
           <div class="acode_line"></div>
         </div>
         <el-form-item :prop="props.formName">
-          <el-input v-model="modelValue.mobile" placeholder="请输入手机号" autocomplete="off"/>
+          <el-input v-model="modelValue.mobile" placeholder="请输入手机号" autocomplete="off" />
         </el-form-item>
       </div>
     </div>
     <div v-if="name === 'mobileYZM'" class="flexl form_item">
       <div class="login_label">验证码</div>
       <el-form-item :prop="props.formName">
-        <el-input v-model="modelValue.sms" placeholder="请输入验证码" autocomplete="off"/>
+        <el-input v-model="modelValue.sms" placeholder="请输入验证码" autocomplete="off" />
       </el-form-item>
-      <div v-if="getYZMflag" className='getyzmTXTtime getyzmTXT'>{{mobileYZMnum}}'后重新获取</div>
-      <div v-if="!getYZMflag" className='getyzmTXT' @click="getYZm()">{{YZMtxt}}</div> 
+      <div v-if="getYZMflag" className="getyzmTXTtime getyzmTXT">{{ mobileYZMnum }}'后重新获取</div>
+      <div v-if="!getYZMflag" className="getyzmTXT" @click="getYZm()">{{ YZMtxt }}</div>
     </div>
     <div v-if="name === 'password'" class="flexl form_item">
       <div class="login_label">密码</div>
       <el-form-item :prop="props.formName">
-        <el-input v-if="ispassword" type="password" v-model="modelValue.pass" placeholder="请输入密码" autocomplete="off"/>
-        <el-input v-else type="text" v-model="modelValue.pass" placeholder="请输入密码" autocomplete="off"/>
+        <el-input
+          v-if="ispassword"
+          v-model="modelValue.pass"
+          type="password"
+          placeholder="请输入密码"
+          autocomplete="off"
+        />
+        <el-input
+          v-else
+          v-model="modelValue.pass"
+          type="text"
+          placeholder="请输入密码"
+          autocomplete="off"
+        />
       </el-form-item>
       <div class="login_pass_img fleximg" @click="ispassword = !ispassword">
-        <img v-if="ispassword" src="@/assets/images/login_close.png">
-        <img v-else src="@/assets/images/login_open.png" >
+        <img v-if="ispassword" src="@/assets/images/login_close.png" />
+        <img v-else src="@/assets/images/login_open.png" />
       </div>
     </div>
     <div v-if="name === 'captcha'" class="fsc login_captcha">
       <div class="form_item login_captcha_item flexl">
         <el-form-item :prop="props.formName">
-          <el-input v-model="modelValue[formName]" placeholder="请输入验证码" autocomplete="off"/>
+          <el-input v-model="modelValue[formName]" placeholder="请输入验证码" autocomplete="off" />
         </el-form-item>
       </div>
-      <div class="chaptcha_img fleximg" @click="getCaptcha"><img :src="captcha"></div>
+      <div class="chaptcha_img fleximg" @click="getCaptcha"><img :src="captcha" /></div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 import areaNum from '@/utils/areaNum'
 import { telReg, okMsg, errMsg } from '@/utils/index'
-import { sendSms, sendRegsms, sendResetsms, captchaGet } from "@/api/login"
-
+import { sendSms, sendRegsms, sendResetsms, captchaGet } from '@/api/login'
 
 const props = withDefaults(
   defineProps<{
@@ -62,170 +79,177 @@ const props = withDefaults(
     label?: string
     modelValue: any
     type?: string //发送验证码的类型，'register','reset','login'
-  }>(),{}
+  }>(),
+  {}
 )
-const getYZMflag= ref(false)//获取验证码的开关，为true后才能获取验证码，到时候后为false关闭
-const mobileYZMnum=ref(120)
+const getYZMflag = ref(false) //获取验证码的开关，为true后才能获取验证码，到时候后为false关闭
+const mobileYZMnum = ref(120)
 const YZMtxt = ref('获取验证码')
 
-const ispassword = ref(true)//用于切换密码框的input为password或者text
+const ispassword = ref(true) //用于切换密码框的input为password或者text
 
 const captcha = ref()
 
 //获取验证码按钮
-const getYZm=async()=>{
+const getYZm = async () => {
   console.log(props.modelValue)
-  let {mobile,acode}=props.modelValue
-  let {type} = props
-  if(!mobile){
+  const { mobile, acode } = props.modelValue
+  const { type } = props
+  if (!mobile) {
     errMsg('请输入手机号码')
     return
   }
-  if(telReg.test(mobile)){
-    let data={
-      acode:'+'+acode,
-      mobile
+  if (telReg.test(mobile)) {
+    const data = {
+      acode: '+' + acode,
+      mobile,
     }
-    const { status } = type==='register' ? await sendRegsms(data) : type==='reset' ? await sendResetsms(data) : await sendSms(data)
-    status && (()=>{
-      okMsg('验证码发送成功')
-      getYZMflag.value = true
-      let timer = setInterval(()=>{                
-        if(mobileYZMnum.value>1){
-          mobileYZMnum.value = mobileYZMnum.value -1
-        }else{
-          getYZMflag.value = false
-          mobileYZMnum.value = 120
-          YZMtxt.value = '重获验证码'
-          clearInterval(timer)
-        }                 
-      },1000)
-    })()
+    const { status } =
+      type === 'register'
+        ? await sendRegsms(data)
+        : type === 'reset'
+        ? await sendResetsms(data)
+        : await sendSms(data)
+    status &&
+      (() => {
+        okMsg('验证码发送成功')
+        getYZMflag.value = true
+        const timer = setInterval(() => {
+          if (mobileYZMnum.value > 1) {
+            mobileYZMnum.value = mobileYZMnum.value - 1
+          } else {
+            getYZMflag.value = false
+            mobileYZMnum.value = 120
+            YZMtxt.value = '重获验证码'
+            clearInterval(timer)
+          }
+        }, 1000)
+      })()
   }
 }
 
 //获取图形验证码
-const getCaptcha = async()=>{
+const getCaptcha = async () => {
   const { status, body } = await captchaGet()
   status && (captcha.value = body)
 }
 props.name === 'captcha' && getCaptcha()
 </script>
 <style lang="scss" scoped>
-  .form_item{
-    width: 380px;
-    height: 52px;
-    background: #F4F4F4;
-    padding: 0 16px;
-    margin-bottom: 20px;
-    position: relative;
-    :deep(.el-form-item){
-      margin-bottom: 0;
-      .el-input__wrapper{
-        background: #F4F4F4;
-        box-shadow: none;
-        padding: 0;
-        input{
-          color: #363636;
-          font-size: 14px;
-        }
-      }
-      .el-form-item__error{
-        top: 134%;
-        left: -85px;
-        padding-left: 20px;
-      }
-      .el-form-item__error::before{
-        content:'';
-        background: url('@/assets/images/login_warn.png') no-repeat;
-        background-size: 12px 12px;
-        width: 12px;
-        height: 12px;
-        position:absolute;
-        left:0;
-        top:15%;
+.form_item {
+  width: 380px;
+  height: 52px;
+  background: #f4f4f4;
+  padding: 0 16px;
+  margin-bottom: 20px;
+  position: relative;
+  :deep(.el-form-item) {
+    margin-bottom: 0;
+    .el-input__wrapper {
+      background: #f4f4f4;
+      box-shadow: none;
+      padding: 0;
+      input {
+        color: #363636;
+        font-size: 14px;
       }
     }
-    .phoneselectpre{
-      width: 60px;
-      height: 20px;
+    .el-form-item__error {
+      top: 134%;
+      left: -85px;
+      padding-left: 20px;
+    }
+    .el-form-item__error::before {
+      content: '';
+      background: url('@/assets/images/login_warn.png') no-repeat;
+      background-size: 12px 12px;
+      width: 12px;
+      height: 12px;
       position: absolute;
-      top: 16px;
-      left: 16px;
-      opacity: 0;
+      left: 0;
+      top: 15%;
     }
-    .login_label{
-      width: 70px;
-      font-size: 14px;
-      color: #363636;
+  }
+  .phoneselectpre {
+    width: 60px;
+    height: 20px;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    opacity: 0;
+  }
+  .login_label {
+    width: 70px;
+    font-size: 14px;
+    color: #363636;
+    line-height: 14px;
+    font-weight: 400;
+  }
+  .login_mobile {
+    .countrycodetxt {
+      width: 36px;
+      text-align: left;
+      height: 14px;
       line-height: 14px;
       font-weight: 400;
-    }
-    .login_mobile{
-      .countrycodetxt{
-        width: 36px;
-        text-align: left;
-        height: 14px;
-        line-height: 14px;
-        font-weight: 400;
-        font-size: 14px;
-        color: #363636;
-      }
-      .login_down_img{
-        width: 12px;
-      }
-      .acode_line{
-        width: 1px;
-        height: 14px;
-        background: #363636;
-        margin-left: 8px;
-      }
-      
-    }
-    .getyzmTXT{
       font-size: 14px;
-      color: #304F97;
-      font-weight: 500;
-      line-height: 14px;
+      color: #363636;
+    }
+    .login_down_img {
+      width: 12px;
+    }
+    .acode_line {
+      width: 1px;
       height: 14px;
-      cursor: pointer;
-      position: absolute;
-      top: 50%;
-      right: 16px;
-      transform: translateY(-50%);
-    }
-    .getyzmTXTtime{
-      color: #999999;
-    }
-    .login_pass_img{
-      width: 16px;
-      position: absolute;
-      top: 50%;
-      right: 16px;
-      transform: translateY(-50%);
-      cursor: pointer;
+      background: #363636;
+      margin-left: 8px;
     }
   }
-  .login_captcha{
-    width: 380px;
-    height: 52px;
-    background: #ffffff;
-    margin-bottom: 20px;
-    .login_captcha_item{
-      width: 250px;
-      margin-bottom: 0;
-      :deep(.el-form-item){
-        .el-form-item__error{
-          top: 134%;
-          left: -15px;
-          padding-left: 20px;
-        }
+  .getyzmTXT {
+    font-size: 14px;
+    color: #304f97;
+    font-weight: 500;
+    line-height: 14px;
+    height: 14px;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+  }
+  .getyzmTXTtime {
+    color: #999999;
+  }
+  .login_pass_img {
+    width: 16px;
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+}
+.login_captcha {
+  width: 380px;
+  height: 52px;
+  background: #ffffff;
+  margin-bottom: 20px;
+  .login_captcha_item {
+    width: 250px;
+    margin-bottom: 0;
+    :deep(.el-form-item) {
+      .el-form-item__error {
+        top: 134%;
+        left: -15px;
+        padding-left: 20px;
       }
     }
-    .chaptcha_img{
-      width: 120px;
-      background: #C7C7C7;
-      cursor: pointer;
-    }
   }
-</style>>
+  .chaptcha_img {
+    width: 120px;
+    background: #c7c7c7;
+    cursor: pointer;
+  }
+}
+</style>
+>

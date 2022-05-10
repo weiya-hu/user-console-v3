@@ -3,7 +3,7 @@
     <div ref="leftLine" class="left_vline" :style="{ transform: `translate(0, ${top}px)` }"></div>
     <div class="kz_left_nav">
       <div class="fold_btn fcs fjend">
-        <div class="fold_icon chover" @click="changeFlag">1</div>
+        <div class="fold_icon chover" @click="changeFlag()">1</div>
       </div>
       <div
         class="nav_item_lv2"
@@ -80,10 +80,12 @@ import { routes } from '@/router/index'
 import { Menu as MyIconMenu } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'
 
-const navRoutes = routes[1].children!.filter((v) => v.name !== 'Console')
-const flag = ref(false)
-const changeFlag = () => {
-  flag.value = !flag.value
+const navRoutes = routes
+  .find((v) => v.name === 'Layout')!
+  .children!.filter((v) => v.name !== 'Console')
+const flag = ref(false) // 次级导航是否展示 true 展示
+const changeFlag = (show?: boolean) => {
+  flag.value = typeof show === 'undefined' ? !flag.value : show
   emit('change', secNav.value ? false : flag.value)
 }
 // 收缩导航时触发，返回是否需要改变左侧导航的宽
@@ -115,12 +117,12 @@ const router = useRouter()
 const store = mainStore()
 const yxtUrl = computed(() => store.state.yxtUrl)
 const goRoute = (path: string, isSmall: boolean) => {
-  if(path === '/product/dmp'){
-    window.open( '//' + yxtUrl.value.dmp, '_blank')
+  if (path === '/product/dmp') {
+    window.open('//' + yxtUrl.value.dmp, '_blank')
     return
   }
-  if(path === '/product/cms'){
-    window.open( '//' + yxtUrl.value.cms, '_blank')
+  if (path === '/product/cms') {
+    window.open('//' + yxtUrl.value.cms, '_blank')
     return
   }
   if (flag.value) {
@@ -149,6 +151,7 @@ const changeLeft = () => {
 
 defineExpose({
   getSecNav, // 改变次级导航，在监听路由变化的地方调用
+  changeFlag, // 改变是否收缩次级导航
 })
 </script>
 
