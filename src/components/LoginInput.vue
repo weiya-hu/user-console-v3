@@ -34,7 +34,7 @@
       <div v-if="!getYZMflag" className="getyzmTXT" @click="getYZm()">{{ YZMtxt }}</div>
     </div>
     <div v-if="name === 'password'" class="flexl form_item">
-      <div class="login_label">密码</div>
+      <div class="login_label">{{props.label}}</div>
       <el-form-item :prop="props.formName">
         <el-input
           v-if="ispassword"
@@ -63,6 +63,13 @@
         </el-form-item>
       </div>
       <div class="chaptcha_img fleximg" @click="getCaptcha"><img :src="captcha" /></div>
+    </div>
+    <div v-if="name === 'invite_code'" class="flexl form_item">
+      <div class="login_label">邀请码</div>
+      <el-form-item :prop="props.formName">
+        <el-input v-model="modelValue.sms" placeholder="请输入邀请码" autocomplete="off" />
+      </el-form-item>
+      <div className="getyzmTXT invite_code_end">选填</div>
     </div>
   </div>
 </template>
@@ -219,6 +226,9 @@ props.name === 'captcha' && getCaptcha()
   }
   .getyzmTXTtime {
     color: #999999;
+  }
+  .invite_code_end{
+    color: #BBBBBB;
   }
   .login_pass_img {
     width: 16px;

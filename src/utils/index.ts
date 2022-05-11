@@ -336,3 +336,34 @@ export function getKzMyStatus(key: any) {
   }
   return obj
 }
+
+/**
+ * 登录注册电话号码验证
+ */
+ export function mobileCheck(rule: any, value: string, callback: any){
+  if (telReg.test(value)) {
+    callback()
+  } else {
+    callback(new Error('请输入正确的手机号码'))
+  }
+}
+
+/**
+ * 登录注册密码验证
+ */
+ export function passCheck(rule: any, value: string, callback: any){
+  if (passReg.test(value)) {
+    callback()
+  } else {
+    callback(new Error('密码长度在6~18之间,不能只是数字或字母'))
+  }
+}
+
+/**
+ * 获取页面参数
+ */
+ export function getUrlParam(name:string){
+  var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+  var r = window.location.search.substring(1).match(reg);
+  if(r!=null)return  decodeURI(r[2]); return null;
+}

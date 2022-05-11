@@ -23,3 +23,15 @@ interface IPageParams {
   source?: number
   [propName: string]: any
 }
+
+/**
+ * @name 登录表单类型
+ */
+ interface ILoginForm {
+  mobile?: number
+  acode?: string
+  sms?: string
+  pass?: string
+  captcha?: string
+  invite_code?: string
+}

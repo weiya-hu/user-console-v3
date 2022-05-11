@@ -46,17 +46,24 @@
                 name="captcha"
                 form-name="captcha"
               />
-              <LoginInput v-model="formValue" name="password" form-name="pass" />
+              <LoginInput v-model="formValue" name="password" form-name="pass" label="密码"/>
             </div>
             <el-form-item>
               <button class="submit_button" type="submit" @click="onSubmit($event)">登录</button>
             </el-form-item>
+            <div class="flexl user_agree" @click="userAgreeCheck = !userAgreeCheck">
+              <div class="fleximg user_agree_img">
+                <img v-if="userAgreeCheck" src="@/assets/images/login_select.png">
+                <img v-else src="@/assets/images/login_unselect.png">
+              </div>
+              <div class="user_agree_txt">我已阅读并同意<span @click="toUseragreement($event)">《康洲数智用户须知》</span> </div>
+            </div>
           </el-form>
           <div class="fsc to_register">
             <div>
-              <div v-if="topNavActive === 1">忘记密码？</div>
+              <div v-if="topNavActive === 1" @click="router.push('/forget')">忘记密码？</div>
             </div>
-            <div>免费注册</div>
+            <div @click="router.push('/register')">免费注册</div>
           </div>
           <div class="fleximg other_login">
             <div class="fleximg other_login_item"><img src="@/assets/images/wechart.png" /></div>
@@ -71,39 +78,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import LoginInput from '@/components/LoginInput.vue'
-import { telReg, okMsg, passReg } from '@/utils/index'
+import { mobileCheck, passCheck, okMsg, errMsg, getUrlParam } from '@/utils/index'
 import { doLogin } from '@/api/login'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-
-interface ILoginForm {
-  mobile?: number
-  acode?: string
-  sms?: string
-  pass?: string
-  captcha?: string
-}
-
-//表单自定义验证规则
-const mobileCheck = (rule: any, value: string, callback: any) => {
-  if (telReg.test(value)) {
-    callback()
-  } else {
-    callback(new Error('请输入正确的手机号码'))
-  }
-}
-const passCheck = (rule: any, value: string, callback: any) => {
-  if (passReg.test(value)) {
-    callback()
-  } else {
-    callback(new Error('密码长度在6~18之间,不能只是数字或字母'))
-  }
-}
 
 const topNav = ref(['手机号登录', '账号登录'])
 const topNavLineLeft = ref(0) //登录方式选择下面那条线移动效果left距离
 const topNavActive = ref(0) //登录方式：0/1
 const chaptchaShow = ref(false) //图形验证码是否显示
+const userAgreeCheck = ref(false)
 const formValue = ref<ILoginForm>({
   acode: '86',
 })
@@ -133,6 +117,10 @@ const onSubmit = (event: any) => {
   event.preventDefault()
   loginFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
+      if(!userAgreeCheck.value){
+        errMsg('请阅读并同意《康洲数智用户须知》')
+        return
+      }
       const data: any = {
         ...formValue.value,
         type: topNavActive.value + 1,
@@ -142,8 +130,10 @@ const onSubmit = (event: any) => {
       status &&
         (() => {
           okMsg('登录成功')
+          sessionStorage.setItem('islogin', '1')
+          let url = getUrlParam('url')
           setTimeout(() => {
-            router.push('/')
+            window.location.href= url ? decodeURIComponent(url) : 'http://www.kzszh.com'
           }, 800)
         })()
       !status &&
@@ -152,6 +142,11 @@ const onSubmit = (event: any) => {
         })()
     }
   })
+}
+
+const toUseragreement=(event:any)=>{
+  event.stopPropagation();
+  window.open(window.location.protocol + '//' + window.location.host + '/useragreement', "_blank");
 }
 </script>
 
@@ -221,6 +216,22 @@ const onSubmit = (event: any) => {
           font-size: 16px;
           color: #fff;
           cursor: pointer;
+        }
+        .user_agree{
+          cursor: pointer;
+          .user_agree_img{
+            width: 14px;
+            margin-right: 9px;
+          }
+          .user_agree_txt{
+            font-size: 12px;
+            color: #363636;
+            line-height: 12px;
+            font-weight: 400;
+            span{
+              color: #304F97;
+            }
+          }
         }
         .to_register {
           margin-top: 16px;

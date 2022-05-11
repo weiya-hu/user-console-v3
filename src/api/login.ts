@@ -69,3 +69,12 @@ export const doLogin = (data: { acode: string; mobile: string }): Promise<IRes> 
 export const captchaGet = (): Promise<IRes> => {
   return get('user ', '/public/captcha.get')
 }
+
+/**
+ * @name 注册
+ */
+ export const doRegister = (data: { acode: string; mobile: string; pass:string; sms:string; invite_code?:string }): Promise<IRes> => {
+  return post('user', '/login/register.do', data)
+}
+
+
