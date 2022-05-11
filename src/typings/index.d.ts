@@ -34,4 +34,5 @@ interface ILoginForm {
   pass?: string
   captcha?: string
   invite_code?: any
+  surePass?: string
 }

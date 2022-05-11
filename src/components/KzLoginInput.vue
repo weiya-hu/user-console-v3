@@ -50,6 +50,29 @@
         <img v-else src="@/assets/images/login_open.png" />
       </div>
     </div>
+    <div v-if="name === 'surePassword'" class="flexl form_item">
+      <div class="login_label">{{ props.label }}</div>
+      <el-form-item :prop="props.formName">
+        <el-input
+          v-if="ispassword"
+          v-model="surePass"
+          type="password"
+          placeholder="请输入密码"
+          autocomplete="off"
+        />
+        <el-input
+          v-else
+          v-model="surePass"
+          type="text"
+          placeholder="请输入密码"
+          autocomplete="off"
+        />
+      </el-form-item>
+      <div class="login_pass_img fleximg" @click="ispassword = !ispassword">
+        <img v-if="ispassword" src="@/assets/images/login_close.png" />
+        <img v-else src="@/assets/images/login_open.png" />
+      </div>
+    </div>
     <div v-if="name === 'captcha'" class="fsc login_captcha">
       <div class="form_item login_captcha_item flexl">
         <el-form-item :prop="props.formName">
@@ -106,6 +129,7 @@ const mobile = computed(vModel('mobile'))
 const acode = computed(vModel('acode'))
 const sms = computed(vModel('sms'))
 const captchaV = computed(vModel('captcha'))
+const surePass = computed(vModel('surePass'))
 
 //获取验证码按钮
 const getYZm = async () => {

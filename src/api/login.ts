@@ -82,3 +82,25 @@ export const doRegister = (data: {
 }): Promise<IRes> => {
   return post('user', '/login/register.do', data)
 }
+
+/**
+ * @name 重置密码短信验证
+ */
+export const doResetsmsCheck_api = (data: {
+  acode: string
+  mobile: string
+  sms: string
+}): Promise<IRes> => {
+  return post('user', '/login/resetsms/check.do', data)
+}
+
+/**
+ * @name 重置密码
+ */
+export const doResetpass_api = (data: {
+  acode: string
+  mobile: string
+  pass: string
+}): Promise<IRes> => {
+  return post('user', '/login/resetpass/modify.do', data)
+}

@@ -37,6 +37,18 @@ export const routes: RouteRecordRaw[] = [
     meta: { title: '用户须知' },
   },
   {
+    path: '/resetpass',
+    name: 'ResetPass',
+    component: () => import('@/views/login/resetPass.vue'),
+    meta: { title: '重设密码' },
+  },
+  {
+    path: '/bindPhone.vue',
+    name: 'BindPhone.vue',
+    component: () => import('@/views/login/bindPhone.vue.vue'),
+    meta: { title: '绑定手机号' },
+  },
+  {
     path: '/',
     name: 'Layout',
     component: () => import('@/views/layout.vue'),

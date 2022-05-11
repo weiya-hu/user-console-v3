@@ -8,10 +8,15 @@
         <div class="register_content_title fleximg">找回密码</div>
         <div class="register_content_main">
           <el-form ref="registerFormRef" :model="formValue" :rules="nextRules">
-            <LoginInput v-model="formValue" name="mobile" form-name="mobile" />
-            <LoginInput v-model="formValue" name="mobileYZM" form-name="sms" type="reset" />
+            <LoginInput v-model="formValue" name="password" form-name="pass" label="登录密码" />
+            <LoginInput
+              v-model="formValue"
+              name="surePassword"
+              form-name="surePass"
+              label="确认密码"
+            />
             <el-form-item>
-              <button class="submit_button" type="submit" @click="onNext($event)">下一步</button>
+              <button class="submit_button" type="submit" @click="onNext($event)">完成</button>
             </el-form-item>
           </el-form>
         </div>
@@ -22,42 +27,44 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import LoginInput from '@/components/KzLoginInput.vue'
-import { mobileCheck, okMsg, getUrlParam } from '@/utils/index'
-import { doResetsmsCheck_api } from '@/api/login'
+import { passCheck, okMsg, getUrlParam, errMsg } from '@/utils/index'
+import { doResetpass_api } from '@/api/login'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
-const registerFormRef = ref()
 const loginToUrl = getUrlParam('url')
-const formValue = ref<ILoginForm>({
-  acode: '86',
-})
+const registerFormRef = ref()
+const formValue = ref<ILoginForm>({})
 const nextRules = ref({
-  mobile: [
-    { required: true, message: '电话号码不能为空', trigger: 'blur' },
-    { validator: mobileCheck, trigger: 'blur' },
+  pass: [
+    { required: true, message: '密码不能为空', trigger: 'blur' },
+    { validator: passCheck, trigger: 'blur' },
   ],
-  sms: [{ required: true, message: '验证码不能为空', trigger: 'blur' }],
+  surePass: [
+    { required: true, message: '密码不能为空', trigger: 'blur' },
+    { validator: passCheck, trigger: 'blur' },
+  ],
 })
 
 const onNext = (event: any) => {
   event.preventDefault()
   registerFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
+      if (formValue.value.pass !== formValue.value.surePass) {
+        errMsg('两次密码不一样')
+        return
+      }
       const data: any = {
         ...formValue.value,
-        acode: '+' + formValue.value.acode,
+        acode: getUrlParam('acode'),
+        mobile: getUrlParam('mobile'),
       }
-      const { status } = await doResetsmsCheck_api(data)
+      const { status } = await doResetpass_api(data)
       status &&
         (() => {
-          okMsg('手机号码验证成功')
+          okMsg('重设密码成功')
           setTimeout(() => {
-            router.push(
-              loginToUrl
-                ? '/resetpass?acode=' + data.acode + '&mobile=' + data.mobile + '&url=' + loginToUrl
-                : '/resetpass?acode=' + data.acode + '&mobile=' + data.mobile
-            )
+            router.push(loginToUrl ? '/login?url=' + loginToUrl : '/login')
           }, 500)
         })()
     }

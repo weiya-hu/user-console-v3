@@ -63,15 +63,14 @@
           </el-form>
           <div class="fsc to_register">
             <div>
-              <div v-if="topNavActive === 1" @click="router.push('/forget')">忘记密码？</div>
+              <div
+                v-if="topNavActive === 1"
+                @click="router.push(loginToUrl ? '/forget?url=' + loginToUrl : '/forget')"
+              >
+                忘记密码？
+              </div>
             </div>
-            <div
-              @click="
-                router.push(
-                  loginToUrl ? '/register?url=' + encodeURIComponent(loginToUrl) : '/register'
-                )
-              "
-            >
+            <div @click="router.push(loginToUrl ? '/register?url=' + loginToUrl : '/register')">
               免费注册
             </div>
           </div>
