@@ -65,7 +65,15 @@
             <div>
               <div v-if="topNavActive === 1" @click="router.push('/forget')">忘记密码？</div>
             </div>
-            <div @click="router.push('/register')">免费注册</div>
+            <div
+              @click="
+                router.push(
+                  loginToUrl ? '/register?url=' + encodeURIComponent(loginToUrl) : '/register'
+                )
+              "
+            >
+              免费注册
+            </div>
           </div>
           <div class="fleximg other_login">
             <div class="fleximg other_login_item"><img src="@/assets/images/wechart.png" /></div>
@@ -79,7 +87,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import LoginInput from '@/components/LoginInput.vue'
+import LoginInput from '@/components/KzLoginInput.vue'
 import { mobileCheck, passCheck, okMsg, errMsg, getUrlParam } from '@/utils/index'
 import { doLogin } from '@/api/login'
 import { useRouter } from 'vue-router'
@@ -90,6 +98,7 @@ const topNavLineLeft = ref(0) //登录方式选择下面那条线移动效果lef
 const topNavActive = ref(0) //登录方式：0/1
 const chaptchaShow = ref(false) //图形验证码是否显示
 const userAgreeCheck = ref(false)
+const loginToUrl = getUrlParam('url')
 const formValue = ref<ILoginForm>({
   acode: '86',
 })
@@ -133,10 +142,11 @@ const onSubmit = (event: any) => {
         (() => {
           okMsg('登录成功')
           sessionStorage.setItem('islogin', '1')
-          const url = getUrlParam('url')
           setTimeout(() => {
-            window.location.href = url ? decodeURIComponent(url) : 'http://www.kzszh.com'
-          }, 800)
+            window.location.href = loginToUrl
+              ? decodeURIComponent(loginToUrl)
+              : 'http://www.kzszh.com'
+          }, 500)
         })()
       !status &&
         (() => {
@@ -148,7 +158,7 @@ const onSubmit = (event: any) => {
 
 const toUseragreement = (event: any) => {
   event.stopPropagation()
-  window.open(window.location.protocol + '//' + window.location.host + '/useragreement', '_blank')
+  window.open(window.location.origin + '/useragreement', '_blank')
 }
 </script>
 

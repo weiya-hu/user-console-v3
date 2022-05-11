@@ -3,7 +3,7 @@
     <div v-if="name === 'mobile'" class="flexl form_item">
       <div class="phoneselectpre">
         <el-form-item prop="acode">
-          <el-select v-model="modelValue.acode">
+          <el-select v-model="acode">
             <el-option
               v-for="(item, i) in areaNum"
               :key="i"
@@ -21,14 +21,14 @@
           <div class="acode_line"></div>
         </div>
         <el-form-item :prop="props.formName">
-          <el-input v-model="modelValue.mobile" placeholder="请输入手机号" autocomplete="off" />
+          <el-input v-model="mobile" placeholder="请输入手机号" autocomplete="off" />
         </el-form-item>
       </div>
     </div>
     <div v-if="name === 'mobileYZM'" class="flexl form_item">
       <div class="login_label">验证码</div>
       <el-form-item :prop="props.formName">
-        <el-input v-model="modelValue.sms" placeholder="请输入验证码" autocomplete="off" />
+        <el-input v-model="sms" placeholder="请输入验证码" autocomplete="off" />
       </el-form-item>
       <div v-if="getYZMflag" className="getyzmTXTtime getyzmTXT">{{ mobileYZMnum }}'后重新获取</div>
       <div v-if="!getYZMflag" className="getyzmTXT" @click="getYZm()">{{ YZMtxt }}</div>
@@ -38,18 +38,12 @@
       <el-form-item :prop="props.formName">
         <el-input
           v-if="ispassword"
-          v-model="modelValue.pass"
+          v-model="pass"
           type="password"
           placeholder="请输入密码"
           autocomplete="off"
         />
-        <el-input
-          v-else
-          v-model="modelValue.pass"
-          type="text"
-          placeholder="请输入密码"
-          autocomplete="off"
-        />
+        <el-input v-else v-model="pass" type="text" placeholder="请输入密码" autocomplete="off" />
       </el-form-item>
       <div class="login_pass_img fleximg" @click="ispassword = !ispassword">
         <img v-if="ispassword" src="@/assets/images/login_close.png" />
@@ -59,7 +53,7 @@
     <div v-if="name === 'captcha'" class="fsc login_captcha">
       <div class="form_item login_captcha_item flexl">
         <el-form-item :prop="props.formName">
-          <el-input v-model="modelValue[formName]" placeholder="请输入验证码" autocomplete="off" />
+          <el-input v-model="captchaV" placeholder="请输入验证码" autocomplete="off" />
         </el-form-item>
       </div>
       <div class="chaptcha_img fleximg" @click="getCaptcha"><img :src="captcha" /></div>
@@ -67,14 +61,14 @@
     <div v-if="name === 'invite_code'" class="flexl form_item">
       <div class="login_label">邀请码</div>
       <el-form-item :prop="props.formName">
-        <el-input v-model="modelValue.sms" placeholder="请输入邀请码" autocomplete="off" />
+        <el-input v-model="invite_code" placeholder="请输入邀请码" autocomplete="off" />
       </el-form-item>
       <div className="getyzmTXT invite_code_end">选填</div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import areaNum from '@/utils/areaNum'
 import { telReg, okMsg, errMsg } from '@/utils/index'
 import { sendSms, sendRegsms, sendResetsms, captchaGet } from '@/api/login'
@@ -89,6 +83,7 @@ const props = withDefaults(
   }>(),
   {}
 )
+const emit = defineEmits(['update:modelValue'])
 const getYZMflag = ref(false) //获取验证码的开关，为true后才能获取验证码，到时候后为false关闭
 const mobileYZMnum = ref(120)
 const YZMtxt = ref('获取验证码')
@@ -96,6 +91,21 @@ const YZMtxt = ref('获取验证码')
 const ispassword = ref(true) //用于切换密码框的input为password或者text
 
 const captcha = ref()
+
+const vModel = (key: string) => {
+  return {
+    get: () => props.modelValue[key],
+    set: (val: any) => {
+      emit('update:modelValue', { ...props.modelValue, [key]: val })
+    },
+  }
+}
+const invite_code = computed(vModel('invite_code'))
+const pass = computed(vModel('pass'))
+const mobile = computed(vModel('mobile'))
+const acode = computed(vModel('acode'))
+const sms = computed(vModel('sms'))
+const captchaV = computed(vModel('captcha'))
 
 //获取验证码按钮
 const getYZm = async () => {

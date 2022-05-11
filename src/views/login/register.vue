@@ -34,16 +34,19 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
-import LoginInput from '@/components/LoginInput.vue'
-import { mobileCheck, passCheck, okMsg, errMsg } from '@/utils/index'
+import LoginInput from '@/components/KzLoginInput.vue'
+import { mobileCheck, passCheck, okMsg, errMsg, getUrlParam } from '@/utils/index'
 import { doRegister } from '@/api/login'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const userAgreeCheck = ref(false)
 const registerFormRef = ref()
+const loginToUrl = getUrlParam('url')
+const code = sessionStorage.getItem('inviteCode') ? sessionStorage.getItem('inviteCode') : ''
 const formValue = ref<ILoginForm>({
   acode: '86',
+  invite_code: sessionStorage.getItem('inviteCode') || undefined,
 })
 const registerRules = ref({
   mobile: [
@@ -76,8 +79,10 @@ const onRegister = (event: any) => {
           okMsg('注册成功')
           sessionStorage.setItem('islogin', '1')
           setTimeout(() => {
-            router.push('/')
-          }, 800)
+            window.location.href = loginToUrl
+              ? decodeURIComponent(loginToUrl)
+              : 'http://www.kzszh.com'
+          }, 500)
         })()
     }
   })
@@ -85,7 +90,7 @@ const onRegister = (event: any) => {
 
 const toUseragreement = (event: any) => {
   event.stopPropagation()
-  window.open(window.location.protocol + '//' + window.location.host + '/useragreement', '_blank')
+  window.open(window.location.origin + '/useragreement', '_blank')
 }
 </script>
 <style lang="scss" scoped>

@@ -28,10 +28,10 @@ interface IPageParams {
  * @name 登录表单类型
  */
 interface ILoginForm {
-  mobile?: number
+  mobile?: string
   acode?: string
   sms?: string
   pass?: string
   captcha?: string
-  invite_code?: string
+  invite_code?: any
 }

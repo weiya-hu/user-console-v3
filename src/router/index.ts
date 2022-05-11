@@ -31,6 +31,12 @@ export const routes: RouteRecordRaw[] = [
     meta: { title: '忘记密码' },
   },
   {
+    path: '/useragreement',
+    name: 'Useragreement',
+    component: () => import('@/views/login/useragreement.vue'),
+    meta: { title: '用户须知' },
+  },
+  {
     path: '/',
     name: 'Layout',
     component: () => import('@/views/layout.vue'),
