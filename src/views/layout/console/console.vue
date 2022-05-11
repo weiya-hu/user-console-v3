@@ -32,6 +32,7 @@
 
 <script setup lang="ts">
 import KzEmpty from '@/components/KzEmpty.vue'
+import { ref } from "vue";
 </script>
 
 <style lang="scss" scoped>
@@ -44,7 +45,11 @@ import KzEmpty from '@/components/KzEmpty.vue'
       padding: 0 16px 12px;
       position: relative;
       height: 162px;
+      margin-right: 16px;
       background-color: aqua;
+      &:last-child{
+        margin-right: 0;
+      }
     }
     .item_img {
       width: 60px;

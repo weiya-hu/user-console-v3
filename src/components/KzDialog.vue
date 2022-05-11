@@ -6,6 +6,7 @@
     :show-close="type != 'kf'"
     :custom-class="type == 'kf' ? 'kf_dialog my_dialog' : 'my_dialog'"
     @close="close"
+    append-to-body
   >
     <template v-if="type == 'kf'" #title>
       <div class="fcc kf_title">联系客服</div>

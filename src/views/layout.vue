@@ -31,8 +31,8 @@
       <el-col class="layout_nav" :class="isSmall && 'no_sec'">
         <KzLeftNav ref="leftNavRef" @change="onChangeLeftNav" />
       </el-col>
-      <el-col class="layout_content" :class="$route.meta.father && 'layout_details_page'">
-        <KzDetailsHeader v-if="$route.meta.father" />
+      <el-col class="layout_content" :class="$route.path !== '/console' && 'layout_details_page'">
+        <KzDetailsHeader v-if="$route.path !== '/console'" ref="detailsHeaderRef"/>
         <div v-if="$route.meta.scroll" class="layout_content_box" style="height: 100%">
           <router-view v-slot="{ Component }">
             <transition name="fade">
@@ -92,9 +92,11 @@ const route = useRoute()
 const router = useRouter()
 const routers = router.getRoutes()
 const leftNavRef = ref()
+const detailsHeaderRef = ref()
 onBeforeRouteUpdate((to, from) => {
   leftNavRef.value.getSecNav(to.meta.father || to.path)
   leftNavRef.value.changeFlag(to.path === '/console' ? false : true)
+  detailsHeaderRef.value && detailsHeaderRef.value.getCrumbs(to)
 
   if (from.meta.keepAlive && to.meta.father == from.path) {
     // 从列表进入详情 缓存列表

@@ -172,7 +172,7 @@ export const routes: RouteRecordRaw[] = [
                 path: '/manage/user/settings',
                 name: 'Settings',
                 component: () => import('@/views/layout/rView.vue'),
-                redirect: '/manage/user/product/myproduct',
+                redirect: '/manage/user/settings/myinfo',
                 meta: { title: '账号设置' },
                 children: [
                   {
@@ -186,6 +186,12 @@ export const routes: RouteRecordRaw[] = [
                     name: 'Safe',
                     component: () => import('@/views/layout/manage/user/settings/safe.vue'),
                     meta: { title: '账号安全' },
+                  },
+                  {
+                    path: '/manage/user/settings/changepass',
+                    name: 'ChangePass',
+                    component: () => import('@/views/layout/manage/user/settings/changePass.vue'),
+                    meta: { title: '修改密码', father: '/manage/user/settings/safe'},
                   },
                 ],
               },
