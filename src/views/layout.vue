@@ -97,6 +97,16 @@ onBeforeRouteUpdate((to, from) => {
   if (to.path === '/console') {
     leftNavRef.value.changeFlag(true)
   }
+
+  if (from.meta.keepAlive && to.meta.father == from.path) {
+    // 从列表进入详情 缓存列表
+    store.setKeepList([from.name as string])
+  } else if (to.meta.keepAlive && from.meta.father == to.path) {
+    // 从详情返回上一级 什么都不做
+  } else {
+    // 兄弟列表切换 或者 详情进入非父级列表
+    store.setKeepList([])
+  }
 })
 onMounted(() => {
   leftNavRef.value && leftNavRef.value.getSecNav()

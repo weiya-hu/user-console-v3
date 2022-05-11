@@ -28,7 +28,7 @@
 const props = withDefaults(
   defineProps<{
     modelValue: number // 激活的
-    tabs: { title: string; [propName: string]: any }[]
+    tabs: any[] // [{}] 形式，默认使用title字段
   }>(),
   {
     modelValue: 0,

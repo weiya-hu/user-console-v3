@@ -5,7 +5,10 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
  * @name 保证唯一 大驼峰 例如 UserInfo
  * @component 需要重定向的空路由页面统一用rView.vue
  * @redirect 重定向 非必写
- * @meta title：导航标题；father：在导航中不出现的详情页需要此属性，值为在此页面时需要激活的导航的path；scroll：页面中是否使用单独的el-scrollbar组件
+ * @meta title：导航标题；
+ * father：在导航中不出现的详情页需要此属性，值为在此页面时需要激活的导航的path；
+ * keepAlive: 页面是否需要缓存，一般在父级进入详情页时，父级需要缓存则给父级添加，父级页面还需要导出name；
+ * scroll：页面中是否使用单独的el-scrollbar组件；
  * @ 子页面都必须写在Layout的children下，因为左侧导航是直接取Layout下children
  */
 export const routes: RouteRecordRaw[] = [
@@ -129,7 +132,7 @@ export const routes: RouteRecordRaw[] = [
                     path: '/manage/user/product/myproduct',
                     name: 'MyProduct',
                     component: () => import('@/views/layout/manage/user/product/myProduct.vue'),
-                    meta: { title: '我的产品与服务' },
+                    meta: { title: '我的产品与服务', keepAlive: true },
                   },
                   {
                     path: '/manage/user/product/productdetails',

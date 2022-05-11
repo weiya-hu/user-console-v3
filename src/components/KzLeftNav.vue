@@ -1,7 +1,7 @@
 <template>
   <div id="kz_left_nav_box" :class="flag && 'col_nav'">
     <div ref="leftLine" class="left_vline" :style="{ transform: `translate(0, ${top}px)` }"></div>
-    <div class="kz_left_nav">
+    <div class="kz_left_nav" @mouseenter="changeFlag(false)" @mouseleave="changeFlag(true)">
       <div class="fold_btn fcs fjend">
         <div class="fold_icon chover" @click="changeFlag()">1</div>
       </div>
@@ -80,10 +80,12 @@ import { routes } from '@/router/index'
 import { Menu as MyIconMenu } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'
 
+const route = useRoute()
 const navRoutes = routes
   .find((v) => v.name === 'Layout')!
   .children!.filter((v) => v.name !== 'Console')
 const flag = ref(false) // 次级导航是否展示 true 展示
+flag.value = route.path === '/console' ? false : true
 const changeFlag = (show?: boolean) => {
   flag.value = typeof show === 'undefined' ? !flag.value : show
   emit('change', secNav.value ? false : flag.value)
@@ -91,7 +93,6 @@ const changeFlag = (show?: boolean) => {
 // 收缩导航时触发，返回是否需要改变左侧导航的宽
 const emit = defineEmits(['change'])
 
-const route = useRoute()
 const secNav = ref<RouteRecordRaw>()
 const nowPath = ref('')
 const getSecNav = (path?: string) => {

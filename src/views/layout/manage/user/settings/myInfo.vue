@@ -2,7 +2,7 @@
   <div class="my_info_page flex">
     <KzStepTab v-model="active" :tabs="tabs" @change="change">
       <template #default="{ item }">
-        {{ item.title }}
+        {{ item.hhh }}
       </template>
     </KzStepTab>
     <div class="info_content f1">
@@ -18,6 +18,7 @@
           <el-button :class="tab == 2 && 'btn_tab_active'" @click="tab = 2">视频</el-button>
           <el-button :class="tab == 3 && 'btn_tab_active'" @click="tab = 3">视频</el-button>
         </el-button-group>
+
         <div class="mt20">
           <el-button type="info" plain>kkkk</el-button>
           <el-button class="bdc_btn">kkkk</el-button>
@@ -31,7 +32,7 @@
 <script setup lang="ts">
 import KzStepTab from '@/components/KzStepTab.vue'
 import { ref, onMounted } from 'vue'
-const tabs = ref([{ title: '哈哈哈哈' }, { title: '嘻嘻嘻嘻' }, { title: '啊啊啊啊' }])
+const tabs = ref([{ hhh: '哈哈哈哈' }, { hhh: '嘻嘻嘻嘻' }, { hhh: '啊啊啊啊' }])
 const active = ref(0)
 let boxHeight: number
 let el: NodeListOf<HTMLElement>
