@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import KzEmpty from '@/components/KzEmpty.vue'
-import { ref } from "vue";
+import { ref } from 'vue'
 </script>
 
 <style lang="scss" scoped>
@@ -47,7 +47,7 @@ import { ref } from "vue";
       height: 162px;
       margin-right: 16px;
       background-color: aqua;
-      &:last-child{
+      &:last-child {
         margin-right: 0;
       }
     }

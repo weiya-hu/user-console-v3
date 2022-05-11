@@ -21,21 +21,20 @@
   </div>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <style lang="scss" scoped>
-.safe_page{
-  .card_body{
-    .item{
+.safe_page {
+  .card_body {
+    .item {
       display: flex;
       align-items: center;
       margin-bottom: 32px;
-      .item_title{
+      .item_title {
         color: #909399;
         margin-right: 40px;
       }
-      .item_content{
+      .item_content {
         color: #303133;
         width: 360px;
       }

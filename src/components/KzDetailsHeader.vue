@@ -1,10 +1,10 @@
 <template>
   <div class="details_header fcs">
-    <div class="fcs back" @click="$router.back()" v-show="crumbs.length > 2">
+    <div v-show="crumbs.length > 2" class="fcs back" @click="$router.back()">
       <el-icon><arrow-left /></el-icon>
       <div>返回</div>
     </div>
-    <div class="vline" v-show="crumbs.length > 2"></div>
+    <div v-show="crumbs.length > 2" class="vline"></div>
     <el-breadcrumb separator="/">
       <el-breadcrumb-item
         v-for="v in crumbs"

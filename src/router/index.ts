@@ -191,7 +191,7 @@ export const routes: RouteRecordRaw[] = [
                     path: '/manage/user/settings/changepass',
                     name: 'ChangePass',
                     component: () => import('@/views/layout/manage/user/settings/changePass.vue'),
-                    meta: { title: '修改密码', father: '/manage/user/settings/safe'},
+                    meta: { title: '修改密码', father: '/manage/user/settings/safe' },
                   },
                 ],
               },

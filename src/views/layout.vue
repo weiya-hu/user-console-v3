@@ -32,7 +32,7 @@
         <KzLeftNav ref="leftNavRef" @change="onChangeLeftNav" />
       </el-col>
       <el-col class="layout_content" :class="$route.path !== '/console' && 'layout_details_page'">
-        <KzDetailsHeader v-if="$route.path !== '/console'" ref="detailsHeaderRef"/>
+        <KzDetailsHeader v-if="$route.path !== '/console'" ref="detailsHeaderRef" />
         <div v-if="$route.meta.scroll" class="layout_content_box" style="height: 100%">
           <router-view v-slot="{ Component }">
             <transition name="fade">
