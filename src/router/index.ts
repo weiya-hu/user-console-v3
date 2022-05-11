@@ -38,7 +38,8 @@ export const routes: RouteRecordRaw[] = [
       if (sessionStorage.getItem('islogin')) {
         return '/console'
       }
-      return '/login'
+      const url = '/login?url=' + encodeURIComponent(window.location.origin + '/console')
+      return url
     },
     meta: { title: '康洲数智' },
     children: [

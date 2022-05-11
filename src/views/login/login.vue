@@ -46,17 +46,19 @@
                 name="captcha"
                 form-name="captcha"
               />
-              <LoginInput v-model="formValue" name="password" form-name="pass" label="密码"/>
+              <LoginInput v-model="formValue" name="password" form-name="pass" label="密码" />
             </div>
             <el-form-item>
               <button class="submit_button" type="submit" @click="onSubmit($event)">登录</button>
             </el-form-item>
             <div class="flexl user_agree" @click="userAgreeCheck = !userAgreeCheck">
               <div class="fleximg user_agree_img">
-                <img v-if="userAgreeCheck" src="@/assets/images/login_select.png">
-                <img v-else src="@/assets/images/login_unselect.png">
+                <img v-if="userAgreeCheck" src="@/assets/images/login_select.png" />
+                <img v-else src="@/assets/images/login_unselect.png" />
               </div>
-              <div class="user_agree_txt">我已阅读并同意<span @click="toUseragreement($event)">《康洲数智用户须知》</span> </div>
+              <div class="user_agree_txt">
+                我已阅读并同意<span @click="toUseragreement($event)">《康洲数智用户须知》</span>
+              </div>
             </div>
           </el-form>
           <div class="fsc to_register">
@@ -117,7 +119,7 @@ const onSubmit = (event: any) => {
   event.preventDefault()
   loginFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
-      if(!userAgreeCheck.value){
+      if (!userAgreeCheck.value) {
         errMsg('请阅读并同意《康洲数智用户须知》')
         return
       }
@@ -131,9 +133,9 @@ const onSubmit = (event: any) => {
         (() => {
           okMsg('登录成功')
           sessionStorage.setItem('islogin', '1')
-          let url = getUrlParam('url')
+          const url = getUrlParam('url')
           setTimeout(() => {
-            window.location.href= url ? decodeURIComponent(url) : 'http://www.kzszh.com'
+            window.location.href = url ? decodeURIComponent(url) : 'http://www.kzszh.com'
           }, 800)
         })()
       !status &&
@@ -144,9 +146,9 @@ const onSubmit = (event: any) => {
   })
 }
 
-const toUseragreement=(event:any)=>{
-  event.stopPropagation();
-  window.open(window.location.protocol + '//' + window.location.host + '/useragreement', "_blank");
+const toUseragreement = (event: any) => {
+  event.stopPropagation()
+  window.open(window.location.protocol + '//' + window.location.host + '/useragreement', '_blank')
 }
 </script>
 
@@ -217,19 +219,19 @@ const toUseragreement=(event:any)=>{
           color: #fff;
           cursor: pointer;
         }
-        .user_agree{
+        .user_agree {
           cursor: pointer;
-          .user_agree_img{
+          .user_agree_img {
             width: 14px;
             margin-right: 9px;
           }
-          .user_agree_txt{
+          .user_agree_txt {
             font-size: 12px;
             color: #363636;
             line-height: 12px;
             font-weight: 400;
-            span{
-              color: #304F97;
+            span {
+              color: #304f97;
             }
           }
         }

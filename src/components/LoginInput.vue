@@ -34,7 +34,7 @@
       <div v-if="!getYZMflag" className="getyzmTXT" @click="getYZm()">{{ YZMtxt }}</div>
     </div>
     <div v-if="name === 'password'" class="flexl form_item">
-      <div class="login_label">{{props.label}}</div>
+      <div class="login_label">{{ props.label }}</div>
       <el-form-item :prop="props.formName">
         <el-input
           v-if="ispassword"
@@ -227,8 +227,8 @@ props.name === 'captcha' && getCaptcha()
   .getyzmTXTtime {
     color: #999999;
   }
-  .invite_code_end{
-    color: #BBBBBB;
+  .invite_code_end {
+    color: #bbbbbb;
   }
   .login_pass_img {
     width: 16px;

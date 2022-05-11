@@ -10,27 +10,30 @@
           <el-form ref="registerFormRef" :model="formValue" :rules="registerRules">
             <LoginInput v-model="formValue" name="mobile" form-name="mobile" />
             <LoginInput v-model="formValue" name="mobileYZM" form-name="sms" type="register" />
-            <LoginInput v-model="formValue" name="password" form-name="pass" label="登录密码"/>
+            <LoginInput v-model="formValue" name="password" form-name="pass" label="登录密码" />
             <LoginInput v-model="formValue" name="invite_code" form-name="invite_code" />
             <el-form-item>
-              <button class="submit_button" type="submit" @click="onRegister($event)">免费注册</button>
+              <button class="submit_button" type="submit" @click="onRegister($event)">
+                免费注册
+              </button>
             </el-form-item>
             <div class="flexl user_agree" @click="userAgreeCheck = !userAgreeCheck">
               <div class="fleximg user_agree_img">
-                <img v-if="userAgreeCheck" src="@/assets/images/login_select.png">
-                <img v-else src="@/assets/images/login_unselect.png">
+                <img v-if="userAgreeCheck" src="@/assets/images/login_select.png" />
+                <img v-else src="@/assets/images/login_unselect.png" />
               </div>
-              <div class="user_agree_txt">我已阅读并同意<span @click="toUseragreement($event)">《康洲数智用户须知》</span> </div>
+              <div class="user_agree_txt">
+                我已阅读并同意<span @click="toUseragreement($event)">《康洲数智用户须知》</span>
+              </div>
             </div>
           </el-form>
         </div>
       </div>
     </div>
-    
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 import LoginInput from '@/components/LoginInput.vue'
 import { mobileCheck, passCheck, okMsg, errMsg } from '@/utils/index'
 import { doRegister } from '@/api/login'
@@ -59,7 +62,7 @@ const onRegister = (event: any) => {
   event.preventDefault()
   registerFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
-      if(!userAgreeCheck.value){
+      if (!userAgreeCheck.value) {
         errMsg('请阅读并同意《康洲数智用户须知》')
         return
       }
@@ -80,41 +83,40 @@ const onRegister = (event: any) => {
   })
 }
 
-const toUseragreement=(event:any)=>{
-  event.stopPropagation();
-  window.open(window.location.protocol + '//' + window.location.host + '/useragreement', "_blank");
+const toUseragreement = (event: any) => {
+  event.stopPropagation()
+  window.open(window.location.protocol + '//' + window.location.host + '/useragreement', '_blank')
 }
-
 </script>
 <style lang="scss" scoped>
-.register{
+.register {
   height: 100vh;
   overflow: auto;
   background: url('@/assets/images/register-background.jpg') no-repeat;
   background-size: cover;
-  .register_main{
+  .register_main {
     width: 900px;
     margin: 9.3vh auto 0;
     .logo_img {
       width: 200px;
       cursor: pointer;
     }
-    .register_content{
+    .register_content {
       margin-top: 80px;
-      .register_content_title{
+      .register_content_title {
         width: 900px;
         height: 90px;
-        background: #304F97;
+        background: #304f97;
         font-size: 26px;
-        color: #FFFFFF;
+        color: #ffffff;
         text-align: center;
         line-height: 26px;
         font-weight: 600;
       }
-      .register_content_main{
+      .register_content_main {
         width: 900px;
         padding: 50px 0 50px 260px;
-        background: rgba(255,255,255,0.7);
+        background: rgba(255, 255, 255, 0.7);
         .submit_button {
           width: 380px;
           height: 52px;
@@ -128,19 +130,19 @@ const toUseragreement=(event:any)=>{
           color: #fff;
           cursor: pointer;
         }
-        .user_agree{
+        .user_agree {
           cursor: pointer;
-          .user_agree_img{
+          .user_agree_img {
             width: 14px;
             margin-right: 9px;
           }
-          .user_agree_txt{
+          .user_agree_txt {
             font-size: 12px;
             color: #363636;
             line-height: 12px;
             font-weight: 400;
-            span{
-              color: #304F97;
+            span {
+              color: #304f97;
             }
           }
         }

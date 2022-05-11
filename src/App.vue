@@ -277,6 +277,7 @@ img {
   }
 }
 .kz_card {
+  // 卡片
   background-color: #fff;
   border-radius: 8px;
   .card_title {

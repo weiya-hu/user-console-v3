@@ -340,7 +340,7 @@ export function getKzMyStatus(key: any) {
 /**
  * 登录注册电话号码验证
  */
- export function mobileCheck(rule: any, value: string, callback: any){
+export function mobileCheck(rule: any, value: string, callback: any) {
   if (telReg.test(value)) {
     callback()
   } else {
@@ -351,7 +351,7 @@ export function getKzMyStatus(key: any) {
 /**
  * 登录注册密码验证
  */
- export function passCheck(rule: any, value: string, callback: any){
+export function passCheck(rule: any, value: string, callback: any) {
   if (passReg.test(value)) {
     callback()
   } else {
@@ -362,8 +362,11 @@ export function getKzMyStatus(key: any) {
 /**
  * 获取页面参数
  */
- export function getUrlParam(name:string){
-  var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-  var r = window.location.search.substring(1).match(reg);
-  if(r!=null)return  decodeURI(r[2]); return null;
+export function getUrlParam(name: string) {
+  const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
+  const r = window.location.search.substring(1).match(reg)
+  if (r != null) {
+    return decodeURI(r[2])
+  }
+  return null
 }

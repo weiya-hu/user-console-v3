@@ -38,7 +38,7 @@ axios.interceptors.response.use(
         if (response.errno == 10620) {
           const isLogin = sessionStorage.getItem('islogin')
           isLogin && sessionStorage.removeItem('islogin')
-          router.replace('/login')
+          router.replace('/login?url=' + encodeURIComponent(window.location.origin + '/console'))
         }
       }
     }

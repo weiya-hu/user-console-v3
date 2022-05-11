@@ -27,7 +27,7 @@ interface IPageParams {
 /**
  * @name 登录表单类型
  */
- interface ILoginForm {
+interface ILoginForm {
   mobile?: number
   acode?: string
   sms?: string

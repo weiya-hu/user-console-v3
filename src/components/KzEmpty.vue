@@ -1,7 +1,8 @@
 <template>
-  <div class="my_empty fcc fc">
+  <div class="kz_empty fcc fc">
     <img :src="empty_i" alt="" />
-    <div>暂无相关数据</div>
+    <div class="kz_empty_text">{{ msg }}</div>
+    <slot></slot>
   </div>
 </template>
 
@@ -11,16 +12,27 @@
  * @author chn
  */
 import empty_i from '@/assets/images/empty.png'
+const props = withDefaults(
+  defineProps<{
+    msg?: string //提示文本
+  }>(),
+  {
+    msg: '暂无数据',
+  }
+)
 </script>
 
 <style scoped lang="scss">
-.my_empty {
-  font-size: 14px;
-  color: #666666;
-
+.kz_empty {
+  .kz_empty_text {
+    font-size: 14px;
+    color: #c0c4cc;
+    margin-bottom: 32px;
+  }
   img {
-    width: 300px;
-    height: 200px;
+    margin-bottom: 8px;
+    width: 99px;
+    height: 96px;
   }
 }
 </style>

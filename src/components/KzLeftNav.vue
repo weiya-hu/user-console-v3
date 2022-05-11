@@ -158,19 +158,18 @@ defineExpose({
 
 <style lang="scss" scoped>
 #kz_left_nav_box {
-  padding-left: 16px;
-  padding-right: 8px;
-  transition: padding var(--el-transition-duration-fast);
   height: 100%;
   display: flex;
   position: relative;
   .kz_left_nav {
     font-size: 14px;
     overflow: hidden;
-    padding-right: 8px;
-    transition: width var(--el-transition-duration);
+    padding: 0 16px;
+    transition: width var(--el-transition-duration), padding var(--el-transition-duration-fast);
     width: 100%;
     flex-shrink: 0;
+    position: relative;
+    z-index: 11;
     .fold_btn {
       height: 40px;
       .fold_icon {
@@ -234,10 +233,9 @@ defineExpose({
     }
   }
   &.col_nav {
-    padding-left: 8px;
-    padding-right: 0;
     .kz_left_nav {
-      width: 56px;
+      width: 64px;
+      padding: 0 8px;
       .nav_item_lv1 {
         .all_text {
           margin-right: 0;

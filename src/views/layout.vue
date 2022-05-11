@@ -94,9 +94,7 @@ const routers = router.getRoutes()
 const leftNavRef = ref()
 onBeforeRouteUpdate((to, from) => {
   leftNavRef.value.getSecNav(to.meta.father || to.path)
-  if (to.path === '/console') {
-    leftNavRef.value.changeFlag(true)
-  }
+  leftNavRef.value.changeFlag(to.path === '/console' ? false : true)
 
   if (from.meta.keepAlive && to.meta.father == from.path) {
     // 从列表进入详情 缓存列表
