@@ -196,13 +196,13 @@ export const routes: RouteRecordRaw[] = [
             name: 'Company',
             component: () => import('@/views/layout/rView.vue'),
             redirect: '/manage/company/companyinfo',
-            meta: { title: '企业管理' },
+            meta: { title: '团队管理' },
             children: [
               {
                 path: '/manage/company/companyinfo',
                 name: 'CompanyInfo',
                 component: () => import('@/views/layout/manage/company/companyInfo.vue'),
-                meta: { title: '企业信息' },
+                meta: { title: '团队信息' },
               },
               {
                 path: '/manage/company/authentication',
@@ -214,7 +214,19 @@ export const routes: RouteRecordRaw[] = [
                 path: '/manage/company/companyservice',
                 name: 'CompanyService',
                 component: () => import('@/views/layout/manage/company/companyService.vue'),
-                meta: { title: '企业服务' },
+                meta: { title: '团队产品与服务' },
+              },
+              {
+                path: '/manage/company/personnelmanage',
+                name: 'PersonnelManage',
+                component: () => import('@/views/layout/manage/company/personnelManage.vue'),
+                meta: { title: '人员管理' },
+              },
+              {
+                path: '/manage/company/rolepermission',
+                name: 'RolePermission',
+                component: () => import('@/views/layout/manage/company/rolePermission.vue'),
+                meta: { title: '角色权限' },
               },
             ],
           },

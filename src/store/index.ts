@@ -40,6 +40,8 @@ export const mainStore = defineStore('mainStore', () => {
           .then((res: IRes) => {
             state.addressList = res.body
             state.addressHash = getHash(res.body, 'code')
+            console.log(state.addressList)
+
             resolve(state.addressList)
           })
           .catch((error: any) => {

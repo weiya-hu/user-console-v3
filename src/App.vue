@@ -290,4 +290,44 @@ img {
     color: $color333;
   }
 }
+.rz_dialog_hll {
+  .el-dialog .el-dialog__header {
+    border-bottom: none;
+  }
+}
+.add_dialog {
+  .el-dialog__body {
+    padding-top: 15px;
+  }
+  .mid_dig {
+    margin-top: 32px;
+    div {
+      font-weight: bold;
+      color: #303133;
+      font-family: PingFangSC-Medium, PingFang SC;
+      margin-bottom: 8px;
+    }
+    img {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto;
+    }
+    .fresh_code {
+      color: #2150ec;
+      margin-top: 8px;
+      font-size: 12px;
+      padding-bottom: 24px;
+    }
+    .mes {
+      color: #909399;
+      font-size: 12px;
+      font-weight: normal;
+      margin-bottom: 24px;
+    }
+    .el-input__wrapper {
+      width: 240px;
+      height: 40px;
+    }
+  }
+}
 </style>
