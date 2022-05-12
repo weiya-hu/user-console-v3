@@ -38,7 +38,9 @@
                   <el-icon color="#FF4736 "><Warning /></el-icon>
                 </div>
                 <div class="handle">
-                  <el-link type="primary" @click="$router.push('/manage/user/settings/realname')">实名认证</el-link>
+                  <el-link type="primary" @click="$router.push('/manage/user/settings/realname')"
+                    >实名认证</el-link
+                  >
                 </div>
               </div>
               <div class="info_txt fsc">
@@ -147,7 +149,9 @@
                   <div class="infoname_txt">{{ userInfoDate.invite_users }}</div>
                 </div>
                 <div class="handle">
-                  <el-link type="primary" @click="$router.push('/manage/user/settings/invitation')">查看</el-link>
+                  <el-link type="primary" @click="$router.push('/manage/user/settings/invitation')"
+                    >查看</el-link
+                  >
                 </div>
               </div>
             </div>
