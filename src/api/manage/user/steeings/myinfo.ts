@@ -9,14 +9,14 @@ export const userInfo_api = (): Promise<IRes> => {
   return get('user ', '/user/information.get')
 }
 // 修改用户中心基本信息
-export const userInfoEdit_api = (data: { 
-  "birth"?: number,
-  "city"?: number | string,
-  "district"?: number | string,
-  "head"?: string,
-  "name"?: string,
-  "province"?: number | string,
-  "sex"?: 0 | 1 | 2 
+export const userInfoEdit_api = (data: {
+  birth?: number
+  city?: number | string
+  district?: number | string
+  head?: string
+  name?: string
+  province?: number | string
+  sex?: 0 | 1 | 2
 }): Promise<IRes> => {
   return post('user ', '/user/information.up', data, true)
 }

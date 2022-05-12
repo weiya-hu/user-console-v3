@@ -1,12 +1,12 @@
 <template>
   <div class="my_dialog">
     <el-dialog
-      v-model="modelValue"
+      ref="editRef"
+      v-model="show"
       width="500px"
-      @close="close"
       :show-close="true"
       custom-class="info_dialog"
-      ref="editRef"
+      @close="close"
     >
       <template #title>
         <div class="my_title">
@@ -22,31 +22,26 @@
         </div>
       </template>
       <template #default>
-        <div class="fcc fc" v-if="info_type == 'name'">
+        <div v-if="info_type == 'name'" class="fcc fc">
           <el-input v-model="userInfoTxt" placeholder="请输入昵称" />
         </div>
-        <div class="fcc fc" v-if="info_type == 'sex'">
+        <div v-if="info_type == 'sex'" class="fcc fc">
           <el-select v-model="userInfoTxt" placeholder="请选择">
             <el-option label="男" value="0" />
             <el-option label="女" value="1" />
           </el-select>
         </div>
-        <div class="fcc fc date_picker_box" v-if="info_type == 'birth'">
+        <div v-if="info_type == 'birth'" class="fcc fc date_picker_box">
           <el-date-picker
             v-model="userInfoTxt"
             placeholder="请选择你的出生日期"
             value-format="x"
             :clear-icon="userInfoTxt ? CircleCloseFilled : ''"
           />
-          <el-icon size="14px" v-show="!userInfoTxt" class="date_icon"><calendar /></el-icon>
+          <el-icon v-show="!userInfoTxt" size="14px" class="date_icon"><calendar /></el-icon>
         </div>
-        <div class="fcc fc" v-if="info_type === 'addr'">
-          <MyCascader
-            v-model="addArr"
-            type="address"
-            ref="addrCRef"
-            @change="changeItemLables()"
-          />
+        <div v-if="info_type === 'addr'" class="fcc fc">
+          <KzCascader ref="addrCRef" v-model="addArr" type="address" @change="changeItemLables()" />
         </div>
       </template>
       <template #footer>
@@ -57,8 +52,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import MyCascader from '@/components/MyCascader.vue'
+import { ref, computed } from 'vue'
+import KzCascader from '@/components/KzCascader.vue'
 import { CircleCloseFilled, Calendar } from '@element-plus/icons-vue'
 import { log } from 'console'
 
@@ -77,6 +72,14 @@ const props = withDefaults(
   }>(),
   {}
 )
+
+const show = computed({
+  get: () => props.modelValue,
+  set: (val) => {
+    emit('update:modelValue', val)
+  },
+})
+
 const editRef = ref()
 const addrCRef = ref()
 
@@ -89,14 +92,14 @@ const close = () => {
   emit('update:modelValue', false)
 }
 const comfirm = () => {
-  console.log(addArr.value);
+  console.log(addArr.value)
   // return
-  if(props.info_type === 'addr'){
-    const addObj:Record<string, number | string> = {}
-    const addHash:Record<number, string> = {
-      0:'province',
-      1:'city',
-      2:'district',
+  if (props.info_type === 'addr') {
+    const addObj: Record<string, number | string> = {}
+    const addHash: Record<number, string> = {
+      0: 'province',
+      1: 'city',
+      2: 'district',
     }
     addArr.value.forEach((v, i) => {
       v && (addObj[addHash[i]] = v)
@@ -104,7 +107,7 @@ const comfirm = () => {
     emit('comfirm', addObj)
     return
   }
-  emit('comfirm', { [props.info_type] : userInfoTxt.value})
+  emit('comfirm', { [props.info_type]: userInfoTxt.value })
 }
 </script>
 
@@ -121,12 +124,12 @@ const comfirm = () => {
     width: 452px;
     height: 40px;
   }
-  .date_picker_box{
+  .date_picker_box {
     position: relative;
-    :deep(.el-input__prefix){
+    :deep(.el-input__prefix) {
       display: none;
     }
-    .date_icon{
+    .date_icon {
       position: absolute;
       right: 10px;
       top: 50%;
@@ -134,5 +137,4 @@ const comfirm = () => {
     }
   }
 }
-
 </style>

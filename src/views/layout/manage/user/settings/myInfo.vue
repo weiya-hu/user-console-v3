@@ -11,16 +11,16 @@
           <div class="card_title">用户信息</div>
           <div class="card_container">
             <div class="card_content">
-              <div class="user_avater" v-loading="upLoading">
+              <div v-loading="upLoading" class="user_avater">
                 <KzMediaUpload
-                  @change="changes"
-                  ref="kzMediaUploadRef"
-                  @up-one-success="upSuccess"
                   v-if="!upLoading"
+                  ref="kzMediaUploadRef"
+                  @change="changes"
+                  @up-one-success="upSuccess"
                 >
                   <el-avatar :size="100" :src="imgUrl"></el-avatar>
                 </KzMediaUpload>
-                <el-avatar :size="100" :src="imgUrl" class="up_avatar" v-else></el-avatar>
+                <el-avatar v-else :size="100" :src="imgUrl" class="up_avatar"></el-avatar>
               </div>
               <div class="info_txt fsc">
                 <div class="infoname">
@@ -38,7 +38,7 @@
                   <el-icon color="#FF4736 "><Warning /></el-icon>
                 </div>
                 <div class="handle">
-                  <el-link type="primary" @click="">实名认证</el-link>
+                  <el-link type="primary">实名认证</el-link>
                 </div>
               </div>
               <div class="info_txt fsc">
@@ -85,7 +85,7 @@
                     <template #reference>
                       <el-link type="primary" class="qc_handle" @click="goCode">生成二维码</el-link>
                     </template>
-                    <div class="fcc" v-if="codeShow">
+                    <div v-if="codeShow" class="fcc">
                       <qrcode-vue
                         :value="
                           'https://' +
@@ -147,7 +147,7 @@
                   <div class="infoname_txt">{{ userInfoDate.invite_users }}</div>
                 </div>
                 <div class="handle">
-                  <el-link type="primary" @click="">查看</el-link>
+                  <el-link type="primary">查看</el-link>
                 </div>
               </div>
             </div>
@@ -166,7 +166,7 @@
                   <div class="infoname_txt">123</div>
                 </div>
                 <div class="handle">
-                  <el-link type="primary" @click="">管理</el-link>
+                  <el-link type="primary">管理</el-link>
                 </div>
               </div>
 
