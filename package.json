@@ -15,8 +15,10 @@
     "element-plus": "^2.1.11",
     "mitt": "^3.0.0",
     "pinia": "^2.0.14",
+    "qrcode.vue": "^3.3.3",
     "tinymce": "^6.0.2",
     "vue": "^3.2.25",
+    "vue-clipboard3": "^2.0.0",
     "vue-router": "^4.0.15"
   },
   "devDependencies": {
