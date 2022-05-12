@@ -1,8 +1,8 @@
 <template>
   <el-cascader
-    v-if="type == 'type'"
+    v-if="type === 'type'"
     ref="cRef"
-    v-model="modelValue"
+    v-model="valueArr"
     :options="typeList"
     :props="typeProps"
     placeholder="请选择行业"
@@ -12,7 +12,7 @@
   <el-cascader
     v-else
     ref="cRef"
-    v-model="modelValue"
+    v-model="valueArr"
     :options="addressList"
     :props="addrProps"
     placeholder="请选择地区"
@@ -32,12 +32,20 @@ import { get_Str } from '@/utils/index'
 const props = withDefaults(
   defineProps<{
     modelValue: any[]
-    type: string
+    type?: string
   }>(),
   {
     type: 'type',
   }
 )
+
+const valueArr = computed({
+  get: () => props.modelValue,
+  set: (val) => {
+    emit('update:modelValue', val)
+  },
+})
+
 const emit = defineEmits(['update:modelValue', 'change'])
 
 const store = mainStore()

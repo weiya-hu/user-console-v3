@@ -144,6 +144,7 @@ img {
     font-size: 16px;
     color: $color333;
     font-weight: 600;
+    padding: 20px 24px 16px;
     .el-dialog__title {
       font-size: 16px;
       color: $color333;
@@ -151,15 +152,19 @@ img {
       line-height: 1;
     }
   }
+  .el-dialog__headerbtn {
+    top: 3px;
+  }
   .el-dialog__body {
-    padding: 20px 24px;
+    padding: 16px 24px 0;
   }
   .el-dialog__footer {
-    padding: 12px 24px 24px;
+    padding: 20px 24px 24px;
   }
-  &.kf_dialog {
+  &.no_header_dialog {
     .el-dialog__header {
       border-bottom: none;
+      padding: 0;
     }
   }
 }

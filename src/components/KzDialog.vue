@@ -1,17 +1,17 @@
 <template>
   <el-dialog
     v-model="show"
-    :width="type == 'kf' ? '280px' : width"
-    :show-close="type != 'kf'"
-    :custom-class="type == 'kf' && 'kf_dialog'"
+    :width="width ? width : type === 'kf' ? '280px' : '500px'"
+    :show-close="!type"
+    :custom-class="type ? 'no_header_dialog' : ''"
     @close="close"
   >
-    <template #title>
-      <div :class="type === 'kf' && 'fcc'">{{ type === 'kf' ? '联系客服' : title }}</div>
+    <template v-if="type !== 'tip'" #title>
+      <div :class="type === 'kf' && 'fcc kf_title'">{{ type === 'kf' ? '联系客服' : title }}</div>
     </template>
     <template #default>
       <slot>
-        <div v-if="type == 'kf'" class="fcc fc">
+        <div v-if="type === 'kf'" class="fcc fc">
           <img :src="kf_code_i" alt="" />
           <div class="tip">请扫描上方二维码，联系客服人员</div>
         </div>
@@ -19,16 +19,16 @@
       </slot>
     </template>
     <template #footer>
-      <div v-if="type == 'kf'" class="fcc">
-        <el-button type="primary" @click="close">我知道了</el-button>
+      <div v-if="type === 'kf'" class="fcc long_btn">
+        <el-button type="primary" size="large" @click="close">我知道了</el-button>
       </div>
       <div v-else>
-        <div v-if="btn == 2" class="fcc">
+        <div v-if="btn === 2" class="fcc">
           <el-button @click="close">取消</el-button>
           <el-button type="primary" @click="sure">确定</el-button>
         </div>
         <div v-else class="fcc">
-          <el-button type="primary" @click="close">我知道了</el-button>
+          <el-button type="primary" size="large" @click="close">我知道了</el-button>
         </div>
       </div>
     </template>
@@ -47,16 +47,16 @@ const props = withDefaults(
     modelValue: boolean // 是否显示
     title?: string // 标题
     msg?: string // 内容
-    type?: string // 'kf' 客服
-    btn?: number // 按钮数 1/2
+    type?: 'kf' | 'tip' | undefined // 'kf' 客服  tip 提示
+    btn?: 1 | 2 // 按钮数 1/2
     width?: string // 宽度 需要单位
   }>(),
   {
     title: '提示',
-    type: '',
+    type: undefined,
     msg: '',
     btn: 2,
-    width: '400px',
+    width: '',
   }
 )
 
@@ -79,20 +79,27 @@ const sure = () => {
 </script>
 
 <style scoped lang="scss">
-.kf_dialog {
+.no_header_dialog {
+  .kf_title {
+    padding: 20px 24px 16px;
+    font-size: 16px;
+    color: #333333;
+    font-weight: 600;
+  }
   .tip {
     font-size: 12px;
     color: #666;
     margin-top: 16px;
   }
 
-  .el-button {
-    width: 180px;
-  }
-
   img {
     width: 180px;
     height: 180px;
+  }
+}
+.long_btn {
+  .el-button {
+    width: 160px;
   }
 }
 </style>

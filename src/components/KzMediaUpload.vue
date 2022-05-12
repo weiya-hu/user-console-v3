@@ -16,12 +16,14 @@
       class="upbox"
       :file-list="imgList.map((v) => ({ name: '', url: v }))"
     >
-      <div class="fc fcc">
-        <el-icon>
-          <Plus />
-        </el-icon>
-        <div class="file_name">拖拽/点击上传</div>
-      </div>
+      <slot>
+        <div class="fc fcc">
+          <el-icon>
+            <Plus />
+          </el-icon>
+          <div class="file_name">拖拽/点击上传</div>
+        </div>
+      </slot>
     </el-upload>
     <div class="tips" v-html="msg"></div>
   </div>
@@ -47,13 +49,16 @@ const props = withDefaults(
     maxSize?: number //最大尺寸 单位M
     imgList?: string[] // 默认上传文件
     needDownload?: boolean // 图片是否需要下载
+    site?: string
   }>(),
   {
     exnameList: () => ['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG'],
     max: 1,
+    msg: '',
     maxSize: 2,
     imgList: () => [],
     needDownload: false,
+    site: 'official_img',
   }
 )
 
@@ -116,7 +121,7 @@ const lookimgs = (file: UploadFile) => {
 const filePath: string[] = []
 const upOneImg = async (file: UploadFile, downloadName?: string) => {
   //上传单张图片
-  const res: IRes = await getAliToken_api({ site: 'official_img' })
+  const res: IRes = await getAliToken_api({ site: props.site })
   if (res.status == 1) {
     const exname = file.name.substring(file.name.lastIndexOf('.'))
     const fd = new FormData()
