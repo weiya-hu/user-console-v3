@@ -41,6 +41,7 @@
       <el-form
         v-show="setLv === 2"
         ref="passFormRef"
+        v-loading="loading"
         :model="passForm"
         :rules="rules"
         size="large"
@@ -205,9 +206,11 @@ const rules = reactive({
   ],
 })
 
+const loading = ref(false)
 const onSubmit = () => {
   passFormRef.value!.validate(async (valid: boolean) => {
     if (valid) {
+      loading.value = true
     }
   })
 }

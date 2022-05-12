@@ -67,5 +67,25 @@ const changeSize = (size: number) => {
   display: flex;
   justify-content: flex-end;
   padding-top: 30px;
+  :deep(.el-pagination) {
+    .el-pager {
+      --el-pagination-button-bg-color: #fff;
+      --el-color-white: #2d68eb;
+      --el-color-primary: rgba(33, 80, 236, 0.05);
+    }
+    &.is-background {
+      .btn-prev,
+      .btn-next {
+        background-color: #fff;
+        border: 1px solid #ddd;
+      }
+      .el-pager li {
+        border: 1px solid #ddd;
+        &.is-active {
+          border: 1px solid #2d68eb;
+        }
+      }
+    }
+  }
 }
 </style>
