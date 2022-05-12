@@ -2,7 +2,11 @@
   <el-cascader
     v-if="type === 'type'"
     ref="cRef"
+<<<<<<< Updated upstream
     v-model="valueArr"
+=======
+    v-model="show"
+>>>>>>> Stashed changes
     :options="typeList"
     :props="typeProps"
     placeholder="请选择行业"
@@ -12,7 +16,11 @@
   <el-cascader
     v-else
     ref="cRef"
+<<<<<<< Updated upstream
     v-model="valueArr"
+=======
+    v-model="show"
+>>>>>>> Stashed changes
     :options="addressList"
     :props="addrProps"
     placeholder="请选择地区"
@@ -47,7 +55,12 @@ const valueArr = computed({
 })
 
 const emit = defineEmits(['update:modelValue', 'change'])
-
+const show = computed({
+  get: () => props.modelValue,
+  set: (val) => {
+    emit('update:modelValue', val)
+  },
+})
 const store = mainStore()
 const typeList = computed(() => store.state.typeList)
 const addressList = computed(() => store.state.addressList)

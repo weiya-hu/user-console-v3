@@ -1,6 +1,6 @@
 <template>
   <div class="rz_dialog_hll">
-    <el-dialog v-model="modelValue" width="500px" custom-class="rz_dialog" @close="close">
+    <el-dialog v-model="show" width="500px" custom-class="rz_dialog" @close="close">
       <div class="fcc fc imgs">
         <img :src="img" alt="" />
         <img :src="img_small" alt="" class="pic" />
@@ -20,6 +20,7 @@
  * 居中认证弹窗
  * @author hll
  */
+import { computed } from 'vue'
 const props = withDefaults(
   defineProps<{
     modelValue: boolean // 是否显示
@@ -36,7 +37,12 @@ const props = withDefaults(
     msgTwo: '',
   }
 )
-
+const show = computed({
+  get: () => props.modelValue,
+  set: (val) => {
+    emit('update:modelValue', val)
+  },
+})
 const emit = defineEmits(['update:modelValue'])
 
 const close = () => {

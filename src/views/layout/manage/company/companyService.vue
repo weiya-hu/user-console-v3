@@ -1,5 +1,5 @@
 <template>
-  <div>企业服务</div>
+  <div><div @click="$router.push('authentication')">企业信息</div></div>
 </template>
 
 <script setup lang="ts"></script>

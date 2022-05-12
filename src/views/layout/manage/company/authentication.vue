@@ -9,10 +9,7 @@
       size="large"
     >
       <el-form-item label="行业分类" prop="region">
-        <el-select v-model="ruleForm.region" placeholder="请选择行业">
-          <el-option label="Zone one" value="shanghai" />
-          <el-option label="Zone two" value="beijing" />
-        </el-select>
+        <KzCascader ref="typeCRef" v-model="ruleForm.region" type="type" placeholder="请选择行业" />
       </el-form-item>
       <el-form-item label="企业名称" prop="name">
         <el-input v-model="ruleForm.name" placeholder="请输入" />
@@ -77,7 +74,7 @@ import { getIndustryList_api, getAddressList_api, getUserInfo, getYxtUrl_api } f
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive({
   name: '',
-  region: '',
+  region: [],
   date1: '',
   delivery: '',
   resource: '',

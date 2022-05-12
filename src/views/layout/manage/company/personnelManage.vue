@@ -1,5 +1,10 @@
 <template>
-  <div class="manager_tab">
+  <div class="manager_tab flex">
+    <div class="left_1">
+      <img src="" alt="" />
+      <div>康洲数智科技项目组</div>
+      <el-button class="bdc_btn">添加分组</el-button>
+    </div>
     <div class="mid">
       <div class="fsc f1">
         <span class="mid_title">管理员列表</span>
@@ -41,7 +46,6 @@
           width="500px"
           custom-class="add_dialog"
           title="添加人员"
-          append-to-body
           @close="close"
         >
           <div class="fcc">
@@ -54,7 +58,7 @@
             </el-button-group>
           </div>
           <div v-if="tab == 1" class="mid_dig">
-            <div class="fleximg">邀请员工微信扫描下方二维码注册</div>
+            <div class="fleximg mare type_face">邀请员工微信扫描下方二维码注册</div>
             <img src="" alt="" class="fleximg" />
             <span class="fleximg fresh_code">刷新二维码</span>
             <div class="fcc">
@@ -62,29 +66,45 @@
             </div>
           </div>
           <div v-else-if="tab == 2" class="mid_dig">
-            <div class="fleximg">点击复制以下链接，发送给员工</div>
-
+            <div class="fleximg type_face">点击复制以下链接，发送给员工</div>
+            <div class="link_code">
+              <el-descriptions :column="1">
+                <el-descriptions-item label="企业编码" class-name="fir"
+                  ><span>kooriookami</span></el-descriptions-item
+                >
+                <el-descriptions-item label="邀请链接" class-name="two"
+                  >18100000000</el-descriptions-item
+                >
+              </el-descriptions>
+            </div>
             <div class="fcc">
               <el-button type="primary" @click="close">复制链接</el-button>
             </div>
           </div>
           <div v-else class="mid_dig">
-            <div class="fleximg">请填写受邀请人员信息</div>
+            <div class="fleximg mare type_face">请填写受邀请人员信息</div>
             <div class="fleximg mes">系统将通过短信邀请对方注册</div>
-            <el-input v-model="msg" placeholder="受邀人员姓名" />
-            <el-input v-model="tel" placeholder="受邀人员手机号">
-              <template #prepend>
-                <el-select v-model="acode">
-                  <el-option
-                    v-for="(v, i) in areaNum"
-                    :key="i"
-                    :label="'+' + v.value"
-                    :value="v.value"
-                    >{{ v.name + ' +' + v.value }}</el-option
-                  >
-                </el-select>
-              </template>
-            </el-input>
+            <el-form :model="numberForm" :rules="telRules">
+              <div class="num">
+                <el-input v-model="msg" placeholder="受邀人员姓名" class="mb16" />
+                <el-form-item prop="tel">
+                  <el-input v-model="numberForm.tel" placeholder="受邀人员手机号">
+                    <template #prepend>
+                      <el-select v-model="acode">
+                        <el-option
+                          v-for="(v, i) in areaNum"
+                          :key="i"
+                          :label="'+' + v.value"
+                          :value="v.value"
+                          >{{ v.name + ' +' + v.value }}</el-option
+                        >
+                      </el-select>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </div>
+            </el-form>
+
             <div class="fcc">
               <el-button type="primary" @click="close">发送短信</el-button>
             </div>
@@ -102,30 +122,67 @@ import KzEmpty from '@/components/KzEmpty.vue'
 import { reactive, ref } from 'vue'
 import areaNum from '@/utils/areaNum'
 import { formatDate } from '@/utils/date'
+import { telReg } from '@/utils/index'
 const page = ref(1)
 const size = ref(20)
 const total = ref(50)
 const tableData = ref([])
-const loading = ref(false)
+const numberForm = reactive({
+  tel: '',
+})
 const show = ref(true)
 const tab = ref(1)
 const msg = ref('')
-const tel = ref('')
+// const tel = ref('')
 const acode = ref('86')
 const close = () => {
   show.value = false
 }
+const telPass = (rule: any, value: string, callback: any) => {
+  if (telReg.test(value)) {
+    callback()
+  } else {
+    callback(new Error('请输入正确的手机号码!'))
+  }
+}
+const telRules = reactive({
+  tel: [
+    { required: true, message: '请输入手机号！', trigger: 'blur' },
+    { validator: telPass, trigger: 'blur' },
+  ],
+})
 </script>
-
 <style lang="scss" scoped>
 .manager_tab {
-  width: 60%;
-  background: #ffffff;
-  border-radius: 8px;
+  .left_1 {
+    box-sizing: border-box;
+    width: 320px;
+    border-radius: 8px;
+    margin-right: 16px;
+    background: #ffffff;
+    img {
+      margin: 32px 50px 16px;
+      width: 220px;
+      height: 64px;
+    }
+    div {
+      width: 144px;
+      height: 22px;
+      font-size: 16px;
+      font-family: PingFangSC-Semibold, PingFang SC;
+      font-weight: 600;
+      color: #333333;
+      line-height: 22px;
+    }
+  }
   .mid {
-    margin: 0 auto;
+    width: calc(100% - 336px);
+    box-sizing: border-box;
+    border-radius: 8px;
+    // margin: 0 auto;
     padding: 24px;
     padding-top: 16px;
+    background: #ffffff;
     .fsc {
       margin-bottom: 16px;
     }
@@ -158,11 +215,83 @@ const close = () => {
       }
     }
   }
-  .add_dialog {
+  :deep(.add_dialog) {
+    .el-dialog__body {
+      padding-top: 15px;
+    }
     .mid_dig {
-      :deep(.el-input__wrapper) {
-        width: 240px;
-        height: 40px;
+      margin-top: 32px;
+      .type_face {
+        font-weight: bold;
+        color: #303133;
+        font-family: PingFangSC-Medium, PingFang SC;
+      }
+      img {
+        width: 160px;
+        height: 160px;
+        margin: 0 auto;
+      }
+      .mare {
+        margin-bottom: 8px;
+      }
+      .fresh_code {
+        color: #2150ec;
+        margin-top: 8px;
+        font-size: 12px;
+        padding-bottom: 24px;
+      }
+      .mes {
+        color: #909399;
+        font-size: 12px;
+        font-weight: normal;
+        margin-bottom: 24px;
+      }
+      .num {
+        margin-bottom: 76px;
+        display: flex;
+        justify-content: center;
+        // align-items: center;
+        flex-wrap: wrap;
+        .el-input {
+          width: 240px;
+          height: 40px;
+        }
+        .el-input--suffix {
+          width: 80px;
+        }
+      }
+      .el-descriptions__label {
+        font-size: 14px;
+        color: #909399;
+        margin-right: 12px;
+      }
+      .link_code {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 40px;
+        margin-bottom: 72px;
+        .el-descriptions__cell {
+          width: 295px;
+          display: flex;
+
+          align-items: center;
+        }
+        .fir {
+          display: block;
+          z-index: 2100;
+          width: 226px;
+          height: 48px;
+          text-align: center;
+          color: #303133;
+          line-height: 48px;
+          background: #f2f3f3;
+          font-size: 18px;
+          font-weight: bold;
+        }
+        .two {
+          color: #303133;
+        }
       }
     }
   }
