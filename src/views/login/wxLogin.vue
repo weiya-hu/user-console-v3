@@ -1,5 +1,5 @@
 <template>
-  <div id='wxLogin' className='fleximg'></div>
+  <div id="wxLogin" className="fleximg"></div>
 </template>
 <script lang="ts" setup>
 import { nextTick } from 'vue'
@@ -11,19 +11,17 @@ const props = withDefaults(
   }>(),
   {}
 )
-nextTick(()=>{
-  var obj = new window.WxLogin({
+nextTick(() => {
+  const obj = new window.WxLogin({
     self_redirect: false,
-    id: "wxLogin",
+    id: 'wxLogin',
     appid: props.appid,
-    scope: "snsapi_login",
+    scope: 'snsapi_login',
     redirect_uri: props.url,
     state: props.state,
-    style: "",
-    href: ""
-  });
+    style: '',
+    href: '',
+  })
 })
-
 </script>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

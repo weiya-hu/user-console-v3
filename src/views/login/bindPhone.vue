@@ -6,13 +6,13 @@
       </div>
       <div class="register_content">
         <div class="register_content_title fleximg">手机号绑定</div>
-        
+
         <div class="register_content_main">
           <div class="login_userinfo">
             <div class="fleximg header_img">
-              <img :src="headerImg" >
+              <img :src="headerImg" />
             </div>
-            <div class="nickname">{{nickname}}</div>
+            <div class="nickname">{{ nickname }}</div>
           </div>
           <el-form ref="loginFormRef" :model="formValue" :rules="registerRules">
             <LoginInput v-model="formValue" name="mobile" form-name="mobile" />
@@ -54,7 +54,7 @@ const router = useRouter()
 
 const userAgreeCheck = ref(false)
 const loginFormRef = ref()
-const loginToUrl = getUrlParam('url') 
+const loginToUrl = getUrlParam('url')
 const headerImg = getUrlParam('headimgurl') || '@/assets/images/login_header.png'
 const nickname = getUrlParam('nickname')
 const chaptchaShow = ref(false) //图形验证码是否显示
@@ -82,7 +82,7 @@ const onRegister = (event: any) => {
       const data: any = {
         ...formValue.value,
         acode: '+' + formValue.value.acode,
-        type:3,
+        type: 3,
       }
       const { status, body, message } = await doWechatBind_api(data)
       status &&
@@ -133,27 +133,27 @@ const toUseragreement = (event: any) => {
         line-height: 26px;
         font-weight: 600;
       }
-      
+
       .register_content_main {
         width: 900px;
         padding: 35px 0 50px 260px;
         background: rgba(255, 255, 255, 0.7);
-        .login_userinfo{
+        .login_userinfo {
           width: 380px;
-          .header_img{
+          .header_img {
             width: 70px;
             height: 70px;
             border-radius: 50%;
             overflow: hidden;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.7);
-            img{
+            img {
               width: 100%;
               height: 100%;
               object-fit: cover;
             }
           }
-          .nickname{
+          .nickname {
             color: #363636;
             font-size: 14px;
             line-height: 14px;
@@ -161,7 +161,7 @@ const toUseragreement = (event: any) => {
             margin: 21px 0 35px;
           }
         }
-        
+
         .submit_button {
           width: 380px;
           height: 52px;
