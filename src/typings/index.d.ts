@@ -36,3 +36,7 @@ interface ILoginForm {
   invite_code?: any
   surePass?: string
 }
+
+interface Window {
+  WxLogin: any
+}

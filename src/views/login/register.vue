@@ -43,7 +43,6 @@ const router = useRouter()
 const userAgreeCheck = ref(false)
 const registerFormRef = ref()
 const loginToUrl = getUrlParam('url')
-const code = sessionStorage.getItem('inviteCode') ? sessionStorage.getItem('inviteCode') : ''
 const formValue = ref<ILoginForm>({
   acode: '86',
   invite_code: sessionStorage.getItem('inviteCode') || undefined,

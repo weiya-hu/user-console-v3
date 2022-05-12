@@ -104,3 +104,24 @@ export const doResetpass_api = (data: {
 }): Promise<IRes> => {
   return post('user', '/login/resetpass/modify.do', data)
 }
+
+/**
+ * @name 获取微信登录二维码链接
+ */
+ export const wechatQrinfoGet_api = ( params: { url?: any } ): Promise<IRes> => {
+  return get('user ', '/login/wechat/qrinfo.get', params)
+}
+
+/**
+ * @name 微信登录
+ */
+export const doWechat_api = (data: {code: any; state: any}): Promise<IRes> => {
+  return post('user', '/login/wechat/callback.do', data)
+}
+
+/**
+ * @name 微信登录绑定手机号
+ */
+export const doWechatBind_api = (data: {acode: any; captcha?: any; invite_code?:any; mobile:any; sms:any;type:any}): Promise<IRes> => {
+  return post('user', 'login/wechat/bind.do', data)
+}
