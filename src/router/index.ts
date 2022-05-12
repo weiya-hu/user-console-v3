@@ -193,6 +193,18 @@ export const routes: RouteRecordRaw[] = [
                     component: () => import('@/views/layout/manage/user/settings/changePass.vue'),
                     meta: { title: '修改密码', father: '/manage/user/settings/safe' },
                   },
+                  {
+                    path: '/manage/user/settings/realname',
+                    name: 'RealName',
+                    component: () => import('@/views/layout/manage/user/settings/realName.vue'),
+                    meta: { title: '实名认证', father: '/manage/user/settings/safe' },
+                  },
+                  {
+                    path: '/manage/user/settings/invitation',
+                    name: 'Invitation',
+                    component: () => import('@/views/layout/manage/user/settings/invitation .vue'),
+                    meta: { title: '邀请用户详情', father: '/manage/user/settings/safe' },
+                  },
                 ],
               },
             ],
