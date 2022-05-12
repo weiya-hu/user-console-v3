@@ -141,10 +141,25 @@ img {
   .el-dialog__header {
     border-bottom: 1px solid $coloreee;
     margin-right: 0;
+    font-size: 16px;
+    color: $color333;
+    font-weight: 600;
     .el-dialog__title {
       font-size: 16px;
       color: $color333;
       font-weight: 600;
+      line-height: 1;
+    }
+  }
+  .el-dialog__body {
+    padding: 20px 24px;
+  }
+  .el-dialog__footer {
+    padding: 12px 24px 24px;
+  }
+  &.kf_dialog {
+    .el-dialog__header {
+      border-bottom: none;
     }
   }
 }

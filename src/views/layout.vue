@@ -193,7 +193,7 @@ emiter.on('lookVideo', (video: string) => {
       :deep(.layout_content_box) {
         padding: 16px;
         position: relative;
-        z-index: 1;
+        z-index: 11;
       }
       .kz_copyright {
         position: absolute;

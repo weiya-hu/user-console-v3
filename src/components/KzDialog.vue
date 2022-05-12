@@ -1,22 +1,22 @@
 <template>
   <el-dialog
     v-model="show"
-    :title="title"
-    :width="type == 'kf' ? '280px' : '400px'"
+    :width="type == 'kf' ? '280px' : width"
     :show-close="type != 'kf'"
-    :custom-class="type == 'kf' ? 'kf_dialog my_dialog' : 'my_dialog'"
-    append-to-body
+    :custom-class="type == 'kf' && 'kf_dialog'"
     @close="close"
   >
-    <template v-if="type == 'kf'" #title>
-      <div class="fcc kf_title">联系客服</div>
+    <template #title>
+      <div :class="type === 'kf' && 'fcc'">{{ type === 'kf' ? '联系客服' : title }}</div>
     </template>
     <template #default>
-      <div v-if="type == 'kf'" class="fcc fc">
-        <img :src="kf_code_i" alt="" />
-        <div class="tip">请扫描上方二维码，联系客服人员</div>
-      </div>
-      <div v-else class="fcc msg">{{ msg }}</div>
+      <slot>
+        <div v-if="type == 'kf'" class="fcc fc">
+          <img :src="kf_code_i" alt="" />
+          <div class="tip">请扫描上方二维码，联系客服人员</div>
+        </div>
+        <div v-else class="fcc msg">{{ msg }}</div>
+      </slot>
     </template>
     <template #footer>
       <div v-if="type == 'kf'" class="fcc">
@@ -25,7 +25,7 @@
       <div v-else>
         <div v-if="btn == 2" class="fcc">
           <el-button @click="close">取消</el-button>
-          <el-button type="primary" @click="sure">确认</el-button>
+          <el-button type="primary" @click="sure">确定</el-button>
         </div>
         <div v-else class="fcc">
           <el-button type="primary" @click="close">我知道了</el-button>
@@ -49,12 +49,14 @@ const props = withDefaults(
     msg?: string // 内容
     type?: string // 'kf' 客服
     btn?: number // 按钮数 1/2
+    width?: string // 宽度 需要单位
   }>(),
   {
     title: '提示',
     type: '',
     msg: '',
     btn: 2,
+    width: '400px',
   }
 )
 
@@ -77,41 +79,20 @@ const sure = () => {
 </script>
 
 <style scoped lang="scss">
-.my_dialog {
-  .msg {
-    font-size: 14px;
-    color: #333;
+.kf_dialog {
+  .tip {
+    font-size: 12px;
+    color: #666;
+    margin-top: 16px;
   }
 
   .el-button {
-    width: 84px;
+    width: 180px;
   }
 
-  .kf_dialog {
-    .tip {
-      font-size: 12px;
-      color: #666;
-      margin-top: 16px;
-    }
-
-    .kf_title {
-      font-size: 16px;
-      color: #333;
-      font-weight: 600;
-    }
-
-    .el-button {
-      width: 180px;
-    }
-
-    .el-dialog__header {
-      border-bottom: none;
-    }
-
-    img {
-      width: 180px;
-      height: 180px;
-    }
+  img {
+    width: 180px;
+    height: 180px;
   }
 }
 </style>

@@ -120,6 +120,23 @@ export function getHash(arr: any[], key: string, nameKey = 'name', childrenKey =
   return obj
 }
 
+export function getAllHash(arr: any[], key: string, nameKey = 'name', childrenKey = 'children') {
+  //转换为哈希表
+  console.time('getAllHash')
+  const obj: any = {}
+  const dg = (list: any[]) => {
+    for (let i = 0; i < list.length; i++) {
+      obj[list[i][key]] = list[i][nameKey]
+      if (list[i][childrenKey]) {
+        dg(list[i][childrenKey])
+      }
+    }
+  }
+  dg(arr)
+  console.timeEnd('getAllHash')
+  return obj
+}
+
 /**
  * 获取哈希表中字符串，先getHash获取哈希表
  * @arr 要查找的值组成的数组，例如['A','2']
