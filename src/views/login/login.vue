@@ -3,6 +3,7 @@
     <div class="login_main">
       <div class="fleximg logo_img">
         <img src="@/assets/images/logo-white.svg" />
+  
       </div>
       <div class="login_main_content">
         <div class="fleximg login_main_img">
@@ -75,10 +76,19 @@
             </div>
           </div>
           <div class="fleximg other_login">
-            <div class="fleximg other_login_item"><img src="@/assets/images/wechart.png" /></div>
+            <div class="fleximg other_login_item" @click="wechartShow = !wechartShow"><img src="@/assets/images/wechart.png" /></div>
             <div class="fleximg other_login_item"><img src="@/assets/images/QQ.png" /></div>
             <div class="fleximg other_login_item"><img src="@/assets/images/weibo.png" /></div>
           </div>
+          <el-dialog
+            v-model="wechartShow"
+            title="微信登录"
+            width="400px"
+            destroy-on-close
+            center
+          >
+            <WxLogin :url="wechartParam.url" :state="wechartParam.state" :appid="wechartParam.appid"/>
+          </el-dialog>
         </div>
       </div>
     </div>
@@ -88,7 +98,8 @@
 import { ref } from 'vue'
 import LoginInput from '@/components/KzLoginInput.vue'
 import { mobileCheck, passCheck, okMsg, errMsg, getUrlParam } from '@/utils/index'
-import { doLogin } from '@/api/login'
+import { doLogin, wechatQrinfoGet_api } from '@/api/login'
+import WxLogin from '@/views/login/wxLogin.vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
@@ -98,6 +109,8 @@ const topNavActive = ref(0) //登录方式：0/1
 const chaptchaShow = ref(false) //图形验证码是否显示
 const userAgreeCheck = ref(false)
 const loginToUrl = getUrlParam('url')
+const wechartShow = ref(false)
+const wechartParam = ref()
 const formValue = ref<ILoginForm>({
   acode: '86',
 })
@@ -121,6 +134,17 @@ const loginNavChange = (e: { target: any }, index: number) => {
   const nav = e.target
   topNavLineLeft.value = nav.offsetLeft
 }
+
+//微信登录初始化
+const wechartInit=async()=>{
+  const{ status, body } = await wechatQrinfoGet_api({url:loginToUrl})
+  status && (wechartParam.value = {
+    url: body.callback_url,
+    state: body.state,
+    appid: body.app_id,
+  })
+}
+wechartInit()
 
 //登录
 const onSubmit = (event: any) => {
@@ -263,7 +287,18 @@ const toUseragreement = (event: any) => {
             cursor: pointer;
           }
         }
+        :deep(.el-overlay){
+          .el-dialog .el-dialog__header{
+            display: none;
+          }
+        }
       }
+    }
+  }
+  .svg_test{
+    width: 100px;
+    svg{
+      width: 100%;
     }
   }
 }

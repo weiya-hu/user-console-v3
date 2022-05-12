@@ -43,10 +43,16 @@ export const routes: RouteRecordRaw[] = [
     meta: { title: '重设密码' },
   },
   {
-    path: '/bindPhone.vue',
-    name: 'BindPhone.vue',
-    component: () => import('@/views/login/bindPhone.vue.vue'),
+    path: '/bindphone',
+    name: 'BindPhone',
+    component: () => import('@/views/login/bindPhone.vue'),
     meta: { title: '绑定手机号' },
+  },
+  {
+    path: '/login/wechat/callback',
+    name: 'WxLoginJump',
+    component: () => import('@/views/login/wxLoginJump.vue'),
+    meta: { title: '微信登录' },
   },
   {
     path: '/',

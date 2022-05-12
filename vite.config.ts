@@ -29,15 +29,16 @@ export default defineConfig({
   server: {
     //启动服务配置
     host: '0.0.0.0',
-    port: 9000,
+    port: 80,
     open: false,
     https: false,
     proxy: {
       '/api': {
-        target: 'http://47.108.185.157:9000', //dev 后台接口
+        // target: 'http://47.108.185.157:9000', //dev 后台接口
         // target: 'http://10.10.0.124:9090',//dev 包季鑫
         // target: 'http://10.10.0.71:9090', //dev 杨航
         // target: 'http://10.10.0.93:9090', //dev 杜飘
+        target: 'http://10.10.0.83:9000', //吴哥
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
