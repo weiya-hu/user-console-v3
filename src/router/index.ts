@@ -208,7 +208,7 @@ export const routes: RouteRecordRaw[] = [
                   {
                     path: '/manage/user/settings/invitation',
                     name: 'Invitation',
-                    component: () => import('@/views/layout/manage/user/settings/invitation .vue'),
+                    component: () => import('@/views/layout/manage/user/settings/invitation.vue'),
                     meta: { title: '邀请用户详情', father: '/manage/user/settings/safe' },
                   },
                 ],

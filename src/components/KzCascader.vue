@@ -2,11 +2,7 @@
   <el-cascader
     v-if="type === 'type'"
     ref="cRef"
-<<<<<<< Updated upstream
     v-model="valueArr"
-=======
-    v-model="show"
->>>>>>> Stashed changes
     :options="typeList"
     :props="typeProps"
     placeholder="请选择行业"
@@ -16,11 +12,7 @@
   <el-cascader
     v-else
     ref="cRef"
-<<<<<<< Updated upstream
     v-model="valueArr"
-=======
-    v-model="show"
->>>>>>> Stashed changes
     :options="addressList"
     :props="addrProps"
     placeholder="请选择地区"
