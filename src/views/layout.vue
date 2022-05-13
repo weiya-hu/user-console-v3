@@ -188,6 +188,7 @@ emiter.on('lookVideo', (video: string) => {
     .layout_content {
       height: 100%;
       flex: 1;
+      max-width: calc(100% - 220px);
       background-color: $bgcolor;
       position: relative;
       :deep(.layout_content_box) {
