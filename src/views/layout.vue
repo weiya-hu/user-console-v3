@@ -113,6 +113,7 @@
         msg="上传demo"
         @up-all-success="upAll"
         @error="upImgError"
+        :img-list="imgsList"
       />
       <el-button class="mb20" @click="upImg">上传</el-button>
       <el-button class="mb20" @click="clearImg">清除</el-button>
@@ -138,6 +139,10 @@ import KzImgUpload from '@/components/KzImgUpload.vue'
 import KzUpload from '@/components/KzUpload.vue'
 const upImgRef = ref()
 const upDemoShow = ref(false)
+const imgsList = ref([
+  'https://res.kzszh.com/dev/web/index/image/f21b635833aaf9ef4f4179e415988102.png', 
+  'https://res.kzszh.com/dev/web/index/image/c942c61ac09d4a582a43d7a8a3d986c0.png'
+])
 const upAll = (files: string[]) => {
   // files 上传成功后的图片地址数组
   console.log(files)
@@ -149,6 +154,7 @@ const upImg = () => {
   upImgRef.value.submit()
 }
 const clearImg = () => {
+  imgsList.value.length = 0 // 有默认上传图片的时候需要在父组件手动清空默认图片
   upImgRef.value.clear()
 }
 

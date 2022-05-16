@@ -32,7 +32,7 @@
 <script setup lang="ts">
 /**
  * 图片上传组件
- * 上传时用了el-upload组件UploadFile内部的uid去判断了图片是否已上传，已上传的不会再次上传
+ * 上传时用了el-upload组件UploadFile内部的uid(时间戳)去判断了图片是否已上传，已上传的不会再次上传
  * @author chn
  */
 import { ref, onMounted, nextTick } from 'vue'
@@ -65,7 +65,24 @@ const props = withDefaults(
 
 onMounted(() => {
   nextTick(() => {
-    if (props.imgList.length && props.max == 1) {
+    if(props.imgList.length){
+      props.imgList.forEach((v, i) => {
+        imgs.value.push({
+          url: v,
+          name: '',
+          status: 'success',
+          uid: -i-1,
+        })
+        sucImgs.value.push({
+          url: v,
+          name: '',
+          status: 'success',
+          uid: -i-1,
+          upUrl: v,
+        })
+      })
+    }
+    if (props.imgList.length >= props.max) {
       const el = document.querySelector('.el-upload--picture-card') as HTMLElement
       el.style.display = 'none'
     }
@@ -104,8 +121,10 @@ const upChange = (file: UploadFile, fileList: UploadFile[]) => {
   emit('change', fxname)
 }
 const upRemove = (file: UploadFile, fileList: UploadFile[]) => {
-  const i = sucImgs.value.findIndex((v) => v.uid === file.uid)
-  sucImgs.value.splice(i, 1)
+  const i = sucImgs.value.findIndex((v) => {
+    return v.upUrl === file.url || v.uid === file.uid
+  })
+  i > - 1 && sucImgs.value.splice(i, 1);
   imgs.value = fileList
   emit('del')
   ;(document.querySelector('.el-upload--picture-card') as HTMLElement).style.display = 'inline-flex'
@@ -124,7 +143,7 @@ const lookimgs = (file: UploadFile) => {
 interface UploadFileSuccess extends UploadFile {
   upUrl?: string
 }
-const sucImgs = ref<UploadFileSuccess[]>([])
+const sucImgs = ref<UploadFileSuccess[]>([]) // 上传成功的图片
 const isAllSuccess = () => {
   if (sucImgs.value.length === imgs.value.length && sucImgs.value.length) {
     emit(
@@ -134,6 +153,9 @@ const isAllSuccess = () => {
   }
 }
 const upOneImg = async (file: UploadFile, downloadName?: string) => {
+  if(file.status === 'success' || !file.raw){
+    return
+  }
   //上传单张图片
   const res: IRes = await getAliToken_api({ site: props.site })
   if (res.status == 1) {
@@ -202,6 +224,7 @@ const clear = () => {
   // imgs 是引用的el-upload组件内传入的UploadFile[]，清空imgs即可清空图片
   imgs.value.length = 0
   sucImgs.value.length = 0
+  // 有默认上传图片props.imgList的时候需要在父组件手动清空默认图片
   ;(document.querySelector('.el-upload--picture-card') as HTMLElement).style.display = 'inline-flex'
 }
 const handleExceed = (files: UploadFile[]) => {

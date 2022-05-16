@@ -35,12 +35,7 @@
       <div class="upbox">
         <slot>
           <div class="up_rt">
-            <div
-              v-html="
-                msg ||
-                '可适当描述所处的行业现状，以及公司目前采取的运营、渠道、推广等多种获客方式，以便运营人员进一步了解熟悉您的所处的行业及需求，同时也为您提供更好的客户服务。'
-              "
-            ></div>
+            <div v-html="msg"></div>
             <div v-if="downLink" class="up_tip dfcolor fcs">
               <el-link type="primary" :href="downLink" download="模板.xlsx" @click="handlink"
                 >下载模板示例</el-link
@@ -81,6 +76,9 @@ const props = withDefaults(
   {
     modelValue: '',
     exnameList: () => ['.zip', '.rar', '.7z'],
+    downLink: '',
+    msg: '可适当描述所处的行业现状，以及公司目前采取的运营、渠道、推广等多种获客方式，以便运营人员进一步了解熟悉您的所处的行业及需求，同时也为您提供更好的客户服务。',
+    type: '',
     maxSize: 4,
     site: '',
   }
