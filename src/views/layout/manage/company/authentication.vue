@@ -7,42 +7,50 @@
       label-width="150px"
       class="demo-ruleForm"
       size="large"
+      v-loading="loading"
     >
-      <el-form-item label="行业分类" prop="region">
-        <KzCascader ref="typeCRef" v-model="ruleForm.region" type="type" placeholder="请选择行业" />
+      <el-form-item label="行业分类" prop="industry_id">
+        <KzCascader
+          ref="typeCRef"
+          v-model="ruleForm.industry_id"
+          type="type"
+          placeholder="请选择行业"
+        />
       </el-form-item>
       <el-form-item label="企业名称" prop="name">
         <el-input v-model="ruleForm.name" placeholder="请输入" />
       </el-form-item>
       <el-form-item label="统一社会信用代码" prop="code">
-        <el-input v-model="ruleForm.code" placeholder="请输入" />
+        <el-input v-model="ruleForm.code" placeholder="请输入" @blur="blur(ruleForm.code)" />
       </el-form-item>
-      <el-form-item label="资质照片" prop="img">
+      <el-form-item label="资质照片" prop="license">
         <div class="imgs">
-          <kzMediaUpload ref="upload" :max="2" :exname-list="exnameList"></kzMediaUpload>
+          <kzImgUpload
+            ref="upload"
+            :max="2"
+            :exname-list="exnameList"
+            @up-all-success="upAll"
+            @look="upLook"
+            @error="upError"
+            @change="onChange"
+          ></kzImgUpload>
           <div>*请上传资质编号清晰的资质照片；</div>
           <div>仅支持jpg、png、jpeg格式图片，最多上传2张。</div>
         </div>
       </el-form-item>
       <el-form-item label="证件有效期" required>
         <!-- <el-col :span="11"> -->
-        <el-form-item prop="date1">
-          <el-date-picker
-            v-model="ruleForm.date1"
-            type="daterange"
-            value-format="x"
-            range-separator="至"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-          />
+        <el-form-item prop="left_time">
+          <el-date-picker v-model="ruleForm.left_time" type="date" value-format="x" />
+          <el-checkbox v-model="ruleForm.left_time" true-label="4102415999000">永久</el-checkbox>
         </el-form-item>
         <!-- </el-col> -->
       </el-form-item>
-      <el-form-item label="联系人" prop="delivery">
-        <el-input v-model="ruleForm.delivery" placeholder="请输入" />
+      <el-form-item label="联系人" prop="legal_person">
+        <el-input v-model="ruleForm.legal_person" placeholder="请输入" />
       </el-form-item>
-      <el-form-item label="联系电话" prop="phoneNum">
-        <el-input v-model="ruleForm.phoneNum" placeholder="请输入" />
+      <el-form-item label="联系电话" prop="contact">
+        <el-input v-model="ruleForm.contact" placeholder="请输入" />
       </el-form-item>
       <el-form-item label="选择地区" prop="addr">
         <KzCascader v-model="ruleForm.addr" type="address" placeholder="请选择地址" />
@@ -50,16 +58,18 @@
       <el-form-item label="详细地址" prop="address">
         <el-input v-model="ruleForm.address" placeholder="请输入" />
       </el-form-item>
-      <el-form-item label="官方网站" prop="website">
-        <el-input v-model="ruleForm.website" placeholder="请输入" />
+      <el-form-item label="官方网站" prop="url">
+        <el-input v-model="ruleForm.url" placeholder="请输入" />
       </el-form-item>
 
-      <el-form-item label="请填写经营范围" prop="desc">
-        <el-input v-model="ruleForm.desc" type="textarea" clearable />
+      <el-form-item label="请填写经营范围" prop="business_scope">
+        <el-input v-model="ruleForm.business_scope" type="textarea" clearable />
       </el-form-item>
+      <div class="preser">
+        <el-link type="primary" class="fcc" @click="submitForm(1)">保存认证消息</el-link>
+      </div>
       <el-form-item>
-        <el-button type="primary" class="sub" @click="submitForm(ruleFormRef)">提交认证</el-button>
-        <!-- <el-button type="primary" @click="submit" class="sub">地区</el-button> -->
+        <el-button type="primary" class="sub" @click="submitForm(2)">提交认证</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -67,59 +77,69 @@
 
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-import type { FormInstance, FormRules } from 'element-plus'
-import kzMediaUpload from '@/components/kzMediaUpload.vue'
+import kzImgUpload from '@/components/kzImgUpload.vue'
 import KzCascader from '@/components/KzCascader.vue'
-import { getIndustryList_api, getAddressList_api, getUserInfo, getYxtUrl_api } from '@/api/login'
-const ruleFormRef = ref<FormInstance>()
+import { lookImage, errMsg } from '@/utils/index'
+import { examine, examineSave, codeCheck } from '@/api/authentication'
+import { telReg } from '@/utils/index'
+const ruleFormRef = ref() //表单
 const ruleForm = reactive({
   name: '',
-  region: [],
-  date1: '',
-  delivery: '',
+  industry_id: [],
+  left_time: '',
+  legal_person: '',
   resource: '',
-  desc: '',
+  business_scope: '',
   code: '',
-  phoneNum: '',
+  contact: '',
   address: '',
-  website: '',
+  url: '',
   addr: [],
-  img: [],
+  license: '',
 })
+const loading = ref(false)
 const exnameList = ['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG']
-const upload = ref()
-const rules = reactive<FormRules>({
+const upload = ref() //上传组件ref
+const telPass = (rule: any, value: string, callback: any) => {
+  if (telReg.test(value)) {
+    callback()
+  } else {
+    callback(new Error('请输入正确的手机号码!'))
+  }
+}
+const rules = {
   name: [
     { required: true, message: '请输入企业名称', trigger: 'blur' },
     // { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
   ],
-  region: [
+  industry_id: [
     {
       required: true,
       message: '请输入行业分类',
       trigger: 'change',
     },
   ],
-  date1: [
+  left_time: [
     {
       required: true,
       message: '请输入证件有效期',
       trigger: 'change',
     },
   ],
-  delivery: [
+  legal_person: [
     {
       required: true,
       message: '请输入联系人',
       trigger: 'blur',
     },
   ],
-  phoneNum: [
+  contact: [
     {
       required: true,
       message: '请输入联系电话',
       trigger: 'blur',
     },
+    { validator: telPass, trigger: 'blur' },
   ],
   addr: [
     {
@@ -128,38 +148,65 @@ const rules = reactive<FormRules>({
       trigger: 'blur',
     },
   ],
-  img: [
+  license: [
     {
       required: true,
       message: '请添加资质照片',
-      trigger: 'blur',
+      trigger: 'change',
     },
   ],
-  // desc: [{ required: true, message: 'Please input activity form', trigger: 'blur' }],
   code: [{ required: true, message: '请输入统一社会信用代码', trigger: 'blur' }],
-})
-
-const submitForm = async (formEl: FormInstance | undefined) => {
-  if (!formEl) {
-    return
-  }
-  await formEl.validate((valid, fields) => {
-    if (valid) {
-      console.log('submit!')
-    } else {
-      console.log('error submit!', fields)
-    }
-  })
 }
-const submit = async () => {
-  const result = await getAddressList_api()
-  console.log(result)
+const blur = async (code: string) => {
+  await codeCheck({ code })
+}
+const upError = (err: string) => {
+  errMsg(err)
+  loading.value = false
+}
+const upLook = (list: string[], i: number) => {
+  lookImage(list, i)
+}
+const upAll = async (url: string[]) => {
+  const Data = {
+    city: ruleForm.addr[1] || 0,
+    province: ruleForm.addr[0] || 0,
+    district: ruleForm.addr[2],
+    source: 3,
+    industry_id: ruleForm.industry_id.join(','), //行业ID
+    left_time: Number(ruleForm.left_time) / 1000,
+  }
+  ruleForm.license = url.toLocaleString() //资质图片地址
+  const res =
+    aStatus.value == 1
+      ? await examine({ ...ruleForm, ...Data })
+      : await examineSave({ ...ruleForm, ...Data })
+}
+const onChange = (val: string) => {
+  ruleForm.license = val
+  console.log(ruleForm)
+  ruleFormRef.value.clearValidate('license')
+}
+const aStatus = ref<1 | 2>(1) // 1 保存 2 提交
+const submitForm = async (val: 1 | 2) => {
+  console.log(upload.value.imgs)
+  aStatus.value = val
+  if (aStatus.value == 1) {
+    ruleFormRef.value.clearValidate()
+    upload.value.submit()
+    console.log(123456)
+  } else {
+    ruleFormRef.value.validate((valid: boolean) => {
+      if (valid) {
+        upload.value.submit()
+      }
+    })
+  }
 }
 </script>
 <style scoped lang="scss">
 .rz {
   background: #ffffff;
-  margin: 0 auto;
   display: flex;
   border-radius: 8px;
   justify-content: center;
@@ -191,8 +238,10 @@ const submit = async () => {
     .sub {
       width: 320px;
       height: 40px;
-      margin-top: 10px;
       margin-bottom: 25px;
+    }
+    .preser {
+      margin: 40px 0px 16px 265px;
     }
   }
 }

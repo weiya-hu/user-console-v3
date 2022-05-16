@@ -218,6 +218,7 @@ const telRules = reactive({
   :deep(.add_dialog) {
     .el-dialog__body {
       padding-top: 15px;
+      padding-bottom: 32px;
     }
     .mid_dig {
       margin-top: 32px;

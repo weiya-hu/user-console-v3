@@ -226,7 +226,7 @@ export const routes: RouteRecordRaw[] = [
                 path: '/manage/company/companyinfo',
                 name: 'CompanyInfo',
                 component: () => import('@/views/layout/manage/company/companyInfo.vue'),
-                meta: { title: '团队信息' },
+                meta: { title: '团队信息', scroll: true },
               },
               {
                 path: '/manage/company/authentication',
@@ -244,7 +244,7 @@ export const routes: RouteRecordRaw[] = [
                 path: '/manage/company/personnelmanage',
                 name: 'PersonnelManage',
                 component: () => import('@/views/layout/manage/company/personnelManage.vue'),
-                meta: { title: '人员管理' },
+                meta: { title: '人员管理', keepAlive: true },
               },
               {
                 path: '/manage/company/rolepermission',
