@@ -132,3 +132,10 @@ export const doWechatBind_api = (data: {
 }): Promise<IRes> => {
   return post('user', 'login/wechat/bind.do', data)
 }
+
+/**
+ * @name 退出登录
+ */
+export const loginOut_api = (): Promise<any> => {
+  return get('user', '/login/out.do', {}, true)
+}

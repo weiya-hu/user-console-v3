@@ -5,7 +5,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
  * @name 保证唯一 大驼峰 例如 UserInfo
  * @component 需要重定向的空路由页面统一用rView.vue
  * @redirect 重定向 非必写
- * @meta title：导航标题；
+ * @meta title：导航标题；icon: 左侧二级导航图标；
  * father：在导航中不出现的详情页需要此属性，值为在此页面时需要激活的导航的path；
  * keepAlive: 页面是否需要缓存，一般在父级进入详情页时，父级需要缓存则给父级添加，父级页面还需要导出name；
  * scroll：页面中是否使用单独的el-scrollbar组件；
@@ -91,7 +91,7 @@ export const routes: RouteRecordRaw[] = [
               ) // 会被浏览器阻止
               return '/console'
             },
-            meta: { title: 'DMP数据系统' },
+            meta: { title: 'DMP数据系统', icon: '#icon-lanmu-DMP' },
           },
           {
             path: '/product/cms',
@@ -104,7 +104,7 @@ export const routes: RouteRecordRaw[] = [
               ) // 会被浏览器阻止
               return '/console'
             },
-            meta: { title: 'CMS内容管理中心' },
+            meta: { title: 'CMS内容管理中心', icon: '#icon-lanmu-CMS' },
           },
         ],
       },
@@ -120,7 +120,7 @@ export const routes: RouteRecordRaw[] = [
             name: 'Reportcenter',
             component: () => import('@/views/layout/rView.vue'),
             redirect: '/report/reportcenter/overview',
-            meta: { title: '报表中心' },
+            meta: { title: '报表中心', icon: '#icon-lanmu-baobiao' },
             children: [
               {
                 path: '/report/reportcenter/overview',
@@ -144,7 +144,7 @@ export const routes: RouteRecordRaw[] = [
             name: 'User',
             component: () => import('@/views/layout/rView.vue'),
             redirect: '/manage/user/product',
-            meta: { title: '用户中心' },
+            meta: { title: '用户中心', icon: '#icon-lanmu-yonghuzhongxin' },
             children: [
               {
                 path: '/manage/user/product',
@@ -220,7 +220,7 @@ export const routes: RouteRecordRaw[] = [
             name: 'Company',
             component: () => import('@/views/layout/rView.vue'),
             redirect: '/manage/company/companyinfo',
-            meta: { title: '团队管理' },
+            meta: { title: '团队管理', icon: '#icon-lanmu-qiyeguanli' },
             children: [
               {
                 path: '/manage/company/companyinfo',

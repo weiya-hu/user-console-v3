@@ -51,7 +51,11 @@ export const mainStore = defineStore('mainStore', () => {
   const setKeepList = (list: string[]) => {
     state.keepList = list
   }
-  const setUserinfo = () => {
+  const setUserinfo = (isClear?: boolean) => {
+    if (isClear) {
+      state.userInfo = {}
+      return Promise.reject()
+    }
     return new Promise<any>((resolve, reject) => {
       getUserInfo()
         .then((res: IRes) => {

@@ -79,6 +79,7 @@ defineExpose({
   top: 0;
   width: 100%;
   border-left: 1px solid $coloreee;
+  border-bottom: 1px solid $coloreee;
   .back {
     color: $dfcolor;
     cursor: pointer;

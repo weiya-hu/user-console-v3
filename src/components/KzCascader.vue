@@ -28,7 +28,7 @@
  */
 import { mainStore } from '@/store/index'
 import { ref, computed } from 'vue'
-import { get_Str } from '@/utils/index'
+import { getHashStr } from '@/utils/index'
 const props = withDefaults(
   defineProps<{
     modelValue: any[]
@@ -56,6 +56,8 @@ const show = computed({
 const store = mainStore()
 const typeList = computed(() => store.state.typeList)
 const addressList = computed(() => store.state.addressList)
+const typeHash = computed(() => store.state.typeHash)
+const addressHash = computed(() => store.state.addressHash)
 const typeProps = {
   expandTrigger: 'hover',
   checkStrictly: true,
@@ -75,11 +77,8 @@ const change = (value: any) => {
 }
 
 const cRef = ref()
-const getText = (arr: (string | number)[]) => {
-  const str =
-    props.type == 'type'
-      ? get_Str(arr, typeList.value, 'industry_id')
-      : get_Str(arr, addressList.value, 'code')
+const getText = (arr: (string | number)[], type?: 'arr' | 'last') => {
+  const str = getHashStr(arr, props.type === 'type' ? typeHash.value : addressHash.value, type)
   return str
 }
 defineExpose({

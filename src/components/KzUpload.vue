@@ -17,7 +17,7 @@
   >
     <template #default>
       <div class="upbox">
-        <div v-if="type == 'video' && modelValue" class="upvideo up_lt">
+        <div v-if="type === 'video' && modelValue" class="upvideo up_lt">
           <video :src="videoBlobUrl"></video>
         </div>
         <div v-else class="fcc up_lt" :class="modelValue ? 'hasfile' : ''">
@@ -66,6 +66,7 @@ import { Plus, Document } from '@element-plus/icons-vue'
 import type { UploadFile, UploadProgressEvent } from 'element-plus'
 import { getAliToken_api } from '@/api/login'
 import { errMsg } from '@/utils'
+import { now } from 'lodash'
 
 const props = withDefaults(
   defineProps<{
@@ -75,11 +76,13 @@ const props = withDefaults(
     msg?: string //描述文字
     type?: string //类型 video||''
     maxSize?: number //最大尺寸 单位M
+    site?: string // 上传接口参数
   }>(),
   {
     modelValue: '',
     exnameList: () => ['.zip', '.rar', '.7z'],
     maxSize: 4,
+    site: '',
   }
 )
 
@@ -96,11 +99,12 @@ const handleExceed = (files: any) => {
   //覆盖前一个文件
   upload.value.clearFiles()
   upload.value.handleStart(files[0])
+  sucFile.value = undefined
 }
 const nowFile = ref<UploadFile>()
 const upChange = (file: UploadFile, list: UploadFile[]) => {
   //上传组件状态改变时 添加时效验文件格式大小
-  if (!file.name) {
+  if (!file.name || file.status === 'fail') {
     return
   }
   nowFile.value = file
@@ -116,15 +120,28 @@ const upChange = (file: UploadFile, list: UploadFile[]) => {
     emit('change', '')
     emit('update:modelValue', file.name)
     file_exname.value = exname
-    if (props.type == 'video') {
+    if (props.type === 'video') {
       !videoBlobUrl.value && emit('changeName', file.name.substring(0, file.name.indexOf('.')))
       videoBlobUrl.value = URL.createObjectURL(file.raw as Blob)
     }
   }
 }
+interface UploadFileSuccess extends UploadFile {
+  upUrl?: string
+}
+const sucFile = ref<UploadFileSuccess>()
 
 const submit = () => {
-  getAliToken_api({ site: props.type == 'video' ? 'official_video' : 'dmp_excel' })
+  if (!nowFile.value) {
+    return
+  }
+  if (sucFile.value?.uid === nowFile.value?.uid && sucFile.value?.upUrl) {
+    emit('success', sucFile.value.upUrl)
+    return
+  }
+  getAliToken_api({
+    site: props.site ? props.site : props.type === 'video' ? 'official_video' : 'dmp_excel',
+  })
     .then((res: IRes) => {
       return new Promise<string>((resolve, reject) => {
         if (res.status == 1) {
@@ -154,18 +171,22 @@ const submit = () => {
 
 const upSuccess = (res: UploadProgressEvent, file: UploadFile) => {
   //上传成功再提交表单 //阿里oss上传成功返回res为空，失败err为xml
+  sucFile.value = { ...file, upUrl: filePath.value }
   emit('success', filePath.value)
 }
 
 const upError = (err: any, file: any, fileList: any) => {
   //上传失败时
   clear()
+  errMsg('上传失败')
   emit('error', err)
 }
 
 const clear = () => {
   //清除文件
   upload.value.clearFiles()
+  nowFile.value = undefined
+  sucFile.value = undefined
   emit('update:modelValue', '')
   URL.revokeObjectURL(videoBlobUrl.value)
   videoBlobUrl.value = ''
@@ -272,8 +293,8 @@ defineExpose({
       padding-left: 12px;
       height: 100px;
       display: flex;
-      align-items: flex-end;
-
+      flex-direction: column;
+      justify-content: flex-end;
       div {
         font-size: 12px;
       }

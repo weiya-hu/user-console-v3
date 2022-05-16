@@ -11,7 +11,9 @@
         @click="goRoute('/console', true)"
       >
         <div class="nav_icon">
-          <img src="" alt="" />
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-lanmu-kongzhitai"></use>
+          </svg>
         </div>
         <transition name="el-fade-in-linear">
           <div v-show="!flag" class="nav_text nowrap">控制台</div>
@@ -29,7 +31,7 @@
             <transition name="el-fade-in-linear">
               <div v-show="!flag" class="nowrap all_text">全部</div>
             </transition>
-            <el-icon><my-icon-menu /></el-icon>
+            <el-icon size="16px"><my-icon-menu /></el-icon>
           </div>
         </div>
         <div
@@ -40,7 +42,9 @@
           @click="goRoute(j.path, false)"
         >
           <div class="nav_icon">
-            <img src="" alt="" />
+            <svg class="icon" aria-hidden="true">
+              <use :xlink:href="j.meta!.icon"></use>
+            </svg>
           </div>
           <transition name="el-fade-in-linear">
             <div v-show="!flag" class="nav_text nowrap">{{j.meta!.title}}</div>
@@ -49,7 +53,7 @@
       </div>
     </div>
     <div v-show="flag" v-if="secNav" class="kz_sec_nav">
-      <div class="sec_title fcs">{{ secNav.meta.title }}</div>
+      <div class="sec_title fcs">{{ secNav.meta!.title }}</div>
       <el-menu v-if="secNav.children" router :default-active="nowPath">
         <template v-for="v in secNav.children" :key="v.path">
           <el-sub-menu v-if="v.children" :index="v.path">
@@ -190,7 +194,7 @@ defineExpose({
         box-sizing: border-box;
       }
       .all_btn {
-        padding-left: 17px;
+        padding-left: 16px;
       }
     }
     .nav_item_lv2 {
@@ -203,10 +207,10 @@ defineExpose({
       transition: color var(--el-transition-duration),
         background-color var(--el-transition-duration);
       cursor: pointer;
-      img {
-        width: 16px;
-        height: 16px;
+      .nav_icon {
+        font-size: 16px;
         margin-right: 8px;
+        color: #303133;
       }
       .nav_text {
         color: #606266;
@@ -220,6 +224,9 @@ defineExpose({
       &.kz_active {
         background-color: $dfcolor;
         .nav_text {
+          color: #fff;
+        }
+        .nav_icon {
           color: #fff;
         }
       }

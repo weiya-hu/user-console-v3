@@ -1,5 +1,5 @@
 <template>
-  <div class="media_upload flex" :class="max == 1 ? 'one_up' : ''">
+  <div class="media_upload flex" :class="max == 1 ? 'one_up' : 'alls_up'">
     <el-upload
       ref="upload"
       drag
@@ -32,13 +32,14 @@
 <script setup lang="ts">
 /**
  * 图片上传组件
+ * 上传时用了el-upload组件UploadFile内部的uid去判断了图片是否已上传，已上传的不会再次上传
  * @author chn
  */
 import { ref, onMounted, nextTick } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import type { UploadFile } from 'element-plus'
 import { getAliToken_api } from '@/api/login'
-import { errMsg } from '@/utils/index'
+import { lookImage, errMsg } from '@/utils/index'
 import axios from 'axios'
 
 const props = withDefaults(
@@ -49,7 +50,7 @@ const props = withDefaults(
     maxSize?: number //最大尺寸 单位M
     imgList?: string[] // 默认上传文件
     needDownload?: boolean // 图片是否需要下载
-    site?: string
+    site?: string // 上传接口参数
   }>(),
   {
     exnameList: () => ['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG'],
@@ -71,18 +72,19 @@ onMounted(() => {
   })
 })
 
-//upOneSuccess：上传单个图片成功后，返回文件地址和添加图片的个数；error：上传发生错误，返回错误；look：点击预览图片，返回图片blob地址数组和点击的图片下标；change：图片改变时，返回图片名；del：删除图片时触发
-const emit = defineEmits(['upOneSuccess', 'error', 'look', 'change', 'del'])
+// upOneSuccess：上传单个图片成功后，返回文件地址和添加图片的个数；upAllSuccess: 上传全部图片成功后，返回文件地址数组;
+// error：上传发生错误，返回错误；change：图片改变时，返回图片名；del：删除图片时触发
+const emit = defineEmits(['upOneSuccess', 'upAllSuccess', 'error', 'change', 'del'])
 
 const imgs = ref<UploadFile[]>([])
 const upload = ref() //上传组件ref
 
 const upChange = (file: UploadFile, fileList: UploadFile[]) => {
-  if (!file.name) {
+  if (!file.name || file.status === 'fail') {
     return
-  } // 当前版本elment2.1.7会触发两次on-change
+  }
   const exname = file.name.substring(file.name.lastIndexOf('.'))
-  if (props.exnameList.indexOf(exname) == -1) {
+  if (props.exnameList.indexOf(exname) === -1) {
     upload.value.handleRemove(file)
     errMsg('图片格式错误！')
     return
@@ -102,8 +104,10 @@ const upChange = (file: UploadFile, fileList: UploadFile[]) => {
   emit('change', fxname)
 }
 const upRemove = (file: UploadFile, fileList: UploadFile[]) => {
-  emit('del')
+  const i = sucImgs.value.findIndex((v) => v.uid === file.uid)
+  sucImgs.value.splice(i, 1)
   imgs.value = fileList
+  emit('del')
   ;(document.querySelector('.el-upload--picture-card') as HTMLElement).style.display = 'inline-flex'
 }
 const lookimgs = (file: UploadFile) => {
@@ -111,14 +115,24 @@ const lookimgs = (file: UploadFile) => {
   imgs.value.forEach((v) => {
     arr.push(v.url!)
   })
-  emit(
-    'look',
+  lookImage(
     arr,
-    arr.findIndex((v) => v == file.url)
+    arr.findIndex((v) => v === file.url)
   )
 }
 
-const filePath: string[] = []
+interface UploadFileSuccess extends UploadFile {
+  upUrl?: string
+}
+const sucImgs = ref<UploadFileSuccess[]>([])
+const isAllSuccess = () => {
+  if (sucImgs.value.length === imgs.value.length && sucImgs.value.length) {
+    emit(
+      'upAllSuccess',
+      sucImgs.value.map((v) => v.upUrl)
+    )
+  }
+}
 const upOneImg = async (file: UploadFile, downloadName?: string) => {
   //上传单张图片
   const res: IRes = await getAliToken_api({ site: props.site })
@@ -150,7 +164,8 @@ const upOneImg = async (file: UploadFile, downloadName?: string) => {
     })
     if (response.status == 200) {
       const url = res.body.host + '/' + res.body.dir + '/' + res.body.uuid + exname
-      filePath.push(url)
+      sucImgs.value.push({ ...file, upUrl: url })
+      isAllSuccess()
       //父组件内部去判断是否全部上传完成，因为上传成功后再走提交接口是个异步操作
       emit('upOneSuccess', url, imgs.value.length)
       return Promise.resolve(url)
@@ -161,10 +176,16 @@ const upOneImg = async (file: UploadFile, downloadName?: string) => {
 }
 const submit = async (downloadName?: string) => {
   // 一般一张图片才会改名，如果是多张，下载名就用文件名，不用传downloadName
+  isAllSuccess()
   try {
     for (let i = 0; i < imgs.value.length; i++) {
       const v = imgs.value[i]
-      const url = await upOneImg(v, downloadName).catch((err) => {
+      const j = sucImgs.value.findIndex((k) => v.uid === k.uid)
+      if (j > -1) {
+        // 即此图片已上传
+        continue
+      }
+      await upOneImg(v, downloadName).catch((err) => {
         throw new Error(err)
       })
     }
@@ -178,10 +199,13 @@ const clear = () => {
   //   upload.value.handleRemove(v)
   // });
   // upload.value.clearFiles();
-  // (document.querySelector('.el-upload--picture-card') as HTMLElement).style.display = 'inline-flex'
+  // imgs 是引用的el-upload组件内传入的UploadFile[]，清空imgs即可清空图片
+  imgs.value.length = 0
+  sucImgs.value.length = 0
+  ;(document.querySelector('.el-upload--picture-card') as HTMLElement).style.display = 'inline-flex'
 }
 const handleExceed = (files: UploadFile[]) => {
-  if (props.max === 1) {
+  if (props.max == 1) {
     upload.value.clearFiles()
     upload.value.handleStart(files[0])
   }
@@ -191,6 +215,7 @@ defineExpose({
   submit, // 上传
   clear, // 清除
   imgs, // 图片数组 File
+  sucImgs, // 上传成功的图片数组 { ...imgs, upUrl: 图片网络地址 }
 })
 </script>
 
@@ -284,6 +309,15 @@ defineExpose({
 
   :deep(.el-upload-list__item) {
     margin: 0 !important;
+  }
+}
+.alls_up {
+  display: block;
+  .tips {
+    height: auto;
+  }
+  :deep(.el-upload--picture-card) {
+    margin-bottom: 20px;
   }
 }
 </style>

@@ -43,7 +43,23 @@ body {
   .el-button--info.is-plain {
     --el-button-text-color: #666;
     --el-button-border-color: #666;
+    --el-button-bg-color: #fff;
   }
+  // .el-button{
+  //   --el-button-border-color: #666
+  // }
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+  // vertical-align: -0.15em;
+  vertical-align: top;
+  fill: currentColor;
+  overflow: hidden;
+}
+.fz16 {
+  font-size: 16px;
 }
 
 #app {
