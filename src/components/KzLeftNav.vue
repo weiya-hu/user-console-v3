@@ -3,7 +3,12 @@
     <div ref="leftLine" class="left_vline" :style="{ transform: `translate(0, ${top}px)` }"></div>
     <div class="kz_left_nav" @mouseenter="changeFlag(false)" @mouseleave="changeFlag(true)">
       <div class="fold_btn fcs fjend">
-        <div class="fold_icon chover" @click="changeFlag()">1</div>
+        <KzIcon
+          :href="flag ? '#icon-zhankai' : '#icon-shouqi'"
+          size="16px"
+          class="chover"
+          @click="changeFlag()"
+        />
       </div>
       <div
         class="nav_item_lv2"
@@ -11,9 +16,7 @@
         @click="goRoute('/console', true)"
       >
         <div class="nav_icon">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-lanmu-kongzhitai"></use>
-          </svg>
+          <KzIcon href="#icon-lanmu-kongzhitai" />
         </div>
         <transition name="el-fade-in-linear">
           <div v-show="!flag" class="nav_text nowrap">控制台</div>
@@ -42,9 +45,7 @@
           @click="goRoute(j.path, false)"
         >
           <div class="nav_icon">
-            <svg class="icon" aria-hidden="true">
-              <use :xlink:href="j.meta!.icon"></use>
-            </svg>
+            <KzIcon :href="j.meta!.icon" />
           </div>
           <transition name="el-fade-in-linear">
             <div v-show="!flag" class="nav_text nowrap">{{j.meta!.title}}</div>
@@ -176,11 +177,6 @@ defineExpose({
     z-index: 11;
     .fold_btn {
       height: 40px;
-      .fold_icon {
-        width: 16px;
-        height: 16px;
-        background: #ddd;
-      }
     }
     .nav_item_lv1 {
       margin-top: 10px;

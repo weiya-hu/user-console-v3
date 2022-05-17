@@ -2,12 +2,12 @@
   <div class="rz">
     <el-form
       ref="ruleFormRef"
+      v-loading="loading"
       :model="ruleForm"
       :rules="rules"
       label-width="180px"
       class="demo-ruleForm"
       size="large"
-      v-loading="loading"
     >
       <el-form-item prop="left_time">
         <el-date-picker v-model="ruleForm.left_time" type="date" value-format="x" />

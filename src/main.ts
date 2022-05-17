@@ -8,6 +8,7 @@ import '@/assets/css/base.scss'
 import ErrorDirective from '@/directive/error.js'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import { mainStore } from '@/store/index'
+import KzIcon from '@/components/KzIcon.vue'
 
 const app = createApp(App)
 
@@ -17,6 +18,7 @@ app
     locale: zhCn,
   })
   .directive('error', ErrorDirective)
+  .component('KzIcon', KzIcon)
 
 const store = mainStore()
 store.setUserinfo().finally(() => {

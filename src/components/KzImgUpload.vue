@@ -65,19 +65,19 @@ const props = withDefaults(
 
 onMounted(() => {
   nextTick(() => {
-    if(props.imgList.length){
+    if (props.imgList.length) {
       props.imgList.forEach((v, i) => {
         imgs.value.push({
           url: v,
           name: '',
           status: 'success',
-          uid: -i-1,
+          uid: -i - 1,
         })
         sucImgs.value.push({
           url: v,
           name: '',
           status: 'success',
-          uid: -i-1,
+          uid: -i - 1,
           upUrl: v,
         })
       })
@@ -124,7 +124,7 @@ const upRemove = (file: UploadFile, fileList: UploadFile[]) => {
   const i = sucImgs.value.findIndex((v) => {
     return v.upUrl === file.url || v.uid === file.uid
   })
-  i > - 1 && sucImgs.value.splice(i, 1);
+  i > -1 && sucImgs.value.splice(i, 1)
   imgs.value = fileList
   emit('del')
   ;(document.querySelector('.el-upload--picture-card') as HTMLElement).style.display = 'inline-flex'
@@ -153,7 +153,7 @@ const isAllSuccess = () => {
   }
 }
 const upOneImg = async (file: UploadFile, downloadName?: string) => {
-  if(file.status === 'success' || !file.raw){
+  if (file.status === 'success' || !file.raw) {
     return
   }
   //上传单张图片

@@ -4,23 +4,17 @@
       <el-row class="layout_top fcs">
         <div class="layout_top_lt fcs">
           <div class="all_nav_btn">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-suoyouchanpin"></use>
-            </svg>
+            <KzIcon href="#icon-suoyouchanpin" />
           </div>
           <img :src="logo_i" alt="加载失败" class="logo" />
         </div>
         <div class="layout_top_middle fcs">
           <div class="vline"></div>
-          <svg class="icon identity_icon" aria-hidden="true">
-            <use xlink:href="#icon-banbenqiehuan-tuandui"></use>
-          </svg>
+          <KzIcon href="#icon-banbenqiehuan-tuandui" size="16px" />
           <el-dropdown>
             <div class="fcs">
               <div class="now_identity">康州数智科技</div>
-              <svg class="icon fz16" aria-hidden="true">
-                <use xlink:href="#icon-xiala-shouqitianchong"></use>
-              </svg>
+              <KzIcon href="#icon-xiala-shouqitianchong" size="16px" />
             </div>
             <template #dropdown>
               <el-dropdown-menu>
@@ -46,9 +40,7 @@
                   <div class="user_name els">
                     康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州
                   </div>
-                  <svg class="icon fz16" aria-hidden="true">
-                    <use xlink:href="#icon-shouqi02"></use>
-                  </svg>
+                  <KzIcon href="#icon-shouqi02" size="16px" />
                 </div>
               </template>
               <div class="user_info" @click="loginOut">康州</div>
@@ -111,9 +103,9 @@
         ref="upImgRef"
         :max="3"
         msg="上传demo"
+        :img-list="imgsList"
         @up-all-success="upAll"
         @error="upImgError"
-        :img-list="imgsList"
       />
       <el-button class="mb20" @click="upImg">上传</el-button>
       <el-button class="mb20" @click="clearImg">清除</el-button>
@@ -140,8 +132,8 @@ import KzUpload from '@/components/KzUpload.vue'
 const upImgRef = ref()
 const upDemoShow = ref(false)
 const imgsList = ref([
-  'https://res.kzszh.com/dev/web/index/image/f21b635833aaf9ef4f4179e415988102.png', 
-  'https://res.kzszh.com/dev/web/index/image/c942c61ac09d4a582a43d7a8a3d986c0.png'
+  'https://res.kzszh.com/dev/web/index/image/f21b635833aaf9ef4f4179e415988102.png',
+  'https://res.kzszh.com/dev/web/index/image/c942c61ac09d4a582a43d7a8a3d986c0.png',
 ])
 const upAll = (files: string[]) => {
   // files 上传成功后的图片地址数组
@@ -174,8 +166,8 @@ const upSuccess = (url: string) => {
 }
 
 const store = mainStore()
-store.setTypeList()
-store.setAddressList()
+store.getTypeList()
+store.getAddressList()
 
 const isLogin = computed(() => {
   if (store.state.userInfo.id) {
@@ -268,9 +260,6 @@ emiter.on('lookVideo', (video: string) => {
       .vline {
         margin-left: 0;
         margin-right: 16px;
-      }
-      .identity_icon {
-        font-size: 16px;
       }
       .now_identity {
         margin-left: 8px;

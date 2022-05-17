@@ -2,12 +2,12 @@
   <div class="rz">
     <el-form
       ref="ruleFormRef"
+      v-loading="loading"
       :model="ruleForm"
       :rules="rules"
       label-width="150px"
       class="demo-ruleForm"
       size="large"
-      v-loading="loading"
     >
       <el-form-item label="行业分类" prop="industry_id">
         <KzCascader
