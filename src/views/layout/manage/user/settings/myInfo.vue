@@ -12,14 +12,14 @@
           <div class="card_container">
             <div class="card_content">
               <div v-loading="upLoading" class="user_avater">
-                <KzMediaUpload
+                <KzImgUpload
                   v-if="!upLoading"
-                  ref="kzMediaUploadRef"
+                  ref="KzImgUploadRef"
                   @change="changes"
                   @up-one-success="upSuccess"
                 >
                   <el-avatar :size="100" :src="imgUrl"></el-avatar>
-                </KzMediaUpload>
+                </KzImgUpload>
                 <el-avatar v-else :size="100" :src="imgUrl" class="up_avatar"></el-avatar>
               </div>
               <div class="info_txt fsc">
@@ -34,8 +34,9 @@
               <div class="info_txt fsc">
                 <div class="infoname">
                   <span class="u_label">真实姓名</span>
-                  <div class="infoname_txt">未实名</div>
-                  <el-icon color="#FF4736 "><Warning /></el-icon>
+                   <div class="infoname_txt" v-if="userInfoDate.real_name!=''">{{userInfoDate.real_name}}</div>
+                  <div class="infoname_txt" v-else>未实名</div>
+                  <el-icon color="#FF4736 " v-if="userInfoDate.real_name==''"><Warning /></el-icon>
                 </div>
                 <div class="handle">
                   <el-link type="primary" @click="$router.push('/manage/user/settings/realname')"
@@ -68,7 +69,10 @@
               <div class="info_txt fsc">
                 <div class="infoname">
                   <span class="u_label">地区</span>
-                  <div class="infoname_txt">重庆市南岸区</div>
+                  <div class="infoname_txt"> {{
+                      userInfoDate.province > 0 &&
+                      getHashStr(strToArr(userInfoDate.province,userInfoDate.city, userInfoDate.district), addressHash)
+                    }}</div>
                 </div>
                 <div class="handle">
                   <el-link type="primary" @click="goEdit('addr')">修改</el-link>
@@ -169,11 +173,7 @@
                   >
                   <div class="infoname_txt">123</div>
                 </div>
-                <div class="handle">
-                  <el-link type="primary">管理</el-link>
-                </div>
               </div>
-
               <div class="info_txt fsc">
                 <div class="infoname">
                   <span class="u_label">部门</span>
@@ -185,6 +185,9 @@
                   <span class="u_label">企业名称</span>
                   <div class="infoname_txt">无</div>
                 </div>
+                <div class="handle">
+                  <el-link type="primary" @click="quitCompany">退出企业</el-link>
+                </div>
               </div>
               <div class="info_txt fsc">
                 <div class="infoname">
@@ -195,25 +198,16 @@
             </div>
           </div>
         </div>
-
-        <el-button-group class="btn_tab">
-          <el-button :class="tab == 1 && 'btn_tab_active'" @click="tab = 1">文章</el-button>
-          <el-button :class="tab == 2 && 'btn_tab_active'" @click="tab = 2">视频</el-button>
-          <el-button :class="tab == 3 && 'btn_tab_active'" @click="tab = 3">视频</el-button>
-        </el-button-group>
-        <div class="mt20">
-          <el-button type="info" plain>kkkk</el-button>
-          <el-button class="bdc_btn">kkkk</el-button>
-          <el-button type="primary">kkkk</el-button>
-        </div>
       </el-scrollbar>
     </div>
+    <KzDialog v-model="quitShow" :msg="quitMsg" :title="'确定退出企业吗？'" :btn="2" />
   </div>
 </template>
 
 <script setup lang="ts">
 import KzStepTab from '@/components/KzStepTab.vue'
 import KzEditInfo from '@/components/KzEditInfo.vue'
+import KzDialog from '@/components/KzDialog.vue'
 import { formatDate } from '@/utils/date'
 import { ref, onMounted } from 'vue'
 import { Warning } from '@element-plus/icons-vue'
@@ -225,9 +219,12 @@ import icon_star from '@/assets/images/user_star.png'
 import icon_company from '@/assets/images/my_company.png'
 import useClipboard from 'vue-clipboard3'
 import QrcodeVue from 'qrcode.vue'
-import KzMediaUpload from '@/components/KzMediaUpload.vue'
+import KzImgUpload from '@/components/KzImgUpload.vue'
 import { mainStore } from '@/store/index'
+import { errMsg } from '@/utils/index'
+import { getHash, getHashStr, strToArr } from '@/utils/index'
 const store = mainStore()
+const addressHash = ref(store.state.addressHash)
 const loginUrl = store.state.yxtUrl.mobile
 console.log(loginUrl)
 
@@ -297,10 +294,10 @@ const goEdit = (key: string) => {
 }
 
 // 修改头像
-const kzMediaUploadRef = ref()
+const KzImgUploadRef = ref()
 const changes = () => {
-  imgUrl.value = kzMediaUploadRef.value.imgs[0].url
-  kzMediaUploadRef.value.submit()
+  imgUrl.value = KzImgUploadRef.value.imgs[0].url
+  KzImgUploadRef.value.submit()
 }
 const upLoading = ref(false)
 const imgUrl = ref('')
@@ -339,13 +336,19 @@ const copyCode = async (val: any) => {
   try {
     await toClipboard(val)
   } catch (e) {
-    alert('该浏览器不支持自动复制')
+    errMsg('该浏览器不支持自动复制')
   }
 }
 const qcsize = 100
 const codeShow = ref(false)
 const goCode = () => {
   codeShow.value = true
+}
+// 退出企业
+const quitShow = ref(false)
+const quitMsg = ref('退出企业后将不再能够使用该企业所有的产品与服务，请务必谨慎操作建议与企业管理员确认后再退出')
+const quitCompany = () => {
+  quitShow.value = true
 }
 </script>
 
@@ -360,11 +363,11 @@ const goCode = () => {
       border-radius: 8px;
       .card_container {
         width: 1012px;
-        height: 650px;
         background: #ffffff;
         .card_content {
           width: 800px;
           margin: 0 auto;
+          padding-bottom: 56px;
           .user_avater {
             width: 96px;
             height: 96px;
@@ -440,20 +443,15 @@ const goCode = () => {
                 margin-right: 16px;
               }
             }
+            &:last-child {
+              margin-bottom: 0;
+            }
           }
         }
       }
     }
-    .conten_item1 {
-      height: 672px;
-    }
-    .conten_item2 {
-      height: 306px;
-      .u_tag {
-      }
-    }
+
     .conten_item3 {
-      height: 308px;
       .active_c {
         margin-right: 8px;
       }

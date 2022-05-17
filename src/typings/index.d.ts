@@ -40,3 +40,13 @@ interface ILoginForm {
 interface Window {
   WxLogin: any
 }
+/**
+ * @name 实名认证表单类型
+ */
+ interface IUserForm {
+  mobile: string
+  acode: string
+  sms: string
+  real_name: string
+  id_card: string
+}
