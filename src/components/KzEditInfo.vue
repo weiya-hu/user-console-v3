@@ -41,7 +41,7 @@
           <el-icon v-show="!userInfoTxt" size="14px" class="date_icon"><calendar /></el-icon>
         </div>
         <div v-if="info_type === 'addr'" class="fcc fc">
-          <KzCascader ref="addrCRef" v-model="addArr" type="address" @change="changeItemLables()" />
+          <KzCascader ref="addrCRef" v-model="addArr" type="address" />
         </div>
       </template>
       <template #footer>
@@ -55,7 +55,7 @@
 import { ref, computed } from 'vue'
 import KzCascader from '@/components/KzCascader.vue'
 import { CircleCloseFilled, Calendar } from '@element-plus/icons-vue'
-import { log } from 'console'
+
 
 /**
  * 修改个人信息 弹窗
@@ -83,7 +83,6 @@ const show = computed({
 const editRef = ref()
 const addrCRef = ref()
 
-const changeItemLables = () => {}
 const emit = defineEmits(['update:modelValue', 'comfirm'])
 
 const close = () => {

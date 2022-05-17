@@ -38,7 +38,9 @@
                     {{ userInfoDate.real_name }}
                   </div>
                   <div class="infoname_txt" v-else>未实名</div>
-                  <el-icon color="#FF4736 " v-if="userInfoDate.real_name==''"><Warning /></el-icon>
+                  <el-icon color="#FF4736 " v-if="userInfoDate.real_name == ''"
+                    ><Warning
+                  /></el-icon>
                 </div>
                 <div class="handle">
                   <el-link type="primary" @click="$router.push('/manage/user/settings/realname')">{{
@@ -106,8 +108,7 @@
                         :value="
                           'https://' +
                           loginUrl +
-                          '/cms_resource.html?&invite_code=' +
-                          userInfoDate.invite_code
+                          `/app/login?invite_code=${userInfoDate.invite_code}`
                         "
                         :size="qcsize"
                         level="H"

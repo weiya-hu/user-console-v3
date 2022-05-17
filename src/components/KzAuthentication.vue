@@ -21,10 +21,8 @@
  * @author hll  pr
  */
 import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
 import KzIcon from '@/components/KzIcon.vue';
-const showUp = ref(1)
-const router = useRouter()
+
 const props = withDefaults(
   defineProps<{
     reSubmit?: boolean //判断是否需要重新认证
