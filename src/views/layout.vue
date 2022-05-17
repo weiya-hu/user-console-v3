@@ -179,7 +179,7 @@ const isLogin = computed(() => {
 
 const loginOut = () => {
   loginOut_api().then(() => {
-    sessionStorage.removeItem('islogin')
+    store.setUserinfo(true)
     router.replace('/login?url=' + encodeURIComponent(window.location.origin + '/console'))
   })
 }

@@ -64,17 +64,14 @@ export const mainStore = defineStore('mainStore', () => {
         .then((res: IRes) => {
           if (res.status == 1) {
             state.userInfo = res.body
-            sessionStorage.setItem('islogin', '1')
             resolve(state.userInfo)
           } else {
             state.userInfo = {}
-            sessionStorage.removeItem('islogin')
             reject(res.message)
           }
         })
         .catch((err) => {
           state.userInfo = {}
-          sessionStorage.removeItem('islogin')
           reject(err)
         })
     })

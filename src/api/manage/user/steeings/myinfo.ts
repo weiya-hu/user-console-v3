@@ -1,14 +1,14 @@
 import { get, post } from '@/utils/request'
 
 /**
- * 
+ *
  * @name 获取会员类别
  */
 export const userMember_api = (): Promise<IRes> => {
   return get('user ', '/public/member.list')
 }
 /**
- * 
+ *
  * @name 用户中心用户基本信息和会员信息列表
  */
 export const userInfo_api = (): Promise<IRes> => {
@@ -31,7 +31,7 @@ export const userInfoEdit_api = (data: {
 /**
  * @name 修改用户中心基本信息
  */
- export const authenticate_api = (data: {
+export const authenticate_api = (data: {
   acode: string
   id_card: string
   mobile: string
@@ -44,14 +44,13 @@ export const userInfoEdit_api = (data: {
 /**
  * @name 查看邀请用户详情
  */
-export const invitation_api =  (): Promise<IRes> => {
+export const invitation_api = (): Promise<IRes> => {
   return get('user ', '/user/invitation/user.list')
 }
 
 /**
  * @name 发送实名认证短信
  */
- export const sendSms_api = (data: { acode: string; mobile: string }): Promise<IRes> => {
+export const sendSms_api = (data: { acode: string; mobile: string }): Promise<IRes> => {
   return post('user', '/user/verified/sms/send.do', data)
 }
-

@@ -34,11 +34,11 @@
               <div class="info_txt fsc">
                 <div class="infoname">
                   <span class="u_label">真实姓名</span>
-                  <div class="infoname_txt" v-if="userInfoDate.real_name != ''">
+                  <div v-if="userInfoDate.real_name != ''" class="infoname_txt">
                     {{ userInfoDate.real_name }}
                   </div>
-                  <div class="infoname_txt" v-else>未实名</div>
-                  <el-icon color="#FF4736 " v-if="userInfoDate.real_name == ''"
+                  <div v-else class="infoname_txt">未实名</div>
+                  <el-icon v-if="userInfoDate.real_name == ''" color="#FF4736 "
                     ><Warning
                   /></el-icon>
                 </div>

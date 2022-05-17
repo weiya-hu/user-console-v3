@@ -23,8 +23,8 @@
         <div v-else class="fcc up_lt" :class="modelValue ? 'hasfile' : ''">
           <div class="fcc fc">
             <el-icon>
-              <document v-if="modelValue" />
-              <plus v-else />
+              <Document v-if="modelValue" />
+              <Plus v-else />
             </el-icon>
             <div class="file_name">{{ modelValue || '拖拽/点击上传' }}</div>
           </div>
@@ -61,7 +61,6 @@ import { Plus, Document } from '@element-plus/icons-vue'
 import type { UploadFile, UploadProgressEvent } from 'element-plus'
 import { getAliToken_api } from '@/api/login'
 import { errMsg } from '@/utils'
-import { now } from 'lodash'
 
 const props = withDefaults(
   defineProps<{

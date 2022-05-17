@@ -22,5 +22,12 @@ app
 
 const store = mainStore()
 store.setUserinfo().finally(() => {
-  app.use(router).mount('#app')
+  app.use(router).mount('#app') // 获取到用户信息再挂载
+  router.beforeEach((to, from) => {
+    const userInfo = store.state.userInfo
+    if (to.meta.lv !== '-1' && !userInfo.id) {
+      router.replace('/login?url=' + encodeURIComponent(window.location.origin + '/console'))
+      return false
+    }
+  })
 })

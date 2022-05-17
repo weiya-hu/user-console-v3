@@ -1,6 +1,6 @@
 <template>
   <div class="kz_empty fcc fc">
-    <img :src="empty_i" alt="" />
+    <img :src="img" alt="" />
     <div class="kz_empty_text">{{ msg }}</div>
     <slot></slot>
   </div>
@@ -14,10 +14,12 @@
 import empty_i from '@/assets/images/empty.png'
 const props = withDefaults(
   defineProps<{
-    msg?: string //提示文本
+    msg?: string // 提示文本
+    img?: string // 展示图片
   }>(),
   {
     msg: '暂无数据',
+    img: empty_i,
   }
 )
 </script>

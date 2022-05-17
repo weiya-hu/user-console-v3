@@ -4,12 +4,12 @@
       <div class="card_title">{{ u_type == 'user' ? '实名认证' : '认证信息' }}</div>
       <div class="fcc fc imgs">
         <img :src="img" alt="" />
-        <KzIcon :href="img_small" size="24px" class="pic"/>
+        <KzIcon :href="img_small" size="24px" class="pic" />
       </div>
       <div class="fcc msg">{{ msg }}</div>
       <div class="fcc msgTwo">{{ msgTwo }}</div>
       <div class="fcc">
-        <el-button type="primary" @click="goUrl" v-if="reSubmit">重新认证</el-button>
+        <el-button v-if="reSubmit" type="primary" @click="goUrl">重新认证</el-button>
       </div>
     </div>
   </div>
@@ -21,7 +21,7 @@
  * @author hll  pr
  */
 import { ref, computed } from 'vue'
-import KzIcon from '@/components/KzIcon.vue';
+import KzIcon from '@/components/KzIcon.vue'
 
 const props = withDefaults(
   defineProps<{

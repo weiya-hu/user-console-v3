@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="real_name kz_card" v-show="showUp === 1">
+    <div v-show="showUp === 1" class="real_name kz_card">
       <div class="card_title">实名认证</div>
       <div class="card_body fcc">
         <el-form
@@ -51,14 +51,14 @@
       </div>
     </div>
     <KzAuthentication
-      u_type="user"
+      v-show="showUp === 2"
       v-model="userShow"
-      :reSubmit="showBtn"
+      u_type="user"
+      :re-submit="showBtn"
       :img="img"
       :img_small="img_small"
       :msg="msg"
-      :msgTwo="msgTwo"
-      v-show="showUp === 2"
+      :msg-two="msgTwo"
       @redo="$router.replace('/manage/user/settings/myinfo')"
     />
   </div>
@@ -141,14 +141,14 @@ const sumbit = () => {
       if (res.status == 1) {
         showUp.value = 2
         img.value = icon_user
-        img_small.value='#icon-renzhengchenggong'
+        img_small.value = '#icon-renzhengchenggong'
         msg.value = '恭喜你，实名认证已通过！'
         msgTwo.value = '你已完成实名认证，康洲数智将会严格按照《数据安全法》保障你的数据安全与隐私'
       } else {
         showUp.value = 2
         showBtn.value = true
         img.value = icon_user
-        img_small.value='#icon-renzhengshibai'
+        img_small.value = '#icon-renzhengshibai'
         msg.value = '很遗憾，你的实名认证未通过！'
         msgTwo.value = '请检查姓名与身份证号码是否有误，更正后再试'
       }

@@ -16,55 +16,49 @@ export const routes: RouteRecordRaw[] = [
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login/login.vue'),
-    meta: { title: '登录' },
+    meta: { title: '登录', lv: '-1' },
   },
   {
     path: '/register',
     name: 'Register',
     component: () => import('@/views/login/register.vue'),
-    meta: { title: '注册' },
+    meta: { title: '注册', lv: '-1' },
   },
   {
     path: '/forget',
     name: 'Forget',
     component: () => import('@/views/login/forget.vue'),
-    meta: { title: '忘记密码' },
+    meta: { title: '忘记密码', lv: '-1' },
   },
   {
     path: '/useragreement',
     name: 'Useragreement',
     component: () => import('@/views/login/useragreement.vue'),
-    meta: { title: '用户须知' },
+    meta: { title: '用户须知', lv: '-1' },
   },
   {
     path: '/resetpass',
     name: 'ResetPass',
     component: () => import('@/views/login/resetPass.vue'),
-    meta: { title: '重设密码' },
+    meta: { title: '重设密码', lv: '-1' },
   },
   {
     path: '/bindphone',
     name: 'BindPhone',
     component: () => import('@/views/login/bindPhone.vue'),
-    meta: { title: '绑定手机号' },
+    meta: { title: '绑定手机号', lv: '-1' },
   },
   {
     path: '/login/wechat/callback',
     name: 'WxLoginJump',
     component: () => import('@/views/login/wxLoginJump.vue'),
-    meta: { title: '微信登录' },
+    meta: { title: '微信登录', lv: '-1' },
   },
   {
     path: '/',
     name: 'Layout',
     component: () => import('@/views/layout.vue'),
-    redirect: (to) => {
-      if (sessionStorage.getItem('islogin')) {
-        return '/console'
-      }
-      const url = '/login?url=' + encodeURIComponent(window.location.origin + '/console')
-      return url
-    },
+    redirect: '/console',
     meta: { title: '康洲数智' },
     children: [
       {
@@ -262,6 +256,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/:catchAll(.*)',
     name: '404',
     component: () => import('@/views/404.vue'),
+    meta: { title: '康州数智', lv: '-1' },
   },
 ]
 

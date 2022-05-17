@@ -43,7 +43,7 @@ interface Window {
 /**
  * @name 实名认证表单类型
  */
- interface IUserForm {
+interface IUserForm {
   mobile: string
   acode: string
   sms: string
