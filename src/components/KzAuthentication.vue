@@ -4,8 +4,8 @@
       <div class="card_title">{{ u_type == 'user' ? '实名认证' : '认证信息' }}</div>
       <div class="fcc fc imgs">
         <img :src="img" alt="" />
+        <KzIcon :href="img_small" size="24px" class="pic"/>
       </div>
-      <img :src="img_small" alt="" class="pic" />
       <div class="fcc msg">{{ msg }}</div>
       <div class="fcc msgTwo">{{ msgTwo }}</div>
       <div class="fcc">
@@ -22,7 +22,7 @@
  */
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-
+import KzIcon from '@/components/KzIcon.vue';
 const showUp = ref(1)
 const router = useRouter()
 const props = withDefaults(
@@ -75,20 +75,19 @@ const goUrl = () => {
 }
 .identific {
   .imgs {
-    margin-top: 100px;
-    margin-bottom: 32px;
-    // position: relative;
+    position: relative;
+    width: 90px;
+    height: 60px;
+    margin: 100px auto 24px;
     img {
-      width: 90px;
-      height: 60px;
+      height: 100%;
+      width: 100%;
     }
-  }
-  .pic {
-    width: 24px;
-    height: 24px;
-    position: absolute;
-    top: 223px;
-    right:794px;
+    .pic {
+      position: absolute;
+      bottom: -5px;
+      right: -4px;
+    }
   }
 }
 

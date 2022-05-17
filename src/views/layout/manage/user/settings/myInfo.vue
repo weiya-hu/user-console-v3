@@ -34,14 +34,16 @@
               <div class="info_txt fsc">
                 <div class="infoname">
                   <span class="u_label">真实姓名</span>
-                   <div class="infoname_txt" v-if="userInfoDate.real_name!=''">{{userInfoDate.real_name}}</div>
+                  <div class="infoname_txt" v-if="userInfoDate.real_name != ''">
+                    {{ userInfoDate.real_name }}
+                  </div>
                   <div class="infoname_txt" v-else>未实名</div>
                   <el-icon color="#FF4736 " v-if="userInfoDate.real_name==''"><Warning /></el-icon>
                 </div>
                 <div class="handle">
-                  <el-link type="primary" @click="$router.push('/manage/user/settings/realname')"
-                    >实名认证</el-link
-                  >
+                  <el-link type="primary" @click="$router.push('/manage/user/settings/realname')">{{
+                    userInfoDate.real_name ? '重新认证' : '实名认证'
+                  }}</el-link>
                 </div>
               </div>
               <div class="info_txt fsc">
@@ -69,10 +71,15 @@
               <div class="info_txt fsc">
                 <div class="infoname">
                   <span class="u_label">地区</span>
-                  <div class="infoname_txt"> {{
+                  <div class="infoname_txt">
+                    {{
                       userInfoDate.province > 0 &&
-                      getHashStr(strToArr(userInfoDate.province,userInfoDate.city, userInfoDate.district), addressHash)
-                    }}</div>
+                      getHashStr(
+                        strToArr(userInfoDate.province, userInfoDate.city, userInfoDate.district),
+                        addressHash
+                      )
+                    }}
+                  </div>
                 </div>
                 <div class="handle">
                   <el-link type="primary" @click="goEdit('addr')">修改</el-link>
@@ -80,7 +87,10 @@
               </div>
               <div class="info_txt fsc">
                 <div class="infoname">
-                  <span class="u_label">我的邀请码</span>
+                  <span class="u_label"
+                    >我的邀请码 <KzIcon href="#icon-bangzhu" class="icon"
+                  /></span>
+
                   <div class="infoname_txt">{{ userInfoDate.invite_code }}</div>
                   <span class="u_tips">*不可修改</span>
                 </div>
@@ -117,7 +127,7 @@
               </div>
               <div class="info_txt fsc">
                 <div class="infoname">
-                  <span class="u_label">邀请者</span>
+                  <span class="u_label">邀请者<KzIcon href="#icon-bangzhu" class="icon" /></span>
                   <div class="infoname_txt">{{ userInfoDate.invitee }}</div>
                 </div>
               </div>
@@ -167,11 +177,9 @@
             <div class="card_content">
               <div class="info_txt fsc">
                 <div class="infoname">
-                  <span class="u_label">
-                    <img class="active_c" :src="icon_company" alt="" />
-                    企业名称</span
-                  >
+                  <span class="u_label"> 企业名称</span>
                   <div class="infoname_txt">123</div>
+                  <img class="active_c" :src="icon_company" alt="" />
                 </div>
               </div>
               <div class="info_txt fsc">
@@ -208,6 +216,7 @@
 import KzStepTab from '@/components/KzStepTab.vue'
 import KzEditInfo from '@/components/KzEditInfo.vue'
 import KzDialog from '@/components/KzDialog.vue'
+import KzIcon from '@/components/KzIcon.vue'
 import { formatDate } from '@/utils/date'
 import { ref, onMounted } from 'vue'
 import { Warning } from '@element-plus/icons-vue'
@@ -346,7 +355,9 @@ const goCode = () => {
 }
 // 退出企业
 const quitShow = ref(false)
-const quitMsg = ref('退出企业后将不再能够使用该企业所有的产品与服务，请务必谨慎操作建议与企业管理员确认后再退出')
+const quitMsg = ref(
+  '退出企业后将不再能够使用该企业所有的产品与服务，请务必谨慎操作建议与企业管理员确认后再退出'
+)
 const quitCompany = () => {
   quitShow.value = true
 }
@@ -457,5 +468,8 @@ const quitCompany = () => {
       }
     }
   }
+}
+.icon {
+  margin-left: 8px;
 }
 </style>

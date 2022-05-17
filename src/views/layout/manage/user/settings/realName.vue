@@ -55,6 +55,7 @@
       v-model="userShow"
       :reSubmit="showBtn"
       :img="img"
+      :img_small="img_small"
       :msg="msg"
       :msgTwo="msgTwo"
       v-show="showUp === 2"
@@ -69,11 +70,12 @@ import { mobileCheck, idCardValidity } from '@/utils/index'
 import areaNum from '@/utils/areaNum'
 import { authenticate_api, sendSms_api } from '@/api/manage/user/steeings/myinfo'
 import KzAuthentication from '@/components/KzAuthentication.vue'
-import icon_f_i from '@/assets/images/icon_fail.png'
-import icon_p_i from '@/assets/images/icon_pass.png'
+import icon_user from '@/assets/images/user.png'
+
 const userShow = ref(true)
 const showBtn = ref(false)
 const img = ref('')
+const img_small = ref('')
 const msg = ref('')
 const msgTwo = ref('')
 const showUp = ref(1)
@@ -90,11 +92,11 @@ const realRules = reactive({
   real_name: [{ required: true, message: '请输入真实姓名！', trigger: 'blur' }],
   id_card: [
     { required: true, message: '请输入个人身份证号', trigger: 'blur' },
-    // { validator: idCardValidity, trigger: 'blur' },
+    { validator: idCardValidity, trigger: 'blur' },
   ],
   mobile: [
     { required: true, message: '请输入手机号！', trigger: 'blur' },
-    // { validator: mobileCheck, trigger: 'blur' },
+    { validator: mobileCheck, trigger: 'blur' },
   ],
   sms: [{ required: true, message: '请输入验证码！', trigger: 'blur' }],
 })
@@ -138,13 +140,15 @@ const sumbit = () => {
 
       if (res.status == 1) {
         showUp.value = 2
-        img.value = icon_p_i
+        img.value = icon_user
+        img_small.value='#icon-renzhengchenggong'
         msg.value = '恭喜你，实名认证已通过！'
         msgTwo.value = '你已完成实名认证，康洲数智将会严格按照《数据安全法》保障你的数据安全与隐私'
       } else {
         showUp.value = 2
         showBtn.value = true
-        img.value = icon_f_i
+        img.value = icon_user
+        img_small.value='#icon-renzhengshibai'
         msg.value = '很遗憾，你的实名认证未通过！'
         msgTwo.value = '请检查姓名与身份证号码是否有误，更正后再试'
       }
