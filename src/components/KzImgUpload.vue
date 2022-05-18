@@ -63,29 +63,33 @@ const props = withDefaults(
   }
 )
 
+const setImgs = () => {
+  if (props.imgList.length) {
+    props.imgList.forEach((v, i) => {
+      imgs.value.push({
+        url: v,
+        name: '',
+        status: 'success',
+        uid: -i - 1,
+      })
+      sucImgs.value.push({
+        url: v,
+        name: '',
+        status: 'success',
+        uid: -i - 1,
+        upUrl: v,
+      })
+    })
+  }
+  if (props.imgList.length >= props.max) {
+    const el = document.querySelector('.el-upload--picture-card') as HTMLElement
+    el.style.display = 'none'
+  }
+}
+
 onMounted(() => {
   nextTick(() => {
-    if (props.imgList.length) {
-      props.imgList.forEach((v, i) => {
-        imgs.value.push({
-          url: v,
-          name: '',
-          status: 'success',
-          uid: -i - 1,
-        })
-        sucImgs.value.push({
-          url: v,
-          name: '',
-          status: 'success',
-          uid: -i - 1,
-          upUrl: v,
-        })
-      })
-    }
-    if (props.imgList.length >= props.max) {
-      const el = document.querySelector('.el-upload--picture-card') as HTMLElement
-      el.style.display = 'none'
-    }
+    setImgs()
   })
 })
 
@@ -239,6 +243,7 @@ defineExpose({
   clear, // 清除
   imgs, // 图片数组 File
   sucImgs, // 上传成功的图片数组 { ...imgs, upUrl: 图片网络地址 }
+  setImgs, // 设置默认上传图片
 })
 </script>
 

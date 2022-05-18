@@ -50,6 +50,10 @@ body {
   // }
 }
 
+.el-popover.el-popper.user_drop{
+  padding: 0;
+}
+
 .kzicon {
   width: 1em;
   height: 1em;
@@ -57,6 +61,16 @@ body {
   vertical-align: top;
   fill: currentColor;
   overflow: hidden;
+}
+.icon_rotate{
+  .kzicon{
+    transition: transform 0.5s;
+  }
+  &:hover{
+    .kzicon{
+      transform: rotate(-180deg);
+    }
+  }
 }
 .fz16 {
   font-size: 16px;

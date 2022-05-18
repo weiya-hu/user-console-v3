@@ -12,7 +12,7 @@
           <div class="vline"></div>
           <KzIcon href="#icon-banbenqiehuan-tuandui" size="16px" />
           <el-dropdown>
-            <div class="fcs">
+            <div class="fcs icon_rotate">
               <div class="now_identity">康州数智科技</div>
               <KzIcon href="#icon-xiala-shouqitianchong" size="16px" />
             </div>
@@ -27,23 +27,45 @@
         </div>
         <div class="layout_top_rt fcs f1 fjend">
           <div class="top_links fcs">
-            <el-button class="mr20" @click="upDemoShow = true">上传demo</el-button>
+            <el-button class="mr20" @click="showDemo">上传demo</el-button>
             <el-link class="mr20" @click="$router.push('/console')">控制台</el-link>
-            <el-link :href="'//' + urlInfo.offical" target="_blank">官网</el-link>
+            <el-link :href="'//' + yxtUrl.offical" target="_blank">官网</el-link>
           </div>
           <div class="vline"></div>
           <div class="user_box fcs">
             <el-avatar :size="36" :src="df_avatar_i" />
-            <el-popover :show-arrow="false" width="316px">
+            <el-popover :show-arrow="false" width="316px" popper-class="user_drop" trigger="click">
               <template #reference>
-                <div class="fcs pl16">
+                <div class="fcs pl16 icon_rotate">
                   <div class="user_name els">
                     康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州
                   </div>
                   <KzIcon href="#icon-shouqi02" size="16px" />
                 </div>
               </template>
-              <div class="user_info" @click="loginOut">康州</div>
+              <div class="user_drop_info fc">
+                <div class="fcs fjend">
+                  <div class="tags fcc">
+                    <img :src="user_general_i" alt="">
+                  </div>
+                  <div class="tags fcc">
+                    <img :src="real_name_i" alt="">
+                  </div>
+                </div>
+                <div class="fcc fc user_avatar">
+                  <el-avatar :size="64" :src="df_avatar_i" />
+                  <div class="user_name1 els">康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州</div>
+                </div>
+                <div class="user_btns f1 fc fjend">
+                  <div class="fsc user_btns_item" v-for="v in user_btns" :key="v.url" @click="handUserBtn(v.url)">
+                    <div class="fcc">
+                      <KzIcon size="16px" :href="v.icon"/>
+                      <div class="btn_text">{{v.text}}</div>
+                    </div>
+                    <el-icon size="16px" v-if="v.url !== 'login_out'"><ArrowRight /></el-icon>
+                  </div>
+                </div>
+              </div>
             </el-popover>
           </div>
         </div>
@@ -123,6 +145,9 @@ import { mainStore } from '@/store/index'
 import emiter from '@/utils/bus'
 import logo_i from '@/assets/images/logo.png'
 import df_avatar_i from '@/assets/images/dfavatar.png'
+import user_general_i from '@/assets/images/user_general.png'
+import real_name_i from '@/assets/images/real_name.png'
+import { ArrowRight } from '@element-plus/icons-vue'
 import KzLeftNav from '@/components/KzLeftNav.vue'
 import KzDetailsHeader from '@/components/KzDetailsHeader.vue'
 import { loginOut_api } from '@/api/login'
@@ -131,10 +156,15 @@ import KzImgUpload from '@/components/KzImgUpload.vue'
 import KzUpload from '@/components/KzUpload.vue'
 const upImgRef = ref()
 const upDemoShow = ref(false)
-const imgsList = ref([
-  'https://res.kzszh.com/dev/web/index/image/f21b635833aaf9ef4f4179e415988102.png',
-  'https://res.kzszh.com/dev/web/index/image/c942c61ac09d4a582a43d7a8a3d986c0.png',
-])
+const imgsList = ref<string[]>([])
+const showDemo = () => {
+  upDemoShow.value = true
+  setTimeout(() => {
+    imgsList.value.push('https://res.kzszh.com/dev/web/index/image/f21b635833aaf9ef4f4179e415988102.png')
+    imgsList.value.push('https://res.kzszh.com/dev/web/index/image/c942c61ac09d4a582a43d7a8a3d986c0.png')
+    upImgRef.value.setImgs()
+  }, 1000);
+}
 const upAll = (files: string[]) => {
   // files 上传成功后的图片地址数组
   console.log(files)
@@ -165,6 +195,22 @@ const upSuccess = (url: string) => {
   console.log(url)
 }
 
+const user_btns = [
+  { text: '用户中心', icon: '#icon-banbenqiehuan-geren', url: '/manage/user' },
+  { text: '反馈', icon: '#icon-pinglun', url: '/console' },
+  { text: '退出登录', icon: '#icon-tuichu', url: 'login_out' },
+]
+const handUserBtn = (url: string) => {
+  if(url === 'login_out'){
+    loginOut_api().then(() => {
+      store.setUserinfo(true)
+      router.replace('/login?url=' + encodeURIComponent(window.location.origin + '/console'))
+    })
+    return
+  }
+  router.push(url)
+}
+
 const store = mainStore()
 store.getTypeList()
 store.getAddressList()
@@ -177,12 +223,6 @@ const isLogin = computed(() => {
   return false
 })
 
-const loginOut = () => {
-  loginOut_api().then(() => {
-    store.setUserinfo(true)
-    router.replace('/login?url=' + encodeURIComponent(window.location.origin + '/console'))
-  })
-}
 
 const route = useRoute()
 const router = useRouter()
@@ -194,10 +234,10 @@ onBeforeRouteUpdate((to, from) => {
   leftNavRef.value.changeFlag(to.path === '/console' ? false : true)
   detailsHeaderRef.value && detailsHeaderRef.value.getCrumbs(to)
 
-  if (from.meta.keepAlive && to.meta.father == from.path) {
+  if (from.meta.keepAlive && to.meta.father === from.path) {
     // 从列表进入详情 缓存列表
     store.setKeepList([from.name as string])
-  } else if (to.meta.keepAlive && from.meta.father == to.path) {
+  } else if (to.meta.keepAlive && from.meta.father === to.path) {
     // 从详情返回上一级 什么都不做
   } else {
     // 兄弟列表切换 或者 详情进入非父级列表
@@ -213,9 +253,9 @@ const onChangeLeftNav = (flag: boolean) => {
 }
 
 //获取跳转地址
-const urlInfo = ref<any>({})
-store.getYxtUrl().then((url: any) => {
-  urlInfo.value = url
+const yxtUrl = ref<Record<string, string>>({})
+store.getYxtUrl().then((url: Record<string, string>) => {
+  yxtUrl.value = url
 })
 
 const showImgs = ref<string[]>([]) //预览图片列表
@@ -332,6 +372,58 @@ emiter.on('lookVideo', (video: string) => {
     .show_video {
       width: 100%;
       height: 600px;
+    }
+  }
+}
+
+.user_drop_info{
+  width: 316px;
+  height: 336px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: url('@/assets/images/user_bg.jpg') no-repeat;
+  background-size: 100% auto;
+  background-position: 0 0;
+  padding-top: 8px;
+  line-height: 1;
+  .tags{
+    background-color: #fff;
+    padding: 4px;
+    border-radius: 12px;
+    margin-right: 8px;
+    img{
+      width: auto;
+      height: 16px;
+    }
+    .kzicon{
+      margin-right: 1px;
+    }
+  }
+  .user_avatar{
+    margin-top: 34px;
+    .user_name1{
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 12px;
+      padding: 0 12px;
+      max-width: 100%;
+    }
+  }
+  .user_btns{
+    padding: 0 16px 16px;
+    color: #606266;
+    .btn_text{
+      margin-left: 8px;
+    }
+    .user_btns_item{
+      height: 34px;
+      padding: 9px 4px 9px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      &:hover{
+        background-color: #F3F4F8;
+        color: $dfcolor;
+      }
     }
   }
 }

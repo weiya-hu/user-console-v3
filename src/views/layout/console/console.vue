@@ -1,7 +1,7 @@
 <template>
   <div class="console_page">
     <div class="flex">
-      <div class="kz_card">
+      <div class="kz_card f1 mr16">
         <div class="card_title fsc">
           <div>热门推荐</div>
           <el-button type="info" plain size="small">全部</el-button>
@@ -14,6 +14,12 @@
             <div class="item_icon"></div>
             <div class="item_bg"></div>
           </div>
+        </div>
+      </div>
+      <div class="kz_card user_card">
+        <div class="fcs fjend">
+          <img :src="user_general_i" alt="">
+          <img :src="real_name_i" alt="">
         </div>
       </div>
     </div>
@@ -33,12 +39,22 @@
 <script setup lang="ts">
 import KzEmpty from '@/components/KzEmpty.vue'
 import { ref } from 'vue'
+import user_general_i from '@/assets/images/user_general.png'
+import real_name_i from '@/assets/images/real_name.png'
+
 </script>
 
 <style lang="scss" scoped>
 .console_page {
   .card_body {
     padding: 0 24px 24px;
+  }
+  .user_card{
+    width: 372px;
+    img{
+      width: auto;
+      height: 16px;
+    }
   }
   .hot_list {
     .item {
