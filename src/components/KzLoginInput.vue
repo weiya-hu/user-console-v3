@@ -95,6 +95,7 @@ import { ref, computed } from 'vue'
 import areaNum from '@/utils/areaNum'
 import { telReg, okMsg, errMsg } from '@/utils/index'
 import { sendSms, sendRegsms, sendResetsms, captchaGet } from '@/api/login'
+import _ from 'lodash'
 
 const props = withDefaults(
   defineProps<{
@@ -132,7 +133,7 @@ const captchaV = computed(vModel('captcha'))
 const surePass = computed(vModel('surePass'))
 
 //获取验证码按钮
-const getYZm = async () => {
+const getYZm = _.debounce(async () => {
   console.log(props.modelValue)
   const { mobile, acode } = props.modelValue
   const { type } = props
@@ -154,26 +155,51 @@ const getYZm = async () => {
     status &&
       (() => {
         okMsg('验证码发送成功')
-        getYZMflag.value = true
-        const timer = setInterval(() => {
-          if (mobileYZMnum.value > 1) {
-            mobileYZMnum.value = mobileYZMnum.value - 1
-          } else {
-            getYZMflag.value = false
-            mobileYZMnum.value = 120
-            YZMtxt.value = '重获验证码'
-            clearInterval(timer)
-          }
-        }, 1000)
+        localStorage.setItem('sendSmsTime', new Date().getTime().toString())
+        changeTime()
       })()
   }
+}, 300)
+
+//修改发送时间
+const changeTime = () => {
+  getYZMflag.value = true
+  const timer = setInterval(() => {
+    if (mobileYZMnum.value > 1) {
+      mobileYZMnum.value = mobileYZMnum.value - 1
+    } else {
+      getYZMflag.value = false
+      localStorage.removeItem('sendSmsTime')
+      mobileYZMnum.value = 120
+      YZMtxt.value = '重获验证码'
+      clearInterval(timer)
+    }
+  }, 1000)
 }
 
+//刷新页面后发送验证码时间获取
+const getSmsTime = () => {
+  const lastTime = Number(localStorage.getItem('sendSmsTime'))
+  lastTime &&
+    (() => {
+      const nowTime = new Date().getTime()
+      if (nowTime - lastTime < 120000) {
+        const stime = (120 - (nowTime - lastTime) / 1000).toFixed(0)
+        mobileYZMnum.value = Number(stime)
+        changeTime()
+      } else {
+        localStorage.removeItem('sendSmsTime')
+      }
+    })()
+}
+
+props.name === 'mobileYZM' && getSmsTime()
+
 //获取图形验证码
-const getCaptcha = async () => {
+const getCaptcha = _.debounce(async () => {
   const { status, body } = await captchaGet()
   status && (captcha.value = body)
-}
+}, 300)
 props.name === 'captcha' && getCaptcha()
 </script>
 <style lang="scss" scoped>

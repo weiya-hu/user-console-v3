@@ -87,7 +87,8 @@ body {
   justify-content: center;
   align-items: center;
 }
-.fsc {
+.fsc,
+.flexb {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -121,6 +122,11 @@ body {
   img {
     width: 100%;
   }
+}
+.flexll {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 .els {
   overflow: hidden;

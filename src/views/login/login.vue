@@ -99,8 +99,10 @@ import LoginInput from '@/components/KzLoginInput.vue'
 import { mobileCheck, passCheck, okMsg, errMsg, getUrlParam } from '@/utils/index'
 import { doLogin, wechatQrinfoGet_api } from '@/api/login'
 import WxLogin from '@/views/login/wxLogin.vue'
+import { mainStore } from '@/store'
 import { useRouter } from 'vue-router'
 const router = useRouter()
+const store = mainStore()
 
 const topNav = ref(['手机号登录', '账号登录'])
 const topNavLineLeft = ref(0) //登录方式选择下面那条线移动效果left距离
@@ -168,7 +170,7 @@ const onSubmit = (event: any) => {
           setTimeout(() => {
             window.location.href = loginToUrl
               ? decodeURIComponent(loginToUrl)
-              : 'http://www.kzszh.com'
+              : '//' + store.state.yxtUrl.offical
           }, 500)
         })()
       !status &&

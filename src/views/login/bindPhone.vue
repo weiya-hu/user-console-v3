@@ -49,8 +49,8 @@ import { ref } from 'vue'
 import LoginInput from '@/components/KzLoginInput.vue'
 import { mobileCheck, okMsg, errMsg, getUrlParam } from '@/utils/index'
 import { doWechatBind_api } from '@/api/login'
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import { mainStore } from '@/store'
+const store = mainStore()
 
 const userAgreeCheck = ref(false)
 const loginFormRef = ref()
@@ -92,7 +92,7 @@ const onRegister = (event: any) => {
           setTimeout(() => {
             window.location.href = loginToUrl
               ? decodeURIComponent(loginToUrl)
-              : 'http://www.kzszh.com'
+              : '//' + store.state.yxtUrl.offical
           }, 500)
         })()
       !status &&
