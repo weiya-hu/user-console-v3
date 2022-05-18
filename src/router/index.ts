@@ -12,77 +12,77 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
  * @ 子页面都必须写在Layout的children下，因为左侧导航是直接取Layout下children
  */
 export const routes: RouteRecordRaw[] = [
-  {
-    path: '/login',
-    name: 'LoginIndex',
-    component: () => import('@/views/login/index.vue'),
-    redirect: '/login',
-    meta: { title: '登录' },
-    children: [
-      {
-        path: '/login',
-        name: 'Login',
-        component: () => import('@/views/login/login.vue'),
-        meta: { title: '登录' },
-      },
-      {
-        path: '/register',
-        name: 'Register',
-        component: () => import('@/views/login/register.vue'),
-        meta: { title: '注册' },
-      },
-      {
-        path: '/forget',
-        name: 'Forget',
-        component: () => import('@/views/login/forget.vue'),
-        meta: { title: '忘记密码' },
-      },
-      {
-        path: '/useragreement',
-        name: 'Useragreement',
-        component: () => import('@/views/login/useragreement.vue'),
-        meta: { title: '用户须知' },
-      },
-      {
-        path: '/resetpass',
-        name: 'ResetPass',
-        component: () => import('@/views/login/resetPass.vue'),
-        meta: { title: '重设密码' },
-      },
-      {
-        path: '/bindphone',
-        name: 'BindPhone',
-        component: () => import('@/views/login/bindPhone.vue'),
-        meta: { title: '绑定手机号' },
-      },
-      {
-        path: '/login/wechat/callback',
-        name: 'WxLoginJump',
-        component: () => import('@/views/login/wxLoginJump.vue'),
-        meta: { title: '微信登录' },
-      },
-    ],
-  },
-  {
-    path: '/news',
-    name: 'NewsIndex',
-    component: () => import('@/views/news/index.vue'),
-    redirect: '/news',
-    children: [
-      {
-        path: '/news',
-        name: 'News',
-        component: () => import('@/views/news/news.vue'),
-        meta: { title: '资讯中心' },
-      },
-      {
-        path: '/news/newsdetail',
-        name: 'NewsDetail',
-        component: () => import('@/views/news/newsDetail.vue'),
-        meta: { title: '资讯详情' },
-      },
-    ],
-  },
+  // {
+  //   path: '/login',
+  //   name: 'LoginIndex',
+  //   component: () => import('@/views/login/index.vue'),
+  //   redirect: '/login',
+  //   meta: { title: '登录' },
+  //   children: [
+  //     {
+  //       path: '/login',
+  //       name: 'Login',
+  //       component: () => import('@/views/login/login.vue'),
+  //       meta: { title: '登录' },
+  //     },
+  //     {
+  //       path: '/register',
+  //       name: 'Register',
+  //       component: () => import('@/views/login/register.vue'),
+  //       meta: { title: '注册' },
+  //     },
+  //     {
+  //       path: '/forget',
+  //       name: 'Forget',
+  //       component: () => import('@/views/login/forget.vue'),
+  //       meta: { title: '忘记密码' },
+  //     },
+  //     {
+  //       path: '/useragreement',
+  //       name: 'Useragreement',
+  //       component: () => import('@/views/login/useragreement.vue'),
+  //       meta: { title: '用户须知' },
+  //     },
+  //     {
+  //       path: '/resetpass',
+  //       name: 'ResetPass',
+  //       component: () => import('@/views/login/resetPass.vue'),
+  //       meta: { title: '重设密码' },
+  //     },
+  //     {
+  //       path: '/bindphone',
+  //       name: 'BindPhone',
+  //       component: () => import('@/views/login/bindPhone.vue'),
+  //       meta: { title: '绑定手机号' },
+  //     },
+  //     {
+  //       path: '/login/wechat/callback',
+  //       name: 'WxLoginJump',
+  //       component: () => import('@/views/login/wxLoginJump.vue'),
+  //       meta: { title: '微信登录' },
+  //     },
+  //   ],
+  // },
+  // {
+  //   path: '/news',
+  //   name: 'NewsIndex',
+  //   component: () => import('@/views/news/index.vue'),
+  //   redirect: '/news',
+  //   children: [
+  //     {
+  //       path: '/news',
+  //       name: 'News',
+  //       component: () => import('@/views/news/news.vue'),
+  //       meta: { title: '资讯中心' },
+  //     },
+  //     {
+  //       path: '/news/newsdetail',
+  //       name: 'NewsDetail',
+  //       component: () => import('@/views/news/newsDetail.vue'),
+  //       meta: { title: '资讯详情' },
+  //     },
+  //   ],
+  // },
   {
     path: '/',
     name: 'Layout',

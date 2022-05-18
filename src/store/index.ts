@@ -16,6 +16,8 @@ export const mainStore = defineStore('mainStore', () => {
     addressHash: {} as IStoreObj, // 地区列表哈希表
     keepList: [] as string[], // 需要缓存的路由组件列表，须要在组件文件中设置name属性，并且name必须和组件对应的路由的name一致，路由的meta属性中也必须添加keepAlive:true,下级路由的meta中也要加入father字段为需要缓存的路由的path
     userPower: ['1'] as string[], // 用户权限数组
+    newsMayLikeId: 2,//新闻资讯推荐id
+    newsFollowId: 1,//新闻关注id
   })
   const getTypeList = () => {
     return new Promise<any[]>((resolve, reject) => {

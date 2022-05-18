@@ -105,6 +105,7 @@ const toUser = () => {
 <style lang="scss" scoped>
 .news_header {
   width: 100%;
+  min-width: 1440px;
   height: 40px;
   background: #363636;
   position: fixed;
