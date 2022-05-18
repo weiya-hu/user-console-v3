@@ -47,3 +47,9 @@ export const examineSave = (data: {
 export const codeCheck = (data: { code: string }): Promise<IRes> => {
   return post('user', '/company/code/check.do', data)
 }
+/**
+ * @name 获取用户企业认证消息
+ */
+export const getcompany_api = (): Promise<IRes> => {
+  return get('user', '/company/relation/audit.get')
+}

@@ -16,7 +16,10 @@
                 <el-descriptions-item><el-link type="primary">修改</el-link></el-descriptions-item>
                 <el-descriptions-item label="团队名称">重庆康洲数智有限公司</el-descriptions-item>
                 <el-descriptions-item><el-link type="primary">修改</el-link></el-descriptions-item>
-                <el-descriptions-item label="所属企业">未认证</el-descriptions-item>
+                <el-descriptions-item label="所属企业"
+                  ><span class="certified">未认证</span
+                  ><el-icon color="#FF4736 "><Warning /></el-icon
+                ></el-descriptions-item>
                 <el-descriptions-item
                   ><el-link type="primary">立即认证</el-link></el-descriptions-item
                 >
@@ -27,7 +30,14 @@
                 <el-descriptions-item
                   ><el-link type="primary">转让团队</el-link></el-descriptions-item
                 >
-                <el-descriptions-item label="团队人数">1</el-descriptions-item>
+                <el-descriptions-item label="团队人数"
+                  >1
+                  <span class="certified">/人</span>
+                  <img :src="icon_company" alt="" />
+                  <!-- <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-xxx"></use>
+                  </svg> -->
+                </el-descriptions-item>
                 <el-descriptions-item
                   ><el-link type="primary">人员管理</el-link></el-descriptions-item
                 >
@@ -50,8 +60,9 @@
 import KzStepTab from '@/components/KzStepTab.vue'
 import { ref, onMounted } from 'vue'
 import { mainStore } from '@/store/index'
+import { Warning } from '@element-plus/icons-vue'
+import icon_company from '@/assets/images/company_num.png'
 const store = mainStore()
-const loginUrl = store.state.yxtUrl.mobile
 
 const tabs = ref([{ title: '基本信息' }, { title: '联系信息' }, { title: '认证信息' }])
 const active = ref(0)
@@ -105,7 +116,7 @@ const scroll = ({ scrollTop }: { scrollTop: number }) => {
       :deep(.el-descriptions__content) {
         font-size: 14px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 550;
+        font-weight: 500;
         color: #303133;
       }
     }
@@ -117,6 +128,16 @@ const scroll = ({ scrollTop }: { scrollTop: number }) => {
         padding-top: 75px;
         padding-bottom: 60px;
         margin: 0 auto;
+      }
+      .certified {
+        color: #909399;
+        margin-right: 9px;
+      }
+      .el-icon {
+        width: 14px;
+        height: 14px;
+        position: relative;
+        top: 2px;
       }
     }
     .conten_item2 {

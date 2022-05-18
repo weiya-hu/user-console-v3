@@ -29,11 +29,13 @@
             ref="upload"
             :max="2"
             :exname-list="exnameList"
+            :img-list="ruleForm.license.split(',')"
             @up-all-success="upAll"
             @look="upLook"
             @error="upError"
             @change="onChange"
-          ></kzImgUpload>
+          >
+          </kzImgUpload>
           <div>*请上传资质编号清晰的资质照片；</div>
           <div>仅支持jpg、png、jpeg格式图片，最多上传2张。</div>
         </div>
@@ -76,13 +78,38 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import kzImgUpload from '@/components/kzImgUpload.vue'
 import KzCascader from '@/components/KzCascader.vue'
 import { lookImage, errMsg } from '@/utils/index'
-import { examine, examineSave, codeCheck } from '@/api/authentication'
+import {
+  examine,
+  examineSave,
+  codeCheck,
+  getcompany_api,
+} from '@/api/manage/user/steeings/authentication'
 import { telReg } from '@/utils/index'
+import { mainStore } from '@/store/index'
+import { getHash, getHashStr, strToArr } from '@/utils/index'
+const store = mainStore()
+const typeHash = computed(() => store.state.typeHash)
+const addressHash = ref(store.state.addressHash)
 const ruleFormRef = ref() //表单
+const getS = async () => {
+  const { body } = await getcompany_api()
+  console.log(body)
+  ruleForm.name = body.name
+  // ruleForm.industry_id = body.industry_id
+  ruleForm.left_time = body.left_time
+  ruleForm.legal_person = body.legal_person
+  ruleForm.business_scope = body.business_scope
+  ruleForm.code = body.code
+  ruleForm.contact = body.contact
+  ruleForm.address = body.address
+  ruleForm.url = body.url
+  ruleForm.license = body.license
+}
+getS()
 const ruleForm = reactive({
   name: '',
   industry_id: [],
@@ -174,9 +201,9 @@ const upAll = async (url: string[]) => {
     district: ruleForm.addr[2],
     source: 3,
     industry_id: ruleForm.industry_id.join(','), //行业ID
-    left_time: Number(ruleForm.left_time) / 1000,
+    left_time: Number(ruleForm.left_time),
   }
-  ruleForm.license = url.toLocaleString() //资质图片地址
+  ruleForm.license = url.toString() //资质图片地址
   const res =
     aStatus.value == 1
       ? await examine({ ...ruleForm, ...Data })
@@ -184,12 +211,11 @@ const upAll = async (url: string[]) => {
 }
 const onChange = (val: string) => {
   ruleForm.license = val
-  console.log(ruleForm)
   ruleFormRef.value.clearValidate('license')
 }
 const aStatus = ref<1 | 2>(1) // 1 保存 2 提交
 const submitForm = async (val: 1 | 2) => {
-  console.log(upload.value.imgs)
+  console.log(ruleForm.license)
   aStatus.value = val
   if (aStatus.value == 1) {
     ruleFormRef.value.clearValidate()
