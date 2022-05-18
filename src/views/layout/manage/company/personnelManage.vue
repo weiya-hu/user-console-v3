@@ -1,21 +1,20 @@
 <template>
-  <div class="manager_tab flexll">
-    <div class="manager_left_nav">
-      <div class="manager_left_nav_top fc flexl">
-        <div class="manager_logo_img flximg">
-          <img src="" />
-        </div>
-        <div class="manager_name">康洲数智科技项目组</div>
-        <el-button class="bdc_btn">添加分组</el-button>
-      </div>
-      <div></div>
+  <div class="manager_tab flex">
+    <div class="left_1">
+      <img src="" alt="" />
+      <div>康洲数智科技项目组</div>
+      <el-button class="bdc_btn"
+        ><el-icon color="#2150ec"><Plus /></el-icon>添加分组</el-button
+      >
     </div>
     <div class="mid">
       <div class="fsc f1">
         <span class="mid_title">管理员列表</span>
         <div>
           <el-button type="info" plain>删除分组</el-button>
-          <el-button type="primary" @click="addPersonShow = !addPersonShow">添加人员</el-button>
+          <el-button type="primary"
+            ><KzIcon href="#icon-tianjia" size="14px" color="white" />添加人员</el-button
+          >
         </div>
       </div>
       <div>
@@ -47,7 +46,7 @@
           </el-table>
         </div>
         <el-dialog
-          v-model="addPersonShow"
+          v-model="show"
           width="500px"
           custom-class="add_dialog"
           title="添加人员"
@@ -55,24 +54,25 @@
         >
           <div class="fcc">
             <el-button-group class="btn_tab">
-              <el-button
-                v-for="(item, index) in addPersonType"
-                :key="index"
-                :class="addPersonTab === index && 'btn_tab_active'"
-                @click="addPersonTab = index"
-                >{{ item }}</el-button
+              <el-button :class="tab == 1 && 'btn_tab_active'" @click="tab = 1"
+                >二维码邀请</el-button
               >
+              <el-button :class="tab == 2 && 'btn_tab_active'" @click="tab = 2">链接邀请</el-button>
+              <el-button :class="tab == 3 && 'btn_tab_active'" @click="tab = 3">短信邀请</el-button>
             </el-button-group>
           </div>
-          <div v-if="addPersonTab === 0" class="mid_dig">
+          <div v-if="tab == 1" class="mid_dig">
             <div class="fleximg mare type_face">邀请员工微信扫描下方二维码注册</div>
             <img src="" alt="" class="fleximg" />
-            <span class="fleximg fresh_code">刷新二维码</span>
+
+            <span class="fleximg fresh_code">
+              <KzIcon href="#icon-shuaxin" size="14px" />刷新二维码</span
+            >
             <div class="fcc">
               <el-button type="primary" @click="close">下载二维码</el-button>
             </div>
           </div>
-          <div v-else-if="addPersonTab === 1" class="mid_dig">
+          <div v-else-if="tab == 2" class="mid_dig">
             <div class="fleximg type_face">点击复制以下链接，发送给员工</div>
             <div class="link_code">
               <el-descriptions :column="1">
@@ -128,23 +128,23 @@ import KzPage from '@/components/KzPage.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
 import { reactive, ref } from 'vue'
 import areaNum from '@/utils/areaNum'
+import { Plus } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
 import { telReg } from '@/utils/index'
 const page = ref(1)
-const size = ref(10)
-const total = ref(0)
-const tableData = ref()
+const size = ref(20)
+const total = ref(50)
+const tableData = ref([])
 const numberForm = reactive({
   tel: '',
 })
-const addPersonShow = ref(false)
-const addPersonTab = ref(0)
+const show = ref(true)
+const tab = ref(1)
 const msg = ref('')
+// const tel = ref('')
 const acode = ref('86')
-const addPersonType = ref(['二维码邀请', '链接邀请', '短信邀请'])
-
 const close = () => {
-  addPersonShow.value = false
+  show.value = false
 }
 const telPass = (rule: any, value: string, callback: any) => {
   if (telReg.test(value)) {
@@ -162,41 +162,32 @@ const telRules = reactive({
 </script>
 <style lang="scss" scoped>
 .manager_tab {
-  width: 100%;
-  overflow: auto;
-  .manager_left_nav {
+  .left_1 {
+    box-sizing: border-box;
     width: 320px;
     border-radius: 8px;
     margin-right: 16px;
     background: #ffffff;
-    .manager_left_nav_top {
-      padding: 32px 0 15px;
-      border-bottom: 1px solid rgba(238, 238, 238, 1);
-      .manager_logo_img {
-        width: 220px;
-        height: 64px;
-        border-radius: 4px;
-        overflow: hidden;
-        cursor: pointer;
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-      }
-      .manager_name {
-        font-size: 16px;
-        line-height: 16px;
-        color: #333333;
-        text-align: center;
-        font-weight: 600;
-        margin: 16px 0 24px;
-      }
+    img {
+      margin: 32px 50px 16px;
+      width: 220px;
+      height: 64px;
+    }
+    div {
+      width: 144px;
+      height: 22px;
+      font-size: 16px;
+      font-family: PingFangSC-Semibold, PingFang SC;
+      font-weight: 600;
+      color: #333333;
+      line-height: 22px;
     }
   }
   .mid {
     width: calc(100% - 336px);
+    box-sizing: border-box;
     border-radius: 8px;
+    // margin: 0 auto;
     padding: 24px;
     padding-top: 16px;
     background: #ffffff;
@@ -235,6 +226,7 @@ const telRules = reactive({
   :deep(.add_dialog) {
     .el-dialog__body {
       padding-top: 15px;
+      padding-bottom: 32px;
     }
     .mid_dig {
       margin-top: 32px;
@@ -252,6 +244,8 @@ const telRules = reactive({
         margin-bottom: 8px;
       }
       .fresh_code {
+        cursor: pointer;
+
         color: #2150ec;
         margin-top: 8px;
         font-size: 12px;

@@ -5,8 +5,8 @@
 import { ref, reactive } from 'vue'
 import { newsType_api } from '@/api/news'
 import { getUrlParam } from '@/utils/index'
-import { mainStore } from '@/store';
-import { useRouter } from 'vue-router';
+import { mainStore } from '@/store'
+import { useRouter } from 'vue-router'
 
 const store = mainStore()
 const router = useRouter()
@@ -28,6 +28,5 @@ const router = useRouter()
 //   })()
 // }
 // getNewsType()
-
 </script>
 <style lang="scss" scoped></style>

@@ -50,7 +50,7 @@ body {
   // }
 }
 
-.el-popover.el-popper.user_drop{
+.el-popover.el-popper.user_drop {
   padding: 0;
 }
 
@@ -62,12 +62,12 @@ body {
   fill: currentColor;
   overflow: hidden;
 }
-.icon_rotate{
-  .kzicon{
+.icon_rotate {
+  .kzicon {
     transition: transform 0.5s;
   }
-  &:hover{
-    .kzicon{
+  &:hover {
+    .kzicon {
       transform: rotate(-180deg);
     }
   }

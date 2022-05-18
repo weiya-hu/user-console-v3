@@ -18,8 +18,8 @@
       </div>
       <div class="kz_card user_card">
         <div class="fcs fjend">
-          <img :src="user_general_i" alt="">
-          <img :src="real_name_i" alt="">
+          <img :src="user_general_i" alt="" />
+          <img :src="real_name_i" alt="" />
         </div>
       </div>
     </div>
@@ -41,7 +41,6 @@ import KzEmpty from '@/components/KzEmpty.vue'
 import { ref } from 'vue'
 import user_general_i from '@/assets/images/user_general.png'
 import real_name_i from '@/assets/images/real_name.png'
-
 </script>
 
 <style lang="scss" scoped>
@@ -49,9 +48,9 @@ import real_name_i from '@/assets/images/real_name.png'
   .card_body {
     padding: 0 24px 24px;
   }
-  .user_card{
+  .user_card {
     width: 372px;
-    img{
+    img {
       width: auto;
       height: 16px;
     }

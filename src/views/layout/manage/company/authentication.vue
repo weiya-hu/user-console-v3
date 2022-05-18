@@ -23,17 +23,17 @@
       <el-form-item label="统一社会信用代码" prop="code">
         <el-input v-model="ruleForm.code" placeholder="请输入" @blur="blur(ruleForm.code)" />
       </el-form-item>
-      <el-form-item label="资质照片" prop="license">
+      <el-form-item label="资质照片" prop="imgName">
         <div class="imgs">
           <kzImgUpload
+            v-if="upShow"
             ref="upload"
             :max="2"
-            :exname-list="exnameList"
-            :img-list="ruleForm.license.split(',')"
+            :img-list="imgList"
             @up-all-success="upAll"
-            @look="upLook"
             @error="upError"
             @change="onChange"
+            @del="delImg"
           >
           </kzImgUpload>
           <div>*请上传资质编号清晰的资质照片；</div>
@@ -68,7 +68,9 @@
         <el-input v-model="ruleForm.business_scope" type="textarea" clearable />
       </el-form-item>
       <div class="preser">
-        <el-link type="primary" class="fcc" @click="submitForm(1)">保存认证消息</el-link>
+        <el-link type="primary" class="fcc" @click="submitForm(1)"
+          ><KzIcon href="#icon-baocun" />保存认证消息</el-link
+        >
       </div>
       <el-form-item>
         <el-button type="primary" class="sub" @click="submitForm(2)">提交认证</el-button>
@@ -78,28 +80,24 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref } from 'vue'
 import kzImgUpload from '@/components/kzImgUpload.vue'
 import KzCascader from '@/components/KzCascader.vue'
-import { lookImage, errMsg } from '@/utils/index'
+import { telReg, errMsg } from '@/utils/index'
 import {
   examine,
   examineSave,
   codeCheck,
   getcompany_api,
 } from '@/api/manage/user/steeings/authentication'
-import { telReg } from '@/utils/index'
-import { mainStore } from '@/store/index'
-import { getHash, getHashStr, strToArr } from '@/utils/index'
-const store = mainStore()
-const typeHash = computed(() => store.state.typeHash)
-const addressHash = ref(store.state.addressHash)
 const ruleFormRef = ref() //表单
+const imgList = ref<string[]>([])
+const upShow = ref(false)
 const getS = async () => {
   const { body } = await getcompany_api()
   console.log(body)
   ruleForm.name = body.name
-  // ruleForm.industry_id = body.industry_id
+  ruleForm.industry_id = body.industry_id.split(',')
   ruleForm.left_time = body.left_time
   ruleForm.legal_person = body.legal_person
   ruleForm.business_scope = body.business_scope
@@ -108,6 +106,12 @@ const getS = async () => {
   ruleForm.address = body.address
   ruleForm.url = body.url
   ruleForm.license = body.license
+  ruleForm.license.split(',').forEach((v: string) => {
+    imgList.value.push(v)
+  })
+  ruleForm.addr = [body.province, body.city, body.district]
+  ruleForm.imgName = body.license ? 'oldName' : ''
+  upShow.value = true
 }
 getS()
 const ruleForm = reactive({
@@ -121,11 +125,11 @@ const ruleForm = reactive({
   contact: '',
   address: '',
   url: '',
-  addr: [],
+  addr: [] as (string | number)[],
   license: '',
+  imgName: '', // 图片名（校验用）
 })
 const loading = ref(false)
-const exnameList = ['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG']
 const upload = ref() //上传组件ref
 const telPass = (rule: any, value: string, callback: any) => {
   if (telReg.test(value)) {
@@ -175,7 +179,7 @@ const rules = {
       trigger: 'blur',
     },
   ],
-  license: [
+  imgName: [
     {
       required: true,
       message: '请添加资质照片',
@@ -190,9 +194,6 @@ const blur = async (code: string) => {
 const upError = (err: string) => {
   errMsg(err)
   loading.value = false
-}
-const upLook = (list: string[], i: number) => {
-  lookImage(list, i)
 }
 const upAll = async (url: string[]) => {
   const Data = {
@@ -210,12 +211,17 @@ const upAll = async (url: string[]) => {
       : await examineSave({ ...ruleForm, ...Data })
 }
 const onChange = (val: string) => {
-  ruleForm.license = val
-  ruleFormRef.value.clearValidate('license')
+  ruleForm.imgName = val
+  ruleFormRef.value.clearValidate('imgName')
 }
+const delImg = () => {
+  if (upload.value.imgs.length === 0) {
+    ruleForm.imgName = ''
+  }
+}
+
 const aStatus = ref<1 | 2>(1) // 1 保存 2 提交
 const submitForm = async (val: 1 | 2) => {
-  console.log(ruleForm.license)
   aStatus.value = val
   if (aStatus.value == 1) {
     ruleFormRef.value.clearValidate()
