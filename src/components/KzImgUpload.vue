@@ -149,6 +149,7 @@ interface UploadFileSuccess extends UploadFile {
 }
 const sucImgs = ref<UploadFileSuccess[]>([]) // 上传成功的图片
 const isAllSuccess = () => {
+  // 感觉判断不够严谨
   if (sucImgs.value.length === imgs.value.length && sucImgs.value.length) {
     emit(
       'upAllSuccess',
@@ -192,7 +193,6 @@ const upOneImg = async (file: UploadFile, downloadName?: string) => {
       const url = res.body.host + '/' + res.body.dir + '/' + res.body.uuid + exname
       sucImgs.value.push({ ...file, upUrl: url })
       isAllSuccess()
-      //父组件内部去判断是否全部上传完成，因为上传成功后再走提交接口是个异步操作
       emit('upOneSuccess', url, imgs.value.length)
       return Promise.resolve(url)
     }
@@ -212,6 +212,9 @@ const submit = async (downloadName?: string) => {
         continue
       }
       await upOneImg(v, downloadName).catch((err) => {
+        // 在imgs里删除当前循环的v
+        imgs.value.splice(i,1);
+        isAllSuccess()
         throw new Error(err)
       })
     }

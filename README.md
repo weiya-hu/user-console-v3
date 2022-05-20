@@ -9,6 +9,7 @@ mitt：组件通信器；
 vite-plugin-compression：vite 插件压缩；
 vite-plugin-eslint：vite 的 ESLint 插件；
 tinymce：富文本编辑器；
+vue-cropper：图片裁剪插件
 
 指令说明：
 "dev": 启动开发服务器,

@@ -19,6 +19,7 @@
     "tinymce": "^6.0.2",
     "vue": "^3.2.25",
     "vue-clipboard3": "^2.0.0",
+    "vue-cropper": "^1.0.3",
     "vue-router": "^4.0.15"
   },
   "devDependencies": {

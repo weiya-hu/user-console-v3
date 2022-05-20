@@ -428,3 +428,26 @@ export function getUrlParam(name: string) {
   }
   return null
 }
+
+type IBasic = Record<string | number | symbol, string | number | boolean | undefined | null | symbol> | undefined
+/**
+ * 对比两个对象的值是否完全相等
+ * @return true/false
+ */
+ export function isObjectValueEqual (a: IBasic, b: IBasic) {
+  if(!a || !b){
+    return false;
+  }
+  let aProps = Object.getOwnPropertyNames(a);
+  let bProps = Object.getOwnPropertyNames(b);
+  if (aProps.length != bProps.length) {
+    return false;
+  }
+  for (let i = 0; i < aProps.length; i++) {
+    let propName = aProps[i];
+    if (a[propName] !== b[propName]) {
+      return false;
+    }
+  }
+  return true;
+}
