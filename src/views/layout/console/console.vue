@@ -18,20 +18,24 @@
       </div>
       <div class="kz_card user_card fc">
         <div class="fcs fjend user_top">
-          <img :src="user_general_i" alt="">
-          <img :src="real_name_i" alt="">
+          <img :src="user_general_i" alt="" />
+          <img :src="real_name_i" alt="" />
         </div>
         <div class="user_avatar fc fcc">
           <el-avatar :size="64" :src="df_avatar_i" />
-          <div class="mt12 els">康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州</div>
+          <div class="mt12 els">
+            康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州
+          </div>
         </div>
         <div class="user_bottom f1 fc fjend">
           <div class="user_company fcs">
-            <img :src="no_company_i" alt="">
+            <img :src="no_company_i" alt="" />
             <!-- <div class="user_company_name els">康洲大数据（集团）有限公司康洲大数据（集团）有限公司康洲大数据（集团）有限公司康洲大数据（集团）有限公司</div> -->
             <div class="user_no_company fcs">
               <div class="mr16">暂无企业信息</div>
-              <el-link type="primary" @click="$router.push('/manage/company')">企业认证<el-icon size="16px" class="right_icon"><SortDown /></el-icon></el-link>
+              <el-link type="primary" @click="$router.push('/manage/company')"
+                >企业认证<el-icon size="16px" class="right_icon"><SortDown /></el-icon
+              ></el-link>
             </div>
           </div>
           <div class="mt12">上次登录：2022-04-22 12:3</div>
@@ -60,7 +64,6 @@ import df_avatar_i from '@/assets/images/dfavatar.png'
 import is_company_i from '@/assets/images/is_company.png'
 import no_company_i from '@/assets/images/no_company.png'
 import { SortDown } from '@element-plus/icons-vue'
-
 </script>
 
 <style lang="scss" scoped>
@@ -68,59 +71,59 @@ import { SortDown } from '@element-plus/icons-vue'
   .card_body {
     padding: 0 24px 24px;
   }
-  .user_card{
+  .user_card {
     width: 372px;
-    .mt12{
+    .mt12 {
       margin-top: 12px;
       max-width: 100%;
     }
-    .user_top{
+    .user_top {
       margin-bottom: 20px;
       padding-top: 12px;
-      img{
+      img {
         width: auto;
         height: 16px;
         margin-right: 12px;
       }
     }
-    .user_avatar{
+    .user_avatar {
       color: #303133;
       font-weight: bold;
       font-size: 18px;
       padding: 0 16px;
     }
-    .user_bottom{
+    .user_bottom {
       padding: 10px 24px 16px 24px;
-      .mt12{
+      .mt12 {
         color: #909399;
         font-size: 12px;
       }
-      .user_company{
+      .user_company {
         color: #303133;
-        img{
+        img {
           width: 16px;
           height: 16px;
           margin-right: 4px;
         }
-        .user_company_name{
+        .user_company_name {
           border-radius: 4px;
           padding: 0px 8px;
           height: 30px;
           line-height: 30px;
           cursor: pointer;
-          &:hover{
+          &:hover {
             background-color: rgba(33, 80, 236, 0.1);
             color: $dfcolor;
           }
         }
-        .user_no_company{
+        .user_no_company {
           color: #606266;
-          .mr16{
+          .mr16 {
             padding-left: 8px;
             height: 30px;
             line-height: 30px;
           }
-          .right_icon{
+          .right_icon {
             transform: rotate(-90deg) rotateY(180deg);
             margin-left: 4px;
           }

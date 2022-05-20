@@ -429,25 +429,27 @@ export function getUrlParam(name: string) {
   return null
 }
 
-type IBasic = Record<string | number | symbol, string | number | boolean | undefined | null | symbol> | undefined
+type IBasic =
+  | Record<string | number | symbol, string | number | boolean | undefined | null | symbol>
+  | undefined
 /**
  * 对比两个对象的值是否完全相等
  * @return true/false
  */
- export function isObjectValueEqual (a: IBasic, b: IBasic) {
-  if(!a || !b){
-    return false;
+export function isObjectValueEqual(a: IBasic, b: IBasic) {
+  if (!a || !b) {
+    return false
   }
-  let aProps = Object.getOwnPropertyNames(a);
-  let bProps = Object.getOwnPropertyNames(b);
+  const aProps = Object.getOwnPropertyNames(a)
+  const bProps = Object.getOwnPropertyNames(b)
   if (aProps.length != bProps.length) {
-    return false;
+    return false
   }
   for (let i = 0; i < aProps.length; i++) {
-    let propName = aProps[i];
+    const propName = aProps[i]
     if (a[propName] !== b[propName]) {
-      return false;
+      return false
     }
   }
-  return true;
+  return true
 }

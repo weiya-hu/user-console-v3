@@ -213,7 +213,7 @@ const submit = async (downloadName?: string) => {
       }
       await upOneImg(v, downloadName).catch((err) => {
         // 在imgs里删除当前循环的v
-        imgs.value.splice(i,1);
+        imgs.value.splice(i, 1)
         isAllSuccess()
         throw new Error(err)
       })

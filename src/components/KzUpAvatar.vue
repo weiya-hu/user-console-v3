@@ -1,41 +1,51 @@
 <template>
   <div class="kz_up_avatar_component">
     <div class="kz_cropper_box">
-      <div :style="{ 'width': boxSize + 'px', 'height': boxSize + 'px' }">
-        <VueCropper 
+      <div :style="{ width: boxSize + 'px', height: boxSize + 'px' }">
+        <VueCropper
           ref="cropperRef"
-          autoCrop
-          fixedBox
+          auto-crop
+          fixed-box
           :img="showImg"
-          outputType="png"
+          v-show="showImg"
+          output-type="png"
+          :auto-crop-width="cropSize + 'px'"
+          :auto-crop-height="cropSize + 'px'"
+          mode="contain"
           @realTime="onRealTime"
           @imgLoad="onImgLoad"
           @cropMoving="onCropMoving"
-          :autoCropWidth="cropSize + 'px'"
-          :autoCropHeight="cropSize + 'px'"
-          mode="contain"
-          v-show="showImg"
         />
-        <div class="no_img_box fc fcc" v-show="!showImg" @click="onIptClick" ref="dragRef">
+        <div v-show="!showImg" ref="dragRef" class="no_img_box fc fcc" @click="onIptClick">
           <el-icon size="28px"><Plus /></el-icon>
           <div class="file_name">拖拽/点击上传</div>
         </div>
       </div>
-      <div class="fsc kz_crop_btns" v-show="showImg">
+      <div v-show="showImg" class="fsc kz_crop_btns">
         <el-link type="primary" @click="onIptClick">重新上传</el-link>
         <div>
-          <KzIcon size="14px" href="#icon-suoxiao" @click="onScaleImg(-1)"/>
-          <KzIcon size="14px" href="#icon-fangda" @click="onScaleImg(1)"/>
+          <KzIcon size="14px" href="#icon-suoxiao" @click="onScaleImg(-1)" />
+          <KzIcon size="14px" href="#icon-fangda" @click="onScaleImg(1)" />
         </div>
       </div>
-      <div class="kz_crop_btns" v-show="!showImg">*上传图片大小在4.0M以内</div>
+      <div v-show="!showImg" class="kz_crop_btns">*上传图片大小在4.0M以内</div>
     </div>
-    <input style="display:none" type="file" accept="image/*" name="picture" ref="upInputRef" @change="onChangeImg"/>
+    <input
+      ref="upInputRef"
+      style="display: none"
+      type="file"
+      accept="image/*"
+      name="picture"
+      @change="onChangeImg"
+    />
     <div class="fc">
-      <div class="avatar_preview_box" :style="{ 'min-width': cropSize + 'px', 'min-height': cropSize + 'px' }">
+      <div
+        class="avatar_preview_box"
+        :style="{ 'min-width': cropSize + 'px', 'min-height': cropSize + 'px' }"
+      >
         <div class="avatar_preview" :style="previews.div">
           <el-avatar :size="cropSize">
-            <img :src="showImg" :style="previews.img">
+            <img :src="showImg" :style="previews.img" />
           </el-avatar>
         </div>
       </div>
@@ -50,7 +60,7 @@
  * @author chn
  */
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-import { VueCropper }  from "vue-cropper";
+import { VueCropper } from 'vue-cropper'
 import { Plus } from '@element-plus/icons-vue'
 import { errMsg, isObjectValueEqual } from '@/utils/index'
 import { getAliToken_api } from '@/api/login'
@@ -90,7 +100,7 @@ const imgAxis = ref<Record<string, number>>()
 const cropAxis = ref<Record<string, number>>()
 const onImgLoad = (isSuccess: string) => {
   // 图片加载事件
-  if(isSuccess === 'success'){
+  if (isSuccess === 'success') {
     imgAxis.value = cropperRef.value.getImgAxis()
     // cropAxis.value = cropperRef.value.getCropAxis() // 获取到的值不对，是组件内部设置的初始值，和截图框初始显示的位置不一致
   }
@@ -106,9 +116,9 @@ const onScaleImg = (number: 1 | -1) => {
   cropperRef.value.changeScale(number)
 }
 
-const validateImg = ():boolean => {
+const validateImg = (): boolean => {
   // 效验图片
-  if(!imgFile.value){
+  if (!imgFile.value) {
     errMsg('请添加图片！')
     return false
   }
@@ -125,19 +135,19 @@ const validateImg = ():boolean => {
 }
 
 const upInputRef = ref<HTMLInputElement>() // 触发选择图片的input框
-const onIptClick= () => {
+const onIptClick = () => {
   upInputRef.value!.click()
 }
 const imgFile = ref<File>()
 const onChangeImg = () => {
   // 上传input change事件
-  if(upInputRef.value?.files?.length){
+  if (upInputRef.value?.files?.length) {
     imgFile.value = upInputRef.value.files[0]
     const flag = validateImg()
-    if(flag){
+    if (flag) {
       isChange.value = true
       emit('update:modelValue', URL.createObjectURL(imgFile.value))
-    }else {
+    } else {
       imgFile.value = undefined
     }
   }
@@ -145,7 +155,7 @@ const onChangeImg = () => {
 
 const getImg = () => {
   // 获取当前截图框内容并更新modelValue
-  cropperRef.value.getCropBlob((blob:Blob) => {
+  cropperRef.value.getCropBlob((blob: Blob) => {
     emit('update:modelValue', URL.createObjectURL(blob))
   })
 }
@@ -157,15 +167,15 @@ const onCropMoving = () => {
 const isChange = ref(false) // 是否改变图标状态
 const upload = async () => {
   // 上传
-  if(!imgFile.value){
+  if (!imgFile.value) {
     props.modelValue && emit('success')
     return
   }
   const newImgAxis = cropperRef.value.getImgAxis()
   const imgflag = isObjectValueEqual(newImgAxis, imgAxis.value)
-  if(props.modelValue && imgflag && !isChange.value){
+  if (props.modelValue && imgflag && !isChange.value) {
     // 即没有移动、缩放图片和截图框
-    console.log('不需要上传');
+    console.log('不需要上传')
     emit('success')
     return
   }
@@ -183,7 +193,7 @@ const upload = async () => {
     for (const [key, value] of Object.entries(upData)) {
       fd.append(key, value)
     }
-    cropperRef.value.getCropBlob(async (blob:Blob) => {
+    cropperRef.value.getCropBlob(async (blob: Blob) => {
       fd.append('file', blob)
       const response = await axios({
         url: res.body.host,
@@ -198,49 +208,46 @@ const upload = async () => {
         emit('update:modelValue', url)
         isChange.value = false
         emit('success')
-      }else{
+      } else {
         emit('error')
       }
     })
-  }else{
+  } else {
     emit('error')
   }
 }
 
 const dragRef = ref<HTMLElement>() // 拖拽容器ref
 onMounted(() => {
-  dragRef.value?.addEventListener("dragenter", dragEnter, false);
-  dragRef.value?.addEventListener("dragover", dragOver, false);
-  dragRef.value?.addEventListener("drop", dragImg, false);
-  
+  dragRef.value?.addEventListener('dragenter', dragEnter, false)
+  dragRef.value?.addEventListener('dragover', dragOver, false)
+  dragRef.value?.addEventListener('drop', dragImg, false)
 })
 onBeforeUnmount(() => {
   try {
-    dragRef.value?.removeEventListener("dragenter", dragEnter);
-    dragRef.value?.removeEventListener("dragover", dragOver);
-    dragRef.value?.removeEventListener("drop", dragImg);
-  } catch (error) {
-    return
-  }
+    dragRef.value?.removeEventListener('dragenter', dragEnter)
+    dragRef.value?.removeEventListener('dragover', dragOver)
+    dragRef.value?.removeEventListener('drop', dragImg)
+  } catch (error) {}
 })
-const dragEnter = (e:DragEvent) => {
-  e.stopPropagation();
-	e.preventDefault();
+const dragEnter = (e: DragEvent) => {
+  e.stopPropagation()
+  e.preventDefault()
 }
-const dragOver = (e:DragEvent) => {
-  e.stopPropagation();
-	e.preventDefault();
+const dragOver = (e: DragEvent) => {
+  e.stopPropagation()
+  e.preventDefault()
 }
-const dragImg = (e:DragEvent) => {
-  e.stopPropagation();
-  e.preventDefault();
-  if(e.dataTransfer?.files.length){
+const dragImg = (e: DragEvent) => {
+  e.stopPropagation()
+  e.preventDefault()
+  if (e.dataTransfer?.files.length) {
     imgFile.value = e.dataTransfer.files[0]
     const flag = validateImg()
-    if(flag){
+    if (flag) {
       isChange.value = true
       emit('update:modelValue', URL.createObjectURL(imgFile.value))
-    }else {
+    } else {
       imgFile.value = undefined
     }
   }
@@ -249,60 +256,60 @@ const dragImg = (e:DragEvent) => {
 defineExpose({
   validateImg, // 效验图片
   getImg, // 获取当前截图框内容并更新modelValue
-  upload // 上传
+  upload, // 上传
 })
 </script>
 
 <style scoped lang="scss">
-.kz_up_avatar_component{
+.kz_up_avatar_component {
   display: flex;
-  .kz_cropper_box{
+  .kz_cropper_box {
     margin-right: 75px;
-    .no_img_box{
+    .no_img_box {
       height: 100%;
       border-radius: 4px;
-      border: 1px dashed #DDDDDD;
+      border: 1px dashed #dddddd;
       cursor: pointer;
       color: #606266;
       font-size: 12px;
-      .el-icon{
-        color: #DDDDDD;
+      .el-icon {
+        color: #dddddd;
         margin-bottom: 12px;
       }
-      &:hover{
+      &:hover {
         border-color: $dfcolor;
         color: $dfcolor;
-        .el-icon{
+        .el-icon {
           color: $dfcolor;
         }
       }
     }
-    .kz_crop_btns{
+    .kz_crop_btns {
       margin-top: 8px;
       font-size: 12px;
       line-height: 14px;
       color: #909399;
-      .el-link{
+      .el-link {
         --el-link-font-size: 12px;
       }
-      .kzicon{
+      .kzicon {
         margin-left: 16px;
         cursor: pointer;
       }
     }
   }
-  .avatar_preview_box{
+  .avatar_preview_box {
     overflow: hidden;
-    .avatar_preview{
+    .avatar_preview {
       border-radius: 4px;
-      border: 1px dashed #DDDDDD;
+      border: 1px dashed #dddddd;
     }
-    .el-avatar{
+    .el-avatar {
       justify-content: flex-start;
       align-items: flex-start;
     }
   }
-  .avatar_preview_text{
+  .avatar_preview_text {
     text-align: center;
     color: #909399;
     font-size: 12px;

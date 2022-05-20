@@ -46,23 +46,30 @@
               <div class="user_drop_info fc">
                 <div class="fcs fjend">
                   <div class="tags fcc">
-                    <img :src="user_general_i" alt="">
+                    <img :src="user_general_i" alt="" />
                   </div>
                   <div class="tags fcc">
-                    <img :src="real_name_i" alt="">
+                    <img :src="real_name_i" alt="" />
                   </div>
                 </div>
                 <div class="fcc fc user_avatar">
                   <el-avatar :size="64" :src="df_avatar_i" />
-                  <div class="user_name1 els">康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州</div>
+                  <div class="user_name1 els">
+                    康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州
+                  </div>
                 </div>
                 <div class="user_btns f1 fc fjend">
-                  <div class="fsc user_btns_item" v-for="v in user_btns" :key="v.url" @click="handUserBtn(v.url)">
+                  <div
+                    v-for="v in user_btns"
+                    :key="v.url"
+                    class="fsc user_btns_item"
+                    @click="handUserBtn(v.url)"
+                  >
                     <div class="fcc">
-                      <KzIcon size="16px" :href="v.icon"/>
-                      <div class="btn_text">{{v.text}}</div>
+                      <KzIcon size="16px" :href="v.icon" />
+                      <div class="btn_text">{{ v.text }}</div>
                     </div>
-                    <el-icon size="16px" v-if="v.url !== 'login_out'"><ArrowRight /></el-icon>
+                    <el-icon v-if="v.url !== 'login_out'" size="16px"><ArrowRight /></el-icon>
                   </div>
                 </div>
               </div>
@@ -119,7 +126,7 @@
       <video :src="lookVideo" controls class="show_video"></video>
     </el-dialog>
 
-    <el-dialog v-model="upDemoShow" title="上传demo" @close="imgsList.length = 0" width="70%">
+    <el-dialog v-model="upDemoShow" title="上传demo" width="70%" @close="imgsList.length = 0">
       <KzImgUpload
         v-if="upDemoShow"
         ref="upImgRef"
@@ -135,7 +142,7 @@
       <el-button class="mt20" @click="upImg1">上传</el-button>
       <el-button class="mt20" @click="clearUp">清除</el-button>
 
-      <KzUpAvatar ref="KzUpAvatarRef" v-model="demoAvatar" @success="onAvatarSuceess"/>
+      <KzUpAvatar ref="KzUpAvatarRef" v-model="demoAvatar" @success="onAvatarSuceess" />
       <el-button class="mt20" @click="upImg3">上传</el-button>
     </el-dialog>
   </div>
@@ -166,10 +173,14 @@ const imgsList = ref<string[]>([])
 const showDemo = () => {
   upDemoShow.value = true
   setTimeout(() => {
-    imgsList.value.push('https://res.kzszh.com/dev/web/index/image/f21b635833aaf9ef4f4179e415988102.png')
-    imgsList.value.push('https://res.kzszh.com/dev/web/index/image/c942c61ac09d4a582a43d7a8a3d986c0.png')
+    imgsList.value.push(
+      'https://res.kzszh.com/dev/web/index/image/f21b635833aaf9ef4f4179e415988102.png'
+    )
+    imgsList.value.push(
+      'https://res.kzszh.com/dev/web/index/image/c942c61ac09d4a582a43d7a8a3d986c0.png'
+    )
     upImgRef.value.setImgs()
-  }, 1000);
+  }, 1000)
 }
 const upAll = (files: string[]) => {
   // files 上传成功后的图片地址数组
@@ -219,7 +230,7 @@ const user_btns = [
   { text: '退出登录', icon: '#icon-tuichu', url: 'login_out' },
 ]
 const handUserBtn = (url: string) => {
-  if(url === 'login_out'){
+  if (url === 'login_out') {
     loginOut_api().then(() => {
       store.setUserinfo(true)
       router.replace('/login?url=' + encodeURIComponent(window.location.origin + '/console'))
@@ -240,7 +251,6 @@ const isLogin = computed(() => {
   router.replace('/login?url=' + encodeURIComponent(window.location.origin + '/console'))
   return false
 })
-
 
 const route = useRoute()
 const router = useRouter()
@@ -394,7 +404,7 @@ emiter.on('lookVideo', (video: string) => {
   }
 }
 
-.user_drop_info{
+.user_drop_info {
   width: 316px;
   height: 336px;
   border-radius: 4px;
@@ -404,22 +414,22 @@ emiter.on('lookVideo', (video: string) => {
   background-position: 0 0;
   padding-top: 8px;
   line-height: 1;
-  .tags{
+  .tags {
     background-color: #fff;
     padding: 4px;
     border-radius: 12px;
     margin-right: 8px;
-    img{
+    img {
       width: auto;
       height: 16px;
     }
-    .kzicon{
+    .kzicon {
       margin-right: 1px;
     }
   }
-  .user_avatar{
+  .user_avatar {
     margin-top: 34px;
-    .user_name1{
+    .user_name1 {
       font-size: 18px;
       font-weight: bold;
       margin-top: 12px;
@@ -427,19 +437,19 @@ emiter.on('lookVideo', (video: string) => {
       max-width: 100%;
     }
   }
-  .user_btns{
+  .user_btns {
     padding: 0 16px 16px;
     color: #606266;
-    .btn_text{
+    .btn_text {
       margin-left: 8px;
     }
-    .user_btns_item{
+    .user_btns_item {
       height: 34px;
       padding: 9px 4px 9px 20px;
       border-radius: 4px;
       cursor: pointer;
-      &:hover{
-        background-color: #F3F4F8;
+      &:hover {
+        background-color: #f3f4f8;
         color: $dfcolor;
       }
     }
