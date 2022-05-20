@@ -244,13 +244,13 @@ export const routes: RouteRecordRaw[] = [
             name: 'Company',
             component: () => import('@/views/layout/rView.vue'),
             redirect: '/manage/company/companyinfo',
-            meta: { title: '团队管理', icon: '#icon-lanmu-qiyeguanli' },
+            meta: { title: '企业管理', icon: '#icon-lanmu-qiyeguanli' },
             children: [
               {
                 path: '/manage/company/companyinfo',
                 name: 'CompanyInfo',
                 component: () => import('@/views/layout/manage/company/companyInfo.vue'),
-                meta: { title: '团队信息', scroll: true },
+                meta: { title: '企业信息', scroll: true },
               },
               {
                 path: '/manage/company/authentication',
@@ -262,7 +262,7 @@ export const routes: RouteRecordRaw[] = [
                 path: '/manage/company/companyservice',
                 name: 'CompanyService',
                 component: () => import('@/views/layout/manage/company/companyService.vue'),
-                meta: { title: '团队产品与服务' },
+                meta: { title: '企业产品与服务' },
               },
               {
                 path: '/manage/company/personnelmanage',

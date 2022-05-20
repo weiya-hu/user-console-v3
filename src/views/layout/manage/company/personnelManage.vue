@@ -1,19 +1,46 @@
 <template>
   <div class="manager_tab flex">
     <div class="left_1">
-      <img src="" alt="" />
+      <div class="img_logo" @click="$router.push('companyinfo')">
+        <img
+          src="https://res.yxtong.com/dev/web/userinfo/company/9d61aed80e6b96234c26c8b17693b784.png"
+          alt=""
+        />
+      </div>
       <div>康洲数智科技项目组</div>
       <el-button class="bdc_btn"
         ><el-icon color="#2150ec"><Plus /></el-icon>添加分组</el-button
       >
+      <div class="tree_sector">
+        <div class="pople_box">
+          <div></div>
+          <div>全部人员</div>
+          <el-icon><MoreFilled /></el-icon>
+        </div>
+        <div class="pople_box">
+          <div></div>
+          <div>全部人员</div>
+          <el-icon><MoreFilled /></el-icon>
+        </div>
+      </div>
     </div>
     <div class="mid">
       <div class="fsc f1">
-        <span class="mid_title">管理员列表</span>
+        <div>
+          <div v-if="showDep">
+            <span class="mid_title">管理员列表</span>
+            <KzIcon href="#icon-bianji" size="16px" class="bj" @click="showDep = false"></KzIcon>
+          </div>
+          <div v-else class="flex">
+            <el-input v-model="department" show-word-limit maxlength="30"></el-input>
+            <el-button type="primary" @click="showDep = true">保存</el-button>
+          </div>
+        </div>
+
         <div>
           <el-button type="info" plain>删除分组</el-button>
-          <el-button type="primary"
-            ><KzIcon href="#icon-tianjia" size="14px" color="white" />添加人员</el-button
+          <el-button type="primary" @click="show = true"
+            ><KzIcon href="#icon-tianjia" size="14px" />添加人员</el-button
           >
         </div>
       </div>
@@ -91,9 +118,9 @@
           <div v-else class="mid_dig">
             <div class="fleximg mare type_face">请填写受邀请人员信息</div>
             <div class="fleximg mes">系统将通过短信邀请对方注册</div>
-            <el-form :model="numberForm" :rules="telRules">
+            <el-form ref="num" :model="numberForm" :rules="telRules">
               <div class="num">
-                <el-input v-model="msg" placeholder="受邀人员姓名" class="mb16" />
+                <el-input v-model="numberForm.msg" placeholder="受邀人员姓名" class="mb16" />
                 <el-form-item prop="tel">
                   <el-input v-model="numberForm.tel" placeholder="受邀人员手机号">
                     <template #prepend>
@@ -129,21 +156,39 @@ import KzEmpty from '@/components/KzEmpty.vue'
 import { reactive, ref } from 'vue'
 import areaNum from '@/utils/areaNum'
 import { Plus } from '@element-plus/icons-vue'
+import { MoreFilled } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
 import { telReg } from '@/utils/index'
+import {
+  getgroup_api,
+  modifyname_api,
+  addgroup_api,
+  deletegroup_api,
+} from '@/api/manage/company/personnelManage'
 const page = ref(1)
 const size = ref(20)
 const total = ref(50)
-const tableData = ref([])
+const tableData = ref([]) //表格
+const num = ref()
 const numberForm = reactive({
-  tel: '',
+  tel: '', //受邀人电话
+  msg: '', //受邀人姓名
 })
-const show = ref(true)
+const show = ref(false)
 const tab = ref(1)
-const msg = ref('')
-// const tel = ref('')
+const menuList = ref<any[]>([])
+const defaultProps = {
+  children: 'children',
+  label: 'name',
+}
+const department = ref('') //编辑部门名字
+const showDep = ref(true) //编辑部门是否显示
 const acode = ref('86')
 const close = () => {
+  numberForm.msg = ''
+  if (tab.value == 3) {
+    num.value.resetFields()
+  }
   show.value = false
 }
 const telPass = (rule: any, value: string, callback: any) => {
@@ -153,12 +198,18 @@ const telPass = (rule: any, value: string, callback: any) => {
     callback(new Error('请输入正确的手机号码!'))
   }
 }
+
 const telRules = reactive({
   tel: [
     { required: true, message: '请输入手机号！', trigger: 'blur' },
     { validator: telPass, trigger: 'blur' },
   ],
 })
+const getGroup = async () => {
+  const res = await getgroup_api()
+  console.log(res)
+}
+getGroup()
 </script>
 <style lang="scss" scoped>
 .manager_tab {
@@ -168,11 +219,39 @@ const telRules = reactive({
     border-radius: 8px;
     margin-right: 16px;
     background: #ffffff;
-    img {
-      margin: 32px 50px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-direction: column;
+    .img_logo {
+      margin: 32px 50px 12px;
       width: 220px;
-      height: 64px;
+      height: 110px;
+      border-radius: 4px;
+      position: relative;
+      cursor: pointer;
+      &:hover::before {
+        content: '点击查看企业信息';
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        border-radius: 4px;
+        z-index: 1;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #1c4296;
+        color: #fff;
+      }
+      img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+      }
     }
+
     div {
       width: 144px;
       height: 22px;
@@ -181,6 +260,39 @@ const telRules = reactive({
       font-weight: 600;
       color: #333333;
       line-height: 22px;
+      margin-bottom: 16px;
+    }
+    .tree_sector {
+      margin-top: 40px;
+      width: 280px;
+      height: 100px;
+      .pople_box {
+        display: flex;
+        // justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        height: 20px;
+        div:nth-child(1) {
+          width: 2px;
+          height: 12px;
+          margin-right: 4px;
+          background: #909399;
+          border-radius: 1px;
+        }
+        div:nth-child(2) {
+          font-size: 14px;
+          font-weight: 550;
+          color: #303133;
+        }
+        :deep(.el-icon) {
+          transform: rotate(90deg);
+          width: 14px;
+          height: 14px;
+          color: #808080;
+          margin-top: -14px;
+          margin-left: 121px;
+        }
+      }
     }
   }
   .mid {
@@ -193,13 +305,23 @@ const telRules = reactive({
     background: #ffffff;
     .fsc {
       margin-bottom: 16px;
+      .el-input {
+        width: 300px;
+        height: 32px;
+        margin-right: 12px;
+        border-radius: 2px;
+      }
     }
     .mid_title {
+      padding-right: 12px;
       font-size: 18px;
       height: 24px;
       line-height: 24px;
       font-weight: bold;
       color: $color333;
+    }
+    .bj {
+      padding-top: 4px;
     }
   }
   :deep(.el-table thead) {

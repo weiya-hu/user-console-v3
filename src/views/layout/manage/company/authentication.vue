@@ -26,7 +26,6 @@
       <el-form-item label="资质照片" prop="imgName">
         <div class="imgs">
           <kzImgUpload
-            v-if="upShow"
             ref="upload"
             :max="2"
             :img-list="imgList"
@@ -89,28 +88,30 @@ import {
   examineSave,
   codeCheck,
   getcompany_api,
-} from '@/api/manage/user/steeings/authentication'
+} from '@/api/manage/company/authentication'
 const ruleFormRef = ref() //表单
 const imgList = ref<string[]>([])
 const upShow = ref(false)
 const getS = async () => {
-  const { body } = await getcompany_api()
-  console.log(body)
-  ruleForm.name = body.name
-  ruleForm.industry_id = body.industry_id.split(',')
-  ruleForm.left_time = body.left_time
-  ruleForm.legal_person = body.legal_person
-  ruleForm.business_scope = body.business_scope
-  ruleForm.code = body.code
-  ruleForm.contact = body.contact
-  ruleForm.address = body.address
-  ruleForm.url = body.url
-  ruleForm.license = body.license
-  ruleForm.license.split(',').forEach((v: string) => {
-    imgList.value.push(v)
-  })
-  ruleForm.addr = [body.province, body.city, body.district]
-  ruleForm.imgName = body.license ? 'oldName' : ''
+  const { body, status } = await getcompany_api()
+  if (status == 1) {
+    ruleForm.name = body.name
+    ruleForm.industry_id = body.industry_id.split(',')
+    ruleForm.left_time = body.left_time
+    ruleForm.legal_person = body.legal_person
+    ruleForm.business_scope = body.business_scope
+    ruleForm.code = body.code
+    ruleForm.contact = body.contact
+    ruleForm.address = body.address
+    ruleForm.url = body.url
+    ruleForm.license = body.license
+    ruleForm.license.split(',').forEach((v: string) => {
+      imgList.value.push(v)
+    })
+    ruleForm.addr = [body.province, body.city, body.district]
+    ruleForm.imgName = body.license ? 'oldName' : ''
+  }
+
   upShow.value = true
 }
 getS()
