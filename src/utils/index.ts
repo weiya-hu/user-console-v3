@@ -375,7 +375,9 @@ export function passCheck(rule: any, value: string, callback: any) {
     callback(new Error('密码长度在6~18之间,不能只是数字或字母'))
   }
 }
-
+/**
+ * 身份证号码验证
+ */
 export function idCardValidity(rule: any, code: any, callback: any) {
   let tip = ''
   let pass = true
@@ -416,6 +418,18 @@ export function idCardValidity(rule: any, code: any, callback: any) {
     callback()
   }
 }
+/**
+ * 邮箱验证规则
+ */
+export function emailCheck(rule:any, value:any, callback:any) {
+  var regex = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+  if (!regex.test(value)) {
+      callback(new Error('请输入正确的邮箱'));
+  } else {
+      callback();
+  }
+}
+
 
 /**
  * 获取页面参数

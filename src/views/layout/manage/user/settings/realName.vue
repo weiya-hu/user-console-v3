@@ -68,10 +68,13 @@
 import { ref, reactive } from 'vue'
 import { mobileCheck, idCardValidity } from '@/utils/index'
 import areaNum from '@/utils/areaNum'
+import { errMsg, okMsg } from '@/utils/index'
 import { authenticate_api, sendSms_api } from '@/api/manage/user/steeings/myinfo'
 import KzAuthentication from '@/components/KzAuthentication.vue'
 import icon_user from '@/assets/images/user.png'
+import { useRouter} from 'vue-router'
 
+const router = useRouter()
 const userShow = ref(true)
 const showBtn = ref(false)
 const img = ref('')
@@ -127,23 +130,18 @@ const getSms = () => {
   })
 }
 
+
 const sumbit = () => {
   realRef.value.validate(async (isValid: boolean) => {
-    console.log(isValid)
-
     if (isValid) {
       const data: any = {
         ...realValue.value,
         acode: '+' + realValue.value.acode,
       }
       const res = await authenticate_api(data)
-
       if (res.status == 1) {
-        showUp.value = 2
-        img.value = icon_user
-        img_small.value = '#icon-renzhengchenggong'
-        msg.value = '恭喜你，实名认证已通过！'
-        msgTwo.value = '你已完成实名认证，康洲数智将会严格按照《数据安全法》保障你的数据安全与隐私'
+        router.replace('/manage/user/settings/myinfo')
+        okMsg('恭喜你，实名认证已通过！')
       } else {
         showUp.value = 2
         showBtn.value = true
@@ -169,12 +167,6 @@ const sumbit = () => {
       width: 128px;
     }
     :deep(.el-form-item__label) {
-      color: #909399;
-    }
-    .tips {
-      padding-left: 70px;
-      margin-bottom: 22px;
-      font-size: 12px;
       color: #909399;
     }
   }
