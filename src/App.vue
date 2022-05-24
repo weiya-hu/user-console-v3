@@ -351,4 +351,28 @@ img {
     border-bottom: none;
   }
 }
+.show_tags {
+  width: 180px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 0 !important;
+  div {
+    width: 100%;
+    height: 50%;
+    cursor: pointer;
+    &:hover {
+      background-color: #e8edfd;
+    }
+    span {
+      margin-left: 16px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #333333;
+      line-height: 40px;
+    }
+  }
+}
 </style>

@@ -84,16 +84,16 @@ import kzImgUpload from '@/components/kzImgUpload.vue'
 import KzCascader from '@/components/KzCascader.vue'
 import { telReg, errMsg } from '@/utils/index'
 import {
-  examine,
-  examineSave,
-  codeCheck,
-  getcompany_api,
+  examine_api,
+  examineSave_api,
+  codeCheck_api,
+  getCompany_api,
 } from '@/api/manage/company/authentication'
 const ruleFormRef = ref() //表单
 const imgList = ref<string[]>([])
 const upShow = ref(false)
 const getS = async () => {
-  const { body, status } = await getcompany_api()
+  const { body, status } = await getCompany_api()
   if (status == 1) {
     ruleForm.name = body.name
     ruleForm.industry_id = body.industry_id.split(',')
@@ -190,7 +190,7 @@ const rules = {
   code: [{ required: true, message: '请输入统一社会信用代码', trigger: 'blur' }],
 }
 const blur = async (code: string) => {
-  await codeCheck({ code })
+  await codeCheck_api({ code })
 }
 const upError = (err: string) => {
   errMsg(err)
@@ -208,8 +208,8 @@ const upAll = async (url: string[]) => {
   ruleForm.license = url.toString() //资质图片地址
   const res =
     aStatus.value == 1
-      ? await examine({ ...ruleForm, ...Data })
-      : await examineSave({ ...ruleForm, ...Data })
+      ? await examine_api({ ...ruleForm, ...Data })
+      : await examineSave_api({ ...ruleForm, ...Data })
 }
 const onChange = (val: string) => {
   ruleForm.imgName = val
