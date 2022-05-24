@@ -261,16 +261,18 @@
           <div class="card_title">我的企业</div>
 
           <div class="card_body fc" v-show="!showCompany">
-            <div class="item_box" v-for="v in userCompany" :key="v.cid">
+            <div class="item_box" v-for="v in userCompany" :key="v.id">
               <div class="item">
                 <div class="item_title">企业名称</div>
                 <div class="item_content fcs">
-                  <el-tooltip effect="dark" :content="v.company_name" placement="top">
-                    <div class="els item_content_box">{{ v.company_name }}</div>
+                  <el-tooltip effect="dark" :content="v.name" placement="top">
+                    <div class="els item_content_box">{{ v.name }}</div>
                   </el-tooltip>
-                  <img class="active_c" :src="icon_company" alt="" />
+                  <img class="active_c" :src="icon_company" alt="" v-if="v.selected == 1" />
                 </div>
-                <el-link type="primary">退出企业</el-link>
+                <el-link type="primary" v-if="v.selected == 0" @click="quitCompany(v.id, v.name)"
+                  >退出企业</el-link
+                >
               </div>
               <div class="item">
                 <div class="item_title">分组</div>
@@ -294,7 +296,22 @@
           <el-button type="primary" @click="avatorChanges">确认</el-button>
         </template>
       </el-dialog>
-      <KzDialog v-model="quitShow" :msg="quitMsg" :title="'确定退出企业吗？'" @sure="quitCom" />
+      <!-- 删除企业 -->
+      <el-dialog v-model="quitShow" custom-class="info_dialog" width="500px" title="删除提示">
+        <template #default>
+          <div class="del_tips">
+            确定退出：<span class="c_tips">{{ delComName }}</span>
+          </div>
+          <span class="del_tip_info"
+            >退出企业后将不再能够使用该企业所有的产品与服务，请务必谨慎操作建议与企业管理员确认后再退出</span
+          >
+        </template>
+        <template #footer>
+          <el-button @click="closeCom">取消</el-button>
+          <el-button type="primary" @click="quitCom">确定</el-button>
+        </template>
+      </el-dialog>
+      <!-- <KzDialog v-model="quitShow"  :title="'确定退出企业吗？'" @sure="quitCom" /> -->
       <!-- 修改账户 -->
       <el-dialog
         v-model="telChange"
@@ -382,7 +399,12 @@
         </template>
       </el-dialog>
       <!-- 修改邮箱 -->
-      <el-dialog v-model="emailChange" custom-class="info_dialog" width="500px" title="编辑绑定邮箱">
+      <el-dialog
+        v-model="emailChange"
+        custom-class="info_dialog"
+        width="500px"
+        title="编辑绑定邮箱"
+      >
         <template #default>
           <div class="fcc">
             <el-form
@@ -395,7 +417,7 @@
               hide-required-asterisk
             >
               <el-form-item label="邮箱地址" prop="email">
-                <el-input  v-model="emailForm.email" placeholder="请输入邮箱地址" />
+                <el-input v-model="emailForm.email" placeholder="请输入邮箱地址" />
               </el-form-item>
               <el-form-item label="验证码" prop="yzm">
                 <div class="fcs f1">
@@ -544,7 +566,7 @@ import QrcodeVue from 'qrcode.vue'
 import { mainStore } from '@/store/index'
 import { errMsg, okMsg } from '@/utils/index'
 import { getHash, getHashStr, strToArr } from '@/utils/index'
-import { mobileCheck, passReg,emailCheck } from '@/utils/index'
+import { mobileCheck, passReg, emailCheck } from '@/utils/index'
 import areaNum from '@/utils/areaNum'
 import { sendResetsms, doResetsmsCheck_api, doResetpass_api } from '@/api/login'
 import { CircleCloseFilled, Calendar } from '@element-plus/icons-vue'
@@ -736,23 +758,27 @@ const myCompany = async () => {
   userCompany.value = res.body
 }
 myCompany()
+
 // 退出企业
 const quitShow = ref(false)
-const quitMsg = ref(
-  '退出企业后将不再能够使用该企业所有的产品与服务，请务必谨慎操作建议与企业管理员确认后再退出'
-)
-
 const delComId = ref<number>(0)
-const quitCompany = (id: number) => {
+const delComName = ref('')
+
+const quitCompany = (id: number, name: string) => {
   quitShow.value = true
   delComId.value = id
+  delComName.value = name
 }
 const quitCom = async () => {
   const res = await quitCompany_api({ cid: delComId.value })
   if (res.status == 1) {
     myCompany()
     quitShow.value = false
+    okMsg('成功退出企业！')
   }
+}
+const closeCom=()=>{
+   quitShow.value = false
 }
 
 //修改手机号
@@ -977,8 +1003,8 @@ const emailRules = reactive({
 const emailComfirm = () => {
   emailFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
-      errMsg("未开通此服务！")
-      emailChange.value=false
+      errMsg('未开通此服务！')
+      emailChange.value = false
     }
   })
 }
@@ -989,16 +1015,16 @@ const closeEdit = () => {
   telChange.value = false
   editMm.value = 1
   mmChange.value = false
-  emailChange.value=false
-  emailForm.email=''
-  emailForm.yzm=''
-  oTelForm.yzm=''
-  nTelForm.tel=''
-  nTelForm.yzm=''
-  mTelForm.tel=''
-  mTelForm.yzm=''
-  passForm.pass=''
-  passForm.checkPass=''
+  emailChange.value = false
+  emailForm.email = ''
+  emailForm.yzm = ''
+  oTelForm.yzm = ''
+  nTelForm.tel = ''
+  nTelForm.yzm = ''
+  mTelForm.tel = ''
+  mTelForm.yzm = ''
+  passForm.pass = ''
+  passForm.checkPass = ''
 }
 </script>
 
@@ -1196,6 +1222,20 @@ const closeEdit = () => {
       color: #303133;
     }
     .mm_tip_cc {
+      font-size: 14px;
+      font-weight: 400;
+      color: #303133;
+    }
+    .del_tips {
+      font-size: 16px;
+      font-weight: 500;
+      color: #303133;
+      margin-bottom: 8px;
+      .c_tips {
+        color: #2d68eb;
+      }
+    }
+    .del_tip_info {
       font-size: 14px;
       font-weight: 400;
       color: #303133;

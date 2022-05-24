@@ -57,7 +57,7 @@ export const invitation_api = (): Promise<IRes> => {
  * @name 用户中心我的企业列表
  */
  export const userCompany_api = (): Promise<IRes> => {
-  return get('user ', '/web/user/company.list')
+  return get('user ', '/web/user/company/and/group.list')
 }
 /**
  * @name 退出企业
