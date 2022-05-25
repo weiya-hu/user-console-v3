@@ -51,5 +51,5 @@ export const codeCheck_api = (data: { code: string }): Promise<IRes> => {
  * @name 获取用户企业认证消息
  */
 export const getCompany_api = (): Promise<IRes> => {
-  return get('user', '/company/relation/audit.get')
+  return get('user', '/web/company/audit.get')
 }

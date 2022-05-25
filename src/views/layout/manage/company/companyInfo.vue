@@ -11,9 +11,9 @@
           <div class="card_title">基本信息</div>
           <div class="card_cont">
             <div>
-              <el-descriptions :column="2" size="large">
-                <el-descriptions-item>
-                  <span class="item_avater">企业logo</span>
+              <el-descriptions :column="2" size="large" border>
+                <el-descriptions-item label-align="right" label="企业logo">
+                  <!-- <span class="item_avater">企业logo</span> -->
                   <div v-loading="upLoading" class="user_avater">
                     <KzImgUpload
                       v-if="!upLoading"
@@ -33,7 +33,9 @@
                 ></el-descriptions-item>
                 <el-descriptions-item><el-link type="primary">修改</el-link></el-descriptions-item>
                 <div v-if="showCom">
-                  <el-descriptions-item label="企业名称">重庆康洲数智有限公司</el-descriptions-item>
+                  <el-descriptions-item label="企业名称" label-align="right"
+                    >重庆康洲数智有限公司</el-descriptions-item
+                  >
                   <el-descriptions-item
                     ><el-link type="primary" @click="showCom = false"
                       >修改</el-link
@@ -41,7 +43,7 @@
                   >
                 </div>
                 <div v-else>
-                  <el-descriptions-item label="企业名称"
+                  <el-descriptions-item label="企业名称" label-align="right"
                     ><el-input v-model="company_name"></el-input
                   ></el-descriptions-item>
                   <el-descriptions-item
@@ -51,23 +53,25 @@
                   >
                 </div>
 
-                <el-descriptions-item label="认证企业"
+                <el-descriptions-item label="认证企业" label-align="right"
                   ><span class="certified">未认证</span
                   ><el-icon color="#FF4736 "><Warning /></el-icon
                 ></el-descriptions-item>
                 <el-descriptions-item
                   ><el-link type="primary">立即认证</el-link></el-descriptions-item
                 >
-                <el-descriptions-item label="企业编码">561245</el-descriptions-item>
+                <el-descriptions-item label="企业编码" label-align="right"
+                  >561245</el-descriptions-item
+                >
                 <el-descriptions-item><el-link type="primary">复制</el-link></el-descriptions-item>
 
-                <el-descriptions-item
-                  ><span class="item_avater comp_one">企业管理员</span>康洲</el-descriptions-item
+                <el-descriptions-item label="企业管理员" label-align="right"
+                  >康洲</el-descriptions-item
                 >
                 <el-descriptions-item
                   ><el-link type="primary">变更管理员</el-link></el-descriptions-item
                 >
-                <el-descriptions-item label="企业人数"
+                <el-descriptions-item label="企业人数" label-align="right"
                   >1
                   <span class="certified">/人</span>
                   <img :src="icon_company" alt="" />
@@ -82,16 +86,16 @@
         <div class="conten_item conten_item2 kz_card">
           <div class="flex">
             <div class="card_title">联系信息</div>
-            <el-button v-if="!showContent" type="primary">保存</el-button>
+            <el-button type="primary" v-if="!showContent">保存</el-button>
           </div>
 
-          <div v-if="showContent" class="content_ord">
+          <div class="content_ord" v-if="showContent">
             <img :src="icon_order" alt="" />
             <div>未添加联系信息</div>
             <div>添加联系信息，为您提供1对1的客户服务</div>
             <el-button type="primary" @click="showContent = false">立即添加</el-button>
           </div>
-          <div v-else class="content_two">
+          <div class="content_two" v-else>
             <el-form :model="formInline" label-width="150px">
               <el-form-item label="联系人">
                 <el-input v-model="formInline.user" placeholder="请输入" />
@@ -115,6 +119,37 @@
                 <el-input v-model="formInline.user" placeholder="请输入" />
               </el-form-item>
             </el-form>
+          </div>
+          <div class="scard_two">
+            <div>
+              <el-descriptions :column="1" size="large" border>
+                <el-descriptions-item label-align="right" label="联系人"
+                  >康洲
+                </el-descriptions-item>
+                <el-descriptions-item label="联系人电话" label-align="right"
+                  >重庆康洲数智有限公司</el-descriptions-item
+                >
+
+                <el-descriptions-item label="联系人邮箱" label-align="right"
+                  >1234659874</el-descriptions-item
+                >
+
+                <el-descriptions-item label="企业座机" label-align="right"
+                  >561245</el-descriptions-item
+                >
+
+                <el-descriptions-item label="所在区域" label-align="right"
+                  >重庆市南岸区</el-descriptions-item
+                >
+
+                <el-descriptions-item label="详细地址" label-align="right"
+                  >11111
+                </el-descriptions-item>
+                <el-descriptions-item label="官网地址" label-align="right"
+                  ><span class="urlAdr">11111</span>
+                </el-descriptions-item>
+              </el-descriptions>
+            </div>
           </div>
         </div>
         <div class="conten_item conten_item2 kz_card conten_item3">
@@ -246,17 +281,32 @@ const upSuccess = (url: string, length: number) => {
         font-family: PingFangSC-Medium, PingFang SC;
         font-weight: 500;
         color: #909399;
+        background: white;
+      }
+      :deep(.el-descriptions) {
+        --el-descriptions-table-border: 1px solid #fff;
       }
       :deep(.el-descriptions__cell) {
-        // width: 400px;
-        padding-bottom: 32px;
-        // text-align: right;
+        padding-bottom: 24px;
+        width: 200px;
+        padding-right: 32px;
       }
       :deep(.el-descriptions__content) {
         font-size: 14px;
         font-family: PingFangSC-Medium, PingFang SC;
         font-weight: 500;
         color: #303133;
+      }
+      .urlAdr {
+        color: #2d68eb !important;
+      }
+      .scard_two {
+        span {
+          color: #2d68eb;
+        }
+        margin: 0 auto;
+        width: 674px;
+        margin-left: 215px;
       }
     }
     .conten_item1 {
@@ -280,7 +330,6 @@ const upSuccess = (url: string, length: number) => {
         width: 220px;
         height: 110px;
         border: 1px solid #eeeeee;
-        margin-left: 100px;
         overflow: hidden;
         position: relative;
         .up_avatar {
@@ -308,11 +357,20 @@ const upSuccess = (url: string, length: number) => {
         }
       }
       .card_cont {
-        width: 650px;
+        width: 674px;
         padding-top: 75px;
         padding-bottom: 40px;
         margin: 0 auto;
+        margin-left: 285px;
       }
+
+      // .scard_two {
+      //   span {
+      //     color: #2d68eb;
+      //   }
+      //   margin: 0 auto;
+      //   margin-right: 300px;
+      // }
       .certified {
         color: #909399;
         margin-right: 9px;
@@ -377,7 +435,8 @@ const upSuccess = (url: string, length: number) => {
     }
     .conten_item3 {
       .content_last {
-        margin-left: 27%;
+        width: 674px;
+        margin: 0 auto;
         padding-bottom: 60px;
         img:nth(1) {
           width: 160px;

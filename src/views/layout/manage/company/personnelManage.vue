@@ -17,15 +17,25 @@
           <div>全部人员</div>
         </div>
 
-        <div v-for="(item, index) in group" :key="index" class="pople_box" @click="getList(index)">
+        <div
+          v-for="(item, index) in group"
+          :key="index"
+          class="pople_box"
+          @click="getList(index, item)"
+        >
           <div class="left_line"></div>
           <div>{{ item }}</div>
-          <el-popover trigger="hover" placement="right" :width="180" popper-class="show_tags">
+          <el-popover
+            trigger="hover"
+            placement="right"
+            :width="180"
+            popper-class="show_tags user_drop"
+            :teleported="false"
+          >
             <div @click="openEdit(index, item)"><span>修改名称</span></div>
             <div @click="deleteGroup(index)"><span>删除分组</span></div>
-
             <template #reference>
-              <el-icon @click="show_tags = !show_tags"><MoreFilled /></el-icon>
+              <el-icon><MoreFilled /></el-icon>
             </template>
           </el-popover>
           <el-dialog
@@ -82,7 +92,7 @@
           </div>
           <div v-else class="flex">
             <el-input v-model="department" show-word-limit maxlength="30"></el-input>
-            <el-button type="primary" @click="modifyGroup">保存</el-button>
+            <el-button type="primary" @click="editName">保存</el-button>
           </div>
         </div>
 
@@ -92,11 +102,6 @@
             ><KzIcon href="#icon-tianjia" size="14px" />添加人员</el-button
           >
         </div>
-        <!-- <div class="fjend">
-          <el-button type="primary" @click="show = true"
-            ><KzIcon href="#icon-tianjia" size="14px" />添加人员</el-button
-          >
-        </div> -->
       </div>
       <div>
         <div class="mana_tab">
@@ -202,6 +207,49 @@
             </div>
           </div>
         </el-dialog>
+        <el-dialog
+          v-model="showEdit"
+          width="500px"
+          custom-class="del_dialog"
+          title="编辑人员"
+          @close="close"
+        >
+          <div class="fir_name">
+            <div>康洲</div>
+            <div>康洲</div>
+            <img :src="icon_del" alt="" />
+          </div>
+          <div class="sel">
+            <span>分组</span>
+            <el-select v-model="sel_value" multiple placeholder="请选择分组（可多选）">
+              <!-- <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              /> -->
+            </el-select>
+          </div>
+          <div class="sel">
+            <span>分组</span>
+            <el-select v-model="sel_value" multiple placeholder="请选择分组（可多选）">
+              <!-- <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              /> -->
+            </el-select>
+          </div>
+          <div class="sel">
+            <span>状态</span>
+            <el-switch v-model="edit_status" :active-value="1" :inactive-value="0" />
+          </div>
+          <div class="fjend">
+            <el-button class="bdc_btn">取消</el-button>
+            <el-button type="primary">保存</el-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -211,6 +259,7 @@
 import KzPage from '@/components/KzPage.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
 import { reactive, ref } from 'vue'
+import icon_del from '@/assets/images/del_pople.png'
 import areaNum from '@/utils/areaNum'
 import { Plus } from '@element-plus/icons-vue'
 import { errMsg, okMsg } from '@/utils/index'
@@ -237,13 +286,17 @@ const show = ref(false)
 const tab = ref(1)
 const department = ref('') //编辑部门名字
 const showDep = ref(true) //编辑部门是否显示
-const show_tags = ref(false) //部门编辑和删除
 const group = ref({}) //全部部门
 const dialogVisible = ref(false) //添加分组弹窗
 const edit_show = ref(false) //编辑部门名称
+const showEdit = ref(true) //编辑员工是否显示
+const edit_status = ref(0) //编辑员工状态
+const comAll = ref(true) //是否显示操作框
+const editId = ref() //表格名字编辑
 const numPoples = ref()
 const edit_input = ref('')
 const group_input = ref('')
+const sel_value = ref([])
 const acode = ref('86')
 const closeAdd = () => {
   group_input.value = ''
@@ -279,7 +332,17 @@ const modifyGroup = async (group_id: number, name: string) => {
   status === 1 ? okMsg('修改名称成功') : errMsg('修改名称失败')
   closeEdit()
   getGroup()
-  getList()
+}
+//表格修改名称
+const editName = async (group_id: number, name: string) => {
+  const { status } = await modifyName_api({
+    group_id: editId.value,
+    name: department.value,
+  })
+  status === 1 ? okMsg('修改名称成功') : errMsg('修改名称失败')
+  showDep.value = true
+  closeEdit()
+  getGroup()
 }
 //修改状态
 const changeStatus = async (id: number) => {
@@ -314,23 +377,24 @@ const getGroup = async () => {
   }
 }
 getGroup()
-const getList = async (id?: number) => {
+const getList = async (id?: number, name?: any) => {
+  department.value = name
+  editId.value = id
+  console.log(editId.value)
+
   const { body, status } = await groupList_api({
     size: size.value,
     current: page.value,
     groupId: id,
   })
-  console.log(body)
 
   if (status == 1) {
     tableData.value = body.records
     total.value = body.total
-    department.value = body.records[0].group_name
   }
   id ? (comAll.value = false) : (comAll.value = true)
 }
 getList()
-const comAll = ref(true) //是否显示操作框
 </script>
 <style lang="scss" scoped>
 .manager_tab {
@@ -440,7 +504,30 @@ const comAll = ref(true) //是否显示操作框
       }
     }
   }
-
+  .show_tags {
+    width: 180px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 0 !important;
+    div {
+      width: 100%;
+      height: 50%;
+      cursor: pointer;
+      &:hover {
+        background-color: #e8edfd;
+      }
+      span {
+        margin-left: 16px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #333333;
+        line-height: 40px;
+      }
+    }
+  }
   .mid {
     width: calc(100% - 336px);
     box-sizing: border-box;
@@ -574,6 +661,43 @@ const comAll = ref(true) //是否显示操作框
         .two {
           color: #303133;
         }
+      }
+    }
+  }
+  :deep(.del_dialog) {
+    padding-bottom: 24px;
+    .fir_name {
+      margin-top: 10px;
+      height: 50px;
+      background-color: #f3f4f8;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      div:nth-child(1) {
+        margin-left: 16px;
+        margin-right: 16px;
+        font-size: 18px;
+        font-weight: 545;
+        color: black;
+      }
+      div:nth-child(2) {
+        flex: 1;
+      }
+      img {
+        margin-right: 16px;
+      }
+    }
+    .sel {
+      margin: 20px 0;
+
+      span:nth-child(1) {
+        color: #333333;
+        margin-right: 16px;
+      }
+      .el-input {
+        width: 278px;
+        height: 40px;
       }
     }
   }
