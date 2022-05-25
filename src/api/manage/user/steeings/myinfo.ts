@@ -43,8 +43,8 @@ export const authenticate_api = (data: {
 /**
  * @name 发送实名认证短信
  */
- export const sendSms_api = (data: { acode: string; mobile: string }): Promise<IRes> => {
-  return post('user', '/web/web/user/verified/sms/send.do', data)
+export const sendSms_api = (data: { acode: string; mobile: string }): Promise<IRes> => {
+  return post('user', '/web/user/verified/sms/send.do', data)
 }
 
 /**
@@ -56,38 +56,41 @@ export const invitation_api = (): Promise<IRes> => {
 /**
  * @name 用户中心我的企业列表
  */
- export const userCompany_api = (): Promise<IRes> => {
+export const userCompany_api = (): Promise<IRes> => {
   return get('user ', '/web/user/company/and/group.list')
 }
 /**
  * @name 退出企业
  */
- export const quitCompany_api = (data: { cid: number; }): Promise<IRes> => {
+export const quitCompany_api = (data: { cid: number }): Promise<IRes> => {
   return post('user', '/web/user/enterprise/exit.do', data)
 }
-
 
 /**
  * @name 修改手机号短信验证（原手机号）
  */
- export const editOldTel_api = (data: { sms: string }): Promise<IRes> => {
+export const editOldTel_api = (data: { sms: string }): Promise<IRes> => {
   return post('user', '/web/user/modify/mobile/former/sms/check.do', data)
 }
 /**
  * @name 修改手机号发送短信（原手机号）
  */
- export const editOldTelSms_api = (): Promise<IRes> => {
+export const editOldTelSms_api = (): Promise<IRes> => {
   return post('user', '/web/user/modify/mobile/former/sms/send.do')
 }
 /**
  * @name 修改手机号短信验证（新手机号）
  */
- export const editNewTel_api = (data: { acode: string; mobile: string;sms:string }): Promise<IRes> => {
+export const editNewTel_api = (data: {
+  acode: string
+  mobile: string
+  sms: string
+}): Promise<IRes> => {
   return post('user', '/web/user/modify/mobile/new/sms/check.do', data)
 }
 /**
  * @name 修改手机号发送短信（新手机号）
  */
- export const editNewTelSms_api = (data: { acode: string; mobile: string }): Promise<IRes> => {
+export const editNewTelSms_api = (data: { acode: string; mobile: string }): Promise<IRes> => {
   return post('user', '/web/user/modify/mobile/new/sms/send.do', data)
 }

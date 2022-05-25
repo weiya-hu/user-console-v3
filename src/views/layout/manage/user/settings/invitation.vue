@@ -23,13 +23,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import KzEmpty from '@/components/KzEmpty.vue'
-import KzDialog from '@/components/KzDialog.vue';
+import KzDialog from '@/components/KzDialog.vue'
 import { invitation_api } from '@/api/manage/user/steeings/myinfo'
 import { formatDate } from '@/utils/date'
 const tableData = ref([])
 const invite = async () => {
   const res = await invitation_api()
-  if (res.status == 1) {
+  if (res.status === 1) {
     tableData.value = res.body
   }
 }

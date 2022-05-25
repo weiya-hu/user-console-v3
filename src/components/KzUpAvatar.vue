@@ -3,11 +3,11 @@
     <div class="kz_cropper_box">
       <div :style="{ width: boxSize + 'px', height: boxSize + 'px' }">
         <VueCropper
+          v-show="showImg"
           ref="cropperRef"
           auto-crop
           fixed-box
           :img="showImg"
-          v-show="showImg"
           output-type="png"
           :auto-crop-width="cropSize + 'px'"
           :auto-crop-height="cropSize + 'px'"

@@ -22,7 +22,7 @@
                 <el-avatar v-else :size="100" :src="imgUrl" class="up_avatar"></el-avatar>
               </div>
               <div class="userinfo_content">
-                <el-descriptions :column="2" size="large" width="500" v-show="editName" border>
+                <el-descriptions v-show="editName" :column="2" size="large" width="500" border>
                   <el-descriptions-item label="用户昵称" label-align="right" width="200px">
                     {{ userInfoDate.nickname }}</el-descriptions-item
                   >
@@ -52,10 +52,10 @@
                     ></el-descriptions-item
                   >
                   <el-descriptions-item
+                    v-if="userInfoDate.invite_code"
                     label="地区"
                     label-align="right"
                     width="200px"
-                    v-if="userInfoDate.invite_code"
                   >
                     <el-tooltip effect="dark" placement="top">
                       <template #content>
@@ -94,12 +94,12 @@
                     ></el-descriptions-item
                   >
                 </el-descriptions>
-                <el-descriptions :column="1" size="large" width="500" v-show="!editName" border>
+                <el-descriptions v-show="!editName" :column="1" size="large" width="500" border>
                   <el-descriptions-item label="用户昵称" label-align="right" width="200px">
                     <el-input
+                      v-model="eidtForm.userName"
                       :placeholder="userInfoDate.nickname"
                       class="fc edit_info"
-                      v-model="eidtForm.userName"
                   /></el-descriptions-item>
                   <el-descriptions-item label="性别" label-align="right" width="200px">
                     <span class="edit_info">
@@ -215,9 +215,11 @@
               <div class="item">
                 <div class="item_title">绑定邮箱</div>
                 <div class="item_content fcs">
-                  {{ userInfoDate.email }}
+                  {{ userInfoDate.email === '' ? '未绑定邮箱' : userInfoDate.email }}
                 </div>
-                <el-link type="primary" @click="goChangoEmail">修改</el-link>
+                <el-link type="primary" @click="goChangoEmail">{{
+                  userInfoDate.email ? '修改' : '绑定'
+                }}</el-link>
               </div>
               <div class="item">
                 <div class="item_title">登录密码</div>
@@ -260,17 +262,17 @@
         <div class="conten_item conten_item4 mb16 kz_card">
           <div class="card_title">我的企业</div>
 
-          <div class="card_body fc" v-show="!showCompany">
-            <div class="item_box" v-for="v in userCompany" :key="v.id">
+          <div v-show="!showCompany" class="card_body fc">
+            <div v-for="v in userCompany" :key="v.id" class="item_box">
               <div class="item">
                 <div class="item_title">企业名称</div>
                 <div class="item_content fcs">
                   <el-tooltip effect="dark" :content="v.name" placement="top">
                     <div class="els item_content_box">{{ v.name }}</div>
                   </el-tooltip>
-                  <img class="active_c" :src="icon_company" alt="" v-if="v.selected == 1" />
+                  <img v-if="v.selected == 1" class="active_c" :src="icon_company" alt="" />
                 </div>
-                <el-link type="primary" v-if="v.selected == 0" @click="quitCompany(v.id, v.name)"
+                <el-link v-if="v.selected == 0" type="primary" @click="quitCompany(v.id, v.name)"
                   >退出企业</el-link
                 >
               </div>
@@ -281,7 +283,7 @@
             </div>
           </div>
           <div class="user_com_box">
-            <div class="fcc user_com_empty" v-show="showCompany">
+            <div v-show="showCompany" class="fcc user_com_empty">
               <img :src="icon_user_company" alt="" />
               <span>暂无企业信息</span>
             </div>
@@ -320,11 +322,11 @@
         title="修改绑定手机号码"
       >
         <template #default>
-          <div class="fcc" v-show="editTel === 1">
+          <div v-show="editTel === 1" class="fcc">
             <el-form
+              ref="oTelFormRef"
               label-position="right"
               label-width="80px"
-              ref="oTelFormRef"
               :model="oTelForm"
               :rules="otelRules"
               size="large"
@@ -349,9 +351,9 @@
           </div>
           <div v-show="editTel === 2">
             <el-form
+              ref="nTelFormRef"
               label-position="right"
               label-width="80px"
-              ref="nTelFormRef"
               :model="nTelForm"
               :rules="ntelRules"
               size="large"
@@ -408,9 +410,9 @@
         <template #default>
           <div class="fcc">
             <el-form
+              ref="emailFormRef"
               label-position="right"
               label-width="80px"
-              ref="emailFormRef"
               :model="emailForm"
               :rules="emailRules"
               size="large"
@@ -442,11 +444,11 @@
       <!-- 修改密码 -->
       <el-dialog v-model="mmChange" custom-class="info_dialog" width="500px" title="修改密码">
         <template #default>
-          <div class="fcc" v-show="editMm === 1">
+          <div v-show="editMm === 1" class="fcc">
             <el-form
+              ref="mmFormRef"
               label-position="right"
               label-width="90px"
-              ref="mmFormRef"
               :model="mTelForm"
               :rules="mTelRules"
               size="large"
@@ -483,9 +485,9 @@
           </div>
           <div v-show="editMm === 2">
             <el-form
+              ref="passFormRef"
               label-position="right"
               label-width="90px"
-              ref="passFormRef"
               :model="passForm"
               :rules="passRules"
               size="large"
@@ -659,7 +661,7 @@ const editData = async (parms: IUserDate) => {
     head: imgUrl.value,
   }
   const res = await userInfoEdit_api({ ...data })
-  if (res.status == 1) {
+  if (res.status === 1) {
     userInfoList()
     editName.value = true
     okMsg('用户信息修改成功!')
@@ -771,14 +773,14 @@ const quitCompany = (id: number, name: string) => {
 }
 const quitCom = async () => {
   const res = await quitCompany_api({ cid: delComId.value })
-  if (res.status == 1) {
+  if (res.status === 1) {
     myCompany()
     quitShow.value = false
-    okMsg('成功退出企业！')
+    okMsg('')
   }
 }
-const closeCom=()=>{
-   quitShow.value = false
+const closeCom = () => {
+  quitShow.value = false
 }
 
 //修改手机号
@@ -859,7 +861,7 @@ const telComfirm = async () => {
     if (valid) {
       const data = { mobile: nTelForm.tel, acode: '+' + acode.value, sms: nTelForm.yzm }
       const res = await editNewTel_api({ ...data })
-      if (res.status == 1) {
+      if (res.status === 1) {
         okMsg('手机号修改成功！')
         telChange.value = false
       }
@@ -972,7 +974,7 @@ const onSubmit = () => {
       loading.value = true
       const data = { acode: '+' + acode.value, mobile: mTelForm.tel, pass: passForm.pass }
       const res = await doResetpass_api({ ...data })
-      if (res.status == 1) {
+      if (res.status === 1) {
         okMsg('密码修改成功！')
         editMm.value = 3
       }
@@ -1246,6 +1248,3 @@ const closeEdit = () => {
   margin-left: 8px;
 }
 </style>
-
-
-

@@ -379,41 +379,9 @@ export function passCheck(rule: any, value: string, callback: any) {
  * 身份证号码验证
  */
 export function idCardValidity(rule: any, code: any, callback: any) {
-  let tip = ''
-  let pass = true
-
-  if (
-    !code ||
-    !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i.test(code)
-  ) {
-    tip = '身份证号格式错误'
-    pass = false
-  } else {
-    // 18位身份证需要验证最后一位校验位
-    if (code.length === 18) {
-      code = code.split('')
-      // ∑(ai×Wi)(mod 11)
-      // 加权因子
-      const factor = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
-      // 校验位
-      const parity = [1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2]
-      let sum = 0
-      let ai = 0
-      let wi = 0
-      for (let i = 0; i < 17; i++) {
-        ai = code[i]
-        wi = factor[i]
-        sum += ai * wi
-      }
-      const last = parity[sum % 11]
-      if (parity[sum % 11] != code[17]) {
-        tip = '校验位错误'
-        pass = false
-      }
-    }
-  }
-  if (!pass) {
-    callback(new Error(tip))
+  const regex = /^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/
+  if (!regex.test(code)) {
+    callback(new Error('身份证号码格式错误'))
   } else {
     callback()
   }
@@ -421,15 +389,14 @@ export function idCardValidity(rule: any, code: any, callback: any) {
 /**
  * 邮箱验证规则
  */
-export function emailCheck(rule:any, value:any, callback:any) {
-  var regex = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+export function emailCheck(rule: any, value: any, callback: any) {
+  const regex = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/
   if (!regex.test(value)) {
-      callback(new Error('请输入正确的邮箱'));
+    callback(new Error('请输入正确的邮箱'))
   } else {
-      callback();
+    callback()
   }
 }
-
 
 /**
  * 获取页面参数

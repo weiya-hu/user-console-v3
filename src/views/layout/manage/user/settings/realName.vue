@@ -72,7 +72,7 @@ import { errMsg, okMsg } from '@/utils/index'
 import { authenticate_api, sendSms_api } from '@/api/manage/user/steeings/myinfo'
 import KzAuthentication from '@/components/KzAuthentication.vue'
 import icon_user from '@/assets/images/user.png'
-import { useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const userShow = ref(true)
@@ -130,7 +130,6 @@ const getSms = () => {
   })
 }
 
-
 const sumbit = () => {
   realRef.value.validate(async (isValid: boolean) => {
     if (isValid) {
@@ -139,7 +138,7 @@ const sumbit = () => {
         acode: '+' + realValue.value.acode,
       }
       const res = await authenticate_api(data)
-      if (res.status == 1) {
+      if (res.status === 1) {
         router.replace('/manage/user/settings/myinfo')
         okMsg('恭喜你，实名认证已通过！')
       } else {

@@ -82,16 +82,16 @@
         <div class="conten_item conten_item2 kz_card">
           <div class="flex">
             <div class="card_title">联系信息</div>
-            <el-button type="primary" v-if="!showContent">保存</el-button>
+            <el-button v-if="!showContent" type="primary">保存</el-button>
           </div>
 
-          <div class="content_ord" v-if="showContent">
+          <div v-if="showContent" class="content_ord">
             <img :src="icon_order" alt="" />
             <div>未添加联系信息</div>
             <div>添加联系信息，为您提供1对1的客户服务</div>
             <el-button type="primary" @click="showContent = false">立即添加</el-button>
           </div>
-          <div class="content_two" v-else>
+          <div v-else class="content_two">
             <el-form :model="formInline" label-width="150px">
               <el-form-item label="联系人">
                 <el-input v-model="formInline.user" placeholder="请输入" />
