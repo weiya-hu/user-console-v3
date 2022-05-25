@@ -23,7 +23,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import KzEmpty from '@/components/KzEmpty.vue'
-import KzDialog from '@/components/KzDialog.vue'
 import { invitation_api } from '@/api/manage/user/steeings/myinfo'
 import { formatDate } from '@/utils/date'
 const tableData = ref([])

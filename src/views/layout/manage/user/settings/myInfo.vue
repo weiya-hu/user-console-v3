@@ -12,7 +12,7 @@
           <div class="card_body fc">
             <div class="avator_box fcc">
               <div v-loading="upLoading" class="user_avater">
-                <el-avatar :size="100" :src="imgUrl || df_avatar_i" @click="cc"></el-avatar>
+                <el-avatar :size="100" :src="imgUrl || df_avatar_i" @click="editAvator"></el-avatar>
               </div>
             </div>
             <div v-show="editName" class="item_box">
@@ -260,7 +260,6 @@
           <el-button type="primary" @click="quitCom">确定</el-button>
         </template>
       </el-dialog>
-      <!-- <KzDialog v-model="quitShow"  :title="'确定退出企业吗？'" @sure="quitCom" /> -->
       <!-- 修改账户 -->
       <el-dialog
         v-model="telChange"
@@ -403,19 +402,6 @@
             >
               <el-form-item label="手机号码" prop="tel">
                 <el-input v-model="userInfoDate.mobile" disabled />
-                <!-- <el-input v-model="mTelForm.tel" placeholder="请输入手机号">
-                  <template #prepend>
-                    <el-select v-model="acode" style="width: 80px">
-                      <el-option
-                        v-for="(v, i) in areaNum"
-                        :key="i"
-                        :label="'+' + v.value"
-                        :value="v.value"
-                        >{{ v.name + ' +' + v.value }}</el-option
-                      >
-                    </el-select>
-                  </template>
-                </el-input> -->
               </el-form-item>
               <el-form-item label="验证码" prop="yzm">
                 <div class="fcs f1">
@@ -450,7 +436,8 @@
                 ></el-input>
               </el-form-item>
               <div class="tips">
-                * 密码最小长度6个字，最大长度16个字；<br />必须包含: 小写字母、数字
+                * 密码最小长度6个字，最大长度16个字；<br />必须包含:
+                小写字母、数字、不能和用户名相同
               </div>
               <el-form-item label="确认密码" prop="checkPass">
                 <el-input
@@ -634,7 +621,7 @@ const goEdit = (key: string) => {
 const editAvatershow = ref(false)
 const upLoading = ref(false)
 const imgUrl = ref('')
-const cc = () => {
+const editAvator = () => {
   editAvatershow.value = true
 }
 
