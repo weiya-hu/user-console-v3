@@ -15,7 +15,7 @@
                 <el-avatar :size="100" :src="imgUrl || df_avatar_i" @click="cc"></el-avatar>
               </div>
             </div>
-            <div class="item_box" v-show="editName">
+            <div v-show="editName" class="item_box">
               <div class="item">
                 <div class="item_title">用户昵称</div>
                 <div class="item_content">
@@ -39,7 +39,7 @@
               </div>
               <div class="item">
                 <div class="item_title">地区</div>
-                <div class="item_content els" v-if="userInfoDate.invite_code">
+                <div v-if="userInfoDate.invite_code" class="item_content els">
                   {{
                     getHashStr(
                       strToArr(userInfoDate.province, userInfoDate.city, userInfoDate.district),
@@ -51,7 +51,7 @@
               </div>
             </div>
 
-            <div class="item_box edit_box" v-show="!editName">
+            <div v-show="!editName" class="item_box edit_box">
               <div class="item">
                 <div class="item_title">用户昵称</div>
                 <el-input v-model="eidtForm.userName" placeholder="请输入用户昵称" size="large" />
@@ -280,7 +280,7 @@
               hide-required-asterisk
             >
               <el-form-item label="原手机号" prop="tel">
-                <el-input disabled v-model="userInfoDate.mobile" />
+                <el-input v-model="userInfoDate.mobile" disabled />
               </el-form-item>
               <el-form-item label="验证码" prop="yzm">
                 <div class="fcs f1">
@@ -402,7 +402,7 @@
               hide-required-asterisk
             >
               <el-form-item label="手机号码" prop="tel">
-                <el-input disabled v-model="userInfoDate.mobile" />
+                <el-input v-model="userInfoDate.mobile" disabled />
                 <!-- <el-input v-model="mTelForm.tel" placeholder="请输入手机号">
                   <template #prepend>
                     <el-select v-model="acode" style="width: 80px">

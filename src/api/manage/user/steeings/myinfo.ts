@@ -97,19 +97,18 @@ export const editNewTelSms_api = (data: { acode: string; mobile: string }): Prom
 /**
  * @name 修改密码发送短信
  */
- export const editMmSms_api = (): Promise<IRes> => {
+export const editMmSms_api = (): Promise<IRes> => {
   return post('user', '/web/user/change/pass/sms/send.do')
 }
 /**
  * @name 修改密码短信验证
  */
- export const editMmTel_api =  (data: { sms: string }): Promise<IRes> => {
+export const editMmTel_api = (data: { sms: string }): Promise<IRes> => {
   return post('user', '/web/user/change/pass/sms/check.do', data)
 }
 /**
  * @name 修改密码短信验证
  */
- export const editMm_api =  (data: { confirm_pass: string;new_pass:string }): Promise<IRes> => {
+export const editMm_api = (data: { confirm_pass: string; new_pass: string }): Promise<IRes> => {
   return post('user', '/web/user/pass/change.do', data)
 }
-
