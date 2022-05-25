@@ -8,6 +8,7 @@
     placeholder="请选择行业"
     class="w100"
     @change="change"
+    :size="size"
   ></el-cascader>
   <el-cascader
     v-else
@@ -18,6 +19,7 @@
     placeholder="请选择地区"
     class="w100"
     @change="change"
+    :size="size"
   ></el-cascader>
 </template>
 
@@ -32,10 +34,12 @@ import { getHashStr } from '@/utils/index'
 const props = withDefaults(
   defineProps<{
     modelValue: any[]
-    type?: string
+    type?: string,
+    size?: 'large' | 'default' | 'small'
   }>(),
   {
     type: 'type',
+    size: 'default'
   }
 )
 

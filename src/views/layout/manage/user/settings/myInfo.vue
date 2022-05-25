@@ -9,193 +9,140 @@
       <el-scrollbar ref="scrollbarRef" :noresize="true" @scroll="scroll">
         <div class="conten_item conten_item1 mb16 kz_card">
           <div class="card_title">用户信息</div>
-          <div class="card_container">
-            <div class="card_content">
+          <div class="card_body fc">
+            <div class="avator_box fcc">
               <div v-loading="upLoading" class="user_avater">
-                <el-avatar
-                  v-if="!upLoading"
-                  :size="100"
-                  :src="imgUrl"
-                  class="up_avatar"
-                  @click="cc"
-                ></el-avatar>
-                <el-avatar v-else :size="100" :src="imgUrl" class="up_avatar"></el-avatar>
+                <el-avatar :size="100" :src="imgUrl || df_avatar_i" @click="cc"></el-avatar>
               </div>
-              <div class="userinfo_content">
-                <el-descriptions v-show="editName" :column="2" size="large" width="500" border>
-                  <el-descriptions-item label="用户昵称" label-align="right" width="200px">
-                    {{ userInfoDate.nickname }}</el-descriptions-item
-                  >
-                  <el-descriptions-item
-                    ><el-link type="primary" @click="goEditName"
-                      >修改</el-link
-                    ></el-descriptions-item
-                  >
-                  <el-descriptions-item label="性别" label-align="right" width="200px">
-                    {{
-                      userInfoDate.sex === 0 ? '未知' : userInfoDate.sex === 1 ? '男' : '女'
-                    }}</el-descriptions-item
-                  >
-                  <el-descriptions-item
-                    ><el-link type="primary" @click="goEditName"
-                      >修改</el-link
-                    ></el-descriptions-item
-                  >
-                  <el-descriptions-item label="出生日期" label-align="right" width="200px">
-                    {{
-                      formatDate(new Date(Number(userInfoDate.birth)), 'yyyy-MM-dd')
-                    }}</el-descriptions-item
-                  >
-                  <el-descriptions-item
-                    ><el-link type="primary" @click="goEditName"
-                      >修改</el-link
-                    ></el-descriptions-item
-                  >
-                  <el-descriptions-item
-                    v-if="userInfoDate.invite_code"
-                    label="地区"
-                    label-align="right"
-                    width="200px"
-                  >
-                    <el-tooltip effect="dark" placement="top">
-                      <template #content>
-                        <div>
-                          {{
-                            getHashStr(
-                              strToArr(
-                                userInfoDate.province,
-                                userInfoDate.city,
-                                userInfoDate.district
-                              ),
-                              addressHash
-                            )
-                          }}
-                        </div>
-                      </template>
-                      <div>
-                        <div class="els addr_box">
-                          {{
-                            getHashStr(
-                              strToArr(
-                                userInfoDate.province,
-                                userInfoDate.city,
-                                userInfoDate.district
-                              ),
-                              addressHash
-                            )
-                          }}
-                        </div>
-                      </div>
-                    </el-tooltip>
-                  </el-descriptions-item>
-                  <el-descriptions-item
-                    ><el-link type="primary" @click="goEditName"
-                      >修改</el-link
-                    ></el-descriptions-item
-                  >
-                </el-descriptions>
-                <el-descriptions v-show="!editName" :column="1" size="large" width="500" border>
-                  <el-descriptions-item label="用户昵称" label-align="right" width="200px">
-                    <el-input
-                      v-model="eidtForm.userName"
-                      :placeholder="userInfoDate.nickname"
-                      class="fc edit_info"
-                  /></el-descriptions-item>
-                  <el-descriptions-item label="性别" label-align="right" width="200px">
-                    <span class="edit_info">
-                      <el-radio v-model="eidtForm.userSex" :label="1">男</el-radio>
-                      <el-radio v-model="eidtForm.userSex" :label="2">女</el-radio>
-                    </span>
-                  </el-descriptions-item>
-                  <el-descriptions-item label="出生日期" label-align="right" width="200px">
-                    <div class="edit_info date_picker_box">
-                      <el-date-picker
-                        v-model="eidtForm.userBirth"
-                        :placeholder="
-                          formatDate(new Date(Number(userInfoDate.birth)), 'yyyy-MM-dd')
-                        "
-                        value-format="x"
-                        :clear-icon="eidtForm.userBirth ? CircleCloseFilled : ''"
-                      />
-                      <el-icon v-show="!eidtForm.userBirth" size="14px" class="date_icon"
-                        ><calendar
-                      /></el-icon></div
-                  ></el-descriptions-item>
+            </div>
+            <div class="item_box" v-show="editName">
+              <div class="item">
+                <div class="item_title">用户昵称</div>
+                <div class="item_content">
+                  {{ userInfoDate.nickname }}
+                </div>
+                <el-link type="primary" @click="goEditName">修改</el-link>
+              </div>
+              <div class="item">
+                <div class="item_title">性别</div>
+                <div class="item_content">
+                  {{ userInfoDate.sex === 0 ? '未知' : userInfoDate.sex === 1 ? '男' : '女' }}
+                </div>
+                <el-link type="primary" @click="goEditName">修改</el-link>
+              </div>
+              <div class="item">
+                <div class="item_title">出生日期</div>
+                <div class="item_content">
+                  {{ formatDate(new Date(Number(userInfoDate.birth)), 'yyyy-MM-dd') }}
+                </div>
+                <el-link type="primary" @click="goEditName">修改</el-link>
+              </div>
+              <div class="item">
+                <div class="item_title">地区</div>
+                <div class="item_content els" v-if="userInfoDate.invite_code">
+                  {{
+                    getHashStr(
+                      strToArr(userInfoDate.province, userInfoDate.city, userInfoDate.district),
+                      addressHash
+                    )
+                  }}
+                </div>
+                <el-link type="primary" @click="goEditName">修改</el-link>
+              </div>
+            </div>
 
-                  <el-descriptions-item label="地区" label-align="right" width="200px">
-                    <KzCascader v-model="eidtForm.addArr" type="address"
-                  /></el-descriptions-item>
+            <div class="item_box edit_box" v-show="!editName">
+              <div class="item">
+                <div class="item_title">用户昵称</div>
+                <el-input v-model="eidtForm.userName" placeholder="请输入用户昵称" size="large" />
+              </div>
+              <div class="item">
+                <div class="item_title">性别</div>
+                <el-radio-group v-model="eidtForm.userSex">
+                  <el-radio :label="1">男</el-radio>
+                  <el-radio :label="2">女</el-radio>
+                </el-radio-group>
+              </div>
+              <div class="item">
+                <div class="item_title">出生日期</div>
+                <div class="date_picker_box">
+                  <el-date-picker
+                    v-model="eidtForm.userBirth"
+                    placeholder="请选择出生日期"
+                    value-format="x"
+                    :clear-icon="eidtForm.userBirth ? CircleCloseFilled : ''"
+                    class="edit_picker"
+                    size="large"
+                  />
+                  <el-icon v-show="!eidtForm.userBirth" size="14px" color="#666" class="date_icon"
+                    ><calendar
+                  /></el-icon>
+                </div>
+              </div>
+              <div class="item">
+                <div class="item_title">地区</div>
+                <KzCascader
+                  v-model="eidtForm.addArr"
+                  type="address"
+                  class="edit_picker"
+                  size="large"
+                />
+              </div>
+              <div class="item fjend">
+                <el-button class="bdc_btn" @click="editCancel">取消</el-button>
+                <el-button type="primary" @click="editData">确认</el-button>
+              </div>
+            </div>
 
-                  <el-descriptions-item
-                    ><div class="fjend">
-                      <el-button class="bdc_btn" @click="editCancel">取消</el-button>
-                      <el-button type="primary" @click="editData">确认</el-button>
-                    </div></el-descriptions-item
-                  >
-                </el-descriptions>
-
-                <el-descriptions :column="2" size="large" width="500" border>
-                  <el-descriptions-item label="真实姓名" label-align="right" width="200px">
-                    {{ userInfoDate.real_name == '' ? '未实名' : userInfoDate.real_name }}
-                    <el-icon v-if="userInfoDate.real_name == ''" color="#FF4736 " class="icon"
-                      ><Warning /></el-icon
-                  ></el-descriptions-item>
-
-                  <el-descriptions-item
-                    ><el-link
-                      type="primary"
-                      @click="$router.push('/manage/user/settings/realname')"
-                      >{{ userInfoDate.real_name ? '重新认证' : '实名认证' }}</el-link
-                    ></el-descriptions-item
-                  >
-                  <el-descriptions-item>
-                    <template #label>
-                      <div class="cell-item">
-                        我的邀请码
-                        <KzIcon href="#icon-bangzhu" class="icon" />
-                      </div>
-                    </template>
-                    {{ userInfoDate.invite_code }}<span class="u_tips">*不可修改</span>
-                  </el-descriptions-item>
-                  <el-descriptions-item>
-                    <el-link type="primary" @click="copyCode(userInfoDate.invite_code)"
-                      >复制</el-link
-                    >
-                    <el-popover placement="right" trigger="click" :teleported="false">
-                      <template #reference>
-                        <el-link type="primary" class="qc_handle" @click="goCode"
-                          >生成二维码</el-link
-                        >
-                      </template>
-                      <div v-if="codeShow" class="fcc">
-                        <qrcode-vue
-                          :value="
-                            'https://' +
-                            loginUrl +
-                            `/app/login?invite_code=${userInfoDate.invite_code}`
-                          "
-                          :size="qcsize"
-                          level="H"
-                        />
-                      </div>
-                    </el-popover>
-                  </el-descriptions-item>
-                  <el-descriptions-item label="注册时间" label-align="right" width="200px">
-                    {{
-                      formatDate(new Date(Number(userInfoDate.create_time)), 'yyyy-MM-dd')
-                    }}</el-descriptions-item
-                  >
-                  <el-descriptions-item></el-descriptions-item>
-                  <el-descriptions-item>
-                    <template #label>
-                      <div class="cell-item">
-                        邀请者
-                        <KzIcon href="#icon-bangzhu" class="icon" />
-                      </div>
-                    </template>
-                    {{ userInfoDate.invitee }}
-                  </el-descriptions-item>
-                </el-descriptions>
+            <div class="item">
+              <div class="item_title">真实姓名</div>
+              <div class="item_content">
+                {{ userInfoDate.real_name == '' ? '未实名' : userInfoDate.real_name }}
+                <el-icon v-if="userInfoDate.real_name == ''" color="#FF4736 " class="n_icon"
+                  ><Warning
+                /></el-icon>
+              </div>
+              <el-link type="primary" @click="$router.push('/manage/user/settings/realname')">{{
+                userInfoDate.real_name ? '重新认证' : '实名认证'
+              }}</el-link>
+            </div>
+            <div class="item">
+              <div class="item_title">
+                我的邀请码 <KzIcon href="#icon-bangzhu" class="n_icon" />
+              </div>
+              <div class="item_content">
+                {{ userInfoDate.invite_code }}<span class="u_tips">*不可修改</span>
+              </div>
+              <div class="fsc item_links">
+                <el-link type="primary" @click="copyCode(userInfoDate.invite_code)"
+                  >复制邀请码</el-link
+                >
+                <el-popover placement="right" trigger="click" :teleported="false">
+                  <template #reference>
+                    <el-link type="primary" class="qc_handle" @click="goCode">生成二维码</el-link>
+                  </template>
+                  <div v-if="codeShow" class="fcc">
+                    <qrcode-vue
+                      :value="
+                        'https://' + loginUrl + `/app/login?invite_code=${userInfoDate.invite_code}`
+                      "
+                      :size="qcsize"
+                      level="H"
+                    />
+                  </div>
+                </el-popover>
+              </div>
+            </div>
+            <div class="item">
+              <div class="item_title">注册时间</div>
+              <div class="item_content">
+                {{ formatDate(new Date(Number(userInfoDate.create_time)), 'yyyy-MM-dd') }}
+              </div>
+            </div>
+            <div class="item">
+              <div class="item_title">邀请者<KzIcon href="#icon-bangzhu" class="n_icon" /></div>
+              <div class="item_content">
+                {{ userInfoDate.invitee }}
               </div>
             </div>
           </div>
@@ -268,7 +215,7 @@
                 <div class="item_title">企业名称</div>
                 <div class="item_content fcs">
                   <el-tooltip effect="dark" :content="v.name" placement="top">
-                    <div class="els item_content_box">{{ v.name }}</div>
+                    <div class="els">{{ v.name }}</div>
                   </el-tooltip>
                   <img v-if="v.selected == 1" class="active_c" :src="icon_company" alt="" />
                 </div>
@@ -333,7 +280,7 @@
               hide-required-asterisk
             >
               <el-form-item label="原手机号" prop="tel">
-                <el-input disabled :placeholder="userInfoDate.mobile" />
+                <el-input disabled v-model="userInfoDate.mobile" />
               </el-form-item>
               <el-form-item label="验证码" prop="yzm">
                 <div class="fcs f1">
@@ -455,7 +402,8 @@
               hide-required-asterisk
             >
               <el-form-item label="手机号码" prop="tel">
-                <el-input v-model="mTelForm.tel" placeholder="请输入手机号">
+                <el-input disabled v-model="userInfoDate.mobile" />
+                <!-- <el-input v-model="mTelForm.tel" placeholder="请输入手机号">
                   <template #prepend>
                     <el-select v-model="acode" style="width: 80px">
                       <el-option
@@ -467,7 +415,7 @@
                       >
                     </el-select>
                   </template>
-                </el-input>
+                </el-input> -->
               </el-form-item>
               <el-form-item label="验证码" prop="yzm">
                 <div class="fcs f1">
@@ -502,7 +450,7 @@
                 ></el-input>
               </el-form-item>
               <div class="tips">
-                * 密码最小长度6个字，最大长度18个字；<br />必须包含: 小写字母、数字
+                * 密码最小长度6个字，最大长度16个字；<br />必须包含: 小写字母、数字
               </div>
               <el-form-item label="确认密码" prop="checkPass">
                 <el-input
@@ -555,6 +503,9 @@ import {
   editNewTel_api,
   editOldTelSms_api,
   editNewTelSms_api,
+  editMmSms_api,
+  editMmTel_api,
+  editMm_api,
 } from '@/api/manage/user/steeings/myinfo'
 import icon_general from '@/assets/images/user_general.png'
 import icon_silver from '@/assets/images/user_silver.png'
@@ -563,6 +514,7 @@ import icon_star from '@/assets/images/user_star.png'
 import icon_company from '@/assets/images/my_company.png'
 import icon_benefits from '@/assets/images/user_member.png'
 import icon_user_company from '@/assets/images/user_company_empty.png'
+import df_avatar_i from '@/assets/images/dfavatar.png'
 import useClipboard from 'vue-clipboard3'
 import QrcodeVue from 'qrcode.vue'
 import { mainStore } from '@/store/index'
@@ -570,7 +522,6 @@ import { errMsg, okMsg } from '@/utils/index'
 import { getHash, getHashStr, strToArr } from '@/utils/index'
 import { mobileCheck, passReg, emailCheck } from '@/utils/index'
 import areaNum from '@/utils/areaNum'
-import { sendResetsms, doResetsmsCheck_api, doResetpass_api } from '@/api/login'
 import { CircleCloseFilled, Calendar } from '@element-plus/icons-vue'
 import KzCascader from '@/components/KzCascader.vue'
 import { useRouter } from 'vue-router'
@@ -876,15 +827,10 @@ const goChangoMm = () => {
   mmChange.value = true
 }
 const mTelForm = reactive({
-  tel: '',
   yzm: '',
 })
 const mmFormRef = ref()
 const mTelRules = reactive({
-  tel: [
-    { required: true, message: '请输入手机号！', trigger: 'blur' },
-    { validator: mobileCheck, trigger: 'blur' },
-  ],
   yzm: [{ required: true, message: '请输入验证码！', trigger: 'blur' }],
 })
 
@@ -894,10 +840,7 @@ const getMmSms = () => {
       smsTime.value = 120
       changeTime()
       localStorage.setItem('changePsssTime', new Date().getTime().toString())
-      const res = await sendResetsms({
-        mobile: mTelForm.tel,
-        acode: '+' + acode.value,
-      })
+      const res = await editMmSms_api()
     }
   })
 }
@@ -907,11 +850,7 @@ const mmNext = () => {
     if (valid) {
       editMm.value = 2
       smsTime.value = 0
-      const res = await doResetsmsCheck_api({
-        acode: '+' + acode.value,
-        mobile: mTelForm.tel,
-        sms: mTelForm.yzm,
-      })
+      const res = await editMmTel_api({ sms: mTelForm.yzm })
     }
   })
 }
@@ -936,7 +875,7 @@ const passForm = reactive({
 
 const validatePass1 = (rule: any, value: any, callback: any) => {
   if (!passReg.test(value)) {
-    callback(new Error('密码长度在6~18之间，不能只是数字或字母'))
+    callback(new Error('密码长度在6~16之间，不能只是数字或字母'))
   } else {
     if (passForm.checkPass !== '') {
       if (!passFormRef.value) {
@@ -958,7 +897,7 @@ const validatePass2 = (rule: any, value: any, callback: any) => {
 const passRules = reactive({
   pass: [
     { required: true, message: '请输入新密码！', trigger: 'blur' },
-    { min: 6, max: 12, message: '密码长度须在6~12个字符！', trigger: 'blur' },
+    { min: 6, max: 12, message: '密码长度须在6~16个字符！', trigger: 'blur' },
     { validator: validatePass1, trigger: 'blur' },
   ],
   checkPass: [
@@ -972,8 +911,8 @@ const onSubmit = () => {
   passFormRef.value!.validate(async (valid: boolean) => {
     if (valid) {
       loading.value = true
-      const data = { acode: '+' + acode.value, mobile: mTelForm.tel, pass: passForm.pass }
-      const res = await doResetpass_api({ ...data })
+      const data = { confirm_pass: passForm.checkPass, new_pass: passForm.pass }
+      const res = await editMm_api({ ...data })
       if (res.status === 1) {
         okMsg('密码修改成功！')
         editMm.value = 3
@@ -1023,7 +962,6 @@ const closeEdit = () => {
   oTelForm.yzm = ''
   nTelForm.tel = ''
   nTelForm.yzm = ''
-  mTelForm.tel = ''
   mTelForm.yzm = ''
   passForm.pass = ''
   passForm.checkPass = ''
@@ -1037,11 +975,37 @@ const closeEdit = () => {
     margin-left: 16px;
     height: 100%;
     .conten_item {
-      background-color: #fff;
-      border-radius: 8px;
       .card_body {
         padding-left: 202px;
         padding-bottom: 56px;
+        display: inline-flex;
+        .avator_box {
+          display: flex;
+          width: 600px;
+          padding-bottom: 56px;
+        }
+        .user_avater {
+          border: 1px solid #eeeeee;
+          border-radius: 50%;
+          :deep(.el-avatar) {
+            cursor: pointer;
+            border: none;
+            position: relative;
+            vertical-align: middle;
+            &:hover::after {
+              content: '点击修改头像';
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+              background-color: rgba(0, 0, 0, 0.44);
+              color: #fff;
+            }
+          }
+        }
         .item_box {
           margin-top: 16px;
           &:first-child {
@@ -1061,115 +1025,52 @@ const closeEdit = () => {
           .item_content {
             color: #303133;
             width: 360px;
-            .item_content_box {
-              width: 250px;
-            }
+          }
+          .item_links {
+            width: 164px;
           }
         }
-      }
-
-      .card_content {
-        padding-bottom: 56px;
-        .user_avater {
-          border: 1px solid #eeeeee;
-          margin: 70px auto -40px;
-          width: 100px;
-          height: 100px;
-          border-radius: 50%;
-          overflow: hidden;
-          position: relative;
-          .up_avatar {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
+        .edit_box {
+          .item {
+            margin-bottom: 12px;
           }
-          :deep(.el-avatar) {
-            cursor: pointer;
-            border-radius: 50%;
-            border: none;
+          .fjend {
+            margin-bottom: 64px;
+            margin-top: 22px;
+          }
+          .el-input {
+            width: 524px;
+          }
+          :deep(.edit_picker) {
+            width: 524px;
+          }
+          .date_picker_box {
             position: relative;
-            &:hover::after {
-              content: '点击修改头像';
-              display: flex;
-              align-items: center;
-              justify-content: center;
+            :deep(.el-input__prefix) {
+              display: none;
+            }
+            .date_icon {
               position: absolute;
-              width: 100%;
-              height: 100%;
-              border-radius: 50%;
-              background-color: rgba(0, 0, 0, 0.44);
-              color: #fff;
+              right: 10px;
+              top: 50%;
+              transform: translate(0, -50%);
             }
           }
-        }
-      }
-      :deep(.el-descriptions) {
-        --el-descriptions-table-border: 1px solid #fff;
-      }
-      :deep(.el-descriptions__label) {
-        font-size: 14px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #909399;
-      }
-      :deep(.el-descriptions__cell) {
-        padding-bottom: 20px;
-        width: 200px;
-      }
-      :deep(.el-descriptions__content) {
-        padding-left: 28px;
-        font-size: 14px;
-        color: #303133;
-      }
-      :deep(.el-input, .el-date-picker) {
-        width: 524px;
-        height: 40px;
-      }
-      :deep(.el-link) {
-        // margin-left: 15px;
-        margin-right: 24px;
-      }
-
-      .userinfo_content {
-        width: 750px;
-        padding-top: 70px;
-        margin: 0 auto;
-      }
-      .date_picker_box {
-        position: relative;
-        :deep(.el-input__prefix) {
-          display: none;
-        }
-        .date_icon {
-          position: absolute;
-          right: 10px;
-          top: 50%;
-          transform: translate(0, -50%);
-        }
-      }
-      .edit_info {
-        // width: 524px;
-      }
-      .cell-item {
-        display: flex;
-        justify-content: flex-end;
-        .icon {
-          height: 25px;
-          line-height: 25px;
         }
       }
     }
+
     .conten_item1 {
-      display: flex;
       .u_tips {
         font-size: 12px;
         color: #909399;
         height: 15px;
         line-height: 15px;
+        margin-left: 8px;
       }
-      .addr_box {
-        width: 156px;
+      .n_icon {
+        margin-left: 8px;
+        vertical-align: middle;
       }
     }
 
@@ -1243,8 +1144,5 @@ const closeEdit = () => {
       color: #303133;
     }
   }
-}
-.icon {
-  margin-left: 8px;
 }
 </style>

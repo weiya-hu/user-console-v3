@@ -94,3 +94,22 @@ export const editNewTel_api = (data: {
 export const editNewTelSms_api = (data: { acode: string; mobile: string }): Promise<IRes> => {
   return post('user', '/web/user/modify/mobile/new/sms/send.do', data)
 }
+/**
+ * @name 修改密码发送短信
+ */
+ export const editMmSms_api = (): Promise<IRes> => {
+  return post('user', '/web/user/change/pass/sms/send.do')
+}
+/**
+ * @name 修改密码短信验证
+ */
+ export const editMmTel_api =  (data: { sms: string }): Promise<IRes> => {
+  return post('user', '/web/user/change/pass/sms/check.do', data)
+}
+/**
+ * @name 修改密码短信验证
+ */
+ export const editMm_api =  (data: { confirm_pass: string;new_pass:string }): Promise<IRes> => {
+  return post('user', '/web/user/pass/change.do', data)
+}
+
