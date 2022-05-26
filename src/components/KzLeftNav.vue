@@ -1,77 +1,83 @@
 <template>
-  <div id="kz_left_nav_box" :class="flag && 'col_nav'">
-    <div ref="leftLine" class="left_vline" :style="{ transform: `translate(0, ${top}px)` }"></div>
-    <div class="kz_left_nav" @mouseenter="changeFlag(false)" @mouseleave="changeFlag(true)">
-      <div class="fold_btn fcs fjend">
-        <KzIcon
-          :href="flag ? '#icon-zhankai' : '#icon-shouqi'"
-          size="16px"
-          class="chover"
-          @click="changeFlag()"
-        />
-      </div>
-      <div
-        class="nav_item_lv2"
-        :class="nowPath === '/console' && 'kz_active'"
-        @click="goRoute('/console', true)"
-      >
-        <div class="nav_icon">
-          <KzIcon href="#icon-lanmu-kongzhitai" />
-        </div>
-        <transition name="el-fade-in-linear">
-          <div v-show="!flag" class="nav_text nowrap">控制台</div>
-        </transition>
-      </div>
-      <div v-for="v in navRoutes" :key="v.name" class="nav_item_lv1">
-        <div class="nav_item_lv1_title">
-          <transition name="el-fade-in-linear">
-            <div v-show="!flag" class="nowrap">{{v.meta!.title}}</div>
-          </transition>
-          <transition name="el-fade-in-linear">
-            <div v-show="flag" v-if="v.name !== 'Product'" class="hline"></div>
-          </transition>
-          <div v-if="v.name === 'Product'" class="fcs chover all_btn">
-            <transition name="el-fade-in-linear">
-              <div v-show="!flag" class="nowrap all_text">全部</div>
-            </transition>
-            <el-icon size="16px"><my-icon-menu /></el-icon>
-          </div>
+  <el-scrollbar :noresize="true">
+    <div id="kz_left_nav_box" :class="flag && 'col_nav'">
+      <div ref="leftLine" class="left_vline" :style="{ transform: `translate(0, ${top}px)` }"></div>
+      <div class="kz_left_nav" @mouseenter="changeFlag(false)" @mouseleave="changeFlag(true)">
+        <div class="fold_btn fcs fjend">
+          <KzIcon
+            :href="flag ? '#icon-zhankai' : '#icon-shouqi'"
+            size="16px"
+            class="chover"
+            @click="changeFlag()"
+          />
         </div>
         <div
-          v-for="j in v.children"
-          :key="j.name"
           class="nav_item_lv2"
-          :class="nowPath.indexOf(j.path) > -1 && 'kz_active'"
-          @click="goRoute(j.path, false)"
+          :class="nowPath === '/console' && 'kz_active'"
+          @click="goRoute('/console', true)"
         >
           <div class="nav_icon">
-            <KzIcon :href="j.meta!.icon" />
+            <KzIcon href="#icon-lanmu-kongzhitai" />
           </div>
           <transition name="el-fade-in-linear">
-            <div v-show="!flag" class="nav_text nowrap">{{j.meta!.title}}</div>
+            <div v-show="!flag" class="nav_text nowrap">控制台</div>
           </transition>
         </div>
+        <div v-for="v in navRoutes" :key="v.name" class="nav_item_lv1">
+          <div class="nav_item_lv1_title">
+            <transition name="el-fade-in-linear">
+              <div v-show="!flag" class="nowrap">{{v.meta!.title}}</div>
+            </transition>
+            <transition name="el-fade-in-linear">
+              <div v-show="flag" v-if="v.name !== 'Product'" class="hline"></div>
+            </transition>
+            <div v-if="v.name === 'Product'" class="fcs chover all_btn">
+              <transition name="el-fade-in-linear">
+                <div v-show="!flag" class="nowrap all_text">全部</div>
+              </transition>
+              <el-icon size="16px"><my-icon-menu /></el-icon>
+            </div>
+          </div>
+          <div
+            v-for="j in v.children"
+            :key="j.name"
+            class="nav_item_lv2"
+            :class="nowPath.indexOf(j.path) > -1 && 'kz_active'"
+            @click="goRoute(j.path, false)"
+          >
+            <div class="nav_icon">
+              <KzIcon :href="j.meta!.icon" />
+            </div>
+            <transition name="el-fade-in-linear">
+              <div v-show="!flag" class="nav_text nowrap">{{j.meta!.title}}</div>
+            </transition>
+          </div>
+        </div>
+      </div>
+      <div v-show="flag" v-if="secNav" class="kz_sec_nav">
+        <div class="sec_title fcs">{{ secNav.meta!.title }}</div>
+        <el-menu v-if="secNav.children" router :default-active="nowPath">
+          <template v-for="v in secNav.children" :key="v.path">
+            <el-sub-menu v-if="v.children" :index="v.path">
+              <template #title>{{v.meta!.title}}</template>
+              <template v-for="j in v.children" :key="j.path">
+                <el-menu-item
+                  v-if="!j.meta!.father"
+                  :index="j.path"
+                  >{{j.meta!.title}}</el-menu-item
+                >
+              </template>
+            </el-sub-menu>
+            <el-menu-item
+              v-if="!v.children && !v.meta!.father"
+              :index="v.path"
+              >{{v.meta!.title}}</el-menu-item
+            >
+          </template>
+        </el-menu>
       </div>
     </div>
-    <div v-show="flag" v-if="secNav" class="kz_sec_nav">
-      <div class="sec_title fcs">{{ secNav.meta!.title }}</div>
-      <el-menu v-if="secNav.children" router :default-active="nowPath">
-        <template v-for="v in secNav.children" :key="v.path">
-          <el-sub-menu v-if="v.children" :index="v.path">
-            <template #title>{{v.meta!.title}}</template>
-            <template v-for="j in v.children" :key="j.path">
-              <el-menu-item v-if="!j.meta!.father" :index="j.path">{{j.meta!.title}}</el-menu-item>
-            </template>
-          </el-sub-menu>
-          <el-menu-item
-            v-if="!v.children && !v.meta!.father"
-            :index="v.path"
-            >{{v.meta!.title}}</el-menu-item
-          >
-        </template>
-      </el-menu>
-    </div>
-  </div>
+  </el-scrollbar>
 </template>
 
 <script setup lang="ts">
@@ -162,6 +168,9 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+:deep(.el-scrollbar__bar.is-horizontal) {
+  display: none !important;
+}
 #kz_left_nav_box {
   height: 100%;
   display: flex;
@@ -253,7 +262,7 @@ defineExpose({
     margin-left: 16px;
   }
   .kz_sec_nav {
-    height: 100%;
+    // height: 100%;
     flex: 1;
     border-left: 1px solid $bdcolor;
     word-break: keep-all;

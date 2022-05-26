@@ -13,15 +13,41 @@
           <KzIcon href="#icon-banbenqiehuan-tuandui" size="16px" />
           <el-dropdown>
             <div class="fcs icon_rotate">
-              <div class="now_identity">康州数智科技</div>
+              <span class="now_identity">康州数智科技</span>
               <KzIcon href="#icon-xiala-shouqitianchong" size="16px" />
             </div>
             <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item>1 1</el-dropdown-item>
-                <el-dropdown-item>2 2</el-dropdown-item>
-                <el-dropdown-item>3 3</el-dropdown-item>
-              </el-dropdown-menu>
+              <div class="user_identity">
+                <div class="user_self">
+                  <div class="identity_title fcs">
+                    <KzIcon href="#icon-banbenqiehuan-geren" size="12px" />
+                    <div>个人版</div>
+                  </div>
+                  <div class="identity_item els">
+                    康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技
+                  </div>
+                </div>
+                <div class="company_self">
+                  <div class="identity_title fsc">
+                    <div class="fcs">
+                      <KzIcon href="#icon-banbenqiehuan-tuandui" size="12px" />
+                      <div>企业版</div>
+                    </div>
+                    <el-link type="primary" @click="addCompanyShow = true"
+                      ><el-icon color="#2D68EB" size="14px"><Plus /></el-icon>新建企业</el-link
+                    >
+                  </div>
+                  <div class="identity_item els">
+                    康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技
+                  </div>
+                  <div class="identity_item els">
+                    康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技
+                  </div>
+                  <div class="identity_item els">
+                    康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技
+                  </div>
+                </div>
+              </div>
             </template>
           </el-dropdown>
         </div>
@@ -126,6 +152,35 @@
       <video :src="lookVideo" controls class="show_video"></video>
     </el-dialog>
 
+    <el-dialog v-model="addCompanyShow" title="新建企业" width="500px">
+      <el-form
+        ref="addCompanyFormRef"
+        v-loading="addCompanyLoading"
+        :model="addCompanyForm"
+        :rules="addCompanyRules"
+        hide-required-asterisk
+        label-width="85px"
+      >
+        <el-form-item label="企业logo：" prop="logo">
+          <KzImgUpload
+            v-if="addCompanyShow"
+            ref="addCompanyLogoUpRef"
+            :max="1"
+            @change="onAddCompanyLogoUpChange"
+            @up-all-success="onAddCompanyLogoUpSuccess"
+            @error="onAddCompanyLogoUpError"
+          />
+        </el-form-item>
+        <el-form-item label="企业名称：" prop="name">
+          <el-input v-model="addCompanyForm.name" placeholder="请输企业名称"></el-input>
+        </el-form-item>
+        <div class="fcs fjend pb20">
+          <el-button @click="addCompanyShow = false">取消</el-button>
+          <el-button type="primary" @click="onAddCompanySubmit">保存</el-button>
+        </div>
+      </el-form>
+    </el-dialog>
+
     <el-dialog v-model="upDemoShow" title="上传demo" width="70%" @close="imgsList.length = 0">
       <KzImgUpload
         v-if="upDemoShow"
@@ -157,10 +212,11 @@ import logo_i from '@/assets/images/logo.png'
 import df_avatar_i from '@/assets/images/dfavatar.png'
 import user_general_i from '@/assets/images/user_general.png'
 import real_name_i from '@/assets/images/real_name.png'
-import { ArrowRight } from '@element-plus/icons-vue'
+import { ArrowRight, Plus } from '@element-plus/icons-vue'
 import KzLeftNav from '@/components/KzLeftNav.vue'
 import KzDetailsHeader from '@/components/KzDetailsHeader.vue'
 import { loginOut_api } from '@/api/login'
+import { errMsg } from '@/utils'
 
 // demo start
 
@@ -177,7 +233,7 @@ const showDemo = () => {
       'https://res.kzszh.com/dev/web/index/image/f21b635833aaf9ef4f4179e415988102.png'
     )
     imgsList.value.push(
-      'https://res.kzszh.com/dev/web/index/image/c942c61ac09d4a582a43d7a8a3d986c0.png'
+      'https://res.kzszh.com/dev/web/index/image/736612fc47abb31fbab2bfdf3d67ba1a.png'
     )
     upImgRef.value.setImgs()
   }, 1000)
@@ -214,7 +270,11 @@ const upSuccess = (url: string) => {
 
 const KzUpAvatarRef = ref()
 const demoAvatar = ref('')
-const upImg3 = () => {
+setTimeout(() => {
+  demoAvatar.value =
+    'https://res.kzszh.com/dev/web/index/image/736612fc47abb31fbab2bfdf3d67ba1a.png'
+}, 2000)
+const upImg3 = async () => {
   KzUpAvatarRef.value.upload()
 }
 const onAvatarSuceess = () => {
@@ -223,6 +283,50 @@ const onAvatarSuceess = () => {
 }
 
 // demo end
+
+const addCompanyShow = ref(false)
+const addCompanyLoading = ref(false)
+const addCompanyFormRef = ref()
+const addCompanyLogoUpRef = ref()
+const addCompanyForm = ref({
+  logo: '',
+  name: '',
+})
+const validateLogo = (rule: any, value: any, callback: any) => {
+  if (addCompanyLogoUpRef.value.imgs.length) {
+    callback()
+  } else {
+    callback(new Error('请添加企业logo！'))
+  }
+}
+const addCompanyRules = ref({
+  logo: [{ validator: validateLogo, trigger: 'change' }],
+  name: [{ required: true, message: '请输入企业名称！', trigger: 'blur' }],
+})
+const onAddCompanySubmit = () => {
+  // 点击保存时
+  addCompanyFormRef.value!.validate((valid: boolean) => {
+    if (valid) {
+      addCompanyLoading.value = true
+      addCompanyLogoUpRef.value.submit()
+    }
+  })
+}
+const onAddCompanyLogoUpChange = () => {
+  // logo 改变时
+  addCompanyFormRef.value.clearValidate('logo')
+}
+const onAddCompanyLogoUpSuccess = (urlArr: string[]) => {
+  // logo 上传成功时
+  addCompanyForm.value.logo = urlArr[0]
+  console.log(addCompanyForm.value)
+  addCompanyLoading.value = false
+}
+const onAddCompanyLogoUpError = (err: string) => {
+  // logo 上传失败时
+  addCompanyLoading.value = false
+  errMsg(err)
+}
 
 const user_btns = [
   { text: '用户中心', icon: '#icon-banbenqiehuan-geren', url: '/manage/user' },
@@ -353,6 +457,7 @@ emiter.on('lookVideo', (video: string) => {
   .layout_container {
     height: calc(100% - 64px);
     .layout_nav {
+      height: 100%;
       width: 220px;
       flex: 0 0 220px;
       background-color: #fff;
@@ -453,6 +558,42 @@ emiter.on('lookVideo', (video: string) => {
         color: $dfcolor;
       }
     }
+  }
+}
+.user_identity {
+  width: 316px;
+  padding: 16px 0;
+  line-height: 1;
+  .identity_title {
+    font-size: 12px;
+    color: #909399;
+    margin-bottom: 14px;
+    .kzicon {
+      margin-right: 5px;
+    }
+    .el-icon {
+      margin-right: 4px;
+    }
+  }
+  .identity_item {
+    height: 34px;
+    line-height: 34px;
+    padding: 0 8px;
+    color: #303133;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    &:hover {
+      color: $dfcolor;
+      background-color: rgba(45, 105, 235, 0.1);
+    }
+  }
+  .user_self {
+    border-bottom: 1px solid #eeeeee;
+    padding: 0 16px 8px;
+  }
+  .company_self {
+    padding: 16px 16px 0;
   }
 }
 </style>

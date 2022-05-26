@@ -9,12 +9,14 @@
           fixed-box
           :img="showImg"
           output-type="png"
-          :auto-crop-width="cropSize + 'px'"
-          :auto-crop-height="cropSize + 'px'"
+          :can-move-box="false"
+          :info="false"
+          :auto-crop-width="boxSize + 'px'"
+          :auto-crop-height="boxSize + 'px'"
           mode="contain"
-          @realTime="onRealTime"
-          @imgLoad="onImgLoad"
-          @cropMoving="onCropMoving"
+          @real-time="onRealTime"
+          @img-load="onImgLoad"
+          @crop-moving="onCropMoving"
         />
         <div v-show="!showImg" ref="dragRef" class="no_img_box fc fcc" @click="onIptClick">
           <el-icon size="28px"><Plus /></el-icon>
@@ -23,9 +25,11 @@
       </div>
       <div v-show="showImg" class="fsc kz_crop_btns">
         <el-link type="primary" @click="onIptClick">重新上传</el-link>
-        <div>
-          <KzIcon size="14px" href="#icon-suoxiao" @click="onScaleImg(-1)" />
-          <KzIcon size="14px" href="#icon-fangda" @click="onScaleImg(1)" />
+        <div class="flex">
+          <el-icon size="14px" @click="onScaleImg(1)"><CirclePlus /></el-icon>
+          <el-icon size="14px" @click="onScaleImg(-1)"><Remove /></el-icon>
+          <el-icon size="14px" @click="onRotateImg(1)"><RefreshLeft /></el-icon>
+          <el-icon size="14px" @click="onRotateImg(0)"><RefreshRight /></el-icon>
         </div>
       </div>
       <div v-show="!showImg" class="kz_crop_btns">*上传图片大小在4.0M以内</div>
@@ -34,43 +38,47 @@
       ref="upInputRef"
       style="display: none"
       type="file"
-      accept="image/*"
+      :accept="exnameList.join(',')"
       name="picture"
       @change="onChangeImg"
     />
-    <div class="fc">
+    <div class="fc kz_up_avatar_preview">
       <div
         class="avatar_preview_box"
-        :style="{ 'min-width': cropSize + 'px', 'min-height': cropSize + 'px' }"
+        :style="{
+          'min-width': cropSize + 'px',
+          'min-height': cropSize + 'px',
+          transform: `scale(calc(${cropSize} / ${boxSize}))`,
+        }"
       >
-        <div class="avatar_preview" :style="previews.div">
-          <el-avatar :size="cropSize">
+        <div class="avatar_preview" :style="{ width: boxSize + 'px', height: boxSize + 'px' }">
+          <el-avatar :size="boxSize">
             <img :src="showImg" :style="previews.img" />
           </el-avatar>
         </div>
       </div>
-      <div class="avatar_preview_text">头像预览</div>
+      <div class="avatar_preview_text" :style="{ top: cropSize + 1 + 'px' }">头像预览</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 /**
- * 头像裁剪上传组件 （图片上传后，不改变拖动图片、截图框的情况下，视为没有更改，再次直接调用上传将会直接触发emit事件success）
+ * 头像裁剪上传组件 （图片上传后，不改变、拖动、旋转图片和截图框的情况下，视为没有更改，再次直接调用上传将会直接触发emit事件success）
  * @author chn
  */
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { VueCropper } from 'vue-cropper'
-import { Plus } from '@element-plus/icons-vue'
 import { errMsg, isObjectValueEqual } from '@/utils/index'
 import { getAliToken_api } from '@/api/login'
 import axios from 'axios'
+import { Plus, CirclePlus, Remove, RefreshLeft, RefreshRight } from '@element-plus/icons-vue'
 
 const props = withDefaults(
   defineProps<{
-    modelValue: string // 图片
+    modelValue: string // 图片，支持网络图片、base64、import引入的图片，不支持URL.createObjectURL的地址
     boxSize?: number // 大盒子宽高 强制设定为正方形
-    cropSize?: number // 截图框宽高 和 预览头像宽高
+    cropSize?: number // 预览头像宽高
     exnameList?: string[] //支持的文件格式数组
     maxSize?: number //最大尺寸 单位M
     site?: string // 上传接口参数
@@ -84,20 +92,48 @@ const props = withDefaults(
   }
 )
 
+const convertImgToBlob = (url: string, callback: Function) => {
+  // 非内存URL图片转blob
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+  const image = new Image()
+  image.crossOrigin = 'Anonymous'
+  image.onload = function () {
+    canvas.height = image.height
+    canvas.width = image.width
+    ctx!.drawImage(image, 0, 0)
+    // canvas.toBlob((blob) => {
+    //   callback(blob)
+    // })
+    const imgBase64 = canvas.toDataURL('image/png')
+    callback(imgBase64)
+    canvas.remove()
+    image.remove()
+  }
+  image.src = url
+}
+
+//可以改为在onMounted 和 上传成功去改showImg
+watch(
+  () => props.modelValue,
+  (newValue, oldValue) => {
+    if (newValue) {
+      convertImgToBlob(newValue, (blob: Blob) => {
+        // 无法转换的不会触发回调
+        showImg.value = URL.createObjectURL(blob)
+      })
+    }
+  }
+)
+
 //success 图片上传成功触发；error 图片上传失败触发
 const emit = defineEmits(['update:modelValue', 'success', 'error'])
 
-const showImg = computed({
-  get: () => props.modelValue,
-  set: (val) => {
-    emit('update:modelValue', val)
-  },
-})
+const showImg = ref('')
 
 const cropperRef = ref() // VueCropper Ref
 
 const imgAxis = ref<Record<string, number>>()
-const cropAxis = ref<Record<string, number>>()
 const onImgLoad = (isSuccess: string) => {
   // 图片加载事件
   if (isSuccess === 'success') {
@@ -116,7 +152,13 @@ const onScaleImg = (number: 1 | -1) => {
   cropperRef.value.changeScale(number)
 }
 
-const validateImg = (): boolean => {
+const onRotateImg = (direction: 0 | 1) => {
+  // 旋转图片90度
+  direction ? cropperRef.value.rotateLeft() : cropperRef.value.rotateRight()
+  isChange.value = true
+}
+
+const validate = (): boolean => {
   // 效验图片
   if (!imgFile.value) {
     errMsg('请添加图片！')
@@ -134,6 +176,14 @@ const validateImg = (): boolean => {
   return true
 }
 
+const validateImg = () => {
+  // 效验图片
+  if (showImg.value) {
+    return true
+  }
+  return validate()
+}
+
 const upInputRef = ref<HTMLInputElement>() // 触发选择图片的input框
 const onIptClick = () => {
   upInputRef.value!.click()
@@ -143,10 +193,10 @@ const onChangeImg = () => {
   // 上传input change事件
   if (upInputRef.value?.files?.length) {
     imgFile.value = upInputRef.value.files[0]
-    const flag = validateImg()
+    const flag = validate()
     if (flag) {
       isChange.value = true
-      emit('update:modelValue', URL.createObjectURL(imgFile.value))
+      showImg.value = URL.createObjectURL(imgFile.value)
     } else {
       imgFile.value = undefined
     }
@@ -154,34 +204,37 @@ const onChangeImg = () => {
 }
 
 const getImg = () => {
-  // 获取当前截图框内容并更新modelValue
-  cropperRef.value.getCropBlob((blob: Blob) => {
-    emit('update:modelValue', URL.createObjectURL(blob))
+  // 获取当前截图框内容，需要显示则用URL.createObjectURL(blob)方法获取本地url
+  return new Promise<Blob>((resolve, reject) => {
+    cropperRef.value.getCropBlob((blob: Blob) => {
+      resolve(blob)
+    })
   })
 }
 
 const onCropMoving = () => {
+  // 截图框移动事件
   isChange.value = true
 }
 
-const isChange = ref(false) // 是否改变图标状态
+// 是否是网络图片
+const httpReg = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/ // eslint-disable-line
+
+const isChange = ref(false) // 是否改变图片状态
 const upload = async () => {
   // 上传
-  if (!imgFile.value) {
-    props.modelValue && emit('success')
-    return
-  }
   const newImgAxis = cropperRef.value.getImgAxis()
-  const imgflag = isObjectValueEqual(newImgAxis, imgAxis.value)
-  if (props.modelValue && imgflag && !isChange.value) {
-    // 即没有移动、缩放图片和截图框
+  const imgflag = isObjectValueEqual(newImgAxis, imgAxis.value) // 对比图片初始位置和现在获取到的位置是否相同，图片是否缩放、移动
+  if (!imgFile.value && httpReg.test(props.modelValue) && imgflag && !isChange.value) {
+    // 即没有添加图片，是网络图片，没有缩放、移动、旋转图片和截图框
     console.log('不需要上传')
     emit('success')
     return
   }
-  const res: IRes = await getAliToken_api({ site: props.site })
-  if (res.status == 1) {
-    const exname = imgFile.value.name.substring(imgFile.value.name.lastIndexOf('.'))
+  const res = await getAliToken_api({ site: props.site })
+  if (res.status === 1) {
+    // const exname = imgFile.value.name.substring(imgFile.value.name.lastIndexOf('.'))
+    const exname = '.png'
     const fd = new FormData()
     const upData: { [propName: string]: string } = {
       key: res.body.dir + '/' + res.body.uuid + exname,
@@ -204,9 +257,12 @@ const upload = async () => {
         data: fd,
       })
       if (response.status == 200) {
+        isChange.value = false // 初始化
+        imgFile.value = undefined // 初始化
+        imgAxis.value = cropperRef.value.getImgAxis() // 更新图片初始位置对象
+
         const url = res.body.host + '/' + res.body.dir + '/' + res.body.uuid + exname
         emit('update:modelValue', url)
-        isChange.value = false
         emit('success')
       } else {
         emit('error')
@@ -224,11 +280,14 @@ onMounted(() => {
   dragRef.value?.addEventListener('drop', dragImg, false)
 })
 onBeforeUnmount(() => {
+  URL.revokeObjectURL(showImg.value)
   try {
     dragRef.value?.removeEventListener('dragenter', dragEnter)
     dragRef.value?.removeEventListener('dragover', dragOver)
     dragRef.value?.removeEventListener('drop', dragImg)
-  } catch (error) {}
+  } catch (error) {
+    return false
+  }
 })
 const dragEnter = (e: DragEvent) => {
   e.stopPropagation()
@@ -243,10 +302,10 @@ const dragImg = (e: DragEvent) => {
   e.preventDefault()
   if (e.dataTransfer?.files.length) {
     imgFile.value = e.dataTransfer.files[0]
-    const flag = validateImg()
+    const flag = validate()
     if (flag) {
       isChange.value = true
-      emit('update:modelValue', URL.createObjectURL(imgFile.value))
+      showImg.value = URL.createObjectURL(imgFile.value)
     } else {
       imgFile.value = undefined
     }
@@ -255,7 +314,7 @@ const dragImg = (e: DragEvent) => {
 
 defineExpose({
   validateImg, // 效验图片
-  getImg, // 获取当前截图框内容并更新modelValue
+  getImg, // 获取当前截图框内容
   upload, // 上传
 })
 </script>
@@ -263,6 +322,10 @@ defineExpose({
 <style scoped lang="scss">
 .kz_up_avatar_component {
   display: flex;
+  user-select: none;
+  :deep(.cropper-view-box) {
+    border-radius: 50%;
+  }
   .kz_cropper_box {
     margin-right: 75px;
     .no_img_box {
@@ -292,28 +355,38 @@ defineExpose({
       .el-link {
         --el-link-font-size: 12px;
       }
-      .kzicon {
-        margin-left: 16px;
+      .el-icon {
         cursor: pointer;
+        margin-left: 16px;
+        &:hover {
+          color: $dfcolor;
+        }
       }
     }
   }
   .avatar_preview_box {
     overflow: hidden;
+    border: 1px dashed #dddddd;
+    transform-origin: 0 0;
     .avatar_preview {
       border-radius: 4px;
-      border: 1px dashed #dddddd;
     }
     .el-avatar {
       justify-content: flex-start;
       align-items: flex-start;
     }
   }
+  .kz_up_avatar_preview {
+    position: relative;
+  }
   .avatar_preview_text {
+    position: absolute;
+    left: 0;
     text-align: center;
     color: #909399;
     font-size: 12px;
-    margin-top: 24px;
+    padding-top: 24px;
+    transform: translate(50%, 0);
   }
 }
 </style>

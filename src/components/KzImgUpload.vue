@@ -214,7 +214,8 @@ const submit = async (downloadName?: string) => {
       await upOneImg(v, downloadName).catch((err) => {
         // 在imgs里删除当前循环的v
         imgs.value.splice(i, 1)
-        isAllSuccess()
+        ;(document.querySelector('.el-upload--picture-card') as HTMLElement).style.display =
+          'inline-flex'
         throw new Error(err)
       })
     }
@@ -326,6 +327,14 @@ defineExpose({
     height: 100px;
     display: flex;
     align-items: flex-end;
+  }
+}
+
+.is-error {
+  .upbox {
+    :deep(.el-upload--picture-card) {
+      border-color: var(--el-color-danger);
+    }
   }
 }
 

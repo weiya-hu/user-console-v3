@@ -7,13 +7,14 @@
           <el-button type="info" plain size="small">全部</el-button>
         </div>
         <div class="card_body hot_list fsc">
-          <div v-for="v in 4" :key="v" class="item">
+          <!-- <div v-for="v in 4" :key="v" class="item">
             <div class="item_img"></div>
             <div class="item_title">213</div>
             <div class="item_msg">123</div>
             <div class="item_icon"></div>
             <div class="item_bg"></div>
-          </div>
+          </div> -->
+          <KzEmpty class="f1" />
         </div>
       </div>
       <div class="kz_card user_card fc">

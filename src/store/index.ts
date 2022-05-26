@@ -59,7 +59,7 @@ export const mainStore = defineStore('mainStore', () => {
   const setUserinfo = (isClear?: boolean) => {
     if (isClear) {
       state.userInfo = {}
-      return Promise.reject()
+      return Promise.resolve()
     }
     return new Promise<any>((resolve, reject) => {
       getUserInfo()
