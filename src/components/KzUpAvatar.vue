@@ -32,7 +32,7 @@
           <el-icon size="14px" @click="onRotateImg(0)"><RefreshRight /></el-icon>
         </div>
       </div>
-      <div v-show="!showImg" class="kz_crop_btns">*上传图片大小在{{maxSize}}M以内</div>
+      <div v-show="!showImg" class="kz_crop_btns">*上传图片大小在{{ maxSize }}M以内</div>
     </div>
     <input
       ref="upInputRef"
@@ -256,7 +256,9 @@ const upload = async () => {
 
 const dragRef = ref<HTMLElement>() // 拖拽容器ref
 onMounted(() => {
-  showImg.value = httpReg.test(props.modelValue) ? props.modelValue + '?random=' + Math.random() : props.modelValue
+  showImg.value = httpReg.test(props.modelValue)
+    ? props.modelValue + '?random=' + Math.random()
+    : props.modelValue
   dragRef.value?.addEventListener('dragenter', dragEnter, false)
   dragRef.value?.addEventListener('dragover', dragOver, false)
   dragRef.value?.addEventListener('drop', dragImg, false)

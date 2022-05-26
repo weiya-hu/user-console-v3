@@ -138,7 +138,7 @@ const editvalue = computed({
   get: () => props.modelValue,
   set: (val) => {
     emit('update:modelValue', val)
-  }, 
+  },
 })
 
 const upImages = async () => {
