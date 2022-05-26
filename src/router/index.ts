@@ -276,6 +276,12 @@ export const routes: RouteRecordRaw[] = [
                 component: () => import('@/views/layout/manage/company/rolePermission.vue'),
                 meta: { title: '角色权限' },
               },
+              {
+                path: '/manage/company/application',
+                name: 'Application',
+                component: () => import('@/views/layout/manage/company/application.vue'),
+                meta: { title: '加入申请' },
+              },
             ],
           },
         ],

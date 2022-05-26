@@ -9,140 +9,141 @@
       <el-scrollbar ref="scrollbarRef" :noresize="true" @scroll="scroll">
         <div class="conten_item conten_item1 mb16 kz_card">
           <div class="card_title">用户信息</div>
-          <div class="card_body fc">
-            <div class="avator_box fcc">
-              <div v-loading="upLoading" class="user_avater">
-                <el-avatar :size="100" :src="imgUrl || df_avatar_i" @click="editAvator"></el-avatar>
-              </div>
-            </div>
-            <div v-show="editName" class="item_box">
-              <div class="item">
-                <div class="item_title">用户昵称</div>
-                <div class="item_content">
-                  {{ userInfoDate.nickname }}
+          <div class="card_body fcc">
+            <div class="fc">
+              <div class="avator_box fcc">
+                <div class="user_avater">
+                  <el-avatar
+                    :size="100"
+                    :src="userInfoDate.head || df_avatar_i"
+                    @click="editAvator"
+                  ></el-avatar>
                 </div>
-                <el-link type="primary" @click="goEditName">修改</el-link>
               </div>
-              <div class="item">
-                <div class="item_title">性别</div>
-                <div class="item_content">
-                  {{ userInfoDate.sex === 0 ? '未知' : userInfoDate.sex === 1 ? '男' : '女' }}
+              <div v-show="editName" class="item_box">
+                <div class="item">
+                  <div class="item_title">用户昵称</div>
+                  <div class="item_content">
+                    {{ userInfoDate.nickname }}
+                  </div>
+                  <el-link type="primary" @click="goEditName">修改</el-link>
                 </div>
-                <el-link type="primary" @click="goEditName">修改</el-link>
-              </div>
-              <div class="item">
-                <div class="item_title">出生日期</div>
-                <div class="item_content">
-                  {{ formatDate(new Date(Number(userInfoDate.birth)), 'yyyy-MM-dd') }}
+                <div class="item">
+                  <div class="item_title">性别</div>
+                  <div class="item_content">
+                    {{ userInfoDate.sex === 0 ? '未知' : userInfoDate.sex === 1 ? '男' : '女' }}
+                  </div>
+                  <el-link type="primary" @click="goEditName">修改</el-link>
                 </div>
-                <el-link type="primary" @click="goEditName">修改</el-link>
-              </div>
-              <div class="item">
-                <div class="item_title">地区</div>
-                <div v-if="userInfoDate.invite_code" class="item_content els">
-                  {{
-                    getHashStr(
-                      strToArr(userInfoDate.province, userInfoDate.city, userInfoDate.district),
-                      addressHash
-                    )
-                  }}
+                <div class="item">
+                  <div class="item_title">出生日期</div>
+                  <div class="item_content">
+                    {{ formatDate(new Date(Number(userInfoDate.birth)), 'yyyy-MM-dd') }}
+                  </div>
+                  <el-link type="primary" @click="goEditName">修改</el-link>
                 </div>
-                <el-link type="primary" @click="goEditName">修改</el-link>
+                <div class="item">
+                  <div class="item_title">地区</div>
+                  <div v-if="userInfoDate.invite_code" class="item_content els">
+                    {{
+                      getHashStr(
+                        strToArr(userInfoDate.province, userInfoDate.city, userInfoDate.district),
+                        addressHash
+                      )
+                    }}
+                  </div>
+                  <el-link type="primary" @click="goEditName">修改</el-link>
+                </div>
               </div>
-            </div>
 
-            <div v-show="!editName" class="item_box edit_box">
-              <div class="item">
-                <div class="item_title">用户昵称</div>
-                <el-input v-model="eidtForm.userName" placeholder="请输入用户昵称" size="large" />
-              </div>
-              <div class="item">
-                <div class="item_title">性别</div>
-                <el-radio-group v-model="eidtForm.userSex">
-                  <el-radio :label="1">男</el-radio>
-                  <el-radio :label="2">女</el-radio>
-                </el-radio-group>
-              </div>
-              <div class="item">
-                <div class="item_title">出生日期</div>
-                <div class="date_picker_box">
-                  <el-date-picker
-                    v-model="eidtForm.userBirth"
-                    placeholder="请选择出生日期"
-                    value-format="x"
-                    :clear-icon="eidtForm.userBirth ? CircleCloseFilled : ''"
+              <div v-show="!editName" class="item_box edit_box">
+                <div class="item">
+                  <div class="item_title">用户昵称</div>
+                  <el-input v-model="eidtForm.userName" placeholder="请输入用户昵称" size="large" />
+                </div>
+                <div class="item">
+                  <div class="item_title">性别</div>
+                  <el-radio-group v-model="eidtForm.userSex">
+                    <el-radio :label="1">男</el-radio>
+                    <el-radio :label="2">女</el-radio>
+                  </el-radio-group>
+                </div>
+                <div class="item">
+                  <div class="item_title">出生日期</div>
+                  <div class="date_picker_box">
+                    <el-date-picker
+                      v-model="eidtForm.userBirth"
+                      placeholder="请选择出生日期"
+                      value-format="x"
+                      :clear-icon="eidtForm.userBirth ? CircleCloseFilled : ''"
+                      class="edit_picker"
+                      size="large"
+                    />
+                    <el-icon v-show="!eidtForm.userBirth" size="14px" color="#666" class="date_icon"
+                      ><calendar
+                    /></el-icon>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="item_title">地区</div>
+                  <KzCascader
+                    v-model="eidtForm.addArr"
+                    type="address"
                     class="edit_picker"
                     size="large"
                   />
-                  <el-icon v-show="!eidtForm.userBirth" size="14px" color="#666" class="date_icon"
-                    ><calendar
+                </div>
+                <div class="item fjend">
+                  <el-button class="bdc_btn" @click="editCancel">取消</el-button>
+                  <el-button type="primary" @click="editData">确认</el-button>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="item_title">真实姓名</div>
+                <div class="item_content">
+                  {{ userInfoDate.real_name == '' ? '未实名' : userInfoDate.real_name }}
+                  <el-icon v-if="userInfoDate.real_name == ''" color="#FF4736 " class="n_icon"
+                    ><Warning
                   /></el-icon>
+                </div>
+                <el-link type="primary" @click="$router.push('/manage/user/settings/realname')">{{
+                  userInfoDate.real_name ? '重新认证' : '实名认证'
+                }}</el-link>
+              </div>
+              <div class="item">
+                <div class="item_title">
+                  我的邀请码 <KzIcon href="#icon-bangzhu" class="n_icon" />
+                </div>
+                <div class="item_content">
+                  {{ userInfoDate.invite_code }}<span class="u_tips">*不可修改</span>
+                </div>
+                <div class="fsc item_links">
+                  <el-link type="primary" @click="copyCode(userInfoDate.invite_code)"
+                    >复制邀请码</el-link
+                  >
+                  <el-popover placement="right" trigger="click" :teleported="false">
+                    <template #reference>
+                      <el-link type="primary" @click="goCode">生成二维码</el-link>
+                    </template>
+                    <div v-if="codeShow" class="fcc fc">
+                      <qrcode-vue :value="qrUrl" :size="qcsize" level="H" id="qrImg" class="mb16" />
+                      <el-button type="primary" @click="downloadQr">下载二维码</el-button>
+                    </div>
+                  </el-popover>
                 </div>
               </div>
               <div class="item">
-                <div class="item_title">地区</div>
-                <KzCascader
-                  v-model="eidtForm.addArr"
-                  type="address"
-                  class="edit_picker"
-                  size="large"
-                />
+                <div class="item_title">注册时间</div>
+                <div class="item_content">
+                  {{ formatDate(new Date(Number(userInfoDate.create_time)), 'yyyy-MM-dd') }}
+                </div>
               </div>
-              <div class="item fjend">
-                <el-button class="bdc_btn" @click="editCancel">取消</el-button>
-                <el-button type="primary" @click="editData">确认</el-button>
-              </div>
-            </div>
-
-            <div class="item">
-              <div class="item_title">真实姓名</div>
-              <div class="item_content">
-                {{ userInfoDate.real_name == '' ? '未实名' : userInfoDate.real_name }}
-                <el-icon v-if="userInfoDate.real_name == ''" color="#FF4736 " class="n_icon"
-                  ><Warning
-                /></el-icon>
-              </div>
-              <el-link type="primary" @click="$router.push('/manage/user/settings/realname')">{{
-                userInfoDate.real_name ? '重新认证' : '实名认证'
-              }}</el-link>
-            </div>
-            <div class="item">
-              <div class="item_title">
-                我的邀请码 <KzIcon href="#icon-bangzhu" class="n_icon" />
-              </div>
-              <div class="item_content">
-                {{ userInfoDate.invite_code }}<span class="u_tips">*不可修改</span>
-              </div>
-              <div class="fsc item_links">
-                <el-link type="primary" @click="copyCode(userInfoDate.invite_code)"
-                  >复制邀请码</el-link
-                >
-                <el-popover placement="right" trigger="click" :teleported="false">
-                  <template #reference>
-                    <el-link type="primary" class="qc_handle" @click="goCode">生成二维码</el-link>
-                  </template>
-                  <div v-if="codeShow" class="fcc">
-                    <qrcode-vue
-                      :value="
-                        'https://' + loginUrl + `/app/login?invite_code=${userInfoDate.invite_code}`
-                      "
-                      :size="qcsize"
-                      level="H"
-                    />
-                  </div>
-                </el-popover>
-              </div>
-            </div>
-            <div class="item">
-              <div class="item_title">注册时间</div>
-              <div class="item_content">
-                {{ formatDate(new Date(Number(userInfoDate.create_time)), 'yyyy-MM-dd') }}
-              </div>
-            </div>
-            <div class="item">
-              <div class="item_title">邀请者<KzIcon href="#icon-bangzhu" class="n_icon" /></div>
-              <div class="item_content">
-                {{ userInfoDate.invitee }}
+              <div class="item">
+                <div class="item_title">邀请者<KzIcon href="#icon-bangzhu" class="n_icon" /></div>
+                <div class="item_content">
+                  {{ userInfoDate.invitee }}
+                </div>
               </div>
             </div>
           </div>
@@ -150,58 +151,66 @@
 
         <div class="conten_item conten_item2 mb16 kz_card">
           <div class="card_title">账户安全</div>
-          <div class="card_body fc">
-            <div class="item_box">
-              <div class="item">
-                <div class="item_title">绑定手机</div>
-                <div class="item_content fcs">
-                  {{ userInfoDate.mobile }}
+          <div class="card_body fcc">
+            <div class="fc">
+              <div class="item_box">
+                <div class="item">
+                  <div class="item_title">绑定手机</div>
+                  <div class="item_content fcs">
+                    {{ userInfoDate.mobile }}
+                  </div>
+                  <el-link type="primary" @click="goChangoTel">修改</el-link>
                 </div>
-                <el-link type="primary" @click="goChangoTel">修改</el-link>
-              </div>
-              <div class="item">
-                <div class="item_title">绑定邮箱</div>
-                <div class="item_content fcs">
-                  {{ userInfoDate.email === '' ? '未绑定邮箱' : userInfoDate.email }}
+                <div class="item">
+                  <div class="item_title">绑定邮箱</div>
+                  <div class="item_content fcs">
+                    {{ userInfoDate.email === '' ? '未绑定邮箱' : userInfoDate.email }}
+                  </div>
+                  <el-link type="primary" @click="goChangoEmail">{{
+                    userInfoDate.email ? '修改' : '绑定'
+                  }}</el-link>
                 </div>
-                <el-link type="primary" @click="goChangoEmail">{{
-                  userInfoDate.email ? '修改' : '绑定'
-                }}</el-link>
-              </div>
-              <div class="item">
-                <div class="item_title">登录密码</div>
-                <div class="item_content fcs"></div>
-                <el-link type="primary" @click="goChangoMm">修改</el-link>
+                <div class="item">
+                  <div class="item_title">登录密码</div>
+                  <div class="item_content fcs"></div>
+                  <div class="fsc item_links">
+                    <el-link type="primary" @click="goChangoMm">修改</el-link>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div class="conten_item conten_item3 mb16 kz_card">
           <div class="card_title">会员信息</div>
-          <div class="card_body fc">
-            <div class="item_box">
-              <div class="item">
-                <div class="item_title">会员等级</div>
-                <div class="item_content fcs">
-                  <img :src="changeMemberImg[userInfoDate.level]" alt="" />
+          <div class="card_body fcc">
+            <div class="fc">
+              <div class="item_box">
+                <div class="item">
+                  <div class="item_title">会员等级</div>
+                  <div class="item_content fcs">
+                    <img :src="changeMemberImg[userInfoDate.level]" alt="" />
+                  </div>
                 </div>
-              </div>
-              <div class="item">
-                <div class="item_title">会员积分</div>
-                <div class="item_content fcs">{{ userInfoDate.integral }}</div>
-              </div>
-              <div class="item">
-                <div class="item_title">会员特权</div>
-                <div class="item_content fcs">
-                  <div class="benefits fcs"><img :src="icon_benefits" alt="" />权益一</div>
+                <div class="item">
+                  <div class="item_title">会员积分</div>
+                  <div class="item_content fcs">{{ userInfoDate.integral }}</div>
                 </div>
-              </div>
-              <div class="item">
-                <div class="item_title">邀请用户数</div>
-                <div class="item_content fcs">
-                  {{ userInfoDate.invite_users }}
+                <div class="item">
+                  <div class="item_title">会员特权</div>
+                  <div class="item_content fcs">
+                    <div class="benefits fcs"><img :src="icon_benefits" alt="" />权益一</div>
+                  </div>
                 </div>
-                <el-link type="primary" @click="$router.push('invitation')">查看</el-link>
+                <div class="item">
+                  <div class="item_title">邀请用户数</div>
+                  <div class="item_content fcs">
+                    {{ userInfoDate.invite_users }}
+                  </div>
+                  <div class="fsc item_links">
+                    <el-link type="primary" @click="$router.push('invitation')">查看</el-link>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -209,23 +218,30 @@
         <div class="conten_item conten_item4 mb16 kz_card">
           <div class="card_title">我的企业</div>
 
-          <div v-show="!showCompany" class="card_body fc">
-            <div v-for="v in userCompany" :key="v.id" class="item_box">
-              <div class="item">
-                <div class="item_title">企业名称</div>
-                <div class="item_content fcs">
-                  <el-tooltip effect="dark" :content="v.name" placement="top">
-                    <div class="els">{{ v.name }}</div>
-                  </el-tooltip>
-                  <img v-if="v.selected == 1" class="active_c" :src="icon_company" alt="" />
+          <div v-show="!showCompany" class="card_body fcc">
+            <div class="fc">
+              <div v-for="v in userCompany" :key="v.id" class="item_box">
+                <div class="item">
+                  <div class="item_title">企业名称</div>
+                  <div class="item_content fcs">
+                    <el-tooltip effect="dark" :content="v.name" placement="top">
+                      <div class="els">{{ v.name }}</div>
+                    </el-tooltip>
+                    <img v-if="v.selected == 1" class="active_c" :src="icon_company" alt="" />
+                  </div>
+                  <div class="fsc item_links">
+                    <el-link
+                      v-if="v.selected == 0"
+                      type="primary"
+                      @click="quitCompany(v.id, v.name)"
+                      >退出企业</el-link
+                    >
+                  </div>
                 </div>
-                <el-link v-if="v.selected == 0" type="primary" @click="quitCompany(v.id, v.name)"
-                  >退出企业</el-link
-                >
-              </div>
-              <div class="item">
-                <div class="item_title">分组</div>
-                <div class="item_content fcs">{{ v.group_name }}</div>
+                <div class="item">
+                  <div class="item_title">分组</div>
+                  <div class="item_content fcs">{{ v.group_name }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -239,10 +255,18 @@
       </el-scrollbar>
       <!-- 修改头像 -->
       <el-dialog ref="editRef" v-model="editAvatershow" title="编辑用户头像" width="500px">
-        <KzUpAvatar ref="KzUpAvatarRef" v-model="imgUrl" @success="upSuccess" />
+        <KzUpAvatar
+          ref="KzUpAvatarRef"
+          v-model="imgUrl"
+          @success="upSuccess"
+          v-loading="upLoading"
+          v-if="editAvatershow"
+        />
         <template #footer>
-          <el-button class="bdc_btn" @click="avatorClose">取消</el-button>
-          <el-button type="primary" @click="avatorChanges">确认</el-button>
+          <div v-loading="upLoading">
+            <el-button class="bdc_btn" @click="avatorClose">取消</el-button>
+            <el-button type="primary" @click="avatorChanges">确认</el-button>
+          </div>
         </template>
       </el-dialog>
       <!-- 删除企业 -->
@@ -513,13 +537,15 @@ import { CircleCloseFilled, Calendar } from '@element-plus/icons-vue'
 import KzCascader from '@/components/KzCascader.vue'
 import { useRouter } from 'vue-router'
 import type { FormInstance } from 'element-plus'
+import { log } from 'console'
 
 const router = useRouter()
 const store = mainStore()
 const addressHash = computed(() => store.state.addressHash)
 
-const loginUrl = store.state.yxtUrl.mobile
-// console.log(loginUrl)
+const loginUrl = computed(() => store.state.yxtUrl.mobile)
+const invate_code = computed(() => store.state.userInfo.invite_code)
+// console.log(invate_code)
 
 const editName = ref(true)
 
@@ -559,6 +585,7 @@ const scroll = ({ scrollTop }: { scrollTop: number }) => {
 }
 // 信息列表
 const userInfoDate = ref<Record<string, string | number>>({})
+
 const userInfoList = async () => {
   const res = await userInfo_api()
   if (res.status === 1) {
@@ -588,7 +615,7 @@ interface IUserDate {
   addr?: (number | string)[]
 }
 
-const editData = async (parms: IUserDate) => {
+const editData = async () => {
   const data = {
     name: eidtForm.value.userName,
     sex: eidtForm.value.userSex,
@@ -602,6 +629,8 @@ const editData = async (parms: IUserDate) => {
   if (res.status === 1) {
     userInfoList()
     editName.value = true
+    upLoading.value = false
+    editAvatershow.value = false
     okMsg('用户信息修改成功!')
   }
 }
@@ -627,21 +656,15 @@ const editAvator = () => {
 
 const KzUpAvatarRef = ref()
 const avatorChanges = () => {
+  upLoading.value = true
   KzUpAvatarRef.value.upload()
-  editAvatershow.value = false
 }
 const avatorClose = () => {
   editAvatershow.value = false
 }
 const upSuccess = () => {
   // 头像上传成功
-  upLoading.value = true
-  setTimeout(() => {
-    // 发请求
-    editData({ head: imgUrl.value }).finally(() => {
-      upLoading.value = false
-    })
-  }, 1000)
+  editData()
 }
 //账号安全
 const goChange = ref(false)
@@ -676,6 +699,24 @@ const changeMemberImg: Record<string, string> = {
   '3': icon_gold,
   '4': icon_star,
 }
+//下载二维码
+
+const qrUrl = ref('')
+
+const qcsize = 100
+const codeShow = ref(false)
+const goCode = () => {
+  qrUrl.value = 'https://' + loginUrl.value + `/app/login?invite_code=${invate_code.value}`
+  codeShow.value = true
+}
+const downloadQr = () => {
+  const myCanvas = document.getElementById('qrImg') as HTMLCanvasElement
+  const a = document.createElement('a')
+  a.href = myCanvas.toDataURL('image/png')
+  a.download = '邀请二维码'
+  a.click()
+  okMsg('下载完成')
+}
 // 复制邀请码
 const { toClipboard } = useClipboard()
 const copyCode = async (val: any) => {
@@ -685,11 +726,7 @@ const copyCode = async (val: any) => {
     errMsg('该浏览器不支持自动复制')
   }
 }
-const qcsize = 100
-const codeShow = ref(false)
-const goCode = () => {
-  codeShow.value = true
-}
+
 //企业信息
 const showCompany = ref(false)
 const userCompany = ref<any>({})
@@ -963,12 +1000,9 @@ const closeEdit = () => {
     height: 100%;
     .conten_item {
       .card_body {
-        padding-left: 202px;
         padding-bottom: 56px;
-        display: inline-flex;
         .avator_box {
           display: flex;
-          width: 600px;
           padding-bottom: 56px;
         }
         .user_avater {

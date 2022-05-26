@@ -15,23 +15,14 @@
                 <el-descriptions-item label-align="right" label="企业logo">
                   <!-- <span class="item_avater">企业logo</span> -->
                   <div v-loading="upLoading" class="user_avater">
-                    <KzImgUpload
-                      v-if="!upLoading"
-                      ref="KzImgUploadRef"
-                      @change="changes"
-                      @up-one-success="upSuccess"
-                    >
-                      <el-image style="width: 220px; height: 110px" :src="imgUrl" fit></el-image>
-                    </KzImgUpload>
                     <el-image
-                      v-else
                       style="width: 220px; height: 110px"
-                      :src="imgUrl"
+                      :src="logoImg || icon_logo"
                       fit
-                      class="up_avatar"
+                   
                     ></el-image></div
                 ></el-descriptions-item>
-                <el-descriptions-item><el-link type="primary">修改</el-link></el-descriptions-item>
+                <el-descriptions-item><el-link type="primary"   @click="editLogo">修改</el-link></el-descriptions-item>
                 <div v-if="showCom">
                   <el-descriptions-item label="企业名称" label-align="right"
                     >重庆康洲数智有限公司</el-descriptions-item
@@ -196,23 +187,59 @@
         </div>
       </el-scrollbar>
     </div>
+    <!-- 修改头像 -->
+    <el-dialog ref="editRef" v-model="editLogoShow" title="编辑用户头像" width="500px">
+      <KzUpAvatar  ref="KzUpLogoRef" v-model="logoImg" @success="upSuccess" />
+      <template #footer>
+        <el-button class="bdc_btn" @click="logoClose">取消</el-button>
+        <el-button type="primary" @click="logoChanges">确认</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import KzStepTab from '@/components/KzStepTab.vue'
+import KzUpAvatar from '@/components/KzUpAvatar.vue'
 import { ref, onMounted, reactive } from 'vue'
 import { Warning } from '@element-plus/icons-vue'
+import icon_logo from '@/assets/images/df_com_logo.png'
 import icon_company from '@/assets/images/company_num.png'
 import icon_order from '@/assets/images/no_ordered.png'
 import icon_recertify from '@/assets/images/recertify.png'
 import icon_fail from '@/assets/images/fail_company.png'
 import icon_submit from '@/assets/images/submit_company.png'
 import icon_ordertwo from '@/assets/images/no_two.png'
-import KzImgUpload from '@/components/KzImgUpload.vue'
 import KzCascader from '@/components/KzCascader.vue'
 const tabs = ref([{ title: '基本信息' }, { title: '联系信息' }, { title: '认证信息' }])
 const active = ref(0)
+// 修改Logo
+const imgUrl = ref('')
+const editLogoShow = ref(false)
+const upLoading = ref(false)
+const KzUpLogoRef = ref()
+const logoImg = ref('')
+const editLogo = () => {
+  editLogoShow.value = true
+}
+const logoClose = () => {
+  editLogoShow.value = false
+}
+const logoChanges = () => {
+  console.log(logoImg.value)
+  editLogoShow.value = false
+}
+const upSuccess = () => {
+  // 头像上传成功
+  upLoading.value = true
+  setTimeout(() => {
+    // 发请求
+    // editData({ head: imgUrl.value }).finally(() => {
+    upLoading.value = false
+    // })
+  }, 1000)
+}
+
 let boxHeight: number
 let el: NodeListOf<HTMLElement>
 onMounted(() => {
@@ -237,9 +264,9 @@ const scroll = ({ scrollTop }: { scrollTop: number }) => {
     active.value = 2
   }
 }
-const upLoading = ref(false)
-const imgUrl = ref('')
-const KzImgUploadRef = ref() //头像
+
+
+
 const showCom = ref(true) //修改公司名字
 const showContent = ref(true) //联系信息
 const formInline = reactive({
@@ -248,21 +275,6 @@ const formInline = reactive({
   addr: [],
 })
 const company_name = ref('')
-const changes = () => {
-  imgUrl.value = KzImgUploadRef.value.imgs[0].url
-  KzImgUploadRef.value.submit()
-}
-const upSuccess = (url: string, length: number) => {
-  upLoading.value = true
-  imgUrl.value = url
-  console.log(url, length)
-  setTimeout(() => {
-    // 发请求
-    // editData({ head: url }).finally(() => {
-    //   upLoading.value = false
-    // })
-  }, 1000)
-}
 </script>
 
 <style lang="scss" scoped>
@@ -330,18 +342,9 @@ const upSuccess = (url: string, length: number) => {
         width: 220px;
         height: 110px;
         border: 1px solid #eeeeee;
-        overflow: hidden;
-        position: relative;
-        .up_avatar {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          z-index: 1;
-        }
-        :deep(.el-upload) {
+        :deep(.el-image) {
           width: 220px;
           height: 110px;
-          border: none;
           position: relative;
           &:hover::after {
             content: '修改头像';
