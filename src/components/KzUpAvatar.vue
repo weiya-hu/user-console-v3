@@ -32,7 +32,7 @@
           <el-icon size="14px" @click="onRotateImg(0)"><RefreshRight /></el-icon>
         </div>
       </div>
-      <div v-show="!showImg" class="kz_crop_btns">*上传图片大小在4.0M以内</div>
+      <div v-show="!showImg" class="kz_crop_btns">*上传图片大小在{{maxSize}}M以内</div>
     </div>
     <input
       ref="upInputRef"
@@ -92,44 +92,25 @@ const props = withDefaults(
   }
 )
 
-const convertImgToBlob = (url: string, callback: Function) => {
-  // 非内存URL图片转blob
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
-  const image = new Image()
-  image.crossOrigin = 'Anonymous'
-  image.onload = function () {
-    canvas.height = image.height
-    canvas.width = image.width
-    ctx!.drawImage(image, 0, 0)
-    // canvas.toBlob((blob) => {
-    //   callback(blob)
-    // })
-    const imgBase64 = canvas.toDataURL('image/png')
-    callback(imgBase64)
-    canvas.remove()
-    image.remove()
-  }
-  image.src = url
-}
-
-//可以改为在onMounted 和 上传成功去改showImg
-watch(
-  () => props.modelValue,
-  (newValue, oldValue) => {
-    if (newValue) {
-      convertImgToBlob(newValue, (blob: Blob) => {
-        // 无法转换的不会触发回调
-        showImg.value = URL.createObjectURL(blob)
-      })
-    }
-  }
-)
-
 //success 图片上传成功触发；error 图片上传失败触发
 const emit = defineEmits(['update:modelValue', 'success', 'error'])
 
 const showImg = ref('')
+/**
+ * VueCropper组件内部为了使用canvas，给图片加了crossOrigin属性为anonymous，即跨域请求，
+ * 如果这张网络图片已经通过<img>标签加载过，并且没有给标签设置crossOrigin="anonymous"，
+ * 组件内部在使用同域名图片时浏览器会取同域名图片的缓存，没有给<img>标签设置crossOrigin="anonymous"的缓存是没有跨域请求的，
+ * 浏览器就会抛出跨域错误，解决方法是：
+ * 1.项目内可能会在此组件使用的同域名<img>标签都加上crossOrigin="anonymous"；
+ * 2.使图片域名不一致让浏览器不在缓存中取同域名图片。
+ * 这里采用了第二种，给此组件内部的网络图片加上了random参数，不会影响图片显示
+ */
+watch(
+  () => props.modelValue,
+  (newValue, oldValue) => {
+    showImg.value = httpReg.test(newValue) ? newValue + '?random=' + Math.random() : newValue
+  }
+)
 
 const cropperRef = ref() // VueCropper Ref
 
@@ -275,6 +256,7 @@ const upload = async () => {
 
 const dragRef = ref<HTMLElement>() // 拖拽容器ref
 onMounted(() => {
+  showImg.value = httpReg.test(props.modelValue) ? props.modelValue + '?random=' + Math.random() : props.modelValue
   dragRef.value?.addEventListener('dragenter', dragEnter, false)
   dragRef.value?.addEventListener('dragover', dragOver, false)
   dragRef.value?.addEventListener('drop', dragImg, false)

@@ -23,7 +23,7 @@ import 'tinymce/plugins/advlist'
 import 'tinymce/plugins/autolink'
 import 'tinymce/plugins/fullscreen'
 import 'tinymce/plugins/preview'
-import { ref, onUpdated, watch } from 'vue'
+import { ref, onUpdated, watch, computed } from 'vue'
 import { getAliToken_api } from '@/api/login'
 import axios from 'axios'
 const props = withDefaults(
@@ -126,12 +126,19 @@ tinymce.init({})
 
 const emit = defineEmits(['update:modelValue'])
 
-const editvalue = ref('') // 打包到线上绑定值会失效 所以用了这个蠢办法
-onUpdated(() => {
-  editvalue.value = props.modelValue
-})
-watch(editvalue, (newValue) => {
-  emit('update:modelValue', newValue)
+// const editvalue = ref('') // 打包到线上绑定值会失效 所以用了这个蠢办法
+// onUpdated(() => {
+//   editvalue.value = props.modelValue
+// })
+// watch(editvalue, (newValue) => {
+//   emit('update:modelValue', newValue)
+// })
+
+const editvalue = computed({
+  get: () => props.modelValue,
+  set: (val) => {
+    emit('update:modelValue', val)
+  }, 
 })
 
 const upImages = async () => {
