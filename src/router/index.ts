@@ -235,6 +235,12 @@ export const routes: RouteRecordRaw[] = [
                     component: () => import('@/views/layout/manage/user/settings/invitation.vue'),
                     meta: { title: '邀请用户详情', father: '/manage/user/settings/myinfo' },
                   },
+                  {
+                    path: '/manage/user/settings/myCompany',
+                    name: 'MyCompany',
+                    component: () => import('@/views/layout/manage/user/settings/myCompany.vue'),
+                    meta: { title: '我的企业' },
+                  },
                 ],
               },
             ],

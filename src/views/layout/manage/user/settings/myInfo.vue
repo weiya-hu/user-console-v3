@@ -127,7 +127,7 @@
                       <el-link type="primary" @click="goCode">生成二维码</el-link>
                     </template>
                     <div v-if="codeShow" class="fcc fc">
-                      <qrcode-vue :value="qrUrl" :size="qcsize" level="H" id="qrImg" class="mb16" />
+                      <qrcode-vue id="qrImg" :value="qrUrl" :size="qcsize" level="H" class="mb16" />
                       <el-button type="primary" @click="downloadQr">下载二维码</el-button>
                     </div>
                   </el-popover>
@@ -256,11 +256,11 @@
       <!-- 修改头像 -->
       <el-dialog ref="editRef" v-model="editAvatershow" title="编辑用户头像" width="500px">
         <KzUpAvatar
+          v-if="editAvatershow"
           ref="KzUpAvatarRef"
           v-model="imgUrl"
-          @success="upSuccess"
           v-loading="upLoading"
-          v-if="editAvatershow"
+          @success="upSuccess"
         />
         <template #footer>
           <div v-loading="upLoading">

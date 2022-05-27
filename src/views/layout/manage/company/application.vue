@@ -8,8 +8,8 @@
           <el-button type="primary" @click="alldo(1)">批量同意</el-button>
         </div>
       </div>
-      <div class="mytable" v-loading="loading">
-        <el-table :data="inviteData" ref="tableRef">
+      <div v-loading="loading" class="mytable">
+        <el-table ref="tableRef" :data="inviteData">
           <el-table-column type="selection" width="50" />
           <el-table-column property="name" label="申请人姓名" />
           <el-table-column property="mobile" label="联系电话" />
@@ -43,7 +43,7 @@ import { inviteCompany_api, invitePass_api } from '@/api/manage/company/applicat
 import { formatDate } from '@/utils/date'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
-import { log } from 'console'
+import { errMsg, okMsg } from '@/utils/index'
 const totle = ref(10)
 const size = ref(10)
 const page = ref(1)
@@ -58,27 +58,29 @@ const inviteList = async () => {
 inviteList()
 const examArr = ref<number[]>([])
 
-const reject =(id:number)=>{
+const reject = (id: number) => {
   examArr.value.push(id)
-   examArr.value.length && Passlist(0)
-  
+  examArr.value.length && Passlist(0)
+  okMsg('操作成功！')
 }
-const agree=(id:number)=>{
-   examArr.value.push(id)
-   examArr.value.length && Passlist(1)
+const agree = (id: number) => {
+  examArr.value.push(id)
+  examArr.value.length && Passlist(1)
+  okMsg('操作成功！')
 }
 
 const tableRef = ref()
 const alldo = (isAgree: 0 | 1) => {
   const nowAgree = tableRef.value.getSelectionRows()
-  examArr.value = nowAgree.map((v:any) => v.id)
+  examArr.value = nowAgree.map((v: any) => v.id)
   examArr.value.length && Passlist(isAgree)
+  okMsg('操作成功！')
 }
 
 const Passlist = async (isAgree: 0 | 1) => {
   const data = {
     invite_ids: examArr.value,
-    status:isAgree
+    status: isAgree,
   }
   const res = await invitePass_api(data)
   inviteList()

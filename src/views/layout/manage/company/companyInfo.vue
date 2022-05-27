@@ -19,10 +19,11 @@
                       style="width: 220px; height: 110px"
                       :src="logoImg || icon_logo"
                       fit
-                   
                     ></el-image></div
                 ></el-descriptions-item>
-                <el-descriptions-item><el-link type="primary"   @click="editLogo">修改</el-link></el-descriptions-item>
+                <el-descriptions-item
+                  ><el-link type="primary" @click="editLogo">修改</el-link></el-descriptions-item
+                >
                 <div v-if="showCom">
                   <el-descriptions-item label="企业名称" label-align="right"
                     >重庆康洲数智有限公司</el-descriptions-item
@@ -189,7 +190,7 @@
     </div>
     <!-- 修改头像 -->
     <el-dialog ref="editRef" v-model="editLogoShow" title="编辑用户头像" width="500px">
-      <KzUpAvatar  ref="KzUpLogoRef" v-model="logoImg" @success="upSuccess" />
+      <KzUpAvatar ref="KzUpLogoRef" v-model="logoImg" @success="upSuccess" />
       <template #footer>
         <el-button class="bdc_btn" @click="logoClose">取消</el-button>
         <el-button type="primary" @click="logoChanges">确认</el-button>
@@ -264,8 +265,6 @@ const scroll = ({ scrollTop }: { scrollTop: number }) => {
     active.value = 2
   }
 }
-
-
 
 const showCom = ref(true) //修改公司名字
 const showContent = ref(true) //联系信息
