@@ -112,3 +112,15 @@ export const editMmTel_api = (data: { sms: string }): Promise<IRes> => {
 export const editMm_api = (data: { confirm_pass: string; new_pass: string }): Promise<IRes> => {
   return post('user', '/web/user/pass/change.do', data)
 }
+/**
+ * @name 获取已加入企业
+ */
+ export const companyAdd_api = (): Promise<IRes> => {
+  return get('user ', '/web/company.list')
+}
+/**
+ * @name 获取待审核企业
+ */
+ export const companyExam_api = (): Promise<IRes> => {
+  return get('user ', '/web/company/audit.list')
+}

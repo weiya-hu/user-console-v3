@@ -301,6 +301,15 @@ img {
   &.sdot_9 {
     background-color: $color999;
   }
+  &.sdot_c0 {
+    background-color: #C0C4CC;
+  }
+  &.sdot_fe {
+    background-color: #FE9B25;
+  }
+  &.sdot_ff {
+    background-color: #FF4736;
+  }
 }
 
 .vline {

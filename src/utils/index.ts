@@ -305,7 +305,32 @@ export const downLoadVideo = (videoSrc: string, videoName?: string) => {
 /**
  * 全局状态
  */
-export const KZ_STATUS: Record<number, { text: string; className: string }> = {
+export const KZ_COM_STATUS: Record<number, { text: string; className: string }> = {
+  0: { text: '---', className: '' },
+  1: { text: '草稿', className: 'sdot_c0' },
+  2: { text: '审核中', className: 'sdot_fe' },
+  3: { text: '审核通过', className: 'sdot_g' },
+  4: { text: '审核失败', className: 'sdot_ff' },
+}
+
+/**
+ * 获取我的企业状态
+ */
+export function getKzComStatus(key: number) {
+  const obj = { text: '---', className: '' }
+  try {
+    if (KZ_COM_STATUS[key as keyof typeof KZ_COM_STATUS]) {
+      return KZ_COM_STATUS[key as keyof typeof KZ_COM_STATUS]
+    }
+  } catch (error) {
+    return obj
+  }
+  return obj
+}
+/**
+ * 全局状态
+ */
+ export const KZ_STATUS: Record<number, { text: string; className: string }> = {
   0: { text: '---', className: '' },
   1: { text: '待处理', className: 'sdot_y' },
   2: { text: '已受理', className: 'sdot_g' },
@@ -327,7 +352,6 @@ export function getKzStatus(key: number) {
   }
   return obj
 }
-
 /**
  * cms我的作品库状态
  */

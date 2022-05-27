@@ -107,9 +107,8 @@
                     ><Warning
                   /></el-icon>
                 </div>
-                <el-link type="primary" @click="$router.push('/manage/user/settings/realname')">{{
-                  userInfoDate.real_name ? '重新认证' : '实名认证'
-                }}</el-link>
+                <el-link type="primary" @click="$router.push('/manage/user/settings/realname')" v-if="!userInfoDate.real_name">
+                 实名认证</el-link>
               </div>
               <div class="item">
                 <div class="item_title">

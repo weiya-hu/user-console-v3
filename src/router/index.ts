@@ -236,13 +236,14 @@ export const routes: RouteRecordRaw[] = [
                     meta: { title: '邀请用户详情', father: '/manage/user/settings/myinfo' },
                   },
                   {
-                    path: '/manage/user/settings/myCompany',
+                    path: '/manage/user/settings/mycompany',
                     name: 'MyCompany',
                     component: () => import('@/views/layout/manage/user/settings/myCompany.vue'),
                     meta: { title: '我的企业' },
                   },
                 ],
               },
+             
             ],
           },
           {
