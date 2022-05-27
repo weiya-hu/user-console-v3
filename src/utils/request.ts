@@ -28,7 +28,10 @@ axios.interceptors.response.use(
   (res) => {
     if (res.status == 200) {
       const response = res.data
-      if (response.status == 0 && response.errno && response.errno != 10200) {
+      if(response && response.errno >= 10200 && response.errno < 10300){
+        return res
+      }
+      if (response && response.status == 0 && response.errno) {
         ElMessage({
           showClose: true,
           message: response.message,

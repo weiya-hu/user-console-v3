@@ -181,7 +181,7 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog v-model="upDemoShow" title="上传demo" width="70%" @close="imgsList.length = 0">
+    <el-dialog v-model="upDemoShow" title="上传demo" width="70%">
       <KzImgUpload
         v-if="upDemoShow"
         ref="upImgRef"
@@ -227,16 +227,11 @@ const upImgRef = ref()
 const upDemoShow = ref(false)
 const imgsList = ref<string[]>([])
 const showDemo = () => {
+  imgsList.value = [
+    'https://res.kzszh.com/dev/web/index/image/f21b635833aaf9ef4f4179e415988102.png',
+    'https://res.kzszh.com/dev/web/index/image/736612fc47abb31fbab2bfdf3d67ba1a.png'
+  ]
   upDemoShow.value = true
-  setTimeout(() => {
-    imgsList.value.push(
-      'https://res.kzszh.com/dev/web/index/image/f21b635833aaf9ef4f4179e415988102.png'
-    )
-    imgsList.value.push(
-      'https://res.kzszh.com/dev/web/index/image/736612fc47abb31fbab2bfdf3d67ba1a.png'
-    )
-    upImgRef.value.setImgs()
-  }, 1000)
 }
 const upAll = (files: string[]) => {
   // files 上传成功后的图片地址数组
