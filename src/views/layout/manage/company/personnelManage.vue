@@ -97,7 +97,7 @@
         </div>
 
         <div>
-          <el-button v-show="!comAll" type="info" plain>删除分组</el-button>
+          <el-button v-show="!comAll" type="info" plain @click="deleteData">删除分组</el-button>
           <el-button type="primary" @click="show = true"
             ><KzIcon href="#icon-tianjia" size="14px" />添加人员</el-button
           >
@@ -121,11 +121,11 @@
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center">
-              <template #default>
+              <template #default="{ row }">
                 <div class="fcs line_last">
-                  <el-link type="primary">编辑</el-link>
+                  <el-button type="text" @click="editPop(row)">编辑</el-button>
                   <span class="line"></span>
-                  <el-link type="primary">删除</el-link>
+                  <el-button type="text" @click="delEdit(row.id)">删除</el-button>
                 </div>
               </template>
             </el-table-column>
@@ -148,7 +148,7 @@
                 >二维码邀请</el-button
               >
               <el-button :class="tab == 2 && 'btn_tab_active'" @click="tab = 2">链接邀请</el-button>
-              <el-button :class="tab == 3 && 'btn_tab_active'" @click="tab = 3">短信邀请</el-button>
+              <!-- <el-button :class="tab == 3 && 'btn_tab_active'" @click="tab = 3">短信邀请</el-button> -->
             </el-button-group>
           </div>
           <div v-if="tab == 1" class="mid_dig">
@@ -212,42 +212,42 @@
           width="500px"
           custom-class="del_dialog"
           title="编辑人员"
-          @close="close"
+          @close="closeDate"
         >
           <div class="fir_name">
-            <div>康洲</div>
-            <div>康洲</div>
-            <img :src="icon_del" alt="" />
+            <div>{{ popName }}</div>
+            <div>{{ popNum }}</div>
+            <img :src="icon_del" alt="" @click="delEdata" />
           </div>
-          <div class="sel">
-            <span>分组</span>
+          <div class="sel_two">
+            <span class="grouping">分组</span>
             <el-select v-model="sel_value" multiple placeholder="请选择分组（可多选）">
-              <!-- <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              /> -->
+              <el-option
+                v-for="(item, index) in options"
+                :key="index"
+                :label="item.group_name"
+                :value="item.group_id"
+              />
             </el-select>
           </div>
-          <div class="sel">
-            <span>分组</span>
-            <el-select v-model="sel_value" multiple placeholder="请选择分组（可多选）">
-              <!-- <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              /> -->
+          <div class="sel_two">
+            <span class="grouping">角色</span>
+            <el-select v-model="sel_two" multiple placeholder="请选择角色（可多选）">
+              <el-option
+                v-for="(item, index) in option_roles"
+                :key="index"
+                :label="item"
+                :value="Number(index)"
+              />
             </el-select>
           </div>
-          <div class="sel">
-            <span>状态</span>
-            <el-switch v-model="edit_status" :active-value="1" :inactive-value="0" />
+          <div class="sel_two">
+            <span class="grouping">状态</span>
+            <el-switch v-model="user_status" :active-value="1" :inactive-value="0" />
           </div>
           <div class="fjend">
-            <el-button class="bdc_btn">取消</el-button>
-            <el-button type="primary">保存</el-button>
+            <el-button class="bdc_btn" @click="closeDate">取消</el-button>
+            <el-button type="primary" @click="submitEdit">保存</el-button>
           </div>
         </el-dialog>
       </div>
@@ -262,7 +262,7 @@ import { reactive, ref } from 'vue'
 import icon_del from '@/assets/images/del_pople.png'
 import areaNum from '@/utils/areaNum'
 import { Plus } from '@element-plus/icons-vue'
-import { errMsg, okMsg } from '@/utils/index'
+import { errMsg, okMsg, getUrlParam } from '@/utils/index'
 import { MoreFilled } from '@element-plus/icons-vue'
 import { telReg } from '@/utils/index'
 import {
@@ -272,7 +272,16 @@ import {
   deleteGroup_api,
   groupList_api,
   statusUser_api,
+  getMember_api,
+  getRole_api,
+  getUser_api,
+  reviseUser_api,
+  deleteMember_api,
 } from '@/api/manage/company/personnelManage'
+import { mainStore } from '@/store/index'
+import { useRoute, useRouter } from 'vue-router'
+const router = useRouter()
+const store = mainStore()
 const page = ref(1)
 const size = ref(20)
 const total = ref(50)
@@ -289,14 +298,18 @@ const showDep = ref(true) //编辑部门是否显示
 const group = ref({}) //全部部门
 const dialogVisible = ref(false) //添加分组弹窗
 const edit_show = ref(false) //编辑部门名称
-const showEdit = ref(true) //编辑员工是否显示
-const edit_status = ref(0) //编辑员工状态
+const showEdit = ref(false) //编辑员工是否显示
+const user_status = ref(0) //编辑员工状态
 const comAll = ref(true) //是否显示操作框
 const editId = ref() //表格名字编辑
+const active = ref('')
 const numPoples = ref()
 const edit_input = ref('')
 const group_input = ref('')
 const sel_value = ref([])
+const options = ref()
+const popNum = ref('')
+const popName = ref('')
 const acode = ref('86')
 const closeAdd = () => {
   group_input.value = ''
@@ -311,12 +324,14 @@ const addGroup = async (name: string) => {
   status === 1 ? okMsg('分组添加成功') : errMsg('分组添加失败')
   closeAdd()
   getGroup()
+  getList()
 }
 //删除分组
 const deleteGroup = async (group_id: number) => {
   const { status } = await deleteGroup_api({ group_id })
   status === 1 ? okMsg('删除分组成功') : errMsg('删除分组失败')
   getGroup()
+  getList()
 }
 const openEdit = (id: number, name: string) => {
   edit_show.value = true
@@ -344,10 +359,82 @@ const editName = async (group_id: number, name: string) => {
   closeEdit()
   getGroup()
 }
+//删除表格分组
+const deleteData = async (group_id: number) => {
+  const { status } = await deleteGroup_api({ group_id: editId.value })
+  // status === 1 ? okMsg('删除分组成功') : errMsg('删除分组失败')
+  // getGroup()
+  // getList()
+  if (status === 1) {
+    okMsg('删除分组成功')
+    getGroup()
+    getList()
+  } else {
+    errMsg('删除分组失败')
+  }
+}
 //修改状态
 const changeStatus = async (id: number) => {
   const { status } = await statusUser_api({ member_id: id })
-  console.log(status)
+  status === 1 ? okMsg('状态修改成功') : errMsg('状态修改失败')
+}
+//编辑人员
+const option_roles = ref()
+const sel_two = ref([])
+const member_id = ref()
+const editPop = async (row: any) => {
+  getUser_api({ memberId: row.id }).then((res) => {
+    console.log(res)
+    if (res.status === 1) {
+      sel_value.value = res.body.group_ids
+      sel_two.value = res.body.role_ids
+      popName.value = res.body.user_name
+      popNum.value = res.body.mobile
+      user_status.value = res.body.user_status
+      member_id.value = res.body.member_id
+    }
+  })
+  showEdit.value = true
+
+  const { status, body } = await getMember_api()
+  if (status === 1) {
+    options.value = body
+  }
+  const res = await getRole_api()
+  if (res.status === 1) {
+    option_roles.value = res.body
+  }
+}
+const submitEdit = async () => {
+  const { status } = await reviseUser_api({
+    group_ids: sel_value.value,
+    role_ids: sel_two.value,
+    user_status: user_status.value,
+    member_id: member_id.value,
+  })
+  if (status == 1) {
+    closeDate()
+    getList(editId.value)
+  }
+}
+const delEdit = async (id?: any) => {
+  const { status } = await deleteMember_api({ member_id: id })
+  status === 1 ? okMsg('删除人员成功') : errMsg('删除人员失败')
+  getList(editId.value)
+}
+const delEdata = async () => {
+  const { status } = await deleteMember_api({ member_id: member_id.value })
+  status === 1 ? okMsg('删除人员成功') : errMsg('删除人员失败')
+  closeDate()
+  getList(editId.value)
+}
+const closeDate = () => {
+  sel_value.value = []
+  sel_two.value = []
+  popName.value = ''
+  popNum.value = ''
+  user_status.value = 0
+  showEdit.value = false
 }
 const close = () => {
   numberForm.msg = ''
@@ -372,29 +459,36 @@ const telRules = reactive({
 })
 const getGroup = async () => {
   const { body, status } = await getGroup_api()
-  if (status == 1) {
+  if (status) {
     group.value = body
+    const id = getUrlParam('id') || null
+    router.push(`/manage/company/personnelmanage?id=${id}`)
+    editId.value = id
+    id ? getList(Number(id), body[Object.keys(body)[0]]) : getList()
   }
 }
 getGroup()
 const getList = async (id?: number, name?: any) => {
-  department.value = name
+  name && (department.value = name)
   editId.value = id
-  console.log(editId.value)
-
   const { body, status } = await groupList_api({
     size: size.value,
     current: page.value,
     groupId: id,
   })
+  console.log(body)
 
-  if (status == 1) {
+  if (status) {
     tableData.value = body.records
     total.value = body.total
+    store.setKeepList([])
+    router.push(`/manage/company/personnelmanage?id=${id}`)
   }
   id ? (comAll.value = false) : (comAll.value = true)
 }
-getList()
+</script>
+<script lang="ts">
+export default { name: 'PersonnelManage' }
 </script>
 <style lang="scss" scoped>
 .manager_tab {
@@ -454,6 +548,17 @@ getList()
       margin-top: 40px;
       width: 280px;
       margin-bottom: 40px;
+      .active {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        width: 100%;
+        height: 32px;
+        margin-bottom: 0;
+        cursor: pointer;
+        background-color: #e8edfd;
+      }
       .pople_box {
         display: flex;
         justify-content: space-between;
@@ -577,8 +682,8 @@ getList()
         }
       }
     }
-    :deep(.el-link) {
-      margin-left: 60px;
+    :deep(.el-button) {
+      width: 110px;
     }
   }
   :deep(.add_dialog) {
@@ -688,16 +793,16 @@ getList()
         margin-right: 16px;
       }
     }
-    .sel {
+    .sel_two {
       margin: 20px 0;
 
-      span:nth-child(1) {
+      .grouping {
         color: #333333;
         margin-right: 16px;
       }
       .el-input {
         width: 278px;
-        height: 40px;
+        min-height: 40px;
       }
     }
   }

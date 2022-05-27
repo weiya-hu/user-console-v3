@@ -1,5 +1,4 @@
 import { get, post } from '@/utils/request'
-import { LargeNumberLike } from 'crypto'
 /**
  * @name 获取企业分组列表
  */
@@ -79,4 +78,10 @@ export const roleList_api = (data: {
   size: number
 }): Promise<IRes> => {
   return get('user', '/web/company/user/two.page', data)
+}
+/**
+ * @name 获取角色列表
+ */
+export const getRole_api = (): Promise<IRes> => {
+  return get('user', '/web/company/role.list')
 }

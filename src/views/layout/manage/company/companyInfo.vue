@@ -12,8 +12,7 @@
           <div class="card_cont">
             <div>
               <el-descriptions :column="2" size="large" border>
-                <el-descriptions-item label-align="right" label="企业logo">
-                  <!-- <span class="item_avater">企业logo</span> -->
+                <!-- <el-descriptions-item label-align="right" label="企业logo">
                   <div v-loading="upLoading" class="user_avater">
                     <el-image
                       style="width: 220px; height: 110px"
@@ -23,8 +22,8 @@
                 ></el-descriptions-item>
                 <el-descriptions-item
                   ><el-link type="primary" @click="editLogo">修改</el-link></el-descriptions-item
-                >
-                <div v-if="showCom">
+                > -->
+                <!-- <div v-if="showCom">
                   <el-descriptions-item label="企业名称" label-align="right"
                     >重庆康洲数智有限公司</el-descriptions-item
                   >
@@ -43,28 +42,38 @@
                       >保存</el-button
                     ></el-descriptions-item
                   >
+                </div> -->
+                <div v-if="basic.status === 3">
+                  <el-descriptions-item label="认证企业" label-align="right">{{
+                    basic.name
+                  }}</el-descriptions-item>
+                  <el-descriptions-item
+                    ><el-link type="primary">重新认证</el-link></el-descriptions-item
+                  >
+                </div>
+                <div v-else>
+                  <el-descriptions-item label="认证企业" label-align="right"
+                    ><span class="certified">未认证</span
+                    ><el-icon color="#FF4736 "><Warning /></el-icon
+                  ></el-descriptions-item>
+                  <el-descriptions-item
+                    ><el-link type="primary">立即认证</el-link></el-descriptions-item
+                  >
                 </div>
 
-                <el-descriptions-item label="认证企业" label-align="right"
-                  ><span class="certified">未认证</span
-                  ><el-icon color="#FF4736 "><Warning /></el-icon
-                ></el-descriptions-item>
-                <el-descriptions-item
-                  ><el-link type="primary">立即认证</el-link></el-descriptions-item
-                >
-                <el-descriptions-item label="企业编码" label-align="right"
-                  >561245</el-descriptions-item
-                >
+                <el-descriptions-item label="企业编码" label-align="right">{{
+                  basic.invite_code
+                }}</el-descriptions-item>
                 <el-descriptions-item><el-link type="primary">复制</el-link></el-descriptions-item>
 
-                <el-descriptions-item label="企业管理员" label-align="right"
-                  >康洲</el-descriptions-item
-                >
+                <el-descriptions-item label="企业管理员" label-align="right">{{
+                  basic.admin
+                }}</el-descriptions-item>
                 <el-descriptions-item
-                  ><el-link type="primary">变更管理员</el-link></el-descriptions-item
+                  ><el-link type="primary" disabled>变更管理员</el-link></el-descriptions-item
                 >
                 <el-descriptions-item label="企业人数" label-align="right"
-                  >1
+                  >{{ basic.size }}
                   <span class="certified">/人</span>
                   <img :src="icon_company" alt="" />
                 </el-descriptions-item>
@@ -78,16 +87,52 @@
         <div class="conten_item conten_item2 kz_card">
           <div class="flex">
             <div class="card_title">联系信息</div>
-            <el-button v-if="!showContent" type="primary">保存</el-button>
+            <el-button v-if="sub" class="bdc_btn" @click="sub = false">修改</el-button>
+            <el-button v-else type="primary">保存</el-button>
           </div>
+          <div class="scard_two" v-if="sub">
+            <div>
+              <el-descriptions :column="1" size="large" border>
+                <el-descriptions-item label-align="right" label="联系人"
+                  >{{ contact.legal_person }}
+                </el-descriptions-item>
+                <el-descriptions-item label="联系人电话" label-align="right">{{
+                  contact.contact
+                }}</el-descriptions-item>
 
-          <div v-if="showContent" class="content_ord">
+                <el-descriptions-item label="联系人邮箱" label-align="right">{{
+                  contact.email
+                }}</el-descriptions-item>
+
+                <el-descriptions-item label="企业座机" label-align="right">{{
+                  contact.tel
+                }}</el-descriptions-item>
+
+                <el-descriptions-item v-if="contact.province" label="所在区域" label-align="right">
+                  {{
+                    getHashStr(
+                      strToArr(contact.province, contact.city, contact.district),
+                      addressHash
+                    )
+                  }}</el-descriptions-item
+                >
+
+                <el-descriptions-item label="详细地址" label-align="right"
+                  >{{ contact.address }}
+                </el-descriptions-item>
+                <el-descriptions-item label="官网地址" label-align="right"
+                  ><span class="urlAdr">{{ contact.url }}</span>
+                </el-descriptions-item>
+              </el-descriptions>
+            </div>
+          </div>
+          <!-- <div class="content_ord">
             <img :src="icon_order" alt="" />
             <div>未添加联系信息</div>
             <div>添加联系信息，为您提供1对1的客户服务</div>
             <el-button type="primary" @click="showContent = false">立即添加</el-button>
-          </div>
-          <div v-else class="content_two">
+          </div> -->
+          <div class="content_two" v-if="!sub">
             <el-form :model="formInline" label-width="150px">
               <el-form-item label="联系人">
                 <el-input v-model="formInline.user" placeholder="请输入" />
@@ -112,50 +157,26 @@
               </el-form-item>
             </el-form>
           </div>
-          <div class="scard_two">
-            <div>
-              <el-descriptions :column="1" size="large" border>
-                <el-descriptions-item label-align="right" label="联系人"
-                  >康洲
-                </el-descriptions-item>
-                <el-descriptions-item label="联系人电话" label-align="right"
-                  >重庆康洲数智有限公司</el-descriptions-item
-                >
-
-                <el-descriptions-item label="联系人邮箱" label-align="right"
-                  >1234659874</el-descriptions-item
-                >
-
-                <el-descriptions-item label="企业座机" label-align="right"
-                  >561245</el-descriptions-item
-                >
-
-                <el-descriptions-item label="所在区域" label-align="right"
-                  >重庆市南岸区</el-descriptions-item
-                >
-
-                <el-descriptions-item label="详细地址" label-align="right"
-                  >11111
-                </el-descriptions-item>
-                <el-descriptions-item label="官网地址" label-align="right"
-                  ><span class="urlAdr">11111</span>
-                </el-descriptions-item>
-              </el-descriptions>
-            </div>
-          </div>
         </div>
         <div class="conten_item conten_item2 kz_card conten_item3">
           <div class="flex">
             <div class="card_title">认证消息</div>
-            <el-button class="bdc_btn" @click="showContent = false">重新认证</el-button>
+            <!-- <el-button
+              v-show="audit.status === 3"
+              class="bdc_btn"
+              @click="$router.push(`authentication/?id=${basic.id}`)"
+              >重新认证</el-button
+            > -->
           </div>
-          <div class="content_ord">
+          <!-- <div v-if="audit.status === 1" class="content_ord">
             <img :src="icon_ordertwo" alt="" />
             <div>企业未认证</div>
             <div>认证企业后才能使用完整的团队功能</div>
-            <el-button type="primary" @click="$router.push('authentication')">立即认证</el-button>
-          </div>
-          <div class="content_last">
+            <el-button type="primary" @click="$router.push(`authentication/?id=${basic.id}`)"
+              >立即认证</el-button
+            >
+          </div> -->
+          <!-- <div v-else-if="audit.status === 3" class="content_last">
             <div class="items">
               <div class="item_title">企业证照</div>
               <img src="" alt="" />
@@ -173,18 +194,39 @@
               <div class="item_content">2018-4-20到2020-9-30</div>
               <img :src="icon_recertify" alt="" />
             </div>
+          </div> -->
+          <div class="scard_two">
+            <div>
+              <el-descriptions :column="1" size="large" border>
+                <el-descriptions-item label-align="right" label="企业证照"
+                  ><img :src="audit.license" alt="" class="img" />
+                </el-descriptions-item>
+                <el-descriptions-item label="统一社会信用代码" label-align="right">{{
+                  audit.code
+                }}</el-descriptions-item>
+
+                <el-descriptions-item label="行业分类" label-align="right">{{
+                  getHashStr(audit.industry_id, typeHash)
+                }}</el-descriptions-item>
+
+                <el-descriptions-item label="证件有效期" label-align="right"
+                  >{{ formatDate(new Date(Number(audit.left_time)), 'yyyy-MM-dd') }}
+                  <img :src="icon_recertify" alt=""
+                /></el-descriptions-item>
+              </el-descriptions>
+            </div>
           </div>
-          <div class="content_ord last_img">
+          <!-- <div v-else-if="audit.status === 2" class="content_ord last_img">
             <img :src="icon_submit" alt="" />
             <div>企业认证已提交，请等待后台审核</div>
             <div>审核结果会通过系统消息的方式进行通知，请注意查看</div>
           </div>
-          <div class="content_ord last_img">
+          <div v-else-if="audit.status === 4" class="content_ord last_img">
             <img :src="icon_fail" alt="" />
             <div>很遗憾，你的企业认证未通过！</div>
             <div>请检查输入的信息是否有误，更正后再试</div>
             <el-button type="primary" @click="$router.push('authentication')">重新认证</el-button>
-          </div>
+          </div> -->
         </div>
       </el-scrollbar>
     </div>
@@ -202,7 +244,7 @@
 <script setup lang="ts">
 import KzStepTab from '@/components/KzStepTab.vue'
 import KzUpAvatar from '@/components/KzUpAvatar.vue'
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, computed } from 'vue'
 import { Warning } from '@element-plus/icons-vue'
 import icon_logo from '@/assets/images/df_com_logo.png'
 import icon_company from '@/assets/images/company_num.png'
@@ -212,10 +254,22 @@ import icon_fail from '@/assets/images/fail_company.png'
 import icon_submit from '@/assets/images/submit_company.png'
 import icon_ordertwo from '@/assets/images/no_two.png'
 import KzCascader from '@/components/KzCascader.vue'
+import { formatDate } from '@/utils/date'
+import { getHashStr, strToArr } from '@/utils/index'
+import { mainStore } from '@/store/index'
+import { getCompany_api } from '@/api/manage/company/companyInfo'
+import { useRoute, useRouter } from 'vue-router'
+const router = useRouter()
+const route = useRoute()
+const store = mainStore()
+const addressHash = computed(() => store.state.addressHash)
+const typeHash = computed(() => store.state.typeHash)
+const id = route.query.id
 const tabs = ref([{ title: '基本信息' }, { title: '联系信息' }, { title: '认证信息' }])
 const active = ref(0)
 // 修改Logo
 const imgUrl = ref('')
+const sub = ref(true)
 const editLogoShow = ref(false)
 const upLoading = ref(false)
 const KzUpLogoRef = ref()
@@ -274,6 +328,22 @@ const formInline = reactive({
   addr: [],
 })
 const company_name = ref('')
+const audit = ref<any>({})
+const basic = ref<any>({})
+const contact = ref<any>({})
+const getInfo = async () => {
+  const { body, status } = await getCompany_api({ id: Number(id) })
+  console.log(id)
+
+  console.log(body)
+
+  if (status === 1) {
+    basic.value = body.basic
+    contact.value = body.contact
+    audit.value = body.audit
+  }
+}
+getInfo()
 </script>
 
 <style lang="scss" scoped>
@@ -299,7 +369,7 @@ const company_name = ref('')
       }
       :deep(.el-descriptions__cell) {
         padding-bottom: 24px;
-        width: 200px;
+        width: 430px;
         padding-right: 32px;
       }
       :deep(.el-descriptions__content) {
@@ -316,8 +386,13 @@ const company_name = ref('')
           color: #2d68eb;
         }
         margin: 0 auto;
+        padding-bottom: 30px;
         width: 674px;
         margin-left: 215px;
+        .img {
+          width: 160px;
+          height: 120px;
+        }
       }
     }
     .conten_item1 {
