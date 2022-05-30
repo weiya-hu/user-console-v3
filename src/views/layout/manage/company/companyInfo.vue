@@ -90,7 +90,7 @@
             <el-button v-if="sub" class="bdc_btn" @click="sub = false">修改</el-button>
             <el-button v-else type="primary">保存</el-button>
           </div>
-          <div class="scard_two" v-if="sub">
+          <div v-if="sub" class="scard_two">
             <div>
               <el-descriptions :column="1" size="large" border>
                 <el-descriptions-item label-align="right" label="联系人"
@@ -132,7 +132,7 @@
             <div>添加联系信息，为您提供1对1的客户服务</div>
             <el-button type="primary" @click="showContent = false">立即添加</el-button>
           </div> -->
-          <div class="content_two" v-if="!sub">
+          <div v-if="!sub" class="content_two">
             <el-form :model="formInline" label-width="150px">
               <el-form-item label="联系人">
                 <el-input v-model="formInline.user" placeholder="请输入" />

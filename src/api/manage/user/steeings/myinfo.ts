@@ -115,12 +115,12 @@ export const editMm_api = (data: { confirm_pass: string; new_pass: string }): Pr
 /**
  * @name 获取已加入企业
  */
- export const companyAdd_api = (): Promise<IRes> => {
+export const companyAdd_api = (): Promise<IRes> => {
   return get('user ', '/web/company.list')
 }
 /**
  * @name 获取待审核企业
  */
- export const companyExam_api = (): Promise<IRes> => {
+export const companyExam_api = (): Promise<IRes> => {
   return get('user ', '/web/company/audit.list')
 }

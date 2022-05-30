@@ -330,7 +330,7 @@ export function getKzComStatus(key: number) {
 /**
  * 全局状态
  */
- export const KZ_STATUS: Record<number, { text: string; className: string }> = {
+export const KZ_STATUS: Record<number, { text: string; className: string }> = {
   0: { text: '---', className: '' },
   1: { text: '待处理', className: 'sdot_y' },
   2: { text: '已受理', className: 'sdot_g' },

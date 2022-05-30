@@ -38,7 +38,11 @@
                 <div class="item">
                   <div class="item_title">出生日期</div>
                   <div class="item_content">
-                    {{ formatDate(new Date(Number(userInfoDate.birth)), 'yyyy-MM-dd') }}
+                    {{
+                      userInfoDate.birth === ''
+                        ? '1970-01-01'
+                        : formatDate(new Date(Number(userInfoDate.birth)), 'yyyy-MM-dd')
+                    }}
                   </div>
                   <el-link type="primary" @click="goEditName">修改</el-link>
                 </div>
@@ -107,8 +111,13 @@
                     ><Warning
                   /></el-icon>
                 </div>
-                <el-link type="primary" @click="$router.push('/manage/user/settings/realname')" v-if="!userInfoDate.real_name">
-                 实名认证</el-link>
+                <el-link
+                  v-if="!userInfoDate.real_name"
+                  type="primary"
+                  @click="$router.push('/manage/user/settings/realname')"
+                >
+                  实名认证</el-link
+                >
               </div>
               <div class="item">
                 <div class="item_title">
@@ -311,7 +320,7 @@
                     placeholder="请输入验证码"
                     class="yzm_ipt"
                   ></el-input>
-                  <el-button class="bdc_btn" :disabled="smsTime > 0" @click="getOldSms">{{
+                  <el-button class="bdc_btn code_tips" :disabled="smsTime > 0" @click="getOldSms">{{
                     smsTime === 0 ? '获取验证码' : smsTime + 'S后重新获取'
                   }}</el-button>
                 </div>
@@ -350,7 +359,7 @@
                     placeholder="请输入验证码"
                     class="yzm_ipt"
                   ></el-input>
-                  <el-button class="bdc_btn" :disabled="smsTime > 0" @click="getNewSms">{{
+                  <el-button class="bdc_btn code_tips" :disabled="smsTime > 0" @click="getNewSms">{{
                     smsTime === 0 ? '获取验证码' : smsTime + 'S后重新获取'
                   }}</el-button>
                 </div>
@@ -397,7 +406,7 @@
                     placeholder="请输入验证码"
                     class="yzm_ipt"
                   ></el-input>
-                  <el-button class="bdc_btn" :disabled="smsTime > 0" @click="getOldSms">{{
+                  <el-button class="bdc_btn code_tips" :disabled="smsTime > 0" @click="getOldSms">{{
                     smsTime === 0 ? '获取验证码' : smsTime + 'S后重新获取'
                   }}</el-button>
                 </div>
@@ -433,7 +442,7 @@
                     placeholder="请输入验证码"
                     class="yzm_ipt"
                   ></el-input>
-                  <el-button class="bdc_btn" :disabled="smsTime > 0" @click="getMmSms">{{
+                  <el-button class="bdc_btn code_tips" :disabled="smsTime > 0" @click="getMmSms">{{
                     smsTime === 0 ? '获取验证码' : smsTime + 'S后重新获取'
                   }}</el-button>
                 </div>
@@ -502,7 +511,6 @@ import KzDialog from '@/components/KzDialog.vue'
 import KzIcon from '@/components/KzIcon.vue'
 import { formatDate } from '@/utils/date'
 import { ref, computed, onMounted, reactive } from 'vue'
-import { Warning } from '@element-plus/icons-vue'
 import {
   userMember_api,
   userInfo_api,
@@ -532,11 +540,10 @@ import { errMsg, okMsg } from '@/utils/index'
 import { getHash, getHashStr, strToArr } from '@/utils/index'
 import { mobileCheck, passReg, emailCheck } from '@/utils/index'
 import areaNum from '@/utils/areaNum'
-import { CircleCloseFilled, Calendar } from '@element-plus/icons-vue'
+import { CircleCloseFilled, Calendar, Warning } from '@element-plus/icons-vue'
 import KzCascader from '@/components/KzCascader.vue'
 import { useRouter } from 'vue-router'
 import type { FormInstance } from 'element-plus'
-import { log } from 'console'
 
 const router = useRouter()
 const store = mainStore()
@@ -1162,6 +1169,9 @@ const closeEdit = () => {
       font-size: 14px;
       font-weight: 400;
       color: #303133;
+    }
+    .code_tips {
+      margin-left: 8px;
     }
   }
 }

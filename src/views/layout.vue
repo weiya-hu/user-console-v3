@@ -229,7 +229,7 @@ const imgsList = ref<string[]>([])
 const showDemo = () => {
   imgsList.value = [
     'https://res.kzszh.com/dev/web/index/image/f21b635833aaf9ef4f4179e415988102.png',
-    'https://res.kzszh.com/dev/web/index/image/736612fc47abb31fbab2bfdf3d67ba1a.png'
+    'https://res.kzszh.com/dev/web/index/image/736612fc47abb31fbab2bfdf3d67ba1a.png',
   ]
   upDemoShow.value = true
 }

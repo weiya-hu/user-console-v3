@@ -302,13 +302,13 @@ img {
     background-color: $color999;
   }
   &.sdot_c0 {
-    background-color: #C0C4CC;
+    background-color: #c0c4cc;
   }
   &.sdot_fe {
-    background-color: #FE9B25;
+    background-color: #fe9b25;
   }
   &.sdot_ff {
-    background-color: #FF4736;
+    background-color: #ff4736;
   }
 }
 

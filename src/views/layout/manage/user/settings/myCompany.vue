@@ -2,7 +2,9 @@
   <div class="kz_card my_company_page">
     <div class="card_title fsc">
       <div>我的企业</div>
-      <el-button type="primary" :icon="Plus" @click="$router.push('/manage/company/authentication')">添加企业</el-button>
+      <el-button type="primary" :icon="Plus" @click="$router.push('/manage/company/authentication')"
+        >添加企业</el-button
+      >
     </div>
 
     <div class="card_content">
@@ -103,21 +105,21 @@
             <template #default="{ row }">
               <div class="fcs">
                 <el-link
-                  type="primary"
                   v-if="row.status == 1"
+                  type="primary"
                   @click="$router.push('/manage/company/authentication?id=' + row.id)"
                   >编辑</el-link
                 >
                 <el-link
-                  type="primary"
                   v-if="row.status == 2"
+                  type="primary"
                   @click="$router.push('/manage/company/authentication?id=' + row.id)"
                   >查看</el-link
                 >
 
                 <el-link
-                  type="primary"
                   v-if="row.status == 4"
+                  type="primary"
                   @click="$router.push('/manage/company/authentication?id=' + row.id)"
                   >重新提交</el-link
                 >
@@ -129,8 +131,8 @@
           </template>
         </el-table>
       </div>
-      <el-dialog v-model="addCompanyShow" title="新建企业"  width="380px">
-        <el-input class="pb20" v-model="companyName" placeholder="请输企业名称"/>
+      <el-dialog v-model="addCompanyShow" title="新建企业" width="380px">
+        <el-input v-model="companyName" class="pb20" placeholder="请输企业名称" />
         <div class="fcs fjend pb20">
           <el-button @click="addCompanyShow = false">取消</el-button>
           <el-button type="primary" @click="onAddCompanySubmit">保存</el-button>
@@ -146,6 +148,7 @@ import { Plus } from '@element-plus/icons-vue'
 import { companyAdd_api, companyExam_api } from '@/api/manage/user/steeings/myinfo'
 import { getKzComStatus, getHash, getHashStr, strToArr } from '@/utils/index'
 import { errMsg } from '@/utils'
+import KzEmpty from '@/components/KzEmpty.vue'
 import { mainStore } from '@/store/index'
 import { useRouter } from 'vue-router'
 
@@ -172,10 +175,6 @@ cExamList()
 
 const addCompanyShow = ref(false)
 const companyName = ref<any>('')
-
-const addCompanyRules = ref({
-  name: [{ required: true, message: '请输入企业名称！', trigger: 'blur' }],
-})
 const onAddCompanySubmit = () => {
   router.replace('/manage/company/authentication?name=' + companyName.value)
 }
