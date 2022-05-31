@@ -360,4 +360,27 @@ img {
     border-bottom: none;
   }
 }
+.force_login {
+  .el-button:hover{
+    color: #304f97;
+    border-color: #304f97;
+    background-color:rgba($color: #304f97, $alpha:0.05) !important;
+  }
+  .el-button--primary{
+    background: #304f97 !important;
+    &:hover{
+      background: rgba($color: #304f97, $alpha:0.85) !important;
+      color: #ffffff;
+    }
+  }
+}
+.add_person_dialogo_hwy{
+  width: 703px !important;
+  .el-dialog__header{
+    border-bottom:none
+  }
+  .el-dialog__body{
+    padding: 0 24px 24px;
+  }
+}
 </style>

@@ -97,7 +97,9 @@
 import { ref } from 'vue'
 import LoginInput from '@/components/KzLoginInput.vue'
 import { mobileCheck, passCheck, okMsg, errMsg, getUrlParam } from '@/utils/index'
-import { doLogin, wechatQrinfoGet_api } from '@/api/login'
+import { ElMessageBox } from 'element-plus'
+import { formatDate } from '@/utils/date'
+import { doLogin, wechatQrinfoGet_api, loginForceDo_api } from '@/api/login'
 import WxLogin from '@/views/login/wxLogin.vue'
 import { mainStore } from '@/store'
 import { useRouter } from 'vue-router'
@@ -162,7 +164,7 @@ const onSubmit = (event: any) => {
         type: topNavActive.value + 1,
         acode: '+' + formValue.value.acode,
       }
-      const { status, body, message } = await doLogin(data)
+      const { status, body, message, errno } = await doLogin(data)
       status &&
         (() => {
           okMsg('登录成功')
@@ -175,7 +177,25 @@ const onSubmit = (event: any) => {
         })()
       !status &&
         (() => {
-          ;(body >= 3 || message === 'captcha: 不能为空') && (chaptchaShow.value = true)
+          if(errno === 10200){
+            ElMessageBox.confirm(`您的账户已于${formatDate(new Date(body.time),'yyyy年MM月dd日 hh:mm:ss')}，在IP:${body.ip}登录，如非本人操作请尽快修改密码！`, '登录提醒', {
+              confirmButtonText: '强制登录',
+              cancelButtonText: '取消',
+              customClass:'force_login'
+            }).then(async()=>{
+              const forceRes = await loginForceDo_api()
+              forceRes.status && (()=>{
+                setTimeout(() => {
+                  window.location.href = loginToUrl
+                    ? decodeURIComponent(loginToUrl)
+                    : '//' + store.state.yxtUrl.offical
+                }, 500)
+              })()
+            })
+          }
+          if(body >= 3 || message === 'captcha: 不能为空'){
+            chaptchaShow.value = true
+          }
         })()
     }
   })

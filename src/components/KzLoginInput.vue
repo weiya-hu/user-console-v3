@@ -91,6 +91,10 @@
   </div>
 </template>
 <script setup lang="ts">
+/**
+ * 登录注册页面的输入框封装
+ * @author hwy
+ */
 import { ref, computed } from 'vue'
 import areaNum from '@/utils/areaNum'
 import { telReg, okMsg, errMsg } from '@/utils/index'
@@ -104,7 +108,7 @@ const props = withDefaults(
     label?: string
     modelValue: any
     type?: string //发送验证码的类型，'register','reset','login'
-  }>(),
+  }>(), 
   {}
 )
 const emit = defineEmits(['update:modelValue'])

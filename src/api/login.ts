@@ -139,3 +139,10 @@ export const doWechatBind_api = (data: {
 export const loginOut_api = (): Promise<any> => {
   return get('user', '/login/out.do', {}, true)
 }
+
+/**
+ * @name 强制登录
+ */
+ export const loginForceDo_api = (): Promise<any> => {
+  return post('user', '/login/login/force.do', {}, true)
+}
