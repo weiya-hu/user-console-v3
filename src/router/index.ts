@@ -32,6 +32,12 @@ export const routes: RouteRecordRaw[] = [
         meta: { title: '注册', lv: '-1' },
       },
       {
+        path: '/invite',
+        name: 'Invite',
+        component: () => import('@/views/login/invite.vue'),
+        meta: { title: '邀请', lv: '-1' },
+      },
+      {
         path: '/forget',
         name: 'Forget',
         component: () => import('@/views/login/forget.vue'),

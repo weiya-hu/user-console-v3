@@ -21,5 +21,5 @@ export const reviseContact_api = (data: {
   url?: string
   id: number
 }): Promise<IRes> => {
-  return get('user ', '/web/company/contact.up', data)
+  return post('user ', '/web/company/contact.up', data)
 }

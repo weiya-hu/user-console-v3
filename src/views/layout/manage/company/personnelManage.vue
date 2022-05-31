@@ -12,7 +12,7 @@
         ><el-icon color="#2150ec"><Plus /></el-icon>添加分组</el-button
       >
       <div class="tree_sector">
-        <div class="pople_box" @click="getList()">
+        <div :class="active ? 'pople_box box_active' : 'pople_box'" @click="getList()">
           <div class="left_line"></div>
           <div>全部人员</div>
         </div>
@@ -20,7 +20,7 @@
         <div
           v-for="(item, index) in group"
           :key="index"
-          class="pople_box"
+          :class="box_active == index ? 'pople_box box_active' : 'pople_box'"
           @click="getList(index, item)"
         >
           <div class="left_line"></div>
@@ -98,7 +98,7 @@
 
         <div>
           <el-button v-show="!comAll" type="info" plain @click="deleteData">删除分组</el-button>
-          <el-button type="primary" @click="show = true"
+          <el-button type="primary" @click="openAdd"
             ><KzIcon href="#icon-tianjia" size="14px" />添加人员</el-button
           >
         </div>
@@ -153,29 +153,31 @@
           </div>
           <div v-if="tab == 1" class="mid_dig">
             <div class="fleximg mare type_face">邀请员工微信扫描下方二维码注册</div>
-            <img src="" alt="" class="fleximg" />
+            <div class="img">
+              <qrcode-vue id="qrImg" :value="qrUrl" :size="160" level="H" />
+            </div>
 
-            <span class="fleximg fresh_code">
+            <span class="fleximg fresh_code" @click="getCode">
               <KzIcon href="#icon-shuaxin" size="14px" />刷新二维码</span
             >
             <div class="fcc">
-              <el-button type="primary" @click="close">下载二维码</el-button>
+              <el-button type="primary" @click="downloadQr">下载二维码</el-button>
             </div>
           </div>
           <div v-else-if="tab == 2" class="mid_dig">
             <div class="fleximg type_face">点击复制以下链接，发送给员工</div>
             <div class="link_code">
               <el-descriptions :column="1">
-                <el-descriptions-item label="企业编码" class-name="fir"
+                <!-- <el-descriptions-item label="企业编码" class-name="fir"
                   ><span>kooriookami</span></el-descriptions-item
-                >
-                <el-descriptions-item label="邀请链接" class-name="two"
-                  >18100000000</el-descriptions-item
-                >
+                > -->
+                <el-descriptions-item label="邀请链接" class-name="two">{{
+                  invite
+                }}</el-descriptions-item>
               </el-descriptions>
             </div>
             <div class="fcc">
-              <el-button type="primary" @click="close">复制链接</el-button>
+              <el-button type="primary" @click="copyCode(inviteCode)">复制链接</el-button>
             </div>
           </div>
           <div v-else class="mid_dig">
@@ -214,10 +216,18 @@
           title="编辑人员"
           @close="closeDate"
         >
-          <div class="fir_name">
+          <!-- <div class="fir_name">
             <div>{{ popName }}</div>
             <div>{{ popNum }}</div>
             <img :src="icon_del" alt="" @click="delEdata" />
+          </div> -->
+          <div class="sel_two">
+            <span class="grouping">名字</span>
+            <el-input v-model="popName"></el-input>
+          </div>
+          <div class="sel_two">
+            <span class="grouping">电话</span>
+            <el-input v-model="popNum" disabled></el-input>
           </div>
           <div class="sel_two">
             <span class="grouping">分组</span>
@@ -258,9 +268,11 @@
 <script setup lang="ts">
 import KzPage from '@/components/KzPage.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import icon_del from '@/assets/images/del_pople.png'
 import areaNum from '@/utils/areaNum'
+import QrcodeVue from 'qrcode.vue'
+import useClipboard from 'vue-clipboard3'
 import { Plus } from '@element-plus/icons-vue'
 import { errMsg, okMsg, getUrlParam } from '@/utils/index'
 import { MoreFilled } from '@element-plus/icons-vue'
@@ -277,6 +289,7 @@ import {
   getUser_api,
   reviseUser_api,
   deleteMember_api,
+  getSign_api,
 } from '@/api/manage/company/personnelManage'
 import { mainStore } from '@/store/index'
 import { useRoute, useRouter } from 'vue-router'
@@ -302,7 +315,8 @@ const showEdit = ref(false) //编辑员工是否显示
 const user_status = ref(0) //编辑员工状态
 const comAll = ref(true) //是否显示操作框
 const editId = ref() //表格名字编辑
-const active = ref('')
+const box_active = ref()
+const active = ref(true)
 const numPoples = ref()
 const edit_input = ref('')
 const group_input = ref('')
@@ -311,6 +325,62 @@ const options = ref()
 const popNum = ref('')
 const popName = ref('')
 const acode = ref('86')
+const codeCid = ref()
+const left_time = ref()
+const sign = ref('')
+const uid = ref()
+//下载二维码
+const codeUrl = computed(() => store.state.yxtUrl.mobile)
+const qrUrl = ref('')
+const goCode = () => {
+  qrUrl.value =
+    'https://' +
+    codeUrl.value +
+    `/app/login?uid=${uid.value}&sign=${sign.value}&left_time=${left_time.value}&cid=${codeCid.value}`
+}
+const getCode = async () => {
+  const { body } = await getSign_api()
+  codeCid.value = body.cid
+  left_time.value = body.left_time
+  sign.value = body.sign
+  uid.value = body.uid
+  console.log(uid.value)
+  goCode()
+  fz()
+}
+const openAdd = async () => {
+  show.value = true
+  getCode()
+}
+const downloadQr = () => {
+  const myCanvas = document.getElementById('qrImg') as HTMLCanvasElement
+  const a = document.createElement('a')
+  a.href = myCanvas.toDataURL('image/png')
+  a.download = '邀请二维码'
+  a.click()
+  okMsg('下载完成')
+  close()
+}
+const invite = ref('')
+const inviteCode = ref('')
+//复制链接
+const fz = () => {
+  invite.value = window.location.origin + `/invite`
+  inviteCode.value =
+    window.location.origin +
+    `/invite?uid=${uid.value}&sign=${sign.value}&left_time=${left_time.value}&cid=${codeCid.value}`
+  console.log(invite.value)
+}
+const { toClipboard } = useClipboard()
+const copyCode = async (val: any) => {
+  try {
+    await toClipboard(val)
+    okMsg('复制成功')
+  } catch (e) {
+    errMsg('该浏览器不支持自动复制')
+  }
+  close()
+}
 const closeAdd = () => {
   group_input.value = ''
   dialogVisible.value = false
@@ -411,6 +481,7 @@ const submitEdit = async () => {
     role_ids: sel_two.value,
     user_status: user_status.value,
     member_id: member_id.value,
+    name: popName.value,
   })
   if (status == 1) {
     closeDate()
@@ -476,7 +547,7 @@ const getList = async (id?: number, name?: any) => {
     current: page.value,
     groupId: id,
   })
-  console.log(body)
+  console.log(id)
 
   if (status) {
     tableData.value = body.records
@@ -485,6 +556,8 @@ const getList = async (id?: number, name?: any) => {
     router.push(`/manage/company/personnelmanage?id=${id}`)
   }
   id ? (comAll.value = false) : (comAll.value = true)
+  id ? (active.value = false) : (active.value = true)
+  box_active.value = id
 }
 </script>
 <script lang="ts">
@@ -592,7 +665,15 @@ export default { name: 'PersonnelManage' }
           color: #303133;
         }
       }
-
+      .box_active {
+        background-color: #e8edfd;
+        .left_line {
+          background: #2d68eb;
+        }
+        div:nth-child(2) {
+          color: #2150ec;
+        }
+      }
       :deep(.el-icon) {
         transform: rotate(90deg);
         width: 14px;
@@ -698,20 +779,21 @@ export default { name: 'PersonnelManage' }
         color: #303133;
         font-family: PingFangSC-Medium, PingFang SC;
       }
-      img {
+      .img {
         width: 160px;
         height: 160px;
         margin: 0 auto;
       }
       .mare {
-        margin-bottom: 8px;
+        margin-bottom: 10px;
       }
       .fresh_code {
         cursor: pointer;
 
         color: #2150ec;
-        margin-top: 8px;
+        margin-top: 10px;
         font-size: 12px;
+
         padding-bottom: 24px;
       }
       .mes {
@@ -746,7 +828,7 @@ export default { name: 'PersonnelManage' }
         margin-top: 40px;
         margin-bottom: 72px;
         .el-descriptions__cell {
-          width: 295px;
+          // width: 295px;
           display: flex;
 
           align-items: center;

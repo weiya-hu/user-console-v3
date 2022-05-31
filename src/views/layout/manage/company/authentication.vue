@@ -26,6 +26,7 @@
       <el-form-item label="资质照片" prop="imgName">
         <div class="imgs">
           <kzImgUpload
+            v-if="upShow"
             ref="upload"
             :max="2"
             :img-list="imgList"
@@ -89,29 +90,34 @@ import {
   codeCheck_api,
   getCompany_api,
 } from '@/api/manage/company/authentication'
+import { useRoute, useRouter } from 'vue-router'
 const ruleFormRef = ref() //表单
+const route = useRoute()
+const id = route.query.id
 const imgList = ref<string[]>([])
 const upShow = ref(false)
 const getS = async () => {
-  const { body, status } = await getCompany_api()
-  if (status == 1) {
-    ruleForm.name = body.name
-    ruleForm.industry_id = body.industry_id.split(',')
-    ruleForm.left_time = body.left_time
-    ruleForm.legal_person = body.legal_person
-    ruleForm.business_scope = body.business_scope
-    ruleForm.code = body.code
-    ruleForm.contact = body.contact
-    ruleForm.address = body.address
-    ruleForm.url = body.url
-    ruleForm.license = body.license
-    ruleForm.license.split(',').forEach((v: string) => {
-      imgList.value.push(v)
-    })
-    ruleForm.addr = [body.province, body.city, body.district]
-    ruleForm.imgName = body.license ? 'oldName' : ''
+  upShow.value = false
+  if (id) {
+    const { body, status } = await getCompany_api({ id: Number(id) })
+    if (status === 1) {
+      ruleForm.name = body.name
+      ruleForm.industry_id = body.industry_id.split(',')
+      ruleForm.left_time = body.left_time
+      ruleForm.legal_person = body.legal_person
+      ruleForm.business_scope = body.business_scope
+      ruleForm.code = body.code
+      ruleForm.contact = body.contact
+      ruleForm.address = body.address
+      ruleForm.url = body.url
+      ruleForm.license = body.license
+      ruleForm.license.split(',').forEach((v: string) => {
+        imgList.value.push(v)
+      })
+      ruleForm.addr = [body.province, body.city, body.district]
+      ruleForm.imgName = body.license ? 'oldName' : ''
+    }
   }
-
   upShow.value = true
 }
 getS()
@@ -204,6 +210,7 @@ const upAll = async (url: string[]) => {
     source: 3,
     industry_id: ruleForm.industry_id.join(','), //行业ID
     left_time: Number(ruleForm.left_time),
+    id: Number(id),
   }
   ruleForm.license = url.toString() //资质图片地址
   const res =
@@ -224,16 +231,30 @@ const delImg = () => {
 const aStatus = ref<1 | 2>(1) // 1 保存 2 提交
 const submitForm = async (val: 1 | 2) => {
   aStatus.value = val
-  if (aStatus.value == 1) {
-    ruleFormRef.value.clearValidate()
-    upload.value.submit()
-    console.log(123456)
+  const Data = {
+    city: ruleForm.addr[1] || 0,
+    province: ruleForm.addr[0] || 0,
+    district: ruleForm.addr[2],
+    source: 3,
+    industry_id: ruleForm.industry_id.join(','), //行业ID
+    left_time: Number(ruleForm.left_time),
+    id: Number(id),
+  }
+  if (ruleForm.license) {
+    if (aStatus.value === 1) {
+      ruleFormRef.value.clearValidate()
+      upload.value.submit()
+      console.log(123456)
+    } else {
+      ruleFormRef.value.validate((valid: boolean) => {
+        if (valid) {
+          upload.value.submit()
+        }
+      })
+    }
   } else {
-    ruleFormRef.value.validate((valid: boolean) => {
-      if (valid) {
-        upload.value.submit()
-      }
-    })
+    ruleFormRef.value.clearValidate()
+    const res = aStatus.value === 1 ? await examineSave_api({ ...ruleForm, ...Data }) : ''
   }
 }
 </script>

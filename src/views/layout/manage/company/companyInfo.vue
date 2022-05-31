@@ -48,7 +48,7 @@
                     basic.name
                   }}</el-descriptions-item>
                   <el-descriptions-item
-                    ><el-link type="primary">重新认证</el-link></el-descriptions-item
+                    ><el-link type="primary" disabled>重新认证</el-link></el-descriptions-item
                   >
                 </div>
                 <div v-else>
@@ -64,7 +64,11 @@
                 <el-descriptions-item label="企业编码" label-align="right">{{
                   basic.invite_code
                 }}</el-descriptions-item>
-                <el-descriptions-item><el-link type="primary">复制</el-link></el-descriptions-item>
+                <el-descriptions-item
+                  ><el-link type="primary" @click="copyCode(basic.invite_code)"
+                    >复制</el-link
+                  ></el-descriptions-item
+                >
 
                 <el-descriptions-item label="企业管理员" label-align="right">{{
                   basic.admin
@@ -88,7 +92,7 @@
           <div class="flex">
             <div class="card_title">联系信息</div>
             <el-button v-if="sub" class="bdc_btn" @click="sub = false">修改</el-button>
-            <el-button v-else type="primary">保存</el-button>
+            <el-button v-else type="primary" @click="goEdit">保存</el-button>
           </div>
           <div v-if="sub" class="scard_two">
             <div>
@@ -133,27 +137,27 @@
             <el-button type="primary" @click="showContent = false">立即添加</el-button>
           </div> -->
           <div v-if="!sub" class="content_two">
-            <el-form :model="formInline" label-width="150px">
+            <el-form :model="formInline" label-width="150px" :rules="telRules" ref="contactRule">
               <el-form-item label="联系人">
-                <el-input v-model="formInline.user" placeholder="请输入" />
+                <el-input v-model="formInline.legal_person" placeholder="请输入" />
               </el-form-item>
-              <el-form-item label="联系人电话">
-                <el-input v-model="formInline.user" placeholder="请输入" />
+              <el-form-item label="联系人电话" prop="contact">
+                <el-input v-model="formInline.contact" placeholder="请输入" autocomplete="off" />
               </el-form-item>
               <el-form-item label="联系人邮箱">
-                <el-input v-model="formInline.user" placeholder="请输入" />
+                <el-input v-model="formInline.email" placeholder="请输入" />
               </el-form-item>
               <el-form-item label="企业座机">
-                <el-input v-model="formInline.user" placeholder="请输入" />
+                <el-input v-model="formInline.tel" placeholder="请输入" />
               </el-form-item>
               <el-form-item label="所在地区">
                 <KzCascader v-model="formInline.addr" type="address" placeholder="请选择" />
               </el-form-item>
               <el-form-item label="详细地址">
-                <el-input v-model="formInline.user" placeholder="请输入" />
+                <el-input v-model="formInline.address" placeholder="请输入" />
               </el-form-item>
               <el-form-item label="官网地址">
-                <el-input v-model="formInline.user" placeholder="请输入" />
+                <el-input v-model="formInline.url" placeholder="请输入" />
               </el-form-item>
             </el-form>
           </div>
@@ -253,11 +257,12 @@ import icon_recertify from '@/assets/images/recertify.png'
 import icon_fail from '@/assets/images/fail_company.png'
 import icon_submit from '@/assets/images/submit_company.png'
 import icon_ordertwo from '@/assets/images/no_two.png'
+import useClipboard from 'vue-clipboard3'
 import KzCascader from '@/components/KzCascader.vue'
 import { formatDate } from '@/utils/date'
-import { getHashStr, strToArr } from '@/utils/index'
+import { getHashStr, strToArr, errMsg, okMsg, telReg } from '@/utils/index'
 import { mainStore } from '@/store/index'
-import { getCompany_api } from '@/api/manage/company/companyInfo'
+import { getCompany_api, reviseContact_api } from '@/api/manage/company/companyInfo'
 import { useRoute, useRouter } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
@@ -270,6 +275,7 @@ const active = ref(0)
 // 修改Logo
 const imgUrl = ref('')
 const sub = ref(true)
+const contactRule = ref()
 const editLogoShow = ref(false)
 const upLoading = ref(false)
 const KzUpLogoRef = ref()
@@ -323,23 +329,73 @@ const scroll = ({ scrollTop }: { scrollTop: number }) => {
 const showCom = ref(true) //修改公司名字
 const showContent = ref(true) //联系信息
 const formInline = reactive({
-  user: '',
-  region: '',
-  addr: [],
+  address: '',
+  contact: '',
+  email: '',
+  legal_person: '',
+  tel: '',
+  url: '',
+  addr: [] as (string | number)[],
 })
 const company_name = ref('')
+//复制编码
+const telPass = (rule: any, value: string, callback: any) => {
+  if (telReg.test(value)) {
+    callback()
+  } else if (value === '') {
+    callback(new Error('请输入手机号！'))
+  } else {
+    callback(new Error('请输入正确的手机号码!'))
+  }
+}
+const telRules = reactive({
+  contact: [{ validator: telPass, trigger: 'blur' }],
+})
+const { toClipboard } = useClipboard()
+const copyCode = async (val: any) => {
+  try {
+    await toClipboard(val)
+  } catch (e) {
+    errMsg('该浏览器不支持自动复制')
+  }
+}
+
 const audit = ref<any>({})
 const basic = ref<any>({})
 const contact = ref<any>({})
+const goEdit = () => {
+  const Data = {
+    city: formInline.addr[1] || 0,
+    province: formInline.addr[0] || 0,
+    district: formInline.addr[2],
+    id: Number(id),
+  }
+  contactRule.value.validateField('contact', async (valid: boolean) => {
+    if (valid) {
+      const { status } = await reviseContact_api({
+        ...formInline,
+        ...Data,
+      })
+      status === 1 ? okMsg('联系信息修改成功') : errMsg('联系信息修改失败')
+    }
+  })
+
+  getInfo()
+  sub.value = true
+}
 const getInfo = async () => {
   const { body, status } = await getCompany_api({ id: Number(id) })
   console.log(id)
-
-  console.log(body)
-
   if (status === 1) {
     basic.value = body.basic
     contact.value = body.contact
+    formInline.address = body.contact.address
+    formInline.contact = body.contact.contact
+    formInline.email = body.contact.email
+    formInline.legal_person = body.contact.legal_person
+    formInline.url = body.contact.url
+    formInline.addr = [body.contact.province, body.contact.city, body.contact.district]
+
     audit.value = body.audit
   }
 }
@@ -388,7 +444,7 @@ getInfo()
         margin: 0 auto;
         padding-bottom: 30px;
         width: 674px;
-        margin-left: 215px;
+        margin-left: 188px;
         .img {
           width: 160px;
           height: 120px;
@@ -434,11 +490,11 @@ getInfo()
         }
       }
       .card_cont {
-        width: 674px;
+        width: 610px;
         padding-top: 75px;
         padding-bottom: 40px;
         margin: 0 auto;
-        margin-left: 285px;
+        margin-left: 260px;
       }
 
       // .scard_two {
@@ -496,10 +552,11 @@ getInfo()
       }
       .content_two {
         display: flex;
-        align-items: center;
+        // align-items: center;
         justify-content: center;
         flex-direction: column;
         padding-bottom: 46px;
+        padding-left: 365px;
         :deep(.el-form-item__label) {
           color: #909399;
           padding-right: 40px;

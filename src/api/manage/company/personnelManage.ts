@@ -85,3 +85,26 @@ export const roleList_api = (data: {
 export const getRole_api = (): Promise<IRes> => {
   return get('user', '/web/company/role.list')
 }
+/**
+ * @name 获取添加企业人员签名
+ */
+export const getSign_api = (): Promise<IRes> => {
+  return get('user', '/web/company/sign/get.do')
+}
+/**
+ * @name 获取添加企业人员签名
+ */
+export const getSignname_api = (): Promise<IRes> => {
+  return get('user', '/public/company/name.get')
+}
+/**
+ * @name 验证签名获取添加企业人员
+ */
+export const addSign_api = (data: {
+  cid: number
+  left_time: number
+  sign: string
+  uid: number
+}): Promise<IRes> => {
+  return post('user', '/web/company/sign/verify.do', data)
+}
