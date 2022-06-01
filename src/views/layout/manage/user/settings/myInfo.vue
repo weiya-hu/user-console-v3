@@ -225,7 +225,12 @@
         </div>
         <div class="conten_item conten_item4 mb16 kz_card">
           <div class="card_title">我的企业</div>
-
+          <div v-show="showCompany" class="user_com_box">
+            <div class="fcc user_com_empty">
+              <img :src="icon_user_company" alt="" />
+              <span>暂无企业信息</span>
+            </div>
+          </div>
           <div v-show="!showCompany" class="card_body fcc">
             <div class="fc">
               <div v-for="v in userCompany" :key="v.id" class="item_box">
@@ -251,12 +256,6 @@
                   <div class="item_content fcs">{{ v.group_name }}</div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="user_com_box">
-            <div v-show="showCompany" class="fcc user_com_empty">
-              <img :src="icon_user_company" alt="" />
-              <span>暂无企业信息</span>
             </div>
           </div>
         </div>
@@ -734,11 +733,12 @@ const copyCode = async (val: any) => {
 }
 
 //企业信息
-const showCompany = ref(false)
+const showCompany = ref(true)
 const userCompany = ref<any>({})
 const myCompany = async () => {
   const res = await userCompany_api()
   userCompany.value = res.body
+  res.body == '' ? (showCompany.value = true) : (showCompany.value = false)
 }
 myCompany()
 
@@ -1119,7 +1119,6 @@ const closeEdit = () => {
     }
     .conten_item4 {
       .user_com_box {
-        padding-right: 402px;
         .user_com_empty {
           height: 254px;
           background: #ffffff;

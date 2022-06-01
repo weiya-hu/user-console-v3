@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import trial_i from '@/assets/images/trial.png'
 import KzPage from '@/components/KzPage.vue'
 import { productList_api, userEnter_api } from '@/api/manage/user/product/product'
@@ -55,8 +55,9 @@ const totle = ref(100)
 const size = ref(10)
 const page = ref(1)
 const store = mainStore()
-const cmsUrl = store.state.yxtUrl.cms
+const cmsUrl = computed(() => store.state.yxtUrl.cms)
 const dmpUrl = store.state.yxtUrl.dmp
+console.log(cmsUrl)
 
 const proList = ref<any>({})
 const productList = async () => {
@@ -91,9 +92,10 @@ const userSystem = async () => {
   const res = await userEnter_api({ ...data })
   if (res.status === 1) {
     if (proId.value === 1) {
-      window.open('//' + cmsUrl, '_blank')
+      window.open('//' + cmsUrl.value, '_blank')
+    } else if (proId.value === 2) {
+      window.open('//' + dmpUrl, '_blank')
     }
-    window.open('//' + dmpUrl, '_blank')
   }
 }
 </script>
@@ -119,7 +121,6 @@ export default { name: 'MyProduct' }
       }
       .time_tips {
         font-size: 12px;
-
         font-weight: 400;
         color: #ff4736;
       }

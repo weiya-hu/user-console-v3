@@ -61,12 +61,10 @@ const examArr = ref<number[]>([])
 const reject = (id: number) => {
   examArr.value.push(id)
   examArr.value.length && Passlist(0)
-  okMsg('操作成功！')
 }
 const agree = (id: number) => {
   examArr.value.push(id)
   examArr.value.length && Passlist(1)
-  okMsg('操作成功！')
 }
 
 const tableRef = ref()
@@ -74,7 +72,6 @@ const alldo = (isAgree: 0 | 1) => {
   const nowAgree = tableRef.value.getSelectionRows()
   examArr.value = nowAgree.map((v: any) => v.id)
   examArr.value.length && Passlist(isAgree)
-  okMsg('操作成功！')
 }
 
 const Passlist = async (isAgree: 0 | 1) => {
@@ -83,6 +80,7 @@ const Passlist = async (isAgree: 0 | 1) => {
     status: isAgree,
   }
   const res = await invitePass_api(data)
+  res.status === 1 ? okMsg('操作成功！') : errMsg('操作失败！')
   inviteList()
 }
 </script>
