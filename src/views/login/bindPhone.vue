@@ -98,23 +98,30 @@ const onRegister = (event: any) => {
         })()
       !status &&
         (() => {
-          if(errno === 10200){
-            ElMessageBox.confirm(`您的账户已于${formatDate(new Date(body.time),'yyyy年MM月dd日 hh:mm:ss')}，在IP:${body.ip}登录，如非本人操作请尽快修改密码！`, '登录提醒', {
-              confirmButtonText: '强制登录',
-              cancelButtonText: '取消',
-              customClass:'force_login'
-            }).then(async()=>{
+          if (errno === 10200) {
+            ElMessageBox.confirm(
+              `您的账户已于${formatDate(new Date(body.time), 'yyyy年MM月dd日 hh:mm:ss')}，在IP:${
+                body.ip
+              }登录，如非本人操作请尽快修改密码！`,
+              '登录提醒',
+              {
+                confirmButtonText: '强制登录',
+                cancelButtonText: '取消',
+                customClass: 'force_login',
+              }
+            ).then(async () => {
               const forceRes = await loginForceDo_api()
-              forceRes.status && (()=>{
-                setTimeout(() => {
-                  window.location.href = loginToUrl
-                    ? decodeURIComponent(loginToUrl)
-                    : '//' + store.state.yxtUrl.offical
-                }, 500)
-              })()
+              forceRes.status &&
+                (() => {
+                  setTimeout(() => {
+                    window.location.href = loginToUrl
+                      ? decodeURIComponent(loginToUrl)
+                      : '//' + store.state.yxtUrl.offical
+                  }, 500)
+                })()
             })
           }
-          if(body >= 3 || message === 'captcha: 不能为空'){
+          if (body >= 3 || message === 'captcha: 不能为空') {
             chaptchaShow.value = true
           }
         })()

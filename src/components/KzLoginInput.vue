@@ -108,7 +108,7 @@ const props = withDefaults(
     label?: string
     modelValue: any
     type?: string //发送验证码的类型，'register','reset','login'
-  }>(), 
+  }>(),
   {}
 )
 const emit = defineEmits(['update:modelValue'])

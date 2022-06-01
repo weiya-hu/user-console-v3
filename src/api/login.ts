@@ -143,6 +143,6 @@ export const loginOut_api = (): Promise<any> => {
 /**
  * @name 强制登录
  */
- export const loginForceDo_api = (): Promise<any> => {
+export const loginForceDo_api = (): Promise<any> => {
   return post('user', '/login/login/force.do', {}, true)
 }

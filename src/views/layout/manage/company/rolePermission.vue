@@ -52,7 +52,7 @@
               v-for="(item,index) in roleManage"
               :key="item"
               :class="roleOrperm === index ? 'btn_tab_active role_toggle':'role_toggle'" 
-              @click=" roleOrperm = index"
+              @click=" permitOrPerson(index)"
             >{{item}}</el-button>
           </el-button-group>
           <div v-if="!roleOrperm"><el-button type="primary" @click="savePermitChange">保存</el-button> </div>
@@ -81,7 +81,33 @@
             </div>
           </div>
           <div v-else>
-            
+            <el-table
+              ref="multipleTableRef"
+              :data="rolePersonList"
+              style="width: 100%"
+            >
+              <el-table-column type="selection" width="70" align="center"/>
+              <el-table-column label="姓名" min-width="120">
+                <template #default="{row}">{{ row.user_name }}</template>
+              </el-table-column>
+              <el-table-column label="分组" min-width="120">
+                <template #default="{row}">{{ row.group_name }}</template>
+              </el-table-column>
+              <el-table-column label="联系电话" min-width="120">
+                <template #default="{row}">{{ row.mobile }}</template>
+              </el-table-column>
+              <el-table-column label="添加时间" min-width="150">
+                <template #default="{row}">{{ formatDate(new Date(row.create_time) ,'yyyy-MM-dd') }}</template>
+              </el-table-column>
+              <el-table-column label="操作" min-width="120" align="center">
+                <template #default="{row}">
+                  <div class="fleximg ">
+                    <el-button class="person_table_operate" type="text" @click="personChangeRole(row.id)">变更角色</el-button>
+                    <el-button type="text" @click="roleDeletePerson(row.id)">删除</el-button>
+                  </div>
+                </template>
+              </el-table-column>
+            </el-table>
           </div>
         </div>
       </div>
@@ -104,6 +130,19 @@
           class="role_name_input" 
           placeholder="请输入角色名" 
         />
+      </div>
+    </KzDialog>
+    <KzDialog v-model='changePersonRoleShow' title="变更角色" @sure="addRoleNameDo">
+      <div class="flexl person_change_role">
+        <div>角色</div>
+        <el-select v-model="personChangedRoles" class="person_change_role_select" multiple placeholder="请选择角色（可多选）">
+          <el-option
+            v-for="(item, index) in roleAll"
+            :key="index"
+            :label="item"
+            :value="Number(index)"
+          />
+        </el-select>
       </div>
     </KzDialog>
     <el-dialog v-model="addPersonShow" title="添加人员" custom-class="add_person_dialogo_hwy" @close="addPersonList=[] ">
@@ -200,8 +239,9 @@ import { errMsg, getUrlParam, okMsg } from '@/utils/index';
 import KzCheckGroup from '@/components/KzCheckGroup.vue'
 import { useRouter } from 'vue-router';
 import { ElMessageBox } from 'element-plus'
-import { companyRoleList_api, permitCompanyList_api, permitRoleList_api, companyRoleNameUp_api, permitRoleAdd_api,companyRoleDel_api,companyRoleIn_api, companyMemberList_api, companyMemberDo_api, companyMemberNameGet_api, companyMemberRoleListUp_api } from '@/api/manage/company/rolePermit'
+import { companyRoleList_api, permitCompanyList_api, permitRoleList_api, companyRoleNameUp_api, permitRoleAdd_api,companyRoleDel_api,companyRoleIn_api, companyMemberList_api, companyMemberDo_api, companyMemberNameGet_api, companyMemberRoleListUp_api, companyUserTwoPage_api, companyRoleIdsGet_api, companyRoleIdDel_api, companyRoleIdsUp_api } from '@/api/manage/company/rolePermit'
 import KzDialog from "@/components/KzDialog.vue"
+import { formatDate } from '@/utils/date'
 
 interface IPermitPre{
   instance_id: any
@@ -220,10 +260,10 @@ const addRoleShow = ref(false) //添加角色是否显示
 const addRoleName = ref() //添加角色输入框v-model
 const roleAll = <any>ref([]) //角色列表
 const roleManage= ref( ['权限','人员']) //页面菜单
+const roleOrperm = ref(1) //菜单是权限还是人员
 const roleId= <any>ref() //当前角色的id
 const changeRoleShow=ref(false)  //无弹框修改角色名是否显示
 const roleName=ref() //无弹框修改角色名v-model
-const roleOrperm = ref(0) //菜单是权限还是人员
 const userCheckList = ref() //用户点击的被选列表
 const getcheckedListFlag = ref() //传递给复选框组件，父组件勾选了全选
 const permitList = ref<IPermitPre[]>([])//所有权限： select:绑定是否被勾选；indeterminate：是否半勾选；userSelect：用户的勾选操作造成的被勾选的值改变
@@ -238,13 +278,18 @@ const currentRolePersonList = ref()//当前角色的显示的全部人员列表-
 const currentRolePersonChecked = ref([]) //全部人员-被选择的人员-arr
 const allPerson = ref() //真正的全部人员列表-obj
 const addPersonList = <any>ref([]) //添加列表
-const groupPerson = ref()
+const groupPerson = ref() //分组人员列表
 const groupPersonProps = {
   children: 'list',
   label: 'name',
 }
-const checkTreeRef = ref()
-
+const checkTreeRef = ref()//分组人员树ref
+const rolePersonList = ref() //当前角色的所有人员列表
+const current = ref(1) //人员当前页数
+const size = ref(10) //人员列表每页条数
+const total = ref(0) //人员列表总条数
+const changePersonRoleShow = ref(false) //更改人员角色dialogo显示与否
+const personChangedRoles = ref() //更改人员角色选择框v-model
 
 const getRoleList =async()=>{
   const {status,body} = await companyRoleList_api()
@@ -256,15 +301,11 @@ const getRoleList =async()=>{
     let roleIndexs = Object.keys(body)
     roleId.value = urlRoleId || roleIndexs[0]
     router.push('/manage/company/rolepermission?roleId='+roleId.value)
-    roleToggle(roleId.value)
+    roleOrperm.value ? roleTogglePerson(roleId.value) : roleTogglePermit(roleId.value)
   })()
 }
 getRoleList()
 
-const roleToggle=async(id?:any)=>{
-  const { status,body } = await permitRoleList_api({roleId:id || getUrlParam('roleId')})
-  status && (permitCheckedList.value = body)
-}
 //返回 { instance: { pid: [ permit_id ，permit_id ] }
 const permitCheckedListed = computed(()=>{
   let arr=<any>{}
@@ -310,6 +351,55 @@ const isIndeterminateChange=(val:boolean,index:number)=>{
   permitList.value[index].indeterminate=val
 }
 
+//切换权限或者人员菜单
+const permitOrPerson=(index:any)=>{
+  roleOrperm.value = index
+  index ? roleTogglePerson() : roleTogglePermit()
+}
+
+//获取当前角色的权限
+const roleTogglePermit=async(id?:any)=>{
+  const { status,body } = await permitRoleList_api({roleId:id || getUrlParam('roleId')})
+  status && (permitCheckedList.value = body)
+}
+//获取当前角色的所有人员
+const roleTogglePerson = async(id?:any)=>{
+  let data = {
+    roleId:id || getUrlParam('roleId'),
+    current:current.value,
+    size:size.value,
+  }
+  const { status,body } = await companyUserTwoPage_api(data)
+  status && (()=>{
+    rolePersonList.value = body.records
+    total.value =body.total 
+  })()
+}
+
+//当前人员变更角色按钮
+const personChangeRole= async(id:any) =>{
+  changePersonRoleShow.value=true
+  const {status, body} = await companyRoleIdsGet_api({memberId:id})
+  status && (personChangedRoles.value = body)
+}
+
+//当前角色删除当前人员
+const roleDeletePerson=(id:any) =>{
+  ElMessageBox.confirm('是否确认从当前角色中删除此人员', '操作提示', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+  }).then(async()=>{
+    // let data = {
+    //   role_id: Number(getUrlParam('roleId')) 
+    // }
+    // const {status, message} = await companyRoleDel_api(data)
+    // status && (()=>{
+    //   roleTogglePerson()
+    //   okMsg(message ? message.toString() :'删除成功')
+    // })()
+  })
+}
+
 //修改角色名
 const saveRoleName = async()=>{
   if(!roleName.value){
@@ -347,10 +437,12 @@ const addRoleClick=()=>{
     addRoleNameRef.value.focus()
   })
 }
+
+//切换角色
 const roleChange=(index:any)=>{
   roleId.value = index
   router.push('/manage/company/rolepermission?roleId='+index)
-  roleToggle(index)
+  roleOrperm.value ? roleTogglePerson(index) : roleTogglePermit(index)
 }
 
 const savePermitChange = ()=>{
@@ -364,7 +456,7 @@ const savePermitChange = ()=>{
     }
     const {status, message} = await permitRoleAdd_api(data)
     status && (()=>{
-      roleToggle()
+      roleTogglePermit()
       okMsg(message ? message.toString() :'保存成功')
     })()
   })
@@ -633,6 +725,25 @@ const addPersons = async()=>{
           padding: 24px;
           border: 1px solid rgba(221,221,221,1);
         }
+        :deep(.el-table){
+          thead>tr>th{ 
+            background: #F2F2F3;
+            height: 40px;
+            .cell{ 
+              font-size: 14px;
+              color: #333333;
+              line-height: 14px;
+              font-weight: 600;
+            }
+          }
+          .person_table_operate{ 
+            margin-right: 12px;
+          }
+          td.el-table__cell div{ 
+            color: #666666;
+          }
+        }
+        
       }
     }
   }
@@ -730,7 +841,6 @@ const addPersons = async()=>{
       }
     }
     .person_checked_list{ 
-      
       flex-wrap: wrap;
       .person_checked{ 
         width: 100px;
@@ -748,6 +858,14 @@ const addPersons = async()=>{
       .person_checked:hover{ 
         border: 1px solid rgba(45,104,235,1);
       }
+    }
+  }
+  .person_change_role{ 
+    >div:nth-child(1){
+      margin-right: 16px;
+    }
+    .person_change_role_select{ 
+      width: 400px;
     }
   }
 }
