@@ -5,12 +5,12 @@
         <div class="mr">
           <div class="fir">
             <div>
-              康州邀请你加入
-              <span>康洲大数据（重庆）有限公司</span>，
+              {{ names.user_name }}邀请你加入 <span>{{ names.company_name }}</span
+              >，
             </div>
           </div>
           <div>是否接受邀请？</div>
-          <el-form :model="nameForm">
+          <!-- <el-form :model="nameForm">
             <el-form-item
               label="真实姓名"
               prop="name"
@@ -18,13 +18,13 @@
             >
               <el-input v-model="nameForm.name" placeholder="请输入真实姓名" />
             </el-form-item>
-          </el-form>
+          </el-form> -->
         </div>
       </div>
       <div class="imgs">
         <img :src="invite_i" alt="" />
         <div class="cc">
-          <span>拒绝邀请</span>
+          <span @click="closeWin">拒绝邀请</span>
           <el-button class="accept" @click="submit">接受邀请</el-button>
         </div>
       </div>
@@ -33,25 +33,77 @@
 </template>
 <script lang="ts" setup>
 import invite_i from '@/assets/images/invite.png'
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
+import { getSignname_api, addSign_api } from '@/api/manage/company/personnelManage'
+import { useRoute, useRouter } from 'vue-router'
+import { mainStore } from '@/store/index'
+import { okMsg } from '@/utils/index'
+import { nextTick } from 'process'
+const router = useRouter()
+const route = useRoute()
+const store = mainStore()
+const uid = route.query.uid
+const sign = route.query.sign as string
+const cid = route.query.cid
+const left_time = route.query.left_time
+const userId = computed(() => store.state.userInfo.id)
+const codeUrl = computed(() => store.state.yxtUrl.mobile)
+
 const show = ref(true)
 const nameForm = reactive({
   name: '',
 })
-const submit = () => {
-  console.log(nameForm.name)
+const names = ref<any>({})
+const getName = async () => {
+  const { body, status } = await getSignname_api({
+    cid: Number(cid),
+    uid: Number(uid),
+    sign: sign.toString(),
+    left_time: Number(left_time),
+  })
+  status && (names.value = body)
+  console.log(userId.value)
+}
+getName()
+const submit = async () => {
+  if (userId.value) {
+    const { body } = await addSign_api({
+      cid: Number(cid),
+      uid: Number(uid),
+      sign: sign.toString(),
+      left_time: Number(left_time),
+    })
+    body === 2
+      ? okMsg('已经加入该企业，无需再次申请')
+      : okMsg('申请加入中，等待企业管理员同意/拒绝')
+  } else {
+    okMsg('请登录后接受邀请')
+    router.replace(
+      '/login?url=' +
+        encodeURIComponent(
+          window.location.origin +
+            `/invite?uid=${uid}&sign=${sign}&left_time=${left_time}&cid=${cid}`
+        )
+    )
+  }
+}
+const closeWin = () => {
+  okMsg('已拒绝邀请')
+  //   window.opener = null
+  //   window.open('', '_self')
+  //   window.close()
 }
 </script>
 <style lang="scss" scoped>
 :deep(.invites_dialog) {
   border-radius: 16px;
   background: #9fc0ff;
-  height: 315px;
+  height: 255px;
   .mid {
     display: flex;
     border-radius: 8px;
     width: 452px;
-    height: 241px;
+    height: 220px;
     background: white;
     font-size: 16px;
     font-weight: bold;

@@ -19,7 +19,7 @@ export const examine_api = (data: {
   url?: string
   id?: number
 }): Promise<IRes> => {
-  return post('user', '/web/company/audit/submit.do', data)
+  return post('user', '/web/company/audit/submit.do', data, true)
 }
 // /**
 //  * @name 重新企业认证提交消息
@@ -85,7 +85,7 @@ export const examineSave_api = (data: {
   url?: string
   id?: number
 }): Promise<IRes> => {
-  return post('user', '/web/company/audit/save.do', data)
+  return post('user', '/web/company/audit/save.do', data, true)
 }
 /**
  * @name 校验社会信用代码

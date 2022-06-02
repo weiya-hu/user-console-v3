@@ -94,8 +94,19 @@ export const getSign_api = (): Promise<IRes> => {
 /**
  * @name 获取添加企业人员签名
  */
-export const getSignname_api = (): Promise<IRes> => {
-  return get('user', '/public/company/name.get')
+export const getSignname_api = (params: {
+  cid: number
+  left_time: number
+  sign: string
+  uid: number
+}): Promise<IRes> => {
+  return get('user', '/public/company/name.get', params)
+}
+/**
+ * @name 获取当前企业名字
+ */
+export const getName_api = (): Promise<IRes> => {
+  return get('user', '/web/company/name.get')
 }
 /**
  * @name 验证签名获取添加企业人员

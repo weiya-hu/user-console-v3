@@ -137,7 +137,7 @@
             <el-button type="primary" @click="showContent = false">立即添加</el-button>
           </div> -->
           <div v-if="!sub" class="content_two">
-            <el-form ref="contactRule" :model="formInline" label-width="150px" :rules="telRules">
+            <el-form :model="formInline" label-width="150px" :rules="telRules" ref="contactRule">
               <el-form-item label="联系人">
                 <el-input v-model="formInline.legal_person" placeholder="请输入" />
               </el-form-item>
@@ -368,7 +368,6 @@ const goEdit = () => {
     city: formInline.addr[1] || 0,
     province: formInline.addr[0] || 0,
     district: formInline.addr[2],
-    id: Number(id),
   }
   contactRule.value.validateField('contact', async (valid: boolean) => {
     if (valid) {
@@ -384,8 +383,7 @@ const goEdit = () => {
   sub.value = true
 }
 const getInfo = async () => {
-  const { body, status } = await getCompany_api({ id: Number(id) })
-  console.log(id)
+  const { body, status } = await getCompany_api()
   if (status === 1) {
     basic.value = body.basic
     contact.value = body.contact
@@ -490,7 +488,7 @@ getInfo()
         }
       }
       .card_cont {
-        width: 610px;
+        width: 625px;
         padding-top: 75px;
         padding-bottom: 40px;
         margin: 0 auto;

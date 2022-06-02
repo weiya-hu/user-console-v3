@@ -15,13 +15,19 @@
           v-model="ruleForm.industry_id"
           type="type"
           placeholder="请选择行业"
+          :disabled="state === 2"
         />
       </el-form-item>
       <el-form-item label="企业名称" prop="name">
-        <el-input v-model="ruleForm.name" placeholder="请输入" />
+        <el-input v-model="ruleForm.name" placeholder="请输入" :disabled="state === 2" />
       </el-form-item>
       <el-form-item label="统一社会信用代码" prop="code">
-        <el-input v-model="ruleForm.code" placeholder="请输入" @blur="blur(ruleForm.code)" />
+        <el-input
+          v-model="ruleForm.code"
+          placeholder="请输入"
+          :disabled="state === 2"
+          @blur="blur(ruleForm.code)"
+        />
       </el-form-item>
       <el-form-item label="资质照片" prop="imgName">
         <div class="imgs">
@@ -43,37 +49,59 @@
       <el-form-item label="证件有效期" required>
         <!-- <el-col :span="11"> -->
         <el-form-item prop="left_time">
-          <el-date-picker v-model="ruleForm.left_time" type="date" value-format="x" />
-          <el-checkbox v-model="ruleForm.left_time" true-label="4102415999000">永久</el-checkbox>
+          <el-date-picker
+            v-model="ruleForm.left_time"
+            type="date"
+            value-format="x"
+            :disabled="state === 2"
+          />
+          <el-checkbox
+            v-model="ruleForm.left_time"
+            true-label="4102415999000"
+            :disabled="state === 2"
+            >永久</el-checkbox
+          >
         </el-form-item>
         <!-- </el-col> -->
       </el-form-item>
       <el-form-item label="联系人" prop="legal_person">
-        <el-input v-model="ruleForm.legal_person" placeholder="请输入" />
+        <el-input v-model="ruleForm.legal_person" placeholder="请输入" :disabled="state === 2" />
       </el-form-item>
       <el-form-item label="联系电话" prop="contact">
-        <el-input v-model="ruleForm.contact" placeholder="请输入" />
+        <el-input v-model="ruleForm.contact" placeholder="请输入" :disabled="state === 2" />
       </el-form-item>
       <el-form-item label="选择地区" prop="addr">
-        <KzCascader v-model="ruleForm.addr" type="address" placeholder="请选择地址" />
+        <KzCascader
+          v-model="ruleForm.addr"
+          type="address"
+          placeholder="请选择地址"
+          :disabled="state === 2"
+        />
       </el-form-item>
       <el-form-item label="详细地址" prop="address">
-        <el-input v-model="ruleForm.address" placeholder="请输入" />
+        <el-input v-model="ruleForm.address" placeholder="请输入" :disabled="state === 2" />
       </el-form-item>
       <el-form-item label="官方网站" prop="url">
-        <el-input v-model="ruleForm.url" placeholder="请输入" />
+        <el-input v-model="ruleForm.url" placeholder="请输入" :disabled="state === 2" />
       </el-form-item>
 
       <el-form-item label="请填写经营范围" prop="business_scope">
-        <el-input v-model="ruleForm.business_scope" type="textarea" clearable />
+        <el-input
+          v-model="ruleForm.business_scope"
+          type="textarea"
+          clearable
+          :disabled="state === 2"
+        />
       </el-form-item>
       <div class="preser">
-        <el-link type="primary" class="fcc" @click="submitForm(1)"
+        <el-link type="primary" class="fcc" :disabled="state === 2" @click="submitForm(1)"
           ><KzIcon href="#icon-baocun" />保存认证消息</el-link
         >
       </div>
       <el-form-item>
-        <el-button type="primary" class="sub" @click="submitForm(2)">提交认证</el-button>
+        <el-button type="primary" class="sub" :disabled="state === 2" @click="submitForm(2)"
+          >提交认证</el-button
+        >
       </el-form-item>
     </el-form>
   </div>
@@ -96,10 +124,12 @@ const route = useRoute()
 const id = route.query.id
 const imgList = ref<string[]>([])
 const upShow = ref(false)
+const state = ref()
 const getS = async () => {
   upShow.value = false
   if (id) {
     const { body, status } = await getCompany_api({ id: Number(id) })
+    state.value = body.status
     if (status === 1) {
       ruleForm.name = body.name
       ruleForm.industry_id = body.industry_id.split(',')
@@ -111,9 +141,11 @@ const getS = async () => {
       ruleForm.address = body.address
       ruleForm.url = body.url
       ruleForm.license = body.license
-      ruleForm.license.split(',').forEach((v: string) => {
-        imgList.value.push(v)
-      })
+      if (ruleForm.license) {
+        ruleForm.license.split(',').forEach((v: string) => {
+          imgList.value.push(v)
+        })
+      }
       ruleForm.addr = [body.province, body.city, body.district]
       ruleForm.imgName = body.license ? 'oldName' : ''
     }
@@ -144,6 +176,12 @@ const telPass = (rule: any, value: string, callback: any) => {
   } else {
     callback(new Error('请输入正确的手机号码!'))
   }
+}
+const imgsPass = (rule: any, value: string, callback: any) => {
+  if (upload.value.imgs.length) {
+    callback()
+  }
+  callback(new Error('请添加资质照片！'))
 }
 const rules = {
   name: [
@@ -192,6 +230,7 @@ const rules = {
       message: '请添加资质照片',
       trigger: 'change',
     },
+    { validator: imgsPass, trigger: 'change' },
   ],
   code: [{ required: true, message: '请输入统一社会信用代码', trigger: 'blur' }],
 }
@@ -207,17 +246,23 @@ const upAll = async (url: string[]) => {
     city: ruleForm.addr[1] || 0,
     province: ruleForm.addr[0] || 0,
     district: ruleForm.addr[2],
-    source: 3,
     industry_id: ruleForm.industry_id.join(','), //行业ID
     left_time: Number(ruleForm.left_time),
     id: Number(id),
   }
   ruleForm.license = url.toString() //资质图片地址
+  console.log('qwert')
+
   const res =
-    aStatus.value == 1
-      ? await examine_api({ ...ruleForm, ...Data })
-      : await examineSave_api({ ...ruleForm, ...Data })
+    aStatus.value === 1
+      ? await examineSave_api({ ...ruleForm, ...Data })
+      : await examine_api({ ...ruleForm, ...Data })
+  console.log(res)
+  if (res.status === 1) {
+    router.back()
+  }
 }
+
 const onChange = (val: string) => {
   ruleForm.imgName = val
   ruleFormRef.value.clearValidate('imgName')
@@ -227,6 +272,7 @@ const delImg = () => {
     ruleForm.imgName = ''
   }
 }
+const router = useRouter()
 
 const aStatus = ref<1 | 2>(1) // 1 保存 2 提交
 const submitForm = async (val: 1 | 2) => {
@@ -235,26 +281,28 @@ const submitForm = async (val: 1 | 2) => {
     city: ruleForm.addr[1] || 0,
     province: ruleForm.addr[0] || 0,
     district: ruleForm.addr[2],
-    source: 3,
     industry_id: ruleForm.industry_id.join(','), //行业ID
     left_time: Number(ruleForm.left_time),
     id: Number(id),
   }
-  if (ruleForm.license) {
-    if (aStatus.value === 1) {
+  if (aStatus.value === 1) {
+    if (ruleForm.imgName) {
       ruleFormRef.value.clearValidate()
       upload.value.submit()
-      console.log(123456)
-    } else {
-      ruleFormRef.value.validate((valid: boolean) => {
-        if (valid) {
-          upload.value.submit()
-        }
-      })
+      return
+    }
+    const res = await examineSave_api({ ...ruleForm, ...Data })
+    console.log(res)
+
+    if (res.status === 1) {
+      router.back()
     }
   } else {
-    ruleFormRef.value.clearValidate()
-    const res = aStatus.value === 1 ? await examineSave_api({ ...ruleForm, ...Data }) : ''
+    ruleFormRef.value.validate((valid: boolean) => {
+      if (valid) {
+        upload.value.submit()
+      }
+    })
   }
 }
 </script>

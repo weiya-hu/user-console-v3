@@ -2,7 +2,7 @@
   <div class="kz_card my_company_page">
     <div class="card_title fsc">
       <div>我的企业</div>
-      <el-button type="primary" :icon="Plus" @click="$router.push('/manage/company/authentication')"
+      <el-button type="primary" :icon="Plus" @click="$router.push('authentication')"
         >添加企业</el-button
       >
     </div>
@@ -107,20 +107,20 @@
                 <el-link
                   v-if="row.status == 1"
                   type="primary"
-                  @click="$router.push('/manage/company/authentication?id=' + row.id)"
+                  @click="$router.push('authentication?id=' + row.id)"
                   >编辑</el-link
                 >
                 <el-link
                   v-if="row.status == 2"
                   type="primary"
-                  @click="$router.push('/manage/company/authentication?id=' + row.id)"
+                  @click="$router.push('authentication?id=' + row.id)"
                   >查看</el-link
                 >
 
                 <el-link
                   v-if="row.status == 4"
                   type="primary"
-                  @click="$router.push('/manage/company/authentication?id=' + row.id)"
+                  @click="$router.push('authentication?id=' + row.id)"
                   >重新提交</el-link
                 >
               </div>

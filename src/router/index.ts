@@ -247,6 +247,12 @@ export const routes: RouteRecordRaw[] = [
                     component: () => import('@/views/layout/manage/user/settings/myCompany.vue'),
                     meta: { title: '我的企业' },
                   },
+                  {
+                    path: '/manage/user/settings/authentication',
+                    name: 'Authentication',
+                    component: () => import('@/views/layout/manage/company/authentication.vue'),
+                    meta: { title: '企业认证' },
+                  },
                 ],
               },
             ],
@@ -264,12 +270,7 @@ export const routes: RouteRecordRaw[] = [
                 component: () => import('@/views/layout/manage/company/companyInfo.vue'),
                 meta: { title: '企业信息', scroll: true },
               },
-              {
-                path: '/manage/company/authentication',
-                name: 'Authentication',
-                component: () => import('@/views/layout/manage/company/authentication.vue'),
-                meta: { title: '企业认证', father: '/manage/company/companyinfo' },
-              },
+
               {
                 path: '/manage/company/companyservice',
                 name: 'CompanyService',

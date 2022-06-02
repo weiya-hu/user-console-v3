@@ -32,3 +32,16 @@ store.setUserinfo().finally(() => {
     }
   })
 })
+router.beforeEach((to, from) => {
+  if (to.path === '/invite') {
+    if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
+      if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+        //处理移动端的业务逻辑
+        store.getYxtUrl().then((res) => {
+          window.location.href = 'https://' + res.mobile + `/app/login${location.search}`
+          return
+        })
+      }
+    }
+  }
+})

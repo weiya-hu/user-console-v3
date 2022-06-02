@@ -28,7 +28,9 @@
         </div>
         <div v-if="showtime(v.left_time) > 0" class="btns">
           <el-button type="danger" plain>购买</el-button>
-          <el-button type="primary" @click="goSystem(v.id, v.version_type)">进入系统</el-button>
+          <el-button type="primary" @click="goSystem(v.id, v.product_id, v.version_type)"
+            >进入系统</el-button
+          >
         </div>
         <div v-else class="btns kf cont">
           <!-- <el-button type="warning mr16" plain >升级</el-button> -->
@@ -48,11 +50,15 @@ import { formatDate } from '@/utils/date'
 import { companyInstance_api, companySwitch_api } from '@/api/manage/company/companyService'
 import { Clock } from '@element-plus/icons-vue'
 import { okMsg } from '@/utils'
+import { mainStore } from '@/store/index'
 const totle = ref(100)
 const size = ref(10)
 const page = ref(1)
 const list = ref<any>({})
 const day = ref()
+const store = mainStore()
+const cmsUrl = store.state.yxtUrl.cms
+const dmpUrl = store.state.yxtUrl.dmp
 const showtime = (val: number) => {
   const nowtime = new Date() //获取当前时间
   const endtime = new Date(val) //定义结束时间
@@ -62,17 +68,39 @@ const showtime = (val: number) => {
   return god
 }
 const getList = async () => {
-  const { body } = await companyInstance_api({ id: 15 })
+  const { body } = await companyInstance_api()
   list.value = body
   console.log(list.value)
 }
 getList()
-const goSystem = async (id: number, version_type: number) => {
-  const res = await companySwitch_api({
-    id: id,
-    version_type: version_type,
-  })
-  console.log(res)
+// const goSystem = async (id: number, version_type: number) => {
+//   const res = await companySwitch_api({
+//     id: id,
+//     version_type: version_type,
+//   })
+//   console.log(res)
+// }
+const sysId = ref(0) //系统ID
+const sysType = ref(0) //1：个人 2：企业
+const proId = ref(0) //1:cms 2:dmp
+const goSystem = (id: number, pid: number, type: number) => {
+  sysType.value = type
+  sysId.value = id
+  proId.value = pid
+  userSystem()
+}
+const userSystem = async () => {
+  const data = {
+    id: sysId.value,
+    version_type: sysType.value,
+  }
+  const res = await companySwitch_api({ ...data })
+  if (res.status === 1) {
+    if (proId.value === 1) {
+      window.open('https://' + cmsUrl, '_blank')
+    }
+    window.open('https://' + dmpUrl, '_blank')
+  }
 }
 </script>
 

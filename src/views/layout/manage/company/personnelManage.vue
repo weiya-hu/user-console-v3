@@ -1,13 +1,13 @@
 <template>
   <div class="manager_tab flex">
     <div class="left_1">
-      <div class="img_logo" @click="$router.push('companyinfo')">
+      <!-- <div class="img_logo" @click="$router.push('companyinfo')">
         <img
           src="https://res.yxtong.com/dev/web/userinfo/company/9d61aed80e6b96234c26c8b17693b784.png"
           alt=""
         />
-      </div>
-      <div class="sel">康洲数智科技项目组</div>
+      </div> -->
+      <div class="sel">{{ conmpanyName }}</div>
       <el-button class="bdc_btn" @click="dialogVisible = true"
         ><el-icon color="#2150ec"><Plus /></el-icon>添加分组</el-button
       >
@@ -172,7 +172,7 @@
                   ><span>kooriookami</span></el-descriptions-item
                 > -->
                 <el-descriptions-item label="邀请链接" class-name="two">{{
-                  invite
+                  inviteCode
                 }}</el-descriptions-item>
               </el-descriptions>
             </div>
@@ -235,8 +235,8 @@
               <el-option
                 v-for="(item, index) in options"
                 :key="index"
-                :label="item.group_name"
-                :value="item.group_id"
+                :label="item"
+                :value="Number(index)"
               />
             </el-select>
           </div>
@@ -290,6 +290,7 @@ import {
   reviseUser_api,
   deleteMember_api,
   getSign_api,
+  getName_api,
 } from '@/api/manage/company/personnelManage'
 import { mainStore } from '@/store/index'
 import { useRoute, useRouter } from 'vue-router'
@@ -315,15 +316,15 @@ const showEdit = ref(false) //编辑员工是否显示
 const user_status = ref(0) //编辑员工状态
 const comAll = ref(true) //是否显示操作框
 const editId = ref() //表格名字编辑
-const box_active = ref()
-const active = ref(true)
-const numPoples = ref()
+const box_active = ref() //列表高亮
+const active = ref(true) //全部人员高亮
+const numPoples = ref() //修改名称id
 const edit_input = ref('')
-const group_input = ref('')
-const sel_value = ref([])
+const group_input = ref('') //添加分组
+const sel_value = ref([]) //编辑人员分组
 const options = ref()
-const popNum = ref('')
-const popName = ref('')
+const popNum = ref('') //编辑人员电话
+const popName = ref('') //编辑人员名字
 const acode = ref('86')
 const codeCid = ref()
 const left_time = ref()
@@ -351,6 +352,12 @@ const getCode = async () => {
 const openAdd = async () => {
   show.value = true
   getCode()
+}
+//获取企业名字
+const conmpanyName = ref()
+const getName = async () => {
+  const { status, message } = await getName_api()
+  status && (conmpanyName.value = message)
 }
 const downloadQr = () => {
   const myCanvas = document.getElementById('qrImg') as HTMLCanvasElement
@@ -466,7 +473,7 @@ const editPop = async (row: any) => {
   })
   showEdit.value = true
 
-  const { status, body } = await getMember_api()
+  const { status, body } = await getGroup_api()
   if (status === 1) {
     options.value = body
   }
@@ -493,12 +500,12 @@ const delEdit = async (id?: any) => {
   status === 1 ? okMsg('删除人员成功') : errMsg('删除人员失败')
   getList(editId.value)
 }
-const delEdata = async () => {
-  const { status } = await deleteMember_api({ member_id: member_id.value })
-  status === 1 ? okMsg('删除人员成功') : errMsg('删除人员失败')
-  closeDate()
-  getList(editId.value)
-}
+// const delEdata = async () => {
+//   const { status } = await deleteMember_api({ member_id: member_id.value })
+//   status === 1 ? okMsg('删除人员成功') : errMsg('删除人员失败')
+//   closeDate()
+//   getList(editId.value)
+// }
 const closeDate = () => {
   sel_value.value = []
   sel_two.value = []
@@ -513,6 +520,7 @@ const close = () => {
     num.value.resetFields()
   }
   show.value = false
+  tab.value = 1
 }
 const telPass = (rule: any, value: string, callback: any) => {
   if (telReg.test(value)) {
@@ -535,8 +543,10 @@ const getGroup = async () => {
     const id = getUrlParam('id') || null
     router.push(`/manage/company/personnelmanage?id=${id}`)
     editId.value = id
-    id ? getList(Number(id), body[Object.keys(body)[0]]) : getList()
+    console.log(id)
+    id ? getList(Number(id), body[id]) : getList()
   }
+  getName()
 }
 getGroup()
 const getList = async (id?: number, name?: any) => {
@@ -576,7 +586,7 @@ export default { name: 'PersonnelManage' }
     justify-content: start;
     flex-direction: column;
     .img_logo {
-      margin: 32px 50px 12px;
+      margin: 32px 50px 0;
       width: 220px;
       height: 110px;
       border-radius: 4px;
@@ -608,7 +618,8 @@ export default { name: 'PersonnelManage' }
     }
 
     .sel {
-      width: 144px;
+      // width: 144px;
+      margin-top: 32px;
       height: 22px;
       font-size: 16px;
       font-family: PingFangSC-Semibold, PingFang SC;
@@ -829,9 +840,13 @@ export default { name: 'PersonnelManage' }
         margin-bottom: 72px;
         .el-descriptions__cell {
           // width: 295px;
+
           display: flex;
 
           align-items: center;
+        }
+        .el-descriptions__label {
+          width: 100px;
         }
         .fir {
           display: block;
