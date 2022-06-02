@@ -546,13 +546,14 @@ const savePermitChange = () => {
   })
 }
 const getValueObject = (objt: any) => {
-  const obj = JSON.parse(JSON.stringify(objH.value))
+  objH.vallue = {}
   for (const i in objt) {
     for (const j in objt[i]) {
-      objt[i][j].length > 0 && (obj[i] = obj[i] ? obj[i].concat(objt[i][j]) : objt[i][j])
+      objt[i][j].length > 0 &&
+        (objH.vallue[i] = objH.vallue[i] ? objH.vallue[i].concat(objt[i][j]) : objt[i][j])
     }
   }
-  return obj
+  return objH.vallue
 }
 const deleteRole = async () => {
   ElMessageBox.confirm('是否确认删除当前角色', '操作提示', {
