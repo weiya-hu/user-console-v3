@@ -49,7 +49,7 @@ export const companyRoleDel_api = (data: { role_id: number }): Promise<IRes> => 
  * @name 添加企业角色
  */
 export const companyRoleIn_api = (data: { role_name: any }): Promise<IRes> => {
-  return post('user ', '/web/company/role.in', data)
+  return post('user ', '/web/company/role.in', data, true)
 }
 
 /**
@@ -78,7 +78,7 @@ export const companyMemberNameGet_api = (params: { name: any }): Promise<IRes> =
  */
 export const companyMemberRoleListUp_api = (data: {
   role_id: any
-  member_ids: []
+  member_ids: any
 }): Promise<IRes> => {
   return post('user ', '/web/company/member/role/list.up', data, true)
 }
@@ -104,13 +104,13 @@ export const companyRoleIdsGet_api = (params: { memberId: any }): Promise<IRes> 
 /**
  * @name 删除指定人员和指定角色的绑定关系
  */
-export const companyRoleIdDel_api = (data: { memberId: any; role_id: any }): Promise<IRes> => {
-  return post('user ', '/web/company/role/id.del', data)
+export const companyRoleIdDel_api = (data: { member_id: any; role_id: any }): Promise<IRes> => {
+  return post('user ', '/web/company/role/id.del', data, true)
 }
 
 /**
  * @name 修改指定人员角色
  */
-export const companyRoleIdsUp_api = (data: { memberId: any; role_ids: any }): Promise<IRes> => {
-  return post('user ', '/web/company/role/ids.up', data)
+export const companyRoleIdsUp_api = (data: { member_id: any; role_ids: any }): Promise<IRes> => {
+  return post('user ', '/web/company/role/ids.up', data, true)
 }

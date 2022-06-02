@@ -99,7 +99,7 @@ import { ref, computed } from 'vue'
 import areaNum from '@/utils/areaNum'
 import { telReg, okMsg, errMsg } from '@/utils/index'
 import { sendSms, sendRegsms, sendResetsms, captchaGet } from '@/api/login'
-import _ from 'lodash'
+import debounce from 'lodash/debounce'
 
 const props = withDefaults(
   defineProps<{
@@ -137,7 +137,7 @@ const captchaV = computed(vModel('captcha'))
 const surePass = computed(vModel('surePass'))
 
 //获取验证码按钮
-const getYZm = _.debounce(async () => {
+const getYZm = debounce(async () => {
   console.log(props.modelValue)
   const { mobile, acode } = props.modelValue
   const { type } = props
@@ -200,7 +200,7 @@ const getSmsTime = () => {
 props.name === 'mobileYZM' && getSmsTime()
 
 //获取图形验证码
-const getCaptcha = _.debounce(async () => {
+const getCaptcha = debounce(async () => {
   const { status, body } = await captchaGet()
   status && (captcha.value = body)
 }, 300)
