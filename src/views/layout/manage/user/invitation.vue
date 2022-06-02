@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import KzEmpty from '@/components/KzEmpty.vue'
-import { invitation_api } from '@/api/manage/user/steeings/myinfo'
+import { invitation_api } from '@/api/manage/user/myinfo'
 import { formatDate } from '@/utils/date'
 const tableData = ref([])
 const invite = async () => {
@@ -45,7 +45,4 @@ const showtime = () => {
 showtime()
 </script>
 
-<style lang="scss" scoped>
-.invitation {
-}
-</style>
+<style lang="scss" scoped></style>

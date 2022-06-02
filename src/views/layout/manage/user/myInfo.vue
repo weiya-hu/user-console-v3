@@ -114,7 +114,7 @@
                 <el-link
                   v-if="!userInfoDate.real_name"
                   type="primary"
-                  @click="$router.push('/manage/user/settings/realname')"
+                  @click="$router.push('/manage/user/realname')"
                 >
                   实名认证</el-link
                 >
@@ -523,7 +523,7 @@ import {
   editMmSms_api,
   editMmTel_api,
   editMm_api,
-} from '@/api/manage/user/steeings/myinfo'
+} from '@/api/manage/user/myinfo'
 import icon_general from '@/assets/images/user_general.png'
 import icon_silver from '@/assets/images/user_silver.png'
 import icon_gold from '@/assets/images/user_gold.png'

@@ -59,7 +59,7 @@
       :img_small="img_small"
       :msg="msg"
       :msg-two="msgTwo"
-      @redo="$router.replace('/manage/user/settings/myinfo')"
+      @redo="$router.replace('/manage/user/myinfo')"
     />
   </div>
 </template>
@@ -69,7 +69,7 @@ import { ref, reactive } from 'vue'
 import { mobileCheck, idCardValidity } from '@/utils/index'
 import areaNum from '@/utils/areaNum'
 import { errMsg, okMsg } from '@/utils/index'
-import { authenticate_api, sendSms_api } from '@/api/manage/user/steeings/myinfo'
+import { authenticate_api, sendSms_api } from '@/api/manage/user/myinfo'
 import KzAuthentication from '@/components/KzAuthentication.vue'
 import icon_user from '@/assets/images/user.png'
 import { useRouter } from 'vue-router'
@@ -139,7 +139,7 @@ const sumbit = () => {
       }
       const res = await authenticate_api(data)
       if (res.status === 1) {
-        router.replace('/manage/user/settings/myinfo')
+        router.replace('/manage/user/myinfo')
         okMsg('恭喜你，实名认证已通过！')
       } else {
         showUp.value = 2

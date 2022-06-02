@@ -46,7 +46,7 @@
 import { ref, computed } from 'vue'
 import trial_i from '@/assets/images/trial.png'
 import KzPage from '@/components/KzPage.vue'
-import { productList_api, userEnter_api } from '@/api/manage/user/product/product'
+import { productList_api, userEnter_api } from '@/api/manage/user/product'
 import { formatDate } from '@/utils/date'
 import { Clock } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'

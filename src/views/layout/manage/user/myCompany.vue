@@ -145,7 +145,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
-import { companyAdd_api, companyExam_api } from '@/api/manage/user/steeings/myinfo'
+import { companyAdd_api, companyExam_api } from '@/api/manage/user/myinfo'
 import { getKzComStatus, getHash, getHashStr, strToArr } from '@/utils/index'
 import { errMsg } from '@/utils'
 import KzEmpty from '@/components/KzEmpty.vue'

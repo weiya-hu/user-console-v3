@@ -25,7 +25,7 @@
           <div
             class="tags fcc"
             :class="!userInfo.real_name && 'real_name_btn'"
-            @click="!userInfo.real_name && $router.push('/manage/user/settings/realname')"
+            @click="!userInfo.real_name && $router.push('/manage/user/realname')"
           >
             <img v-if="userInfo.real_name" :src="real_name_i" alt="" />
             <div v-else class="real_name_text">实名认证</div>
@@ -56,7 +56,7 @@
       <div class="card_title">已订购产品与服务</div>
       <div class="card_body">
         <KzEmpty>
-          <el-button type="primary" size="large" @click="$router.push('/manage/user/product/order')"
+          <el-button type="primary" size="large" @click="$router.push('/manage/user/order')"
             >订购产品与服务</el-button
           >
         </KzEmpty>

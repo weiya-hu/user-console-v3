@@ -41,7 +41,7 @@
                       <KzIcon href="#icon-banbenqiehuan-tuandui" size="12px" />
                       <div>企业版</div>
                     </div>
-                    <el-link type="primary" @click="addCompanyShow = true"
+                    <el-link type="primary" @click="$router.push('/manage/user/authentication')"
                       ><el-icon color="#2D68EB" size="14px"><Plus /></el-icon>新建企业</el-link
                     >
                   </div>
@@ -90,7 +90,7 @@
                   <div
                     class="tags fcc"
                     :class="!userInfo.real_name && 'real_name_btn'"
-                    @click="!userInfo.real_name && $router.push('/manage/user/settings/realname')"
+                    @click="!userInfo.real_name && $router.push('/manage/user/realname')"
                   >
                     <img v-if="userInfo.real_name" :src="real_name_i" alt="" />
                     <div v-else class="real_name_text">实名认证</div>
