@@ -18,7 +18,7 @@ vue-cropper：图片裁剪插件
 "lint": lint 规则代码检查及自动格式化，配置详见.eslintrc.js,
 "prettier": prettier 规则代码检查及自动格式化，配置详见.prettierrc.js
 
-增加的自定义指令： v-error = "boolean" errorRedo="emitName" errorRedo 为重试事件名 使用 emiter.on('emitName', function...) 监听点击重试事件
+增加的自定义指令： v-error:[myEventName]="boolean" myEventName 为重试事件名 使用 emiter.on('myEventName', function...) 监听点击重试事件
 
 commit 之前请运行指令格式化
 

@@ -8,12 +8,20 @@
           </div>
           <img :src="logo_i" alt="加载失败" class="logo" />
         </div>
-        <div class="layout_top_middle fcs">
+        <div v-if="userCompanyList.user" class="layout_top_middle fcs">
           <div class="vline"></div>
-          <KzIcon href="#icon-banbenqiehuan-tuandui" size="16px" />
+          <KzIcon
+            :href="
+              nowIdentity.iconType === 'user'
+                ? '#icon-banbenqiehuan-geren'
+                : '#icon-banbenqiehuan-tuandui'
+            "
+            size="16px"
+            color="#909399"
+          />
           <el-dropdown>
             <div class="fcs icon_rotate">
-              <span class="now_identity">康州数智科技</span>
+              <span class="now_identity">{{ nowIdentity.name }}</span>
               <KzIcon href="#icon-xiala-shouqitianchong" size="16px" />
             </div>
             <template #dropdown>
@@ -23,8 +31,8 @@
                     <KzIcon href="#icon-banbenqiehuan-geren" size="12px" />
                     <div>个人版</div>
                   </div>
-                  <div class="identity_item els">
-                    康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技
+                  <div class="identity_item els" @click="changeIdentity(userCompanyList.user)">
+                    {{ userCompanyList.user.name }}
                   </div>
                 </div>
                 <div class="company_self">
@@ -37,14 +45,13 @@
                       ><el-icon color="#2D68EB" size="14px"><Plus /></el-icon>新建企业</el-link
                     >
                   </div>
-                  <div class="identity_item els">
-                    康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技
-                  </div>
-                  <div class="identity_item els">
-                    康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技
-                  </div>
-                  <div class="identity_item els">
-                    康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技康州数智科技
+                  <div
+                    v-for="v in userCompanyList.company_list"
+                    :key="v.id"
+                    class="identity_item els"
+                    @click="changeIdentity(v)"
+                  >
+                    {{ v.name }}
                   </div>
                 </div>
               </div>
@@ -59,30 +66,39 @@
           </div>
           <div class="vline"></div>
           <div class="user_box fcs">
-            <el-avatar :size="36" :src="df_avatar_i" />
-            <el-popover :show-arrow="false" width="316px" popper-class="user_drop">
+            <el-avatar :size="36" :src="userInfo.head || df_avatar_i" />
+            <el-popover
+              v-if="memberList.length && userInfo.level"
+              :show-arrow="false"
+              width="316px"
+              popper-class="user_drop"
+            >
               <template #reference>
                 <div class="fcs pl16 icon_rotate">
-                  <div class="user_name els">
-                    康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州
-                  </div>
+                  <div class="user_name els">{{ userInfo.name }}</div>
                   <KzIcon href="#icon-shouqi02" size="16px" />
                 </div>
               </template>
               <div class="user_drop_info fc">
                 <div class="fcs fjend">
                   <div class="tags fcc">
-                    <img :src="user_general_i" alt="" />
+                    <img
+                      :src="memberList.find(v => Number(v.id) === userInfo.level)!.icon"
+                      alt=""
+                    />
                   </div>
-                  <div class="tags fcc">
-                    <img :src="real_name_i" alt="" />
+                  <div
+                    class="tags fcc"
+                    :class="!userInfo.real_name && 'real_name_btn'"
+                    @click="!userInfo.real_name && $router.push('/manage/user/settings/realname')"
+                  >
+                    <img v-if="userInfo.real_name" :src="real_name_i" alt="" />
+                    <div v-else class="real_name_text">实名认证</div>
                   </div>
                 </div>
                 <div class="fcc fc user_avatar">
-                  <el-avatar :size="64" :src="df_avatar_i" />
-                  <div class="user_name1 els">
-                    康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州
-                  </div>
+                  <el-avatar :size="64" :src="userInfo.head || df_avatar_i" />
+                  <div class="user_name1 els">{{ userInfo.name }}</div>
                 </div>
                 <div class="user_btns f1 fc fjend">
                   <div
@@ -135,6 +151,12 @@
     </template>
     <el-skeleton v-else :rows="5" animated />
 
+    <KzDialog v-model="changeIdentityShow" title="切换版本" @sure="onChangeIdentity">
+      <div class="is_change_identity">
+        切换版本后页面会重新加载，是否切换版本至“ {{ changeIdentityItem.name }} ”？
+      </div>
+    </KzDialog>
+
     <el-image-viewer
       v-if="imgShow"
       :url-list="showImgs"
@@ -152,7 +174,7 @@
       <video :src="lookVideo" controls class="show_video"></video>
     </el-dialog>
 
-    <el-dialog v-model="addCompanyShow" title="新建企业" width="500px">
+    <el-dialog v-model="addCompanyShow" title="新建企业" width="500px" @close="closeAddCompany">
       <el-form
         ref="addCompanyFormRef"
         v-loading="addCompanyLoading"
@@ -210,14 +232,14 @@ import { mainStore } from '@/store/index'
 import emiter from '@/utils/bus'
 import logo_i from '@/assets/images/logo.png'
 import df_avatar_i from '@/assets/images/dfavatar.png'
-import user_general_i from '@/assets/images/user_general.png'
 import real_name_i from '@/assets/images/real_name.png'
 import { ArrowRight, Plus } from '@element-plus/icons-vue'
 import KzLeftNav from '@/components/KzLeftNav.vue'
 import KzDetailsHeader from '@/components/KzDetailsHeader.vue'
+import KzDialog from '@/components/KzDialog.vue'
 import { loginOut_api } from '@/api/login'
 import { errMsg } from '@/utils'
-
+import { getUserCompanyList_api, changeIdentity_api } from '@/api/index'
 // demo start
 
 import KzImgUpload from '@/components/KzImgUpload.vue'
@@ -228,8 +250,8 @@ const upDemoShow = ref(false)
 const imgsList = ref<string[]>([])
 const showDemo = () => {
   imgsList.value = [
-    // 'https://res.kzszh.com/dev/web/index/image/f21b635833aaf9ef4f4179e415988102.png',
-    // 'https://res.kzszh.com/dev/web/index/image/736612fc47abb31fbab2bfdf3d67ba1a.png',
+    'https://res.kzszh.com/dev/web/index/image/f21b635833aaf9ef4f4179e415988102.png',
+    'https://res.kzszh.com/dev/web/index/image/736612fc47abb31fbab2bfdf3d67ba1a.png',
   ]
   upDemoShow.value = true
 }
@@ -279,14 +301,53 @@ const onAvatarSuceess = () => {
 
 // demo end
 
+const userCompanyList = ref<IKzObj>({})
+const nowIdentity = ref<{ iconType: 'user' | 'company'; [x: string]: any }>({ iconType: 'user' })
+const getUserCompanyList = async () => {
+  const res = await getUserCompanyList_api()
+  if (res.status === 1) {
+    userCompanyList.value = res.body
+    if (userCompanyList.value.user.selected === 1) {
+      nowIdentity.value = userCompanyList.value.user
+      nowIdentity.value.iconType = 'user'
+    } else {
+      nowIdentity.value = userCompanyList.value.company_list.find((v: any) => v.selected === 1)
+      nowIdentity.value.iconType = 'company'
+    }
+    store.setUserCompany(nowIdentity.value, res.body)
+  }
+}
+getUserCompanyList()
+const changeIdentityShow = ref(false)
+const changeIdentityItem = ref<IKzObj>({})
+const changeIdentity = async (item: IKzObj) => {
+  changeIdentityItem.value = item
+  changeIdentityShow.value = true
+}
+const onChangeIdentity = async () => {
+  const res = await changeIdentity_api({ cid: changeIdentityItem.value.id })
+  if (res.status === 1) {
+    window.location.reload()
+  }
+}
+
+// 新增企业start
 const addCompanyShow = ref(false)
 const addCompanyLoading = ref(false)
+emiter.on('addCompany', () => {
+  addCompanyShow.value = true
+})
 const addCompanyFormRef = ref()
 const addCompanyLogoUpRef = ref()
 const addCompanyForm = ref({
   logo: '',
   name: '',
 })
+const closeAddCompany = () => {
+  addCompanyFormRef.value.resetFields()
+  addCompanyForm.value.logo = ''
+  addCompanyForm.value.name = ''
+}
 const validateLogo = (rule: any, value: any, callback: any) => {
   if (addCompanyLogoUpRef.value.imgs.length) {
     callback()
@@ -322,6 +383,7 @@ const onAddCompanyLogoUpError = (err: string) => {
   addCompanyLoading.value = false
   errMsg(err)
 }
+// 新增企业end
 
 const user_btns = [
   { text: '用户中心', icon: '#icon-banbenqiehuan-geren', url: '/manage/user' },
@@ -342,6 +404,9 @@ const handUserBtn = (url: string) => {
 const store = mainStore()
 store.getTypeList()
 store.getAddressList()
+const userInfo = computed(() => store.state.userInfo)
+store.getMemberList()
+const memberList = computed(() => store.state.memberList)
 
 const isLogin = computed(() => {
   if (store.state.userInfo.id) {
@@ -353,7 +418,7 @@ const isLogin = computed(() => {
 
 const route = useRoute()
 const router = useRouter()
-const routers = router.getRoutes()
+const routes = router.getRoutes()
 const leftNavRef = ref()
 const detailsHeaderRef = ref()
 onBeforeRouteUpdate((to, from) => {
@@ -493,6 +558,10 @@ emiter.on('lookVideo', (video: string) => {
       }
     }
   }
+  .is_change_identity {
+    padding: 30px 0;
+    font-size: 16px;
+  }
 }
 :deep(.view_videobox) {
   .el-dialog__body {
@@ -525,6 +594,19 @@ emiter.on('lookVideo', (video: string) => {
     }
     .kzicon {
       margin-right: 1px;
+    }
+  }
+  .real_name_btn {
+    cursor: pointer;
+    .real_name_text {
+      height: 16px;
+      font-size: 12px;
+      line-height: 16px;
+      padding: 0 4px;
+      color: $dfcolor;
+    }
+    &:hover {
+      background-color: #f3f4f8;
     }
   }
   .user_avatar {

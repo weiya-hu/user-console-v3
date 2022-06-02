@@ -8,12 +8,6 @@ interface IRes {
   message?: string
 }
 
-interface INavitem {
-  path: string
-  name: string
-  [propName: string]: any
-}
-
 /**
  * @name 分页类型
  */
@@ -23,6 +17,11 @@ interface IPageParams {
   source?: number
   [propName: string]: any
 }
+
+/**
+ * @name 对象类型
+ */
+type IKzObj = Record<string | number | symbol, any>
 
 /**
  * @name 登录表单类型

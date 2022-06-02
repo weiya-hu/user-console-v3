@@ -137,7 +137,7 @@
             <el-button type="primary" @click="showContent = false">立即添加</el-button>
           </div> -->
           <div v-if="!sub" class="content_two">
-            <el-form :model="formInline" label-width="150px" :rules="telRules" ref="contactRule">
+            <el-form ref="contactRule" :model="formInline" label-width="150px" :rules="telRules">
               <el-form-item label="联系人">
                 <el-input v-model="formInline.legal_person" placeholder="请输入" />
               </el-form-item>

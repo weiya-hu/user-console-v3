@@ -28,6 +28,11 @@ export function Format(fmt: string, date: Date) {
   return fmt
 }
 
+/**
+ * 转换时间格式
+ * @date new Date
+ * @pattern 格式，例如'yyyy-MM-dd hh:mm:ss'
+ */
 export function formatDate(date?: Date, pattern?: string) {
   if (date) {
     let d = Format('yyyy-MM-dd hh:mm:ss', date)

@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 /**
- * 简易的居中布局弹窗 和 客服弹窗
+ * 简易的居中布局弹窗 和 客服弹窗，默认slot，弹窗内容
  * @author chn
  */
 import kf_code_i from '@/assets/images/kf_code.png'

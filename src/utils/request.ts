@@ -21,6 +21,14 @@ axios.interceptors.request.use((config) => {
       Authorization: token,
     }
   }
+  const insid = router.currentRoute.value.query.insid
+  if (insid) {
+    config.headers = {
+      ...config.headers,
+      'Content-Type': 'application/json', //'application/x-www-form-urlencoded';
+      insid: insid as string,
+    }
+  }
   return config
 })
 // 响应拦截器

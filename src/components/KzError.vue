@@ -16,22 +16,22 @@
 import { ElButton, ElResult } from 'element-plus'
 import emiter from '@/utils/bus'
 import { ref } from 'vue'
-const reDoFunctionName = ref('')
+const reDoEmitEvent = ref('')
 const reDo = () => {
-  emiter.emit(reDoFunctionName.value)
+  emiter.emit(reDoEmitEvent.value)
 }
-const setFunctionName = (name: string) => {
-  reDoFunctionName.value = name
+const setEmitEvent = (eventName: string) => {
+  reDoEmitEvent.value = eventName
 }
 defineExpose({
-  setFunctionName, // 设置emiter函数名
+  setEmitEvent, // 设置emiter事件名
 })
 </script>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 export default defineComponent({
-  name: 'Error',
+  name: 'KzError',
 })
 </script>
 

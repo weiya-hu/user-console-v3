@@ -200,7 +200,7 @@ export const routes: RouteRecordRaw[] = [
                     path: '/manage/user/product/order',
                     name: 'Order',
                     component: () => import('@/views/layout/manage/user/product/order.vue'),
-                    meta: { title: '订购产品' },
+                    meta: { title: '订购产品', scroll: true },
                   },
                 ],
               },

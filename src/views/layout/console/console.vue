@@ -18,28 +18,37 @@
         </div>
       </div>
       <div class="kz_card user_card fc">
-        <div class="fcs fjend user_top">
-          <img :src="user_general_i" alt="" />
-          <img :src="real_name_i" alt="" />
+        <div v-if="memberList.length && userInfo.level" class="fcs fjend user_top">
+          <div class="tags fcc">
+            <img :src="memberList.find(v => Number(v.id) === userInfo.level)!.icon" alt="" />
+          </div>
+          <div
+            class="tags fcc"
+            :class="!userInfo.real_name && 'real_name_btn'"
+            @click="!userInfo.real_name && $router.push('/manage/user/settings/realname')"
+          >
+            <img v-if="userInfo.real_name" :src="real_name_i" alt="" />
+            <div v-else class="real_name_text">实名认证</div>
+          </div>
         </div>
         <div class="user_avatar fc fcc">
-          <el-avatar :size="64" :src="df_avatar_i" />
-          <div class="mt12 els">
-            康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州康州
-          </div>
+          <el-avatar :size="64" :src="userInfo.head || df_avatar_i" />
+          <div class="mt12 els">{{ userInfo.name }}</div>
         </div>
         <div class="user_bottom f1 fc fjend">
           <div class="user_company fcs">
-            <img :src="no_company_i" alt="" />
-            <!-- <div class="user_company_name els">康洲大数据（集团）有限公司康洲大数据（集团）有限公司康洲大数据（集团）有限公司康洲大数据（集团）有限公司</div> -->
-            <div class="user_no_company fcs">
+            <img :src="nowUserIdentity.iconType === 'user' ? no_company_i : is_company_i" alt="" />
+            <div v-if="nowUserIdentity.iconType === 'company'" class="user_company_name els f1">
+              {{ nowUserIdentity.name }}
+            </div>
+            <div v-else class="user_no_company fcs">
               <div class="mr16">暂无企业信息</div>
               <el-link type="primary" @click="$router.push('/manage/company')"
                 >企业认证<el-icon size="16px" class="right_icon"><SortDown /></el-icon
               ></el-link>
             </div>
           </div>
-          <div class="mt12">上次登录：2022-04-22 12:3</div>
+          <div class="mt12">上次登录：{{ formatDate(new Date(userInfo.last_time)) }}</div>
         </div>
       </div>
     </div>
@@ -58,22 +67,32 @@
 
 <script setup lang="ts">
 import KzEmpty from '@/components/KzEmpty.vue'
-import { ref } from 'vue'
-import user_general_i from '@/assets/images/user_general.png'
+import { ref, computed } from 'vue'
 import real_name_i from '@/assets/images/real_name.png'
 import df_avatar_i from '@/assets/images/dfavatar.png'
 import is_company_i from '@/assets/images/is_company.png'
 import no_company_i from '@/assets/images/no_company.png'
 import { SortDown } from '@element-plus/icons-vue'
+import { formatDate } from '@/utils/date'
+
+import { mainStore } from '@/store/index'
+const store = mainStore()
+const userInfo = computed(() => store.state.userInfo)
+const memberList = computed(() => store.state.memberList)
+const nowUserIdentity = computed(() => store.state.nowUserIdentity)
 </script>
 
 <style lang="scss" scoped>
 .console_page {
+  min-height: 300px;
   .card_body {
     padding: 0 24px 24px;
   }
   .user_card {
     width: 372px;
+    background: url('@/assets/images/user_bg.jpg') no-repeat;
+    background-size: 100% auto;
+    background-position: 0 0;
     .mt12 {
       margin-top: 12px;
       max-width: 100%;
@@ -81,10 +100,31 @@ import { SortDown } from '@element-plus/icons-vue'
     .user_top {
       margin-bottom: 20px;
       padding-top: 12px;
-      img {
-        width: auto;
-        height: 16px;
-        margin-right: 12px;
+      .tags {
+        background-color: #fff;
+        padding: 4px;
+        border-radius: 12px;
+        margin-right: 8px;
+        img {
+          width: auto;
+          height: 16px;
+        }
+        .kzicon {
+          margin-right: 1px;
+        }
+      }
+      .real_name_btn {
+        cursor: pointer;
+        .real_name_text {
+          height: 16px;
+          font-size: 12px;
+          line-height: 16px;
+          padding: 0 4px;
+          color: $dfcolor;
+        }
+        &:hover {
+          background-color: #f3f4f8;
+        }
       }
     }
     .user_avatar {
