@@ -1,5 +1,5 @@
 <template>
-  <div class="rz_dialog_hll">
+  <div v-if="pageShow" class="rz_dialog_hll">
     <el-dialog v-model="show" width="500px" custom-class="invites_dialog" :show-close="false">
       <div class="mid">
         <div class="mr">
@@ -10,15 +10,6 @@
             </div>
           </div>
           <div>是否接受邀请？</div>
-          <!-- <el-form :model="nameForm">
-            <el-form-item
-              label="真实姓名"
-              prop="name"
-              :rules="[{ required: true, message: '请填写真实姓名' }]"
-            >
-              <el-input v-model="nameForm.name" placeholder="请输入真实姓名" />
-            </el-form-item>
-          </el-form> -->
         </div>
       </div>
       <div class="imgs">
@@ -38,10 +29,23 @@ import { getSignname_api, addSign_api } from '@/api/manage/company/personnelMana
 import { useRoute, useRouter } from 'vue-router'
 import { mainStore } from '@/store/index'
 import { okMsg } from '@/utils/index'
-import { nextTick } from 'process'
+
 const router = useRouter()
 const route = useRoute()
 const store = mainStore()
+
+const pageShow = ref(false)
+if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
+  if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+    //处理移动端的业务逻辑
+    store.getYxtUrl().then((res) => {
+      window.location.href = 'https://' + res.mobile + `/app/login${location.search}`
+      return
+    })
+  }
+  pageShow.value = true
+}
+
 const uid = route.query.uid
 const sign = route.query.sign as string
 const cid = route.query.cid
@@ -50,9 +54,6 @@ const userId = computed(() => store.state.userInfo.id)
 const codeUrl = computed(() => store.state.yxtUrl.mobile)
 
 const show = ref(true)
-const nameForm = reactive({
-  name: '',
-})
 const names = ref<any>({})
 const getName = async () => {
   const { body, status } = await getSignname_api({
