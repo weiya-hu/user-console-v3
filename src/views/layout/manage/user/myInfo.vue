@@ -757,7 +757,7 @@ const quitCom = async () => {
   if (res.status === 1) {
     myCompany()
     quitShow.value = false
-    okMsg('')
+    okMsg('操作成功！')
   }
 }
 const closeCom = () => {

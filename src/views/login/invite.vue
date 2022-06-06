@@ -40,7 +40,6 @@ if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
     //处理移动端的业务逻辑
     store.getYxtUrl().then((res) => {
       window.location.href = 'https://' + res.mobile + `/app/login${location.search}`
-      return
     })
   }
   pageShow.value = true

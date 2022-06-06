@@ -124,3 +124,9 @@ export const companyAdd_api = (): Promise<IRes> => {
 export const companyExam_api = (): Promise<IRes> => {
   return get('user ', '/web/company/audit.list')
 }
+/**
+ * @name 删除待审核企业
+ */
+export const delCompanyInfo_api = (data: { id: number }): Promise<IRes> => {
+  return post('user', '/web/company/audit.del', data)
+}

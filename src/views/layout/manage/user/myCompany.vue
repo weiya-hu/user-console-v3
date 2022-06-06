@@ -44,19 +44,6 @@
           </el-table-column>
           <el-table-column property="address" label="详细地址" />
           <el-table-column property="business_scope" label="经营范围" />
-
-          <!-- <el-table-column label="操作">
-            <template #default="{ row }">
-              <div class="fcs">
-                <el-link
-                  type="primary"
-                  v-if="row.type == 1"
-                  @click="$router.push('/manage/company/companyinfo?id=' + row.id)"
-                  >企业管理</el-link
-                >
-              </div>
-            </template>
-          </el-table-column> -->
           <template #empty>
             <KzEmpty />
           </template>
@@ -110,6 +97,7 @@
                   @click="$router.push('authentication?id=' + row.id)"
                   >编辑</el-link
                 >
+                <el-link v-if="row.status == 1" type="primary" @click="goDel(row.id)">删除</el-link>
                 <el-link
                   v-if="row.status == 2"
                   type="primary"
@@ -145,9 +133,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
-import { companyAdd_api, companyExam_api } from '@/api/manage/user/myinfo'
+import { companyAdd_api, companyExam_api, delCompanyInfo_api } from '@/api/manage/user/myinfo'
 import { getKzComStatus, getHash, getHashStr, strToArr } from '@/utils/index'
-import { errMsg } from '@/utils'
+import { errMsg, okMsg } from '@/utils'
 import KzEmpty from '@/components/KzEmpty.vue'
 import { mainStore } from '@/store/index'
 import { useRouter } from 'vue-router'
@@ -178,6 +166,14 @@ const companyName = ref<any>('')
 const onAddCompanySubmit = () => {
   router.replace('/manage/company/authentication?name=' + companyName.value)
 }
+const goDel = async (id: number) => {
+  console.log('删除', id)
+  const res = await delCompanyInfo_api({ id })
+  if (res.status == 1) {
+    okMsg('操作成功！')
+  }
+  cExamList()
+}
 </script>
 
 <style lang="scss" scoped>
@@ -185,6 +181,9 @@ const onAddCompanySubmit = () => {
   padding: 24px;
   .tab_box {
     margin-top: 24px;
+  }
+  .el-link {
+    margin-right: 24px;
   }
 }
 </style>
