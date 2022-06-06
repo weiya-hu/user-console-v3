@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-    <div class="kz_step_tab_right f1">
+    <div class="kz_step_tab_right f1" v-if="slots.content">
       <el-scrollbar ref="scrollbarRef" :noresize="true" @scroll="debounceScroll">
         <slot name="content"></slot>
       </el-scrollbar>
@@ -48,9 +48,16 @@ const props = withDefaults(
     viewHeight: 0,
   }
 )
-// 点击时触发，改变绑定的v-model,触发change，返回点击的index
+const slots = useSlots()
+
 const emit = defineEmits(['update:modelValue', 'change'])
+// 点击时触发，改变绑定的v-model,触发change，返回点击的index
 const change = (index: number) => {
+  if(!slots.content){
+    emit('update:modelValue', index)
+    emit('change', index)
+    return
+  }
   const itme = props.itemEl[index]
   if (!index) {
     scrollbarRef.value!.setScrollTop(0)
@@ -67,7 +74,6 @@ const change = (index: number) => {
   scrollbarRef.value!.setScrollTop(itme.offsetTop - itme.offsetHeight)
 }
 
-const slots = useSlots()
 const totalHeight = ref(0) // 滚动元素总高度
 onMounted(() => {
   nextTick(() => {

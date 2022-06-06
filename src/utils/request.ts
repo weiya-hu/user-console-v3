@@ -25,8 +25,8 @@ axios.interceptors.request.use((config) => {
   if (insid) {
     config.headers = {
       ...config.headers,
-      'Content-Type': 'application/json', //'application/x-www-form-urlencoded';
-      insid: insid as string,
+      'Content-Type': 'application/json',
+      'INSID': insid as string,
     }
   }
   return config

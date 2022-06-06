@@ -151,12 +151,6 @@
     </template>
     <el-skeleton v-else :rows="5" animated />
 
-    <KzDialog v-model="changeIdentityShow" title="切换版本" @sure="onChangeIdentity">
-      <div class="is_change_identity">
-        切换版本后页面会重新加载，是否切换版本至“ {{ changeIdentityItem.name }} ”？
-      </div>
-    </KzDialog>
-
     <el-image-viewer
       v-if="imgShow"
       :url-list="showImgs"
@@ -240,8 +234,9 @@ import KzDialog from '@/components/KzDialog.vue'
 import { loginOut_api } from '@/api/login'
 import { errMsg } from '@/utils'
 import { getUserCompanyList_api, changeIdentity_api } from '@/api/index'
-// demo start
+import { ElMessageBox } from 'element-plus'
 
+// demo start
 import KzImgUpload from '@/components/KzImgUpload.vue'
 import KzUpload from '@/components/KzUpload.vue'
 import KzUpAvatar from '@/components/KzUpAvatar.vue'
@@ -318,17 +313,23 @@ const getUserCompanyList = async () => {
   }
 }
 getUserCompanyList()
-const changeIdentityShow = ref(false)
-const changeIdentityItem = ref<IKzObj>({})
-const changeIdentity = async (item: IKzObj) => {
-  changeIdentityItem.value = item
-  changeIdentityShow.value = true
-}
-const onChangeIdentity = async () => {
-  const res = await changeIdentity_api({ cid: changeIdentityItem.value.id })
-  if (res.status === 1) {
-    window.location.reload()
-  }
+const changeIdentity = (item: IKzObj) => {
+  ElMessageBox.confirm(
+    '切换版本后页面会重新加载，是否切换版本至“ ' + item.name + ' ”？',
+    '版本切换',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'info',
+    }
+  ).then(async () => {
+    const res = await changeIdentity_api({ cid: item.id })
+    if (res.status === 1) {
+      window.location.href = window.location.origin + '/console'
+    }
+  }).catch(() => {
+     return 
+  })
 }
 
 // 新增企业start
@@ -557,10 +558,6 @@ emiter.on('lookVideo', (video: string) => {
         max-width: calc(100% - 64px);
       }
     }
-  }
-  .is_change_identity {
-    padding: 30px 0;
-    font-size: 16px;
   }
 }
 :deep(.view_videobox) {
