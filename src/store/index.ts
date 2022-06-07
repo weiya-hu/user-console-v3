@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import { getIndustryList_api, getAddressList_api, getUserInfo, getYxtUrl_api } from '@/api/login'
-import { getMemberList_api } from '@/api/index'
+import { getMemberList_api, getIsManager_api, getUserCompanyList_api } from '@/api/index'
 import { getHash } from '@/utils/index'
 
 import user_general_i from '@/assets/images/user_general.png'
@@ -24,7 +24,7 @@ export const mainStore = defineStore('mainStore', () => {
     addressList: [] as IStoreObj[], // 地区列表
     addressHash: {} as IStoreObj, // 地区列表哈希表
     keepList: [] as string[], // 需要缓存的路由组件列表，须要在组件文件中设置name属性，并且name必须和组件对应的路由的name一致，路由的meta属性中也必须添加keepAlive:true,下级路由的meta中也要加入father字段为需要缓存的路由的path
-    userPower: ['1'] as string[], // 用户权限数组
+    userPower: [] as string[], // 用户权限数组
     newsMayLikeId: 2, //新闻资讯推荐id
     newsFollowId: 1, //新闻关注id
   })
@@ -72,9 +72,16 @@ export const mainStore = defineStore('mainStore', () => {
     }
     return new Promise<any>((resolve, reject) => {
       getUserInfo()
-        .then((res: IRes) => {
-          if (res.status == 1) {
+        .then(async (res: IRes) => {
+          if (res.status === 1) {
             state.userInfo = res.body
+            const res1 = await getIsManager_api()
+            if (res.status === 1) {
+              state.userInfo.isManager = res1.body
+              if (res1.body) {
+                state.userPower.push('IS_NOW_MANAGER')
+              }
+            }
             resolve(state.userInfo)
           } else {
             state.userInfo = {}
@@ -91,7 +98,7 @@ export const mainStore = defineStore('mainStore', () => {
     return new Promise<any>((resolve, reject) => {
       getYxtUrl_api()
         .then((res: IRes) => {
-          if (res.status == 1) {
+          if (res.status === 1) {
             localStorage.setItem('yxtUrl', JSON.stringify(res.body))
             state.yxtUrl = res.body
             resolve(res.body)
@@ -104,14 +111,17 @@ export const mainStore = defineStore('mainStore', () => {
         })
     })
   }
-  const isCanDo = (powerId: string) => {
-    return state.userPower.includes(powerId)
+  const isCanDo = (powerId: string | undefined) => {
+    if (powerId) {
+      return state.userPower.includes(powerId)
+    }
+    return false
   }
   const getMemberList = () => {
     return new Promise<any>((resolve, reject) => {
       getMemberList_api()
         .then((res: IRes) => {
-          if (res.status == 1) {
+          if (res.status === 1) {
             state.memberList = res.body
             const icons = [user_general_i, user_silver_i, user_gold_i, user_star_i]
             state.memberList.forEach((v, i) => {
@@ -129,15 +139,20 @@ export const mainStore = defineStore('mainStore', () => {
   }
 
   /**
-   * @nowIdentity 用户当前身份
-   * @info 个人身份和企业身份
+   * @name 设置用户个人/企业列表和当前选择的身份
    */
-  const setUserCompany = (
-    nowIdentity: { iconType: 'user' | 'company'; [x: string]: any },
-    info?: IStoreObj
-  ) => {
-    state.nowUserIdentity = nowIdentity
-    info && (state.userCompany = info)
+  const setUserCompany = async () => {
+    const res = await getUserCompanyList_api()
+    if (res.status === 1) {
+      state.userCompany = res.body
+      if (res.body.user.selected === 1) {
+        state.nowUserIdentity = res.body.user
+        state.nowUserIdentity.iconType = 'user'
+      } else {
+        state.nowUserIdentity = res.body.company_list.find((v: any) => v.selected === 1)
+        state.nowUserIdentity.iconType = 'company'
+      }
+    }
   }
   return {
     state,

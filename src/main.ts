@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from '@/router'
 import { createPinia } from 'pinia'
-import ElementPlus from 'element-plus'
+import ElementPlus, { ElMessageBox } from 'element-plus'
 import 'element-plus/dist/index.css'
 import '@/assets/css/base.scss'
 import ErrorDirective from '@/directive/error.js'
@@ -28,6 +28,16 @@ store.setUserinfo().finally(() => {
     const userInfo = store.state.userInfo
     if (to.path !== '/login' && to.meta.lv !== '-1' && !userInfo.id) {
       router.replace('/login?url=' + encodeURIComponent(window.location.origin + '/console'))
+      return false
+    }
+    if (to.meta.power && !store.isCanDo(to.meta.power as string)) {
+      ElMessageBox.alert('当前身份无此权限。', '温馨提示', {
+        confirmButtonText: '关闭',
+        type: 'error',
+        callback: () => {
+          router.replace(from.fullPath)
+        },
+      })
       return false
     }
   })

@@ -9,6 +9,8 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
  * father：在导航中不出现的详情页需要此属性，值为在此页面时需要激活的导航的path；
  * keepAlive: 页面是否需要缓存，一般在父级进入详情页时，父级需要缓存则给父级添加，父级页面还需要导出name；
  * scroll：页面中是否使用单独的el-scrollbar组件；
+ * lv：现仅用于判断是否需要登录的页面；
+ * power：页面权限字段；
  * @ 子页面都必须写在Layout的children下，因为左侧导航是直接取Layout下children
  */
 export const routes: RouteRecordRaw[] = [
@@ -315,7 +317,7 @@ export const routes: RouteRecordRaw[] = [
             name: 'Company',
             component: () => import('@/views/layout/rView.vue'),
             redirect: '/manage/company/companyinfo',
-            meta: { title: '企业管理', icon: '#icon-lanmu-qiyeguanli' },
+            meta: { title: '企业管理', icon: '#icon-lanmu-qiyeguanli', power: 'IS_NOW_MANAGER' },
             children: [
               {
                 path: '/manage/company/companyinfo',

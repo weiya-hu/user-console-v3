@@ -15,9 +15,15 @@ export const changeIdentity_api = (data: { cid: number }): Promise<IRes> => {
 }
 
 /**
- * @name 获取会员等级信息
+ * @name 获取会员等级信息 [银牌会员。。。]
  */
 export const getMemberList_api = (): Promise<IRes> => {
-  //获取会员等级信息
   return get('user', '/public/member.list')
+}
+
+/**
+ * @name 用户是否当前企业管理员
+ */
+export const getIsManager_api = (): Promise<IRes> => {
+  return get('user', '/web/user/company/admin/verify.do')
 }

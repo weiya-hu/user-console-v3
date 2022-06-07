@@ -36,7 +36,10 @@
           <div class="mt12 els">{{ userInfo.name }}</div>
         </div>
         <div class="user_bottom f1 fc fjend">
-          <div class="user_company fcs">
+          <div
+            v-if="userCompany.company_list && userCompany.company_list.length"
+            class="user_company fcs"
+          >
             <img :src="nowUserIdentity.iconType === 'user' ? no_company_i : is_company_i" alt="" />
             <div v-if="nowUserIdentity.iconType === 'company'" class="user_company_name els f1">
               {{ nowUserIdentity.name }}
@@ -74,12 +77,13 @@ import is_company_i from '@/assets/images/is_company.png'
 import no_company_i from '@/assets/images/no_company.png'
 import { SortDown } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
-
 import { mainStore } from '@/store/index'
+
 const store = mainStore()
 const userInfo = computed(() => store.state.userInfo)
 const memberList = computed(() => store.state.memberList)
 const nowUserIdentity = computed(() => store.state.nowUserIdentity)
+const userCompany = computed(() => store.state.userCompany)
 </script>
 
 <style lang="scss" scoped>
@@ -91,7 +95,7 @@ const nowUserIdentity = computed(() => store.state.nowUserIdentity)
   .user_card {
     width: 372px;
     background: url('@/assets/images/user_bg.jpg') no-repeat;
-    background-size: 100% auto;
+    background-size: 100% 100%;
     background-position: 0 0;
     .mt12 {
       margin-top: 12px;

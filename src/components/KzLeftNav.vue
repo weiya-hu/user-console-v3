@@ -38,20 +38,21 @@
               <el-icon size="16px"><my-icon-menu /></el-icon>
             </div>
           </div>
-          <div
-            v-for="j in v.children"
-            :key="j.name"
-            class="nav_item_lv2"
-            :class="nowPath.indexOf(j.path) > -1 && 'kz_active'"
-            @click="goRoute(j.path, false)"
-          >
-            <div class="nav_icon">
-              <KzIcon :href="j.meta!.icon" />
+          <template v-for="j in v.children" :key="j.name">
+            <div
+              v-if="j.meta?.power ? store.isCanDo(j.meta.power as string) : true"
+              class="nav_item_lv2"
+              :class="nowPath.indexOf(j.path) > -1 && 'kz_active'"
+              @click="goRoute(j.path, false)"
+            >
+              <div class="nav_icon">
+                <KzIcon :href="j.meta!.icon" />
+              </div>
+              <transition name="el-fade-in-linear">
+                <div v-show="!flag" class="nav_text nowrap">{{j.meta!.title}}</div>
+              </transition>
             </div>
-            <transition name="el-fade-in-linear">
-              <div v-show="!flag" class="nav_text nowrap">{{j.meta!.title}}</div>
-            </transition>
-          </div>
+          </template>
         </div>
       </div>
       <div v-show="flag" v-if="secNav" class="kz_sec_nav">

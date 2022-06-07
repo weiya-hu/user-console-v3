@@ -230,10 +230,9 @@ import real_name_i from '@/assets/images/real_name.png'
 import { ArrowRight, Plus } from '@element-plus/icons-vue'
 import KzLeftNav from '@/components/KzLeftNav.vue'
 import KzDetailsHeader from '@/components/KzDetailsHeader.vue'
-import KzDialog from '@/components/KzDialog.vue'
 import { loginOut_api } from '@/api/login'
 import { errMsg } from '@/utils'
-import { getUserCompanyList_api, changeIdentity_api } from '@/api/index'
+import { changeIdentity_api } from '@/api/index'
 import { ElMessageBox } from 'element-plus'
 
 // demo start
@@ -296,23 +295,6 @@ const onAvatarSuceess = () => {
 
 // demo end
 
-const userCompanyList = ref<IKzObj>({})
-const nowIdentity = ref<{ iconType: 'user' | 'company'; [x: string]: any }>({ iconType: 'user' })
-const getUserCompanyList = async () => {
-  const res = await getUserCompanyList_api()
-  if (res.status === 1) {
-    userCompanyList.value = res.body
-    if (userCompanyList.value.user.selected === 1) {
-      nowIdentity.value = userCompanyList.value.user
-      nowIdentity.value.iconType = 'user'
-    } else {
-      nowIdentity.value = userCompanyList.value.company_list.find((v: any) => v.selected === 1)
-      nowIdentity.value.iconType = 'company'
-    }
-    store.setUserCompany(nowIdentity.value, res.body)
-  }
-}
-getUserCompanyList()
 const changeIdentity = (item: IKzObj) => {
   ElMessageBox.confirm(
     '切换版本后页面会重新加载，是否切换版本至“ ' + item.name + ' ”？',
@@ -405,9 +387,15 @@ const handUserBtn = (url: string) => {
 const store = mainStore()
 store.getTypeList()
 store.getAddressList()
+
 const userInfo = computed(() => store.state.userInfo)
+
 store.getMemberList()
 const memberList = computed(() => store.state.memberList)
+
+store.setUserCompany()
+const userCompanyList = computed(() => store.state.userCompany)
+const nowIdentity = computed(() => store.state.nowUserIdentity)
 
 const isLogin = computed(() => {
   if (store.state.userInfo.id) {
