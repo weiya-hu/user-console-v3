@@ -133,10 +133,10 @@ const goRoute = (path: string, isSmall: boolean) => {
     window.open('//' + yxtUrl.value.dmp, '_blank')
     return
   }
-  if (path === '/product/cms') {
-    window.open('//' + yxtUrl.value.cms, '_blank')
-    return
-  }
+  // if (path === '/product/cms') {
+  //   window.open('//' + yxtUrl.value.cms, '_blank')
+  //   return
+  // }
   if (flag.value) {
     emit('change', isSmall)
   }

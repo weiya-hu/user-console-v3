@@ -116,7 +116,7 @@ export const routes: RouteRecordRaw[] = [
             redirect: (to) => {
               const yxtUrl = localStorage.getItem('yxtUrl')
               window.open(
-                yxtUrl ? '//' + JSON.parse(yxtUrl).dmp : 'https://dmp-dev.kzszh.com/index',
+                yxtUrl ? '//' + JSON.parse(yxtUrl).dmp : 'http://lc.kzszh.com:9000/console',
                 '_blank'
               ) // 会被浏览器阻止
               return '/console'
@@ -126,15 +126,77 @@ export const routes: RouteRecordRaw[] = [
           {
             path: '/product/cms',
             name: 'Cms',
-            redirect: (to) => {
-              const yxtUrl = localStorage.getItem('yxtUrl')
-              window.open(
-                yxtUrl ? '//' + JSON.parse(yxtUrl).cms : 'https://cms-dev.kzszh.com/index',
-                '_blank'
-              ) // 会被浏览器阻止
-              return '/console'
-            },
+            redirect: '/product/cms/mywork',
+            component: () => import('@/views/layout/rView.vue'),
             meta: { title: 'CMS内容管理中心', icon: '#icon-lanmu-CMS' },
+            children: [
+              {
+                path: '/product/cms/mywork',
+                name: 'MyWork',
+                component: () => import('@/views/layout/rView.vue'),
+                meta: { title: '我的作品库' },
+                redirect: '/product/cms/mywork/article',
+                children: [
+                  {
+                    path: '/product/cms/mywork/article',
+                    name: 'MyworkArticle',
+                    component: () => import('@/views/layout/product/cms/myWork/article.vue'),
+                    meta: { title: '软文库' },
+                  },
+                  {
+                    path: '/product/cms/mywork/images',
+                    name: 'MyworkImages',
+                    component: () => import('@/views/layout/product/cms/myWork/images.vue'),
+                    meta: { title: '图片库' },
+                  },
+                  {
+                    path: '/product/cms/mywork/poster',
+                    name: 'MyworkPoster',
+                    component: () => import('@/views/layout/product/cms/myWork/poster.vue'),
+                    meta: { title: '海报库' },
+                  },
+                  {
+                    path: '/product/cms/mywork/video',
+                    name: 'MyworkVideo',
+                    component: () => import('@/views/layout/product/cms/myWork/video.vue'),
+                    meta: { title: '视频库' },
+                  },
+                ],
+              },
+              {
+                path: '/product/cms/custom',
+                name: 'Custom',
+                component: () => import('@/views/layout/rView.vue'),
+                meta: { title: '个性化内容库' },
+                redirect: '/product/cms/custom/article',
+                children: [
+                  {
+                    path: '/product/cms/custom/article',
+                    name: 'CustomArticle',
+                    component: () => import('@/views/layout/product/cms/custom/article.vue'),
+                    meta: { title: '软文库' },
+                  },
+                  {
+                    path: '/product/cms/custom/images',
+                    name: 'CustomImages',
+                    component: () => import('@/views/layout/product/cms/custom/images.vue'),
+                    meta: { title: '图片库' },
+                  },
+                  {
+                    path: '/product/cms/custom/poster',
+                    name: 'CustomPoster',
+                    component: () => import('@/views/layout/product/cms/custom/poster.vue'),
+                    meta: { title: '海报库' },
+                  },
+                  {
+                    path: '/product/cms/custom/video',
+                    name: 'CustomVideo',
+                    component: () => import('@/views/layout/product/cms/custom/video.vue'),
+                    meta: { title: '视频库' },
+                  },
+                ],
+              },
+            ],
           },
         ],
       },
