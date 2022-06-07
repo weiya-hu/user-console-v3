@@ -196,6 +196,28 @@ export const routes: RouteRecordRaw[] = [
                   },
                 ],
               },
+              {
+                path: '/product/cms/resource',
+                name: 'Resource',
+                component: () => import('@/views/layout/rView.vue'),
+                meta: { title: '资源内容库' },
+                redirect: '/product/cms/resource/resource',
+                children: [
+                  {
+                    path: '/product/cms/resource/resource',
+                    name: 'ResourceResource',
+                    component: () => import('@/views/layout/product/cms/resource/resource.vue'),
+                    meta: { title: '资源内容库' },
+                  },
+                  {
+                    path: '/product/cms/resource/resourceDetail',
+                    name: 'ResourceDetail',
+                    component: () =>
+                      import('@/views/layout/product/cms/resource/resourceDetail.vue'),
+                    meta: { title: '资源内容库详情', father: '/product/cms/resource/resource' },
+                  },
+                ],
+              },
             ],
           },
         ],

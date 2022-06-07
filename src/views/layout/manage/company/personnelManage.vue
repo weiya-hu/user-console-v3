@@ -133,7 +133,7 @@
               <KzEmpty />
             </template>
           </el-table>
-          <KzPage v-model:page="page" v-model:size="size" :total="total" />
+          <KzPage v-model:page="page" v-model:size="size" :total="total" @change="getGroup()" />
         </div>
         <el-dialog
           v-model="show"

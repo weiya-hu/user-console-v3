@@ -1,5 +1,5 @@
 <template>
-  <div class="m_article" @click="$router.push('/product/cms/resource/resourceDetail')">资源</div>
+  <div class="m_article">资源详情</div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'

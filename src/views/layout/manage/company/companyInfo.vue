@@ -82,7 +82,9 @@
                   <img :src="icon_company" alt="" />
                 </el-descriptions-item>
                 <el-descriptions-item
-                  ><el-link type="primary">人员管理</el-link></el-descriptions-item
+                  ><el-link type="primary" @click="router.push('/manage/company/personnelmanage')"
+                    >人员管理</el-link
+                  ></el-descriptions-item
                 >
               </el-descriptions>
             </div>
@@ -377,9 +379,9 @@ const goEdit = () => {
       })
       status === 1 ? okMsg('联系信息修改成功') : errMsg('联系信息修改失败')
     }
+    getInfo()
   })
 
-  getInfo()
   sub.value = true
 }
 const getInfo = async () => {
@@ -423,7 +425,7 @@ getInfo()
       }
       :deep(.el-descriptions__cell) {
         padding-bottom: 24px;
-        width: 430px;
+        width: 475px;
         padding-right: 32px;
       }
       :deep(.el-descriptions__content) {
@@ -488,7 +490,7 @@ getInfo()
         }
       }
       .card_cont {
-        width: 625px;
+        width: 610px;
         padding-top: 75px;
         padding-bottom: 40px;
         margin: 0 auto;
