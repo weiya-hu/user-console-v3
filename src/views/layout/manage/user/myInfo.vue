@@ -746,15 +746,12 @@ const quitCom = async () => {
   const res = await quitCompany_api({ cid: delComId.value })
   if (res.status === 1) {
     myCompany()
-    getUserCompanyList()
+    store.setUserCompany()
     quitShow.value = false
     okMsg('操作成功！')
   }
 }
-// 刷新面板
-const getUserCompanyList = async () => {
-  const res = await getUserCompanyList_api()
-}
+
 const closeCom = () => {
   quitShow.value = false
 }

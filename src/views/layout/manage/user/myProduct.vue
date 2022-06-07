@@ -13,31 +13,22 @@
             <div>{{ v.version_name }}</div>
           </div>
         </div>
-        <div class="time fsc">
-          <div v-if="showtime(v.left_time) > 5" class="lt fcs">
-            <KzIcon href="#icon-riqi" size="14px" />
-            <div>剩余{{ showtime(v.left_time) }}天</div>
+        <div class="time fsc" v-if="showtime(v.left_time) > 0">
+          <div class="lt fcs">
+            <KzIcon href="#icon-riqi" size="14px" :color="showtime(v.left_time) <= 5 && '#FF4736'"/>
+            <div :class="showtime(v.left_time) <= 5 && 'time_tips'">剩余{{ showtime(v.left_time) }}天</div>
           </div>
-          <div v-else-if="showtime(v.left_time) < 5 && showtime(v.left_time) > 0" class="lt fcs">
-            <el-icon class="kzicon" color="#FF4736 " size="14px"><Clock /></el-icon>
-            <div class="time_tips">剩余{{ showtime(v.left_time) }}天</div>
-          </div>
-          <div v-else class="lt fcs">
-            <el-icon class="kzicon" color="#FF4736 " size="14px"><Clock /></el-icon>
-            <div class="time_tips">当前版本已过期，请联系客服续期</div>
-          </div>
-          <div v-if="showtime(v.left_time) > 0" class="rt">
+          <div class="rt">
             有效期至： {{ formatDate(new Date(Number(v.left_time)), 'yyyy-MM-dd') }}
           </div>
+        </div>
+        <div v-else class="time fcs">
+          <KzIcon href="#icon-zhuyi-biankuang" size="14px" color="#FF4736"/>
+          <div class="time_tips">当前版本已过期，请联系客服续期</div>
         </div>
         <div v-if="showtime(v.left_time) > 0" class="btns">
           <el-button v-if="v.version_type === 1" type="danger" plain>购买</el-button>
           <el-button v-else type="warning" plain>升级</el-button>
-          <el-button type="primary" @click="goSystem(v.id, v.product_id, v.version_type)"
-            >进入系统</el-button
-          >
-        </div>
-        <div v-else-if="showtime(v.left_time) > 0" class="btns">
           <el-button type="primary" @click="goSystem(v.id, v.product_id, v.version_type)"
             >进入系统</el-button
           >
@@ -67,7 +58,6 @@ const page = ref(1)
 const store = mainStore()
 const cmsUrl = computed(() => store.state.yxtUrl.cms)
 const dmpUrl = store.state.yxtUrl.dmp
-console.log(cmsUrl)
 
 const proList = ref<any>({})
 const productList = async () => {
@@ -129,11 +119,7 @@ export default { name: 'MyProduct' }
       &:nth-child(4n) {
         margin-right: 0;
       }
-      .time_tips {
-        font-size: 12px;
-        font-weight: 400;
-        color: #ff4736;
-      }
+      
       .trial_img {
         position: absolute;
         right: -4px;
@@ -199,6 +185,11 @@ export default { name: 'MyProduct' }
         }
         .rt {
           color: #c0c4cc;
+        }
+        .time_tips {
+          font-size: 12px;
+          font-weight: 400;
+          color: #ff4736;
         }
       }
       .btns {
