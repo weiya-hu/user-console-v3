@@ -407,8 +407,9 @@ const addGroup = async (name: string) => {
 const deleteGroup = async (group_id: number) => {
   const { status } = await deleteGroup_api({ group_id })
   status === 1 ? okMsg('删除分组成功') : errMsg('删除分组失败')
+  router.push(`/manage/company/personnelmanage`)
   getGroup()
-  getList()
+  // getList()
 }
 const openEdit = (id: number, name: string) => {
   edit_show.value = true
@@ -442,13 +443,9 @@ const deleteData = async (group_id: number) => {
   // status === 1 ? okMsg('删除分组成功') : errMsg('删除分组失败')
   // getGroup()
   // getList()
-  if (status === 1) {
-    okMsg('删除分组成功')
-    getGroup()
-    getList()
-  } else {
-    errMsg('删除分组失败')
-  }
+  status === 1 ? okMsg('删除分组成功') : errMsg('删除分组失败')
+  router.push(`/manage/company/personnelmanage`)
+  getGroup()
 }
 //修改状态
 const changeStatus = async (id: number) => {
