@@ -167,11 +167,8 @@ const onAddCompanySubmit = () => {
   router.replace('/manage/company/authentication?name=' + companyName.value)
 }
 const goDel = async (id: number) => {
-  console.log('删除', id)
   const res = await delCompanyInfo_api({ id })
-  if (res.status == 1) {
-    okMsg('操作成功！')
-  }
+  res.status == 1 ? okMsg('操作成功！') : errMsg('操作失败！')
   cExamList()
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="kz_card my_product_page">
     <div class="card_title">产品与服务</div>
-    <div class="fcs fww card_content">
+    <div v-if="list.length" class="fcs fww card_content">
       <div v-for="v in list" :key="v" class="item">
         <img v-if="v.version_type === 1" :src="trial_i" alt="" class="trial_img" />
         <div class="img_box fcc">
@@ -33,18 +33,19 @@
           >
         </div>
         <div v-else class="btns kf cont">
-          <!-- <el-button type="warning mr16" plain >升级</el-button> -->
           <KzIcon href="#icon-lanmu-kefu" size="14px" color="#2D68EB" />
           联系客服
         </div>
       </div>
     </div>
+    <KzEmpty v-else />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import trial_i from '@/assets/images/trial.png'
+import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import { formatDate } from '@/utils/date'
 import { companyInstance_api, companySwitch_api } from '@/api/manage/company/companyService'

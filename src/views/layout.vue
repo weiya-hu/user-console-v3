@@ -322,14 +322,14 @@ const changeIdentity = (item: IKzObj) => {
       cancelButtonText: '取消',
       type: 'info',
     }
-  ).then(async () => {
-    const res = await changeIdentity_api({ cid: item.id })
-    if (res.status === 1) {
-      window.location.href = window.location.origin + '/console'
-    }
-  }).catch(() => {
-     return 
-  })
+  )
+    .then(async () => {
+      const res = await changeIdentity_api({ cid: item.id })
+      if (res.status === 1) {
+        window.location.href = window.location.origin + '/console'
+      }
+    })
+    .catch(() => {})
 }
 
 // 新增企业start

@@ -1,7 +1,7 @@
 <template>
   <div class="kz_card my_product_page">
     <div class="card_title">产品与服务</div>
-    <div class="fcs fww card_content">
+    <div v-if="proList.length" class="fcs fww card_content">
       <div v-for="v in proList" :key="v" class="item">
         <img v-if="v.version_type === 1" :src="trial_i" alt="" class="trial_img" />
         <div class="img_box fcc">
@@ -22,7 +22,7 @@
             <el-icon class="kzicon" color="#FF4736 " size="14px"><Clock /></el-icon>
             <div class="time_tips">当前版本已过期，请联系客服续期</div>
           </div>
-          <div class="rt">
+          <div v-if="showtime(v.left_time) > 0" class="rt">
             有效期至： {{ formatDate(new Date(Number(v.left_time)), 'yyyy-MM-dd') }}
           </div>
         </div>
@@ -33,19 +33,20 @@
           >
         </div>
         <div v-else class="btns kf">
-          <!-- <el-button type="warning mr16" plain >升级</el-button> -->
+          <el-button type="warning" class="mr16" plain>升级</el-button>
           <KzIcon href="#icon-lanmu-kefu" size="14px" color="#2D68EB" />
           联系客服
         </div>
       </div>
     </div>
+    <KzEmpty v-else />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import trial_i from '@/assets/images/trial.png'
-import KzPage from '@/components/KzPage.vue'
+import KzEmpty from '@/components/KzEmpty.vue'
 import { productList_api, userEnter_api } from '@/api/manage/user/product'
 import { formatDate } from '@/utils/date'
 import { Clock } from '@element-plus/icons-vue'

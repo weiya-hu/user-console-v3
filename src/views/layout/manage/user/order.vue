@@ -1,12 +1,20 @@
 <template>
   <div id="order_page" class="order_page">
-    <KzStepTab v-model="active" :tabs="tabs" :item-el="itemEl" :view-height="viewHeight">
+    <KzStepTab
+      v-model="active"
+      :tabs="tabs"
+      :item-el="itemEl"
+      :view-height="viewHeight"
+      :total-height="totalHeight"
+    >
       <template #default="{ item }">
         {{ item.title }}
       </template>
       <template #content>
-        <div v-for="(v, i) in tabs" :key="i" class="kz_card order_conten_item">
-          {{ v.title }}
+        <div id="order_conten_item_id">
+          <div v-for="(v, i) in tabs" :key="i" class="kz_card order_conten_item">
+            {{ v.title }}
+          </div>
         </div>
       </template>
     </KzStepTab>
@@ -26,10 +34,12 @@ const active = ref(0)
 
 const itemEl = ref<NodeListOf<HTMLElement>>()
 const viewHeight = ref(0)
+const totalHeight = ref(0)
 onMounted(() => {
   nextTick(() => {
     itemEl.value = document.querySelectorAll('.order_page .order_conten_item')
     viewHeight.value = document.getElementById('order_page')!.offsetHeight
+    totalHeight.value = document.getElementById('order_conten_item_id')!.offsetHeight
   })
 })
 </script>

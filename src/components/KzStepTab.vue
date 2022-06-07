@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-    <div class="kz_step_tab_right f1" v-if="slots.content">
+    <div v-if="slots.content" class="kz_step_tab_right f1">
       <el-scrollbar ref="scrollbarRef" :noresize="true" @scroll="debounceScroll">
         <slot name="content"></slot>
       </el-scrollbar>
@@ -36,16 +36,18 @@ import { ref, onMounted, nextTick, useSlots } from 'vue'
 import debounce from 'lodash/debounce'
 const props = withDefaults(
   defineProps<{
-    modelValue: number // 激活的
+    modelValue: number // 激活的，tabs索引
     tabs: any[] // [{}] 形式，默认使用title字段
     itemEl?: NodeListOf<HTMLElement> // content插槽下item的domList，querySelectorAll获取
-    viewHeight?: number // 滚动视图高度，HTMLElement.offsetHeight获取
+    viewHeight?: number // 滚动视图高度，HTMLElement.offsetHeight获取.
+    totalHeight?: number // 滚动元素总高度，即 #content 插槽内容总offsetHeight
   }>(),
   {
     modelValue: 0,
     tabs: () => [],
     itemEl: undefined,
     viewHeight: 0,
+    totalHeight: 0,
   }
 )
 const slots = useSlots()
@@ -53,7 +55,7 @@ const slots = useSlots()
 const emit = defineEmits(['update:modelValue', 'change'])
 // 点击时触发，改变绑定的v-model,触发change，返回点击的index
 const change = (index: number) => {
-  if(!slots.content){
+  if (!slots.content) {
     emit('update:modelValue', index)
     emit('change', index)
     return
@@ -64,7 +66,7 @@ const change = (index: number) => {
     return
   }
   if (index === props.itemEl.length - 1) {
-    scrollbarRef.value!.setScrollTop(totalHeight.value)
+    scrollbarRef.value!.setScrollTop(props.totalHeight)
     return
   }
   if (itme.offsetHeight > props.viewHeight / 2) {
@@ -74,16 +76,6 @@ const change = (index: number) => {
   scrollbarRef.value!.setScrollTop(itme.offsetTop - itme.offsetHeight)
 }
 
-const totalHeight = ref(0) // 滚动元素总高度
-onMounted(() => {
-  nextTick(() => {
-    slots.content &&
-      (totalHeight.value = (
-        document.querySelector('.order_page .el-scrollbar__view') as HTMLElement
-      ).offsetHeight)
-  })
-})
-
 const scrollbarRef = ref()
 const scroll = ({ scrollTop }: { scrollTop: number }) => {
   if (!scrollTop) {
@@ -92,7 +84,7 @@ const scroll = ({ scrollTop }: { scrollTop: number }) => {
     emit('change', 0)
     return
   }
-  if (scrollTop + props.viewHeight >= totalHeight.value) {
+  if (scrollTop + props.viewHeight >= props.totalHeight) {
     // 滚动到底部了
     emit('update:modelValue', props.itemEl.length - 1)
     emit('change', props.itemEl.length - 1)

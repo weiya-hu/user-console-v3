@@ -26,7 +26,7 @@ axios.interceptors.request.use((config) => {
     config.headers = {
       ...config.headers,
       'Content-Type': 'application/json',
-      'INSID': insid as string,
+      INSID: insid as string,
     }
   }
   return config
