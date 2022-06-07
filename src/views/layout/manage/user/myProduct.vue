@@ -13,17 +13,23 @@
             <div>{{ v.version_name }}</div>
           </div>
         </div>
-        <div class="time fsc" v-if="showtime(v.left_time) > 0">
+        <div v-if="showtime(v.left_time) > 0" class="time fsc">
           <div class="lt fcs">
-            <KzIcon href="#icon-riqi" size="14px" :color="showtime(v.left_time) <= 5 && '#FF4736'"/>
-            <div :class="showtime(v.left_time) <= 5 && 'time_tips'">剩余{{ showtime(v.left_time) }}天</div>
+            <KzIcon
+              href="#icon-riqi"
+              size="14px"
+              :color="showtime(v.left_time) <= 5 && '#FF4736'"
+            />
+            <div :class="showtime(v.left_time) <= 5 && 'time_tips'">
+              剩余{{ showtime(v.left_time) }}天
+            </div>
           </div>
           <div class="rt">
             有效期至： {{ formatDate(new Date(Number(v.left_time)), 'yyyy-MM-dd') }}
           </div>
         </div>
         <div v-else class="time fcs">
-          <KzIcon href="#icon-zhuyi-biankuang" size="14px" color="#FF4736"/>
+          <KzIcon href="#icon-zhuyi-biankuang" size="14px" color="#FF4736" />
           <div class="time_tips">当前版本已过期，请联系客服续期</div>
         </div>
         <div v-if="showtime(v.left_time) > 0" class="btns">
@@ -119,7 +125,7 @@ export default { name: 'MyProduct' }
       &:nth-child(4n) {
         margin-right: 0;
       }
-      
+
       .trial_img {
         position: absolute;
         right: -4px;
