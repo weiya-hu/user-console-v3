@@ -648,14 +648,6 @@ const editCancel = () => {
   editName.value = true
 }
 
-const userShow = ref(false)
-const changeUp = ref('')
-
-const goEdit = (key: string) => {
-  changeUp.value = key
-  userShow.value = true
-}
-
 // 修改头像
 const editAvatershow = ref(false)
 const upLoading = ref(false)
@@ -676,13 +668,7 @@ const upSuccess = () => {
   // 头像上传成功
   editData()
 }
-//账号安全
-const goChange = ref(false)
-const u_type = ref<string>('')
-const goSafe = (type: string) => {
-  u_type.value = type
-  goChange.value = true
-}
+
 //修改手机号
 const telChange = ref(false)
 const editTel = ref(1)
@@ -693,12 +679,11 @@ const goChangoTel = () => {
 
 // 会员信息
 const uMember = ref<any>('')
-const memberimg = ref('')
+
 const userMember = async () => {
   const res = await userMember_api()
   if (res.status === 1) {
     uMember.value = res.body
-    // console.log(uMember.value[1])
   }
 }
 userMember()

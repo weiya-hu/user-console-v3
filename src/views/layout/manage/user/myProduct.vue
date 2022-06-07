@@ -14,9 +14,13 @@
           </div>
         </div>
         <div class="time fsc">
-          <div v-if="showtime(v.left_time) > 0" class="lt fcs">
+          <div v-if="showtime(v.left_time) > 5" class="lt fcs">
             <KzIcon href="#icon-riqi" size="14px" />
             <div>剩余{{ showtime(v.left_time) }}天</div>
+          </div>
+          <div v-else-if="showtime(v.left_time) < 5 && showtime(v.left_time) > 0" class="lt fcs">
+            <el-icon class="kzicon" color="#FF4736 " size="14px"><Clock /></el-icon>
+            <div class="time_tips">剩余{{ showtime(v.left_time) }}天</div>
           </div>
           <div v-else class="lt fcs">
             <el-icon class="kzicon" color="#FF4736 " size="14px"><Clock /></el-icon>
@@ -27,13 +31,18 @@
           </div>
         </div>
         <div v-if="showtime(v.left_time) > 0" class="btns">
-          <el-button type="danger" plain>购买</el-button>
+          <el-button v-if="v.version_type === 1" type="danger" plain>购买</el-button>
+          <el-button v-else type="warning" plain>升级</el-button>
+          <el-button type="primary" @click="goSystem(v.id, v.product_id, v.version_type)"
+            >进入系统</el-button
+          >
+        </div>
+        <div v-else-if="showtime(v.left_time) > 0" class="btns">
           <el-button type="primary" @click="goSystem(v.id, v.product_id, v.version_type)"
             >进入系统</el-button
           >
         </div>
         <div v-else class="btns kf">
-          <el-button type="warning" class="mr16" plain>升级</el-button>
           <KzIcon href="#icon-lanmu-kefu" size="14px" color="#2D68EB" />
           联系客服
         </div>
