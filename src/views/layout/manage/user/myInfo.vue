@@ -218,6 +218,10 @@
                     <div class="item_title">会员等级</div>
                     <div class="item_content fcs">
                       <img :src="changeMemberImg[userInfoDate.level]" alt="" />
+                      <!-- <img
+                      :src="memberList.find(v => Number(v.id) === userInfoDate.level)!.icon"
+                      alt=""
+                    /> -->
                     </div>
                   </div>
                   <div class="item">
@@ -541,14 +545,14 @@ import {
   editMmTel_api,
   editMm_api,
 } from '@/api/manage/user/myinfo'
-import icon_general from '@/assets/images/user_general.png'
-import icon_silver from '@/assets/images/user_silver.png'
-import icon_gold from '@/assets/images/user_gold.png'
-import icon_star from '@/assets/images/user_star.png'
+import icon_general from '@/assets/images/user_general.svg'
+import icon_silver from '@/assets/images/user_silver.svg'
+import icon_gold from '@/assets/images/user_gold.svg'
+import icon_star from '@/assets/images/user_star.svg'
 import icon_company from '@/assets/images/my_company.png'
 import icon_benefits from '@/assets/images/user_member.png'
 import icon_user_company from '@/assets/images/user_company_empty.png'
-import df_avatar_i from '@/assets/images/dfavatar.png'
+import df_avatar_i from '@/assets/images/dfavatar.svg'
 import useClipboard from 'vue-clipboard3'
 import QrcodeVue from 'qrcode.vue'
 import { mainStore } from '@/store/index'
@@ -560,15 +564,14 @@ import { CircleCloseFilled, Calendar, Warning } from '@element-plus/icons-vue'
 import KzCascader from '@/components/KzCascader.vue'
 import { useRouter } from 'vue-router'
 import type { FormInstance } from 'element-plus'
-import { getUserCompanyList_api } from '@/api/index'
 
 const router = useRouter()
 const store = mainStore()
+
 const addressHash = computed(() => store.state.addressHash)
 
 const loginUrl = computed(() => store.state.yxtUrl.mobile)
 const invate_code = computed(() => store.state.userInfo.invite_code)
-// console.log(invate_code)
 
 const editName = ref(true)
 
@@ -717,6 +720,7 @@ const { toClipboard } = useClipboard()
 const copyCode = async (val: any) => {
   try {
     await toClipboard(val)
+    okMsg('复制成功！')
   } catch (e) {
     errMsg('该浏览器不支持自动复制')
   }

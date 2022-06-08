@@ -115,15 +115,272 @@ export const routes: RouteRecordRaw[] = [
           {
             path: '/product/dmp',
             name: 'Dmp',
-            redirect: (to) => {
-              const yxtUrl = localStorage.getItem('yxtUrl')
-              window.open(
-                yxtUrl ? '//' + JSON.parse(yxtUrl).dmp : 'http://lc.kzszh.com:9000/console',
-                '_blank'
-              ) // 会被浏览器阻止
-              return '/console'
-            },
+            redirect: '/product/dmp/findb',
+            component: () => import('@/views/layout/rView.vue'),
             meta: { title: 'DMP数据系统', icon: '#icon-lanmu-DMP' },
+            children: [
+              {
+                path: '/product/dmp/findb',
+                name: 'FindB',
+                component: () => import('@/views/layout/rView.vue'),
+                meta: { title: '找B端客户' },
+                redirect: '/product/dmp/findb/kzdata',
+                children: [
+                  {
+                    path: '/product/dmp/findb/kzdata',
+                    name: 'BKzData',
+                    component: () => import('@/views/layout/product/dmp/findB/kzData.vue'),
+                    meta: { title: '康州数据源' },
+                  },
+                  {
+                    path: '/product/dmp/findb/otherdata',
+                    name: 'OtherData',
+                    component: () => import('@/views/layout/product/dmp/findB/otherData.vue'),
+                    meta: { title: '个性化数据' },
+                  },
+                  {
+                    path: '/product/dmp/findb/specificdata',
+                    name: 'SpecificData',
+                    component: () => import('@/views/layout/product/dmp/findB/specificData.vue'),
+                    meta: { title: '第三方数据' },
+                  },
+                  {
+                    path: '/product/dmp/findb/specificdatadetails',
+                    name: 'SpecificDataDetails',
+                    component: () =>
+                      import('@/views/layout/product/dmp/findB/specificDataDetails.vue'),
+                    meta: { title: '个性化数据详细页', father: '/product/dmp/findb/specificdata' },
+                  },
+                ],
+              },
+              {
+                path: '/product/dmp/findc',
+                name: 'FindC',
+                component: () => import('@/views/layout/rView.vue'),
+                meta: { title: '找C端客户' },
+                redirect: '/product/dmp/findc/kzdata',
+                children: [
+                  {
+                    path: '/product/dmp/findc/kzdata',
+                    name: 'CKzData',
+                    component: () => import('@/views/layout/product/dmp/findC/kzData.vue'),
+                    meta: { title: '康州数据源' },
+                  },
+                  {
+                    path: '/product/dmp/findc/kzdatadetails',
+                    name: 'CKzDataDetails',
+                    component: () => import('@/views/layout/product/dmp/findC/kzDataDetails.vue'),
+                    meta: { title: '康州数据源详细页', father: '/product/dmp/findc/kzdata' },
+                  },
+                  {
+                    path: '/product/dmp/findc/otherdata',
+                    name: 'COtherData',
+                    component: () => import('@/views/layout/product/dmp/findC/otherData.vue'),
+                    meta: { title: '第三方数据源' },
+                  },
+                  {
+                    path: '/product/dmp/findc/otherDataDetails',
+                    name: 'COtherDataDetails',
+                    component: () =>
+                      import('@/views/layout/product/dmp/findC/otherDataDetails.vue'),
+                    meta: { title: '第三方数据源详细页', father: '/product/dmp/findc/otherdata' },
+                  },
+                  {
+                    path: '/product/dmp/findc/teldata',
+                    name: 'TelData',
+                    component: () => import('@/views/layout/product/dmp/findC/telData.vue'),
+                    meta: { title: '号码段获客' },
+                  },
+                  {
+                    path: '/product/dmp/findc/teldatadetails',
+                    name: 'TelDataDetails',
+                    component: () => import('@/views/layout/product/dmp/findC/telDataDetails.vue'),
+                    meta: { title: '号码段获客详细页', father: '/product/dmp/findc/teldata' },
+                  },
+                  {
+                    path: '/product/dmp/findc/addata',
+                    name: 'AdData',
+                    component: () => import('@/views/layout/product/dmp/findC/adData.vue'),
+                    meta: { title: '微信获客' },
+                  },
+                  {
+                    path: '/product/dmp/findc/addatadetails',
+                    name: 'AdDataDetails',
+                    component: () => import('@/views/layout/product/dmp/findC/adDataDetails.vue'),
+                    meta: { title: '微信获客详细页', father: '/product/dmp/findc/addata' },
+                  },
+                  {
+                    path: '/product/dmp/findc/baidudata',
+                    name: 'BaiduData',
+                    component: () => import('@/views/layout/product/dmp/findC/baiduData.vue'),
+                    meta: { title: '百度关键词获客' },
+                  },
+                  {
+                    path: '/product/dmp/findc/baidudatadetails',
+                    name: 'BaiduDataDetails',
+                    component: () =>
+                      import('@/views/layout/product/dmp/findC/baiduDataDetails.vue'),
+                    meta: { title: '百度关键词获客详细页', father: '/product/dmp/findc/baidudata' },
+                  },
+                  {
+                    path: '/product/dmp/findc/bigdata',
+                    name: 'BigData',
+                    component: () => import('@/views/layout/product/dmp/findC/bigData.vue'),
+                    meta: { title: '大数据获客' },
+                  },
+                  {
+                    path: '/product/dmp/findc/bigdatadetails',
+                    name: 'BigDataDetails',
+                    component: () => import('@/views/layout/product/dmp/findC/bigDataDetails.vue'),
+                    meta: { title: '大数据获客详细页', father: '/product/dmp/findc/bigdata' },
+                  },
+                  {
+                    path: '/product/dmp/findc/fourdata',
+                    name: 'FourData',
+                    component: () => import('@/views/layout/product/dmp/findC/fourData.vue'),
+                    meta: { title: '号码段获客' },
+                  },
+                  {
+                    path: '/product/dmp/findc/fourdatadetails',
+                    name: 'FourDataDetails',
+                    component: () => import('@/views/layout/product/dmp/findC/fourDataDetails.vue'),
+                    meta: { title: '号码段获客详细页', father: '/product/dmp/findc/fourdata' },
+                  },
+                  {
+                    path: '/product/dmp/findc/biddingdata',
+                    name: 'BiddingData',
+                    component: () => import('@/views/layout/product/dmp/findC/biddingData.vue'),
+                    meta: { title: '竞价获客' },
+                  },
+                  {
+                    path: '/product/dmp/findc/biddingdatadetails',
+                    name: 'BiddingDataDetails',
+                    component: () =>
+                      import('@/views/layout/product/dmp/findC/biddingDataDetails.vue'),
+                    meta: { title: '竞价获客详细页', father: '/product/dmp/findc/biddingdata' },
+                  },
+                  {
+                    path: '/product/dmp/findc/msgdata',
+                    name: 'MsgData',
+                    component: () => import('@/views/layout/product/dmp/findC/msgData.vue'),
+                    meta: { title: '短信获客' },
+                  },
+                  {
+                    path: '/product/dmp/findc/msgdatadetails',
+                    name: 'MsgDataDetails',
+                    component: () => import('@/views/layout/product/dmp/findC/msgDataDetails.vue'),
+                    meta: { title: '短信获客详细页', father: '/product/dmp/findc/msgdata' },
+                  },
+                ],
+              },
+              {
+                path: '/product/dmp/seekPathPro',
+                name: 'SeekPathPro',
+                component: () => import('@/views/layout/rView.vue'),
+                meta: { title: '找渠道/项目' },
+                redirect: '/product/dmp/seekPathPro/seekpath',
+                children: [
+                  {
+                    path: '/product/dmp/seekPathPro/seekpath',
+                    name: 'SeekPath',
+                    component: () => import('@/views/layout/product/dmp/seekPathPro/seekPath.vue'),
+                    meta: { title: '找渠道' },
+                  },
+                  {
+                    path: '/product/dmp/seekPathPro/seekpathdetails',
+                    name: 'SeekPathDetails',
+                    component: () =>
+                      import('@/views/layout/product/dmp/seekPathPro/seekPathDetails.vue'),
+                    meta: { title: '找渠道详细页', father: '/product/dmp/seekPathPro/seekpath' },
+                  },
+                  {
+                    path: '/product/dmp/seekPathPro/seekproject',
+                    name: 'SeekProject',
+                    component: () =>
+                      import('@/views/layout/product/dmp/seekPathPro/seekProject.vue'),
+                    meta: { title: '找项目数据' },
+                  },
+                  {
+                    path: '/product/dmp/seekPathPro/seekprojectdetails',
+                    name: 'SeekProjectDetails',
+                    component: () =>
+                      import('@/views/layout/product/dmp/seekPathPro/seekProjectDetails.vue'),
+                    meta: {
+                      title: '找项目数据详细页',
+                      father: '/product/dmp/seekPathPro/seekproject',
+                    },
+                  },
+                ],
+              },
+              {
+                path: '/product/dmp/seekAbroad',
+                name: 'SeekAbroad',
+                component: () => import('@/views/layout/rView.vue'),
+                meta: { title: '找海外' },
+                redirect: '/product/dmp/seekAbroad/buyer',
+                children: [
+                  {
+                    path: '/product/dmp/seekAbroad/buyer',
+                    name: 'Buyer',
+                    component: () => import('@/views/layout/product/dmp/seekAbroad/buyer.vue'),
+                    meta: { title: '供应商' },
+                  },
+                  {
+                    path: '/product/dmp/seekAbroad/buyerdetails',
+                    name: 'BuyerDetails',
+                    component: () =>
+                      import('@/views/layout/product/dmp/seekAbroad/buyerDetails.vue'),
+                    meta: { title: '供应商详细页', father: '/product/dmp/seekAbroad/buyer' },
+                  },
+                  {
+                    path: '/product/dmp/seekAbroad/supplier',
+                    name: 'Supplier',
+                    component: () => import('@/views/layout/product/dmp/seekAbroad/supplier.vue'),
+                    meta: { title: '上传2C数据' },
+                  },
+                  {
+                    path: '/product/dmp/seekAbroad/supplierdetails',
+                    name: 'SupplierDetails',
+                    component: () =>
+                      import('@/views/layout/product/dmp/seekAbroad/supplierDetails.vue'),
+                    meta: { title: '上传2C数据详细页', father: '/product/dmp/seekAbroad/supplier' },
+                  },
+                ],
+              },
+              {
+                path: '/product/dmp/myData',
+                name: 'MyData',
+                component: () => import('@/views/layout/rView.vue'),
+                meta: { title: '我的数据源' },
+                redirect: '/product/dmp/myData/up2b',
+                children: [
+                  {
+                    path: '/product/dmp/myData/up2b',
+                    name: 'Up2B',
+                    component: () => import('@/views/layout/product/dmp/myData/up2b.vue'),
+                    meta: { title: '上传2B数据' },
+                  },
+                  {
+                    path: '/product/dmp/myData/up2bdetails',
+                    name: 'Up2BDetails',
+                    component: () => import('@/views/layout/product/dmp/myData/up2bDetails.vue'),
+                    meta: { title: '上传2B数据详细页', father: '/product/dmp/myData/up2b' },
+                  },
+                  {
+                    path: '/product/dmp/myData/up2c',
+                    name: 'Up2C',
+                    component: () => import('@/views/layout/product/dmp/myData/up2c.vue'),
+                    meta: { title: '上传2C数据' },
+                  },
+                  {
+                    path: '/product/dmp/myData/up2cdetails',
+                    name: 'Up2CDetails',
+                    component: () => import('@/views/layout/product/dmp/myData/up2cDetails.vue'),
+                    meta: { title: '上传2C数据详细页', father: '/product/dmp/myData/up2c' },
+                  },
+                ],
+              },
+            ],
           },
           {
             path: '/product/cms',

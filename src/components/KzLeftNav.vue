@@ -130,10 +130,10 @@ const router = useRouter()
 const store = mainStore()
 const yxtUrl = computed(() => store.state.yxtUrl)
 const goRoute = (path: string, isSmall: boolean) => {
-  if (path === '/product/dmp') {
-    window.open('//' + yxtUrl.value.dmp, '_blank')
-    return
-  }
+  // if (path === '/product/dmp') {
+  //   window.open('//' + yxtUrl.value.dmp, '_blank')
+  //   return
+  // }
   // if (path === '/product/cms') {
   //   window.open('//' + yxtUrl.value.cms, '_blank')
   //   return

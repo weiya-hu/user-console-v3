@@ -27,7 +27,7 @@ import { ref, onMounted } from 'vue'
 import KzEmpty from '@/components/KzEmpty.vue'
 import { invitation_api } from '@/api/manage/user/myinfo'
 import { formatDate } from '@/utils/date'
-import df_avatar_i from '@/assets/images/dfavatar.png'
+import df_avatar_i from '@/assets/images/dfavatar.svg'
 const tableData = ref([])
 const inviteDate = async () => {
   const res = await invitation_api()

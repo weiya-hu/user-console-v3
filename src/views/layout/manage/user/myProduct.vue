@@ -18,7 +18,7 @@
             <KzIcon
               href="#icon-riqi"
               size="14px"
-              :color="showtime(v.left_time) <= 5 && '#FF4736'"
+              :color="showtime(v.left_time) <= 5 ? '#FF4736' : '#000'"
             />
             <div :class="showtime(v.left_time) <= 5 && 'time_tips'">
               剩余{{ showtime(v.left_time) }}天

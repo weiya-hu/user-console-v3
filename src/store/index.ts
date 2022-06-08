@@ -4,10 +4,10 @@ import { getIndustryList_api, getAddressList_api, getUserInfo, getYxtUrl_api } f
 import { getMemberList_api, getIsManager_api, getUserCompanyList_api } from '@/api/index'
 import { getHash } from '@/utils/index'
 
-import user_general_i from '@/assets/images/user_general.png'
-import user_silver_i from '@/assets/images/user_silver.png'
-import user_gold_i from '@/assets/images/user_gold.png'
-import user_star_i from '@/assets/images/user_star.png'
+import user_general_i from '@/assets/images/user_general.svg'
+import user_silver_i from '@/assets/images/user_silver.svg'
+import user_gold_i from '@/assets/images/user_gold.svg'
+import user_star_i from '@/assets/images/user_star.svg'
 
 type IStoreObj = Record<string | number, any>
 
