@@ -298,7 +298,7 @@ export const routes: RouteRecordRaw[] = [
                     name: 'SeekProject',
                     component: () =>
                       import('@/views/layout/product/dmp/seekPathPro/seekProject.vue'),
-                    meta: { title: '找项目数据' },
+                    meta: { title: '找项目' },
                   },
                   {
                     path: '/product/dmp/seekPathPro/seekprojectdetails',
@@ -323,27 +323,27 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/seekAbroad/buyer',
                     name: 'Buyer',
                     component: () => import('@/views/layout/product/dmp/seekAbroad/buyer.vue'),
-                    meta: { title: '供应商' },
+                    meta: { title: '采购商' },
                   },
                   {
                     path: '/product/dmp/seekAbroad/buyerdetails',
                     name: 'BuyerDetails',
                     component: () =>
                       import('@/views/layout/product/dmp/seekAbroad/buyerDetails.vue'),
-                    meta: { title: '供应商详细页', father: '/product/dmp/seekAbroad/buyer' },
+                    meta: { title: '采购商详细页', father: '/product/dmp/seekAbroad/buyer' },
                   },
                   {
                     path: '/product/dmp/seekAbroad/supplier',
                     name: 'Supplier',
                     component: () => import('@/views/layout/product/dmp/seekAbroad/supplier.vue'),
-                    meta: { title: '上传2C数据' },
+                    meta: { title: '供应商' },
                   },
                   {
                     path: '/product/dmp/seekAbroad/supplierdetails',
                     name: 'SupplierDetails',
                     component: () =>
                       import('@/views/layout/product/dmp/seekAbroad/supplierDetails.vue'),
-                    meta: { title: '上传2C数据详细页', father: '/product/dmp/seekAbroad/supplier' },
+                    meta: { title: '供应商详细页', father: '/product/dmp/seekAbroad/supplier' },
                   },
                 ],
               },
