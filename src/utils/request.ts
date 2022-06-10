@@ -45,6 +45,7 @@ axios.interceptors.response.use(
           message: response.message,
           type: 'error',
           grouping: true,
+          customClass: 'el_message'
         })
         if (response.errno == 10620) {
           router.replace('/login?url=' + encodeURIComponent(window.location.origin + '/console'))

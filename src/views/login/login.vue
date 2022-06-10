@@ -1,5 +1,5 @@
 <template>
-  <div class="login_page">
+  <div v-if="loginShow" class="login_page">
     <div class="login_main">
       <div class="fleximg logo_img">
         <img src="@/assets/images/logo-white.svg" />
@@ -114,6 +114,7 @@ const userAgreeCheck = ref(false)
 const loginToUrl = getUrlParam('url')
 const wechartShow = ref(false)
 const wechartParam = ref()
+const loginShow = ref(false)
 const formValue = ref<ILoginForm>({
   acode: '86',
 })
@@ -130,6 +131,18 @@ const loginRules = ref({
   ],
   captcha: [{ required: true, message: '验证码不能为空', trigger: 'blur' }],
 })
+
+//如果是移动端跳沙龙活动页，现在移动端的登录暂时没有，以后有了就要用路由守卫通过判断从哪里跳到登录的来写
+if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
+  if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+    //处理移动端的业务逻辑
+    store.getYxtUrl().then((res) => {
+      router.push('/salon/login')
+    })
+  }else{
+    loginShow.value = true
+  }
+}
 
 //登录类型切换
 const loginNavChange = (e: { target: any }, index: number) => {

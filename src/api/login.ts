@@ -10,7 +10,7 @@ export const getUserInfo = (): Promise<IRes> => {
 /**
  * @name 发送登录短信
  */
-export const sendSms = (data: { acode: string; mobile: string }): Promise<IRes> => {
+export const sendSms = (data: { acode: any; mobile: any }): Promise<IRes> => {
   return post('user', '/login/sms/send.do', data)
 }
 
@@ -31,7 +31,7 @@ export const sendResetsms = (data: { acode: string; mobile: string }): Promise<I
 /**
  * @name 登录
  */
-export const doLogin = (data: { acode: string; mobile: string }): Promise<IRes> => {
+export const doLogin = (data: any): Promise<IRes> => {
   return post('user', '/login/login.do', data)
 }
 

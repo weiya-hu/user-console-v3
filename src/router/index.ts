@@ -24,6 +24,33 @@ declare module 'vue-router' {
  */
 export const routes: RouteRecordRaw[] = [
   {
+    path: '/salon',
+    name: 'Salon',
+    component: () => import('@/views/salon/index.vue'),
+    redirect: '/salon',
+    meta: { title: '沙龙', lv: '-1' },
+    children: [
+      {
+        path: '/salon',
+        name: 'Salon',
+        component: () => import('@/views/salon/activity.vue'),
+        meta: { title: '沙龙', lv: '-1' },
+      },
+      {
+        path: '/salon/login',
+        name: 'SalonLogin',
+        component: () => import('@/views/salon/salonLogin.vue'),
+        meta: { title: '登录', lv: '-1' },
+      },
+      {
+        path: '/useragreementh5',
+        name: 'SalonUseragreementH5',
+        component: () => import('@/views/salon/useragreementH5.vue'),
+        meta: { title: '用户须知', lv: '-1' },
+      },
+    ]
+  },
+  {
     path: '/login',
     name: 'LoginIndex',
     component: () => import('@/views/login/index.vue'),
@@ -405,6 +432,18 @@ export const routes: RouteRecordRaw[] = [
                     name: 'MyworkArticle',
                     component: () => import('@/views/layout/product/cms/myWork/article.vue'),
                     meta: { title: '软文库' },
+                  },
+                  {
+                    path: '/product/cms/mywork/articleadd',
+                    name: 'MyworkArticleAdd',
+                    component: () => import('@/views/layout/product/cms/myWork/articleAdd.vue'),
+                    meta: {  title: '软文编辑/新增',father: '/product/cms/mywork/article',},
+                  },
+                  {
+                    path: '/product/cms/mywork/articledetails',
+                    name: 'MyworkArticleDetails',
+                    component: () => import('@/views/layout/product/cms/myWork/articleDetails.vue'),
+                    meta: { title: '软文详情',father: '/product/cms/mywork/article', },
                   },
                   {
                     path: '/product/cms/mywork/images',

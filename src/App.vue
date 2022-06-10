@@ -17,7 +17,7 @@ body {
   --el-color-danger: #e40000;
   --el-color-success: #24bd13;
   --el-color-warning: #ffb700;
-  min-width: 1440px;
+  // min-width: 1440px;
 }
 body {
   .el-button--primary {
@@ -420,6 +420,21 @@ body .el-dialog {
       width: 75px;
       height: 42px;
     }
+  }
+}
+@media screen and (min-width:750px ) {
+ html,body{
+  min-width: 1440px;
+  }
+}
+@media screen and (max-width:750px ) {
+ html,body{
+  font-size: 0.1rem;
+  }
+  .el_message{
+    width: 3rem !important;
+    overflow: hidden;
+    --el-message-min-width: 2rem !important;
   }
 }
 </style>
