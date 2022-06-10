@@ -70,7 +70,7 @@
       <el-form-item label="联系电话" prop="contact">
         <el-input v-model="ruleForm.contact" placeholder="请输入" :disabled="state === 2" />
       </el-form-item>
-      <el-form-item label="选择地区" prop="addr">
+      <el-form-item label="省份地区" prop="addr">
         <KzCascader
           v-model="ruleForm.addr"
           type="address"
@@ -85,8 +85,9 @@
         <el-input v-model="ruleForm.url" placeholder="请输入" :disabled="state === 2" />
       </el-form-item>
 
-      <el-form-item label="请填写经营范围" prop="business_scope">
+      <el-form-item label="经营范围" prop="business_scope">
         <el-input
+          placeholder="请填写经营范围"
           v-model="ruleForm.business_scope"
           type="textarea"
           clearable

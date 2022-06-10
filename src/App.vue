@@ -398,4 +398,28 @@ body .el-dialog {
     background-color: $coloreee;
   }
 }
+.cms_table {
+  .el-table {
+    thead > tr > th {
+      background: #f2f2f3;
+      height: 40px;
+      .cell {
+        font-size: 14px;
+        color: #333333;
+        line-height: 14px;
+        font-weight: 600;
+      }
+    }
+    td.el-table__cell div {
+      color: #666666;
+    }
+    .person_table_operate {
+      margin-right: 12px;
+    }
+    img {
+      width: 75px;
+      height: 42px;
+    }
+  }
+}
 </style>

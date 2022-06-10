@@ -1,8 +1,8 @@
 <template>
   <div class="kz_card my_product_page">
     <div class="card_title">产品与服务</div>
-    <div v-if="list.length" class="fcs fww card_content">
-      <div v-for="v in list" :key="v" class="item">
+    <div v-if="proList.length" class="fcs fww card_content">
+      <div v-for="v in proList" :key="v" class="item">
         <img v-if="v.version_type === 1" :src="trial_i" alt="" class="trial_img" />
         <div class="img_box fcc">
           <img :src="v.thumb_url" alt="" />
@@ -13,26 +13,33 @@
             <div>{{ v.version_name }}</div>
           </div>
         </div>
-        <div class="time fsc">
-          <div v-if="showtime(v.left_time) > 0" class="lt fcs">
-            <KzIcon href="#icon-riqi" size="14px" />
-            <div>剩余{{ showtime(v.left_time) }}天</div>
+        <div v-if="showtime(v.left_time) > 0" class="time fsc">
+          <div class="lt fcs">
+            <KzIcon
+              href="#icon-riqi"
+              size="14px"
+              :color="Number(showtime(v.left_time)) <= 5 && '#FF4736'"
+            />
+            <div :class="showtime(v.left_time) <= 5 && 'time_tips'">
+              剩余{{ showtime(v.left_time) }}天
+            </div>
           </div>
-          <div v-else class="lt fcs">
-            <el-icon class="kzicon" color="#FF4736 " size="14px"><Clock /></el-icon>
-            <div class="time_tips">当前版本已过期，请联系客服续期</div>
-          </div>
-          <div v-if="showtime(v.left_time) > 0" class="rt">
+          <div class="rt">
             有效期至： {{ formatDate(new Date(Number(v.left_time)), 'yyyy-MM-dd') }}
           </div>
         </div>
+        <div v-else class="time fcs">
+          <KzIcon href="#icon-zhuyi-biankuang" size="14px" color="#FF4736" />
+          <div class="time_tips">当前版本已过期，请联系客服续期</div>
+        </div>
         <div v-if="showtime(v.left_time) > 0" class="btns">
-          <el-button type="danger" plain>购买</el-button>
+          <el-button v-if="v.version_type === 1" type="danger" plain>购买</el-button>
+          <el-button v-else type="warning" plain>升级</el-button>
           <el-button type="primary" @click="goSystem(v.id, v.product_id, v.version_type)"
             >进入系统</el-button
           >
         </div>
-        <div v-else class="btns kf cont">
+        <div v-else class="btns kf">
           <KzIcon href="#icon-lanmu-kefu" size="14px" color="#2D68EB" />
           联系客服
         </div>
@@ -43,44 +50,37 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import trial_i from '@/assets/images/trial.png'
 import KzEmpty from '@/components/KzEmpty.vue'
-import KzPage from '@/components/KzPage.vue'
-import { formatDate } from '@/utils/date'
 import { companyInstance_api, companySwitch_api } from '@/api/manage/company/companyService'
+import { formatDate } from '@/utils/date'
 import { Clock } from '@element-plus/icons-vue'
-import { okMsg } from '@/utils'
 import { mainStore } from '@/store/index'
+import { okMsg } from '@/utils'
 const totle = ref(100)
 const size = ref(10)
 const page = ref(1)
-const list = ref<any>({})
-const day = ref()
 const store = mainStore()
-const cmsUrl = store.state.yxtUrl.cms
+const cmsUrl = computed(() => store.state.yxtUrl.cms)
 const dmpUrl = store.state.yxtUrl.dmp
-const showtime = (val: number) => {
+
+const proList = ref<any>({})
+const productList = async () => {
+  const { body, status } = await companyInstance_api()
+  proList.value = body
+}
+productList()
+
+const day = ref()
+const showtime = (time: any) => {
   const nowtime = new Date() //获取当前时间
-  const endtime = new Date(val) //定义结束时间
+  const endtime = new Date(time) //定义结束时间
   const gotime = endtime.getTime() - nowtime.getTime() //距离结束时间的毫秒数
   const god = Math.floor(gotime / (1000 * 60 * 60 * 24)) //计算天数
   day.value = god + '天'
   return god
 }
-const getList = async () => {
-  const { body } = await companyInstance_api()
-  list.value = body
-  console.log(list.value)
-}
-getList()
-// const goSystem = async (id: number, version_type: number) => {
-//   const res = await companySwitch_api({
-//     id: id,
-//     version_type: version_type,
-//   })
-//   console.log(res)
-// }
 const sysId = ref(0) //系统ID
 const sysType = ref(0) //1：个人 2：企业
 const proId = ref(0) //1:cms 2:dmp
@@ -98,15 +98,16 @@ const userSystem = async () => {
   const res = await companySwitch_api({ ...data })
   if (res.status === 1) {
     if (proId.value === 1) {
-      window.open('https://' + cmsUrl, '_blank')
+      window.open('//' + cmsUrl.value, '_blank')
+    } else if (proId.value === 2) {
+      window.open('//' + dmpUrl, '_blank')
     }
-    window.open('https://' + dmpUrl, '_blank')
   }
 }
 </script>
 
 <script lang="ts">
-export default { name: 'CompanyService' }
+export default { name: 'MyProduct' }
 </script>
 
 <style lang="scss" scoped>
@@ -124,6 +125,7 @@ export default { name: 'CompanyService' }
       &:nth-child(4n) {
         margin-right: 0;
       }
+
       .trial_img {
         position: absolute;
         right: -4px;
@@ -191,16 +193,26 @@ export default { name: 'CompanyService' }
           color: #c0c4cc;
         }
         .time_tips {
+          font-size: 12px;
+          font-weight: 400;
           color: #ff4736;
         }
       }
       .btns {
         text-align: right;
       }
+      .kf {
+        font-size: 14px;
+        font-weight: 400;
+        color: #2d68eb;
+        height: 32px;
+        line-height: 32px;
+        cursor: pointer;
+        .kzicon {
+          vertical-align: middle;
+        }
+      }
     }
-  }
-  .cont {
-    color: #2d68eb;
   }
 }
 </style>

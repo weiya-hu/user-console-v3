@@ -107,10 +107,21 @@
         <div class="mana_tab">
           <el-table :data="tableData">
             <el-table-column prop="user_name" label="姓名" align="center" />
-            <el-table-column prop="group_name" label="部门" align="center" />
+            <el-table-column
+              prop="group_name"
+              label="分组"
+              align="center"
+              :show-overflow-tooltip="true"
+            />
+            <el-table-column
+              prop="role_name"
+              label="角色"
+              align="center"
+              :show-overflow-tooltip="true"
+            />
 
-            <el-table-column prop="mobile" label="电话" align="center" />
-            <el-table-column property="user_status" label="账号状态" align="center">
+            <el-table-column prop="mobile" label="联系电话" align="center" />
+            <el-table-column property="user_status" label="人员状态" align="center">
               <template #default="{ row }">
                 <el-switch
                   v-model="row.user_status"
@@ -403,6 +414,7 @@ const addGroup = async (name: string) => {
   getGroup()
   getList()
 }
+
 //删除分组
 const deleteGroup = async (group_id: number) => {
   const { status } = await deleteGroup_api({ group_id })
@@ -555,6 +567,7 @@ const getList = async (id?: number, name?: any) => {
     groupId: id,
   })
   console.log(id)
+  console.log(body)
 
   if (status) {
     tableData.value = body.records

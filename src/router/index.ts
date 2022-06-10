@@ -440,6 +440,12 @@ export const routes: RouteRecordRaw[] = [
                     meta: { title: '软文库' },
                   },
                   {
+                    path: '/product/cms/custom/articledetail',
+                    name: 'CustomArticleDetail',
+                    component: () => import('@/views/layout/product/cms/custom/articleDetail.vue'),
+                    meta: { title: '软文库详情', father: '/product/cms/custom/article' },
+                  },
+                  {
                     path: '/product/cms/custom/images',
                     name: 'CustomImages',
                     component: () => import('@/views/layout/product/cms/custom/images.vue'),
