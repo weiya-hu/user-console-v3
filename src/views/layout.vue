@@ -127,16 +127,45 @@
           class="layout_content"
           :class="{ layout_details_page: $route.path !== '/console', layout_content_big: isSmall }"
         >
-          <KzDetailsHeader v-if="$route.path !== '/console'" ref="detailsHeaderRef" />
+          <div class="fsc layout_content_page_top" v-if="$route.path !== '/console'">
+            <KzDetailsHeader ref="detailsHeaderRef" />
+            <div class="fcs" v-if="insListInfo[nowProduct]">
+              <div class="">{{nowIdentity.name}}</div>
+              <div class="vline"></div>
+              <el-dropdown @command="changeEdition" v-if="insListInfo[nowProduct].length">
+                <div class="fcs">
+                  <div class="now_edition">{{insListInfo[nowProduct].find(v => v.insid === Number($route.query.insid))?.name}}</div>
+                  <el-icon size="14px"><arrow-down /></el-icon>
+                </div>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item :command="v" v-for="v in insListInfo[nowProduct]" :key="v">
+                      <div class="ins_edition_dot" :class="Number($route.query.insid) === v.insid && 'active'"></div>
+                      <div>{{v.name}}</div>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </div>
+          </div>
+
           <div v-if="$route.meta.scroll" class="layout_content_box" style="height: 100%">
-            <router-view v-slot="{ Component }">
+            <div v-if="noIns" class="no_ins">
+              <img :src="noInsImg[nowProduct as keyof typeof noInsImg]" alt="">
+              <el-button type="primary" class="buy_btn">立即购买</el-button>
+            </div>
+            <router-view v-slot="{ Component }" v-else>
               <transition name="fade">
                 <component :is="Component" />
               </transition>
             </router-view>
           </div>
           <el-scrollbar v-else wrap-class="layout_content_box" :noresize="true">
-            <router-view v-slot="{ Component }">
+            <div v-if="noIns" class="no_ins">
+              <img :src="noInsImg[nowProduct as keyof typeof noInsImg]" alt="">
+              <el-button type="primary" class="buy_btn">立即购买</el-button>
+            </div>
+            <router-view v-slot="{ Component }" v-else>
               <transition name="fade">
                 <component :is="Component" />
               </transition>
@@ -150,6 +179,24 @@
       </el-row>
     </template>
     <el-skeleton v-else :rows="5" animated />
+
+    <KzDialog v-model="editionChangeShow" title="切换企业版本数据" :msg="'切换后页面会重新加载，是否切换至“ ' + editionChangeItme.name + ' ”'" @sure="sureChangeEdition"/>
+
+    <el-dialog
+      v-model="switchShow"
+      title="选择版本"
+      width="30%"
+      :show-close="false"
+      :close-on-press-escape="false"
+      :close-on-click-modal="false"
+    >
+      <el-radio-group v-model="changeInsid">
+        <el-radio :label="v.insid" v-for="v in insListInfo[nowProduct]" :key="v.insid">{{v.name}}</el-radio>
+      </el-radio-group>
+      <template #footer>
+        <el-button type="primary" @click="selectIns" :disabled="!changeInsid">确定</el-button>
+      </template>
+    </el-dialog>
 
     <el-image-viewer
       v-if="imgShow"
@@ -220,8 +267,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRouter, useRoute, onBeforeRouteUpdate, RouteLocationNormalizedLoaded } from 'vue-router'
 import { mainStore } from '@/store/index'
 import emiter from '@/utils/bus'
 import logo_i from '@/assets/images/logo.png'
@@ -234,6 +281,9 @@ import { loginOut_api } from '@/api/login'
 import { errMsg } from '@/utils'
 import { changeIdentity_api } from '@/api/index'
 import { ElMessageBox } from 'element-plus'
+import { ArrowDown } from '@element-plus/icons-vue'
+import KzDialog from "@/components/KzDialog.vue";
+import { noInsImg } from "@/utils/insPower";
 
 // demo start
 import KzImgUpload from '@/components/KzImgUpload.vue'
@@ -295,6 +345,34 @@ const onAvatarSuceess = () => {
 
 // demo end
 
+const leftNavRef = ref()
+const detailsHeaderRef = ref()
+
+const route = useRoute()
+const router = useRouter()
+const store = mainStore()
+
+store.getTypeList()
+store.getAddressList()
+
+store.getYxtUrl()
+const yxtUrl = computed(() => store.state.yxtUrl)
+
+const userInfo = computed(() => store.state.userInfo)
+const isLogin = computed(() => {
+  if (store.state.userInfo.id) {
+    return true
+  }
+  router.replace('/login?url=' + encodeURIComponent(window.location.origin + '/console'))
+  return false
+})
+
+store.getMemberList()
+const memberList = computed(() => store.state.memberList)
+
+store.setUserCompany()
+const userCompanyList = computed(() => store.state.userCompany)
+const nowIdentity = computed(() => store.state.nowUserIdentity)
 const changeIdentity = (item: IKzObj) => {
   ElMessageBox.confirm(
     '切换版本后页面会重新加载，是否切换版本至“ ' + item.name + ' ”？',
@@ -384,33 +462,122 @@ const handUserBtn = (url: string) => {
   router.push(url)
 }
 
-const store = mainStore()
-store.getTypeList()
-store.getAddressList()
-
-const userInfo = computed(() => store.state.userInfo)
-
-store.getMemberList()
-const memberList = computed(() => store.state.memberList)
-
-store.setUserCompany()
-const userCompanyList = computed(() => store.state.userCompany)
-const nowIdentity = computed(() => store.state.nowUserIdentity)
-
-const isLogin = computed(() => {
-  if (store.state.userInfo.id) {
-    return true
+// 切换实例版本start
+const editionChangeShow = ref(false)
+const editionChangeItme = ref<Record<string, string | number>>({})
+const changeEdition = (value:any) => {
+  if(editionChangeItme.value.insid === value.insid){
+    return
   }
-  router.replace('/login?url=' + encodeURIComponent(window.location.origin + '/console'))
-  return false
-})
+  editionChangeItme.value = value
+  editionChangeShow.value = true
+}
+const sureChangeEdition = () => {
+  window.location.replace(`/product/${nowProduct.value}?insid=` + editionChangeItme.value.insid)
+}
+const switchShow = ref(false)
+const changeInsid = ref(0)
+const selectIns = () => {
+  if(changeInsid.value){
+    window.location.replace(`/product/${nowProduct.value}?insid=` + changeInsid.value)
+  }
+}
 
-const route = useRoute()
-const router = useRouter()
-const routes = router.getRoutes()
-const leftNavRef = ref()
-const detailsHeaderRef = ref()
+const hasInsPower = (nowRoute: RouteLocationNormalizedLoaded) => {
+  if(nowRoute.meta.insPower && nowRoute.query.insid){
+    const nowInsPowerList = computed(() => store.state.insPowerListInfo[nowRoute.query.insid as string])
+    if(!nowInsPowerList.value){
+      return
+    }
+    if(!nowInsPowerList.value.includes(nowRoute.meta.insPower)){
+      noIns.value = true
+      ElMessageBox.alert('当前身份/版本无此权限。', '温馨提示', {
+        confirmButtonText: '关闭',
+        type: 'error',
+        callback: () => null,
+      })
+    }
+  }
+}
+store.setInstance().then(() => {
+  if(route.path.includes('/product/')){
+    nowProduct.value = route.path.split('/')[2]
+    changeIns()
+    hasInsPower(route)
+  }else{
+    noIns.value = false
+  }
+})
+const insListInfo = computed(() => store.state.insListInfo)
+const nowProduct = ref('') // 当前产品 'dmp'/'cms'...
+const insid = ref('')
+const noIns = ref(true)
+const changeIns = () => {
+  const insList = insListInfo.value[nowProduct.value]
+  const setIns = () => {
+    if(insList.length > 1){
+      noIns.value = true
+      switchShow.value = true
+    }else{
+      window.location.replace(`/product/${nowProduct.value}?insid=` + insList[0].insid)
+    }
+  }
+  if(!route.query.insid){
+    if(!insList || !insList.length){
+      // 没有实例的情况
+      noIns.value = true
+      insid.value = ''
+      return
+    }else{
+      noIns.value = false
+    }
+    setIns()
+  }else{
+    insid.value = route.query.insid as string
+    if(!insList || !insList.length){
+      // 没有实例的情况
+      noIns.value = true
+      insid.value = ''
+      return
+    }else{
+      noIns.value = false
+    }
+    if(insList && insList.findIndex(v => v.insid === Number(route.query.insid)) === -1){
+      // 地址栏有insid但是insid错误的情况
+      setIns()
+      return
+    }
+  }
+}
+// 切换实例版本end
+
+// const routes = router.getRoutes()
 onBeforeRouteUpdate((to, from) => {
+  if(to.path.includes('/product/')){
+    const toPathArr = to.path.split('/')
+    nowProduct.value = toPathArr[2]
+    changeIns()
+    if(toPathArr[2] !== from.path.split('/')[2]){
+      // 即类似dmp切换到cms，清空insid
+      noIns.value = true
+      insid.value = ''
+    }
+    if(insid.value && !to.query.insid){
+      return {
+        replace: true,
+        path: to.path,
+        query: {
+          ...to.query,
+          insid: insid.value
+        }
+      }
+    }
+    hasInsPower(to)
+  }else{
+    noIns.value = false
+    nowProduct.value = ''
+  }
+
   leftNavRef.value.getSecNav(to.meta.father || to.path)
   leftNavRef.value.changeFlag(to.path === '/console' ? false : true)
   detailsHeaderRef.value && detailsHeaderRef.value.getCrumbs(to)
@@ -420,6 +587,7 @@ onBeforeRouteUpdate((to, from) => {
     store.setKeepList([from.name as string])
   } else if (to.meta.keepAlive && from.meta.father === to.path) {
     // 从详情返回上一级 什么都不做
+    return
   } else {
     // 兄弟列表切换 或者 详情进入非父级列表
     store.setKeepList([])
@@ -432,12 +600,6 @@ const isSmall = ref(false)
 const onChangeLeftNav = (flag: boolean) => {
   isSmall.value = flag
 }
-
-//获取跳转地址
-const yxtUrl = ref<Record<string, string>>({})
-store.getYxtUrl().then((url: Record<string, string>) => {
-  yxtUrl.value = url
-})
 
 const showImgs = ref<string[]>([]) //预览图片列表
 const imgShow = ref(false) //预览是否显示
@@ -527,6 +689,17 @@ emiter.on('lookVideo', (video: string) => {
         padding: 16px;
         position: relative;
         z-index: 11;
+        .no_ins{
+          img{
+            width: 100%;
+          }
+          .buy_btn{
+            z-index: 1;
+            position: fixed;
+            right: 16px;
+            top: 120px;
+          }
+        }
       }
       .kz_copyright {
         position: absolute;
@@ -544,6 +717,22 @@ emiter.on('lookVideo', (video: string) => {
       }
       &.layout_content_big {
         max-width: calc(100% - 64px);
+      }
+      .layout_content_page_top{
+        height: 40px;
+        width: 100%;
+        padding-left: 16px;
+        padding-right: 32px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-color: #fff;
+        border-left: 1px solid $coloreee;
+        border-bottom: 1px solid $coloreee;
+        .now_edition{
+          color: $dfcolor;
+          margin-right: 4px;
+        }
       }
     }
   }
@@ -656,6 +845,29 @@ emiter.on('lookVideo', (video: string) => {
   }
   .company_self {
     padding: 16px 16px 0;
+  }
+}
+.ins_edition_dot{
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 8px;
+  background: #FFFFFF;
+  border: 1px solid #ddd;
+  &.active{
+    background-color: $dfcolor;
+    border: none;
+    position: relative;
+    &::after{
+      content: '';
+      background-color: #fff;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      position: absolute;
+      left: 5px;
+      top: 5px;
+    }
   }
 }
 </style>

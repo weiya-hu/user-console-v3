@@ -1,17 +1,26 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import insPowerHash from "@/utils/insPower";
+
+declare module 'vue-router' {
+  interface RouteMeta {
+    title: string // 导航标题
+    icon?: string // 左侧二级导航图标
+    father?: string // 在导航中不出现的详情页需要此属性，值为在此页面时需要激活的导航的path
+    keepAlive?: boolean // 页面是否需要缓存，一般在父级进入详情页时，父级需要缓存则给父级添加，父级页面还需要导出name，导出的name和路由的name保持一致
+    scroll?: boolean // 页面中是否使用单独的el-scrollbar组件，一般在页面中使用了KzStepTab组件时设置
+    lv?: string // 现仅用于判断是否需要登录的页面
+    power?: string // 页面权限字段，现仅用于是否企业管理员（能否进入企业管理页面）判断
+    insPower?: string // 实例页面权限字段
+  }
+}
 
 /**
  * @path 全小写，详情页和父级同级，详情页在meta里添加father字段为父级的path
  * @name 保证唯一 大驼峰 例如 UserInfo
  * @component 需要重定向的空路由页面统一用rView.vue
  * @redirect 重定向 非必写
- * @meta title：导航标题；icon: 左侧二级导航图标；
- * father：在导航中不出现的详情页需要此属性，值为在此页面时需要激活的导航的path；
- * keepAlive: 页面是否需要缓存，一般在父级进入详情页时，父级需要缓存则给父级添加，父级页面还需要导出name；
- * scroll：页面中是否使用单独的el-scrollbar组件；
- * lv：现仅用于判断是否需要登录的页面；
- * power：页面权限字段；
- * @ 子页面都必须写在Layout的children下，因为左侧导航是直接取Layout下children
+ * @meta 详见RouteMeta接口
+ * 需要在左侧导航出现的页面都必须写在Layout的children里，因为左侧导航是直接取Layout的children
  */
 export const routes: RouteRecordRaw[] = [
   {
@@ -116,37 +125,37 @@ export const routes: RouteRecordRaw[] = [
             path: '/product/dmp',
             name: 'Dmp',
             redirect: '/product/dmp/findb',
-            component: () => import('@/views/layout/rView.vue'),
-            meta: { title: 'DMP数据系统', icon: '#icon-lanmu-DMP' },
+            component: () => import('@/views/layout/product/dmp/DmpView.vue'),
+            meta: { title: 'DMP数据系统', icon: '#icon-lanmu-DMP',  },
             children: [
               {
                 path: '/product/dmp/findb',
                 name: 'FindB',
                 component: () => import('@/views/layout/rView.vue'),
-                meta: { title: '找B端客户' },
+                meta: { title: '找B端客户', insPower: insPowerHash['dmp_b'] },
                 redirect: '/product/dmp/findb/kzdata',
                 children: [
                   {
                     path: '/product/dmp/findb/kzdata',
                     name: 'BKzData',
                     component: () => import('@/views/layout/product/dmp/findB/kzData.vue'),
-                    meta: { title: '康州数据源' },
+                    meta: { title: '康州数据源', insPower: insPowerHash['dmp_b_kz'] },
                   },
                   {
                     path: '/product/dmp/findb/otherdata',
-                    name: 'OtherData',
+                    name: 'BOtherData',
                     component: () => import('@/views/layout/product/dmp/findB/otherData.vue'),
-                    meta: { title: '个性化数据' },
+                    meta: { title: '第三方数据', insPower: insPowerHash['dmp_b_dsf'] },
                   },
                   {
                     path: '/product/dmp/findb/specificdata',
-                    name: 'SpecificData',
+                    name: 'BSpecificData',
                     component: () => import('@/views/layout/product/dmp/findB/specificData.vue'),
-                    meta: { title: '第三方数据' },
+                    meta: { title: '个性化数据', insPower: 'kkkk123123' },
                   },
                   {
                     path: '/product/dmp/findb/specificdatadetails',
-                    name: 'SpecificDataDetails',
+                    name: 'BSpecificDataDetails',
                     component: () =>
                       import('@/views/layout/product/dmp/findB/specificDataDetails.vue'),
                     meta: { title: '个性化数据详细页', father: '/product/dmp/findb/specificdata' },

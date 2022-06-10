@@ -173,7 +173,8 @@ img {
   }
 }
 
-.el-dialog {
+body .el-dialog {
+  --el-dialog-border-radius: 8px;
   .el-dialog__header {
     border-bottom: 1px solid $coloreee;
     margin-right: 0;

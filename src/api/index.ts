@@ -27,3 +27,17 @@ export const getMemberList_api = (): Promise<IRes> => {
 export const getIsManager_api = (): Promise<IRes> => {
   return get('user', '/web/user/company/admin/verify.do')
 }
+
+/**
+ * @name 获取当前用户当前身份下所有可用实例
+ */
+ export const getNowInsList_api = (): Promise<IRes> => {
+  return get('user ', '/web/usable/product/instance.list')
+}
+
+/**
+ * @name 获取当前用户所有实例权限
+ */
+ export const getInsPowerList_api = (): Promise<IRes> => {
+  return get('user ', '/user/permission.get')
+}

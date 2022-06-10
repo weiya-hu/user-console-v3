@@ -1,10 +1,10 @@
 <template>
   <div class="details_header fcs">
-    <div v-show="crumbs.length > 2" class="fcs back" @click="$router.back()">
+    <div class="fcs back" @click="$router.back()">
       <el-icon><arrow-left /></el-icon>
       <div>返回</div>
     </div>
-    <div v-show="crumbs.length > 2" class="vline"></div>
+    <div class="vline"></div>
     <el-breadcrumb separator="/">
       <el-breadcrumb-item
         v-for="v in crumbs"
@@ -24,6 +24,8 @@
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { useRoute, RouteRecordRaw, RouteLocationNormalized } from 'vue-router'
 import { ref } from 'vue'
+
+const route = useRoute()
 const crumbs = ref<RouteRecordRaw[]>([])
 const getCrumbs = (route: RouteLocationNormalized) => {
   const pathArr = route.path.split('/')
@@ -62,7 +64,7 @@ const getCrumbs = (route: RouteLocationNormalized) => {
     }
   }
 }
-getCrumbs(useRoute())
+getCrumbs(route)
 
 defineExpose({
   getCrumbs, // 获取面包屑导航
@@ -72,14 +74,6 @@ defineExpose({
 <style scoped lang="scss">
 .details_header {
   height: 40px;
-  background-color: #fff;
-  padding-left: 16px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  border-left: 1px solid $coloreee;
-  border-bottom: 1px solid $coloreee;
   .back {
     color: $dfcolor;
     cursor: pointer;

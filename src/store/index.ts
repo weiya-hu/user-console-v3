@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import { getIndustryList_api, getAddressList_api, getUserInfo, getYxtUrl_api } from '@/api/login'
-import { getMemberList_api, getIsManager_api, getUserCompanyList_api } from '@/api/index'
+import { getMemberList_api, getIsManager_api, getUserCompanyList_api, getNowInsList_api, getInsPowerList_api } from '@/api/index'
 import { getHash } from '@/utils/index'
 
 import user_general_i from '@/assets/images/user_general.svg'
@@ -19,6 +19,8 @@ export const mainStore = defineStore('mainStore', () => {
     memberList: [] as IStoreObj[], // 会员等级列表
     userCompany: {} as IStoreObj, // 用户个人/企业列表
     nowUserIdentity: {} as IStoreObj, // 当前用户身份
+    insListInfo: {} as { [x: string]: { insid: number, name: string, product_id: number }[] }, // 当前用户当前身份下可用实例 { dmp: [...], cms: [...] }
+    insPowerListInfo: {} as any, // 用户全部实例权限列表 键为insid，值为对应的权限字符数组
     typeList: [] as IStoreObj[], // 行业分类
     typeHash: {} as IStoreObj, // 行业分类哈希表
     addressList: [] as IStoreObj[], // 地区列表
@@ -154,6 +156,18 @@ export const mainStore = defineStore('mainStore', () => {
       }
     }
   }
+  /**
+   * @name 设置用户当前身份可用实例及用户所有实例权限
+   */
+  const setInstance = async () => {
+    return new Promise<void>(async (resolve, reject) => {
+      const res1 = await getNowInsList_api()
+      state.insListInfo = res1.body
+      const res2 = await getInsPowerList_api()
+      state.insPowerListInfo = res2.body
+      resolve()
+    })
+  }
   return {
     state,
     getTypeList, // 获取行业树
@@ -163,6 +177,7 @@ export const mainStore = defineStore('mainStore', () => {
     getYxtUrl, // 获取跳转地址
     isCanDo, // 传入权限id判断用户是否有此权限
     getMemberList, // 获取会员等级列表
-    setUserCompany, // 设置用户个人/企业列表
+    setUserCompany, // 设置用户个人/企业列表和当前选择的身份
+    setInstance, // 设置用户当前身份可用实例及用户所有实例权限
   }
 })
