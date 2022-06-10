@@ -87,8 +87,8 @@
 
       <el-form-item label="经营范围" prop="business_scope">
         <el-input
-          placeholder="请填写经营范围"
           v-model="ruleForm.business_scope"
+          placeholder="请填写经营范围"
           type="textarea"
           clearable
           :disabled="state === 2"

@@ -422,16 +422,18 @@ body .el-dialog {
     }
   }
 }
-@media screen and (min-width:750px ) {
- html,body{
-  min-width: 1440px;
+@media screen and (min-width: 750px) {
+  html,
+  body {
+    min-width: 1440px;
   }
 }
-@media screen and (max-width:750px ) {
- html,body{
-  font-size: 0.1rem;
+@media screen and (max-width: 750px) {
+  html,
+  body {
+    font-size: 0.1rem;
   }
-  .el_message{
+  .el_message {
     width: 3rem !important;
     overflow: hidden;
     --el-message-min-width: 2rem !important;

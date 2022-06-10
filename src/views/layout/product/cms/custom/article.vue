@@ -11,10 +11,10 @@
       <div>
         <div class="cms_table">
           <el-table
+            v-loading="loading"
             :data="tableList"
             style="width: 100%"
             row-class-name="my-data-table-row"
-            v-loading="loading"
           >
             <KzDataTable
               v-for="(item, index) in tableTitle"

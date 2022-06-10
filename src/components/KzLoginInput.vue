@@ -21,14 +21,14 @@
           <div class="acode_line"></div>
         </div>
         <el-form-item :prop="props.formName">
-          <el-input v-model="mobile" placeholder="请输入手机号" autoComplete='new-password' />
+          <el-input v-model="mobile" placeholder="请输入手机号" auto-complete="new-password" />
         </el-form-item>
       </div>
     </div>
     <div v-if="name === 'mobileYZM'" class="flexl form_item">
       <div class="login_label">验证码</div>
       <el-form-item :prop="props.formName">
-        <el-input v-model="sms" placeholder="请输入验证码" autoComplete='new-password' />
+        <el-input v-model="sms" placeholder="请输入验证码" auto-complete="new-password" />
       </el-form-item>
       <div v-if="getYZMflag" className="getyzmTXTtime getyzmTXT">{{ mobileYZMnum }}'后重新获取</div>
       <div v-if="!getYZMflag" className="getyzmTXT" @click="getYZm()">{{ YZMtxt }}</div>
@@ -41,9 +41,15 @@
           v-model="pass"
           type="password"
           placeholder="请输入密码"
-          autoComplete='new-password'
+          auto-complete="new-password"
         />
-        <el-input v-else v-model="pass" type="text" placeholder="请输入密码" autoComplete='new-password' />
+        <el-input
+          v-else
+          v-model="pass"
+          type="text"
+          placeholder="请输入密码"
+          auto-complete="new-password"
+        />
       </el-form-item>
       <div class="login_pass_img fleximg" @click="ispassword = !ispassword">
         <img v-if="ispassword" src="@/assets/images/login_close.png" />
@@ -58,14 +64,14 @@
           v-model="surePass"
           type="password"
           placeholder="请输入密码"
-          autoComplete='new-password'
+          auto-complete="new-password"
         />
         <el-input
           v-else
           v-model="surePass"
           type="text"
           placeholder="请输入密码"
-          autoComplete='new-password'
+          auto-complete="new-password"
         />
       </el-form-item>
       <div class="login_pass_img fleximg" @click="ispassword = !ispassword">
@@ -76,7 +82,7 @@
     <div v-if="name === 'captcha'" class="fsc login_captcha">
       <div class="form_item login_captcha_item flexl">
         <el-form-item :prop="props.formName">
-          <el-input v-model="captchaV" placeholder="请输入验证码" autoComplete='new-password' />
+          <el-input v-model="captchaV" placeholder="请输入验证码" auto-complete="new-password" />
         </el-form-item>
       </div>
       <div class="chaptcha_img fleximg" @click="getCaptcha"><img :src="captcha" /></div>
@@ -84,7 +90,7 @@
     <div v-if="name === 'invite_code'" class="flexl form_item">
       <div class="login_label">邀请码</div>
       <el-form-item :prop="props.formName">
-        <el-input v-model="invite_code" placeholder="请输入邀请码" autoComplete='new-password' />
+        <el-input v-model="invite_code" placeholder="请输入邀请码" auto-complete="new-password" />
       </el-form-item>
       <div className="getyzmTXT invite_code_end">选填</div>
     </div>

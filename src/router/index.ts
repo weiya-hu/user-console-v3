@@ -48,7 +48,7 @@ export const routes: RouteRecordRaw[] = [
         component: () => import('@/views/salon/useragreementH5.vue'),
         meta: { title: '用户须知', lv: '-1' },
       },
-    ]
+    ],
   },
   {
     path: '/login',
@@ -437,13 +437,13 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/cms/mywork/articleadd',
                     name: 'MyworkArticleAdd',
                     component: () => import('@/views/layout/product/cms/myWork/articleAdd.vue'),
-                    meta: {  title: '软文编辑/新增',father: '/product/cms/mywork/article',},
+                    meta: { title: '软文编辑/新增', father: '/product/cms/mywork/article' },
                   },
                   {
                     path: '/product/cms/mywork/articledetails',
                     name: 'MyworkArticleDetails',
                     component: () => import('@/views/layout/product/cms/myWork/articleDetails.vue'),
-                    meta: { title: '软文详情',father: '/product/cms/mywork/article', },
+                    meta: { title: '软文详情', father: '/product/cms/mywork/article' },
                   },
                   {
                     path: '/product/cms/mywork/images',

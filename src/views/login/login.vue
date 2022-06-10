@@ -139,7 +139,7 @@ if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
     store.getYxtUrl().then((res) => {
       router.push('/salon/login')
     })
-  }else{
+  } else {
     loginShow.value = true
   }
 }

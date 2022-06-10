@@ -3,8 +3,18 @@
     <div class="article_top flexb">
       <div>软文库</div>
       <div>
-        <el-button class="bdc_btn" >同步官网</el-button>
-        <el-button type="primary" class="add_need_btn" @click="$router.push('/product/cms/mywork/articleadd')"><KzIconVue href="#icon-tianjia" size="14px" color="white" class="add_need_icon"/>新建</el-button>
+        <el-button class="bdc_btn">同步官网</el-button>
+        <el-button
+          type="primary"
+          class="add_need_btn"
+          @click="$router.push('/product/cms/mywork/articleadd')"
+          ><KzIconVue
+            href="#icon-tianjia"
+            size="14px"
+            color="white"
+            class="add_need_icon"
+          />新建</el-button
+        >
       </div>
     </div>
     <div class="mytable">
@@ -37,7 +47,12 @@
             >
             <span
               v-if="row.status == 4"
-              @click="()=>{errorMsg = row.fail_reason ;errorShow = true}"
+              @click="
+                () => {
+                  errorMsg = row.fail_reason
+                  errorShow = true
+                }
+              "
               >{{ row.title }}
             </span>
           </template>
@@ -61,21 +76,21 @@
               <el-link type="primary" @click="goDel(row.id)">删除</el-link>
               <div class="line"></div>
               <el-link
-                type="primary"
                 v-if="row.status == 1"
+                type="primary"
                 @click="$router.push('/product/cms/mywork/articleadd?id=' + row.id)"
                 >编辑</el-link
               >
               <el-link
-                type="primary"
                 v-if="row.status == 2 || row.status == 3"
+                type="primary"
                 @click="$router.push('/product/cms/mywork/articledetails?id=' + row.id)"
                 >查看</el-link
               >
               <el-link
                 v-if="row.status == 4"
                 type="primary"
-                @click=" errorMsg = row.fail_reasonerrorShow = true"
+                @click="errorMsg = row.fail_reasonerrorShow = true"
                 >拒绝原因</el-link
               >
             </div>
@@ -86,14 +101,14 @@
         </template>
       </el-table>
     </div>
-    <KzPage :total="total" v-model="page" @change="changePage" />
+    <KzPage v-model="page" :total="total" @change="changePage" />
     <KzDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="sureDel" />
     <KzDialog v-model="errorShow" :msg="errorMsg" :title="'拒绝原因'" :btn="1" />
     <el-image-viewer
-      @close="imgShow = false"
       v-if="imgShow"
       :url-list="showImgs"
       :initial-index="showImgIndex"
+      @close="imgShow = false"
     />
   </div>
 </template>
@@ -163,7 +178,7 @@ const imgShow = ref(false) //预览是否显示
 const showImgIndex = ref(0) //首张预览图片
 const look = (url: string) => {
   // window.open(url)
-  let arr: string[] = []
+  const arr: string[] = []
   tableData.value.forEach((v) => {
     arr.push(v.thumb_url)
   })
@@ -181,18 +196,18 @@ export default { name: '我的作品库-软文' }
 .m_article {
   background: #ffffff;
   padding: 20px 24px;
-  .article_top{
+  .article_top {
     margin-bottom: 20px;
-    &>div:nth-child(1){
+    & > div:nth-child(1) {
       height: 20px;
       font-size: 18px;
       font-weight: 600;
       color: #303133;
       line-height: 18px;
     }
-    .add_need_btn{
+    .add_need_btn {
       width: 88px;
-      .add_need_icon{
+      .add_need_icon {
         margin-right: 4px;
       }
     }
