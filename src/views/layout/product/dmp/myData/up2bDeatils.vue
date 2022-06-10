@@ -1,5 +1,5 @@
 <template>
-  <div class="kz_card my_up2b_page" v-loading="loading">
+  <div v-loading="loading" class="kz_card my_up2b_page">
     <div class="fsc f1">
       <div class="tips">
         为您找到 0 家符合条件的客户（*根据政策与监管法规要求，联系人手机号脱敏展示）
@@ -11,10 +11,10 @@
 
     <div class="mytable">
       <el-table
+        v-loading="loading"
         :data="tableList"
         size="large"
         row-class-name="my-data-table-row"
-        v-loading="loading"
       >
         <el-table-column type="selection" width="50" />
         <el-table-column property="num" label="序号" />
@@ -25,23 +25,23 @@
         <el-table-column property="industry_id" label="行业" />
         <el-table-column property="city" label="地区">
           <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div style="width: 100px">
-                    {{
-                      row.province > 0 &&
-                      getHashStr(strToArr(row.province, row.city, row.district), addressHash)
-                    }}
-                  </div>
-                </template>
-                <div>
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div style="width: 100px">
                   {{
                     row.province > 0 &&
                     getHashStr(strToArr(row.province, row.city, row.district), addressHash)
                   }}
                 </div>
-              </el-tooltip>
-            </template>
+              </template>
+              <div>
+                {{
+                  row.province > 0 &&
+                  getHashStr(strToArr(row.province, row.city, row.district), addressHash)
+                }}
+              </div>
+            </el-tooltip>
+          </template>
         </el-table-column>
         <el-table-column property="address" label="地址" />
         <el-table-column property="company_type" label="企业类型" />
@@ -66,10 +66,10 @@ import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import { getHash, getHashStr, strToArr } from '@/utils/index'
 import { mainStore } from '@/store/index'
-import {useRoute} from 'vue-router'
+import { useRoute } from 'vue-router'
 import { upRecordList } from '@/api/product/dmp/myData'
 
-const store =mainStore()
+const store = mainStore()
 const addressHash = ref(store.state.addressHash)
 const route = useRoute()
 const id = route.query.id
@@ -95,8 +95,6 @@ const getList = async () => {
 }
 getList()
 </script>
-
-
 
 <style scoped lang="scss">
 .my_up2b_page {

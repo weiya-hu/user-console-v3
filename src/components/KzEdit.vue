@@ -24,7 +24,7 @@ import 'tinymce/plugins/autolink'
 import 'tinymce/plugins/fullscreen'
 import 'tinymce/plugins/preview'
 import { ref, onUpdated, watch, computed } from 'vue'
-import { getAliToken_api } from '@/api/login'
+import { getAliToken_api } from '@/api/index'
 import axios from 'axios'
 const props = withDefaults(
   defineProps<{

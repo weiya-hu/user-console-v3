@@ -384,4 +384,18 @@ body .el-dialog {
     padding: 0 24px 24px;
   }
 }
+.dmp_table {
+  thead {
+    th.el-table__cell {
+      background-color: #f2f2f3;
+      color: $color333;
+    }
+  }
+  .line {
+    height: 14px;
+    width: 1px;
+    margin: 0 16px;
+    background-color: $coloreee;
+  }
+}
 </style>

@@ -9,7 +9,7 @@
       "
       :total="total"
       :pager-count="9"
-      :page-sizes="[10, 20, 30]"
+      :page-sizes="[10, 20, 30, 50]"
       @current-change="change"
       @size-change="changeSize"
     >
@@ -66,7 +66,7 @@ const changeSize = (size: number) => {
 .mypage {
   display: flex;
   justify-content: flex-end;
-  padding-top: 30px;
+  padding-top: 24px;
   :deep(.el-pagination) {
     .el-pager {
       --el-pagination-button-bg-color: #fff;

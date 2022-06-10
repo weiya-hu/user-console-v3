@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import insPowerHash from "@/utils/insPower";
+import insPowerHash from '@/utils/insPower'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -125,40 +125,48 @@ export const routes: RouteRecordRaw[] = [
             path: '/product/dmp',
             name: 'Dmp',
             redirect: '/product/dmp/findb',
-            component: () => import('@/views/layout/product/dmp/DmpView.vue'),
-            meta: { title: 'DMP数据系统', icon: '#icon-lanmu-DMP',  },
+            component: () => import('@/views/layout/rView.vue'),
+            meta: { title: 'DMP数据系统', icon: '#icon-lanmu-DMP' },
             children: [
               {
                 path: '/product/dmp/findb',
                 name: 'FindB',
                 component: () => import('@/views/layout/rView.vue'),
-                meta: { title: '找B端客户', insPower: insPowerHash['dmp_b'] },
+                meta: { title: '找B端客户', insPower: insPowerHash.dmp_b },
                 redirect: '/product/dmp/findb/kzdata',
                 children: [
                   {
                     path: '/product/dmp/findb/kzdata',
                     name: 'BKzData',
                     component: () => import('@/views/layout/product/dmp/findB/kzData.vue'),
-                    meta: { title: '康州数据源', insPower: insPowerHash['dmp_b_kz'] },
+                    meta: { title: '康州数据源', scroll: true, insPower: insPowerHash.dmp_b_kz },
                   },
                   {
                     path: '/product/dmp/findb/otherdata',
                     name: 'BOtherData',
                     component: () => import('@/views/layout/product/dmp/findB/otherData.vue'),
-                    meta: { title: '第三方数据', insPower: insPowerHash['dmp_b_dsf'] },
+                    meta: { title: '第三方数据', insPower: insPowerHash.dmp_b_dsf },
                   },
                   {
                     path: '/product/dmp/findb/specificdata',
                     name: 'BSpecificData',
                     component: () => import('@/views/layout/product/dmp/findB/specificData.vue'),
-                    meta: { title: '个性化数据', insPower: 'kkkk123123' },
+                    meta: {
+                      title: '个性化数据',
+                      keepAlive: true,
+                      insPower: insPowerHash.dmp_b_diy,
+                    },
                   },
                   {
                     path: '/product/dmp/findb/specificdatadetails',
                     name: 'BSpecificDataDetails',
                     component: () =>
                       import('@/views/layout/product/dmp/findB/specificDataDetails.vue'),
-                    meta: { title: '个性化数据详细页', father: '/product/dmp/findb/specificdata' },
+                    meta: {
+                      title: '个性化数据详细页',
+                      father: '/product/dmp/findb/specificdata',
+                      insPower: insPowerHash.dmp_b_diy,
+                    },
                   },
                 ],
               },

@@ -53,9 +53,9 @@ export function kzConfirm(msg?: string) {
 }
 
 /**
- * 递归循环查找字符
+ * 树状数组中递归循环查找字符
  * @arr ['A','2'] 要查找的值组成的数组
- * @listArr 带有children的数组，层级和arr的长度一致
+ * @listArr 带有children的树状数组，层级和arr的长度一致
  * @key arr在listArr中的字段名称
  * @nameKey 对应字符的键名，默认值'name'
  * @childrenKey arr中children数组键名，默认值'children'
@@ -93,7 +93,7 @@ export function get_Str(
 }
 
 /**
- * 带有children的对象数组 转换为 哈希表
+ * 带有children的树状数组 转换为 哈希表
  * @arr 要转换的数组
  * @key arr中要当成哈希表键名的字段名称
  * @nameKey arr中要当成哈希表key对应字符串的键名，默认值'name'

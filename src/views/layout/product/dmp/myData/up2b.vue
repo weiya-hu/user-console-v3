@@ -12,10 +12,10 @@
 
     <div class="mytable">
       <el-table
+        v-loading="loading"
         :data="tableList"
         size="large"
         row-class-name="my-data-table-row"
-        v-loading="loading"
       >
         <el-table-column type="selection" width="50" />
         <el-table-column property="id" label="ID" />
@@ -88,8 +88,6 @@ const getList = async () => {
 }
 getList()
 </script>
-
-
 
 <style scoped lang="scss">
 .my_up2b_page {

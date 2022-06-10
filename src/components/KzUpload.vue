@@ -59,7 +59,7 @@
 import { ref } from 'vue'
 import { Plus, Document } from '@element-plus/icons-vue'
 import type { UploadFile, UploadProgressEvent } from 'element-plus'
-import { getAliToken_api } from '@/api/login'
+import { getAliToken_api } from '@/api/index'
 import { errMsg } from '@/utils'
 
 const props = withDefaults(
@@ -301,7 +301,8 @@ defineExpose({
       text-align: left;
 
       .up_tip {
-        margin-top: 8px;
+        // margin-top: 8px;
+        margin-top: 0px;
       }
     }
   }

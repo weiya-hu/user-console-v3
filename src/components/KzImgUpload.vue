@@ -38,7 +38,7 @@
 import { ref, onMounted, nextTick } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import type { UploadFile } from 'element-plus'
-import { getAliToken_api } from '@/api/login'
+import { getAliToken_api } from '@/api/index'
 import { lookImage, errMsg } from '@/utils/index'
 import axios from 'axios'
 

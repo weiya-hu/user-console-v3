@@ -11,13 +11,13 @@
 
     <div class="mytable">
       <el-table
+        v-loading="loading"
         :data="tableList"
         size="large"
         row-class-name="my-data-table-row"
-        v-loading="loading"
       >
         <el-table-column type="selection" width="50" />
-      
+
         <el-table-column property="contact" label="姓名" />
         <el-table-column property="sex" label="性别" />
         <el-table-column property="mobiles" label="联系方式" />
@@ -25,25 +25,25 @@
         <el-table-column property="industry_id" label="从事行业" />
         <el-table-column property="city" label="地区">
           <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div style="width: 100px">
-                    {{
-                      row.province > 0 &&
-                      getHashStr(strToArr(row.province, row.city, row.district), addressHash)
-                    }}
-                  </div>
-                </template>
-                <div>
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div style="width: 100px">
                   {{
                     row.province > 0 &&
                     getHashStr(strToArr(row.province, row.city, row.district), addressHash)
                   }}
                 </div>
-              </el-tooltip>
-            </template>
+              </template>
+              <div>
+                {{
+                  row.province > 0 &&
+                  getHashStr(strToArr(row.province, row.city, row.district), addressHash)
+                }}
+              </div>
+            </el-tooltip>
+          </template>
         </el-table-column>
-               <template #empty>
+        <template #empty>
           <KzEmpty />
         </template>
       </el-table>
@@ -59,10 +59,10 @@ import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import { getHash, getHashStr, strToArr } from '@/utils/index'
 import { mainStore } from '@/store/index'
-import {useRoute} from 'vue-router'
+import { useRoute } from 'vue-router'
 import { upRecordList } from '@/api/product/dmp/myData'
 
-const store =mainStore()
+const store = mainStore()
 const addressHash = ref(store.state.addressHash)
 const route = useRoute()
 const id = route.query.id
@@ -88,8 +88,6 @@ const getList = async () => {
 }
 getList()
 </script>
-
-
 
 <style scoped lang="scss">
 .my_up2b_page {

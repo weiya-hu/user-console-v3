@@ -102,8 +102,8 @@ const sure = () => {
     }
   }
 }
-.kz_dialog{
-  .msg{
+.kz_dialog {
+  .msg {
     padding: 14px 0 10px;
   }
 }

@@ -70,7 +70,7 @@
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { VueCropper } from 'vue-cropper'
 import { errMsg, isObjectValueEqual } from '@/utils/index'
-import { getAliToken_api } from '@/api/login'
+import { getAliToken_api } from '@/api/index'
 import axios from 'axios'
 import { Plus, CirclePlus, Remove, RefreshLeft, RefreshRight } from '@element-plus/icons-vue'
 

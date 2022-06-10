@@ -14,8 +14,7 @@ import { mainStore } from '@/store/index'
 
 const store = mainStore()
 const keepList = computed(() => store.state.keepList)
-console.log('dmpView');
-
+console.log('dmpView')
 </script>
 
 <style scoped></style>

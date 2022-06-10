@@ -1,5 +1,5 @@
 <template>
-  <div class="m_article">康州数据源</div>
+  <div class="m_article">康州数据源c</div>
 </template>
 
 <script setup lang="ts">

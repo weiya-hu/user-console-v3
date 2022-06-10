@@ -127,21 +127,29 @@
           class="layout_content"
           :class="{ layout_details_page: $route.path !== '/console', layout_content_big: isSmall }"
         >
-          <div class="fsc layout_content_page_top" v-if="$route.path !== '/console'">
+          <div v-if="$route.path !== '/console'" class="fsc layout_content_page_top">
             <KzDetailsHeader ref="detailsHeaderRef" />
-            <div class="fcs" v-if="insListInfo[nowProduct]">
-              <div class="">{{nowIdentity.name}}</div>
+            <div v-if="insListInfo[nowProduct]" class="fcs">
+              <div class="">{{ nowIdentity.name }}</div>
               <div class="vline"></div>
-              <el-dropdown @command="changeEdition" v-if="insListInfo[nowProduct].length">
+              <el-dropdown v-if="insListInfo[nowProduct].length" @command="changeEdition">
                 <div class="fcs">
-                  <div class="now_edition">{{insListInfo[nowProduct].find(v => v.insid === Number($route.query.insid))?.name}}</div>
+                  <div class="now_edition">
+                    {{
+                      insListInfo[nowProduct].find((v) => v.insid === Number($route.query.insid))
+                        ?.name
+                    }}
+                  </div>
                   <el-icon size="14px"><arrow-down /></el-icon>
                 </div>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item :command="v" v-for="v in insListInfo[nowProduct]" :key="v">
-                      <div class="ins_edition_dot" :class="Number($route.query.insid) === v.insid && 'active'"></div>
-                      <div>{{v.name}}</div>
+                    <el-dropdown-item v-for="v in insListInfo[nowProduct]" :key="v" :command="v">
+                      <div
+                        class="ins_edition_dot"
+                        :class="Number($route.query.insid) === v.insid && 'active'"
+                      ></div>
+                      <div>{{ v.name }}</div>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -149,12 +157,19 @@
             </div>
           </div>
 
-          <div v-if="$route.meta.scroll" class="layout_content_box" style="height: 100%">
-            <div v-if="noIns" class="no_ins">
-              <img :src="noInsImg[nowProduct as keyof typeof noInsImg]" alt="">
-              <el-button type="primary" class="buy_btn">立即购买</el-button>
-            </div>
-            <router-view v-slot="{ Component }" v-else>
+          <div
+            v-if="$route.meta.scroll"
+            class="layout_content_box"
+            style="height: 100%"
+            :style="{ padding: noIns ? '0px' : '16px' }"
+          >
+            <el-scrollbar v-if="noIns">
+              <div class="no_ins" style="padding: 16px">
+                <img :src="noInsImg[nowProduct as keyof typeof noInsImg]" alt="" />
+                <el-button type="primary" class="buy_btn">立即购买</el-button>
+              </div>
+            </el-scrollbar>
+            <router-view v-else v-slot="{ Component }">
               <transition name="fade">
                 <component :is="Component" />
               </transition>
@@ -162,10 +177,10 @@
           </div>
           <el-scrollbar v-else wrap-class="layout_content_box" :noresize="true">
             <div v-if="noIns" class="no_ins">
-              <img :src="noInsImg[nowProduct as keyof typeof noInsImg]" alt="">
+              <img :src="noInsImg[nowProduct as keyof typeof noInsImg]" alt="" />
               <el-button type="primary" class="buy_btn">立即购买</el-button>
             </div>
-            <router-view v-slot="{ Component }" v-else>
+            <router-view v-else v-slot="{ Component }">
               <transition name="fade">
                 <component :is="Component" />
               </transition>
@@ -180,7 +195,12 @@
     </template>
     <el-skeleton v-else :rows="5" animated />
 
-    <KzDialog v-model="editionChangeShow" title="切换企业版本数据" :msg="'切换后页面会重新加载，是否切换至“ ' + editionChangeItme.name + ' ”'" @sure="sureChangeEdition"/>
+    <KzDialog
+      v-model="editionChangeShow"
+      title="切换企业版本数据"
+      :msg="'切换后页面会重新加载，是否切换至“ ' + editionChangeItme.name + ' ”'"
+      @sure="sureChangeEdition"
+    />
 
     <el-dialog
       v-model="switchShow"
@@ -191,10 +211,12 @@
       :close-on-click-modal="false"
     >
       <el-radio-group v-model="changeInsid">
-        <el-radio :label="v.insid" v-for="v in insListInfo[nowProduct]" :key="v.insid">{{v.name}}</el-radio>
+        <el-radio v-for="v in insListInfo[nowProduct]" :key="v.insid" :label="v.insid">{{
+          v.name
+        }}</el-radio>
       </el-radio-group>
       <template #footer>
-        <el-button type="primary" @click="selectIns" :disabled="!changeInsid">确定</el-button>
+        <el-button type="primary" :disabled="!changeInsid" @click="selectIns">确定</el-button>
       </template>
     </el-dialog>
 
@@ -282,8 +304,8 @@ import { errMsg } from '@/utils'
 import { changeIdentity_api } from '@/api/index'
 import { ElMessageBox } from 'element-plus'
 import { ArrowDown } from '@element-plus/icons-vue'
-import KzDialog from "@/components/KzDialog.vue";
-import { noInsImg } from "@/utils/insPower";
+import KzDialog from '@/components/KzDialog.vue'
+import { noInsImg } from '@/utils/insPower'
 
 // demo start
 import KzImgUpload from '@/components/KzImgUpload.vue'
@@ -465,8 +487,8 @@ const handUserBtn = (url: string) => {
 // 切换实例版本start
 const editionChangeShow = ref(false)
 const editionChangeItme = ref<Record<string, string | number>>({})
-const changeEdition = (value:any) => {
-  if(editionChangeItme.value.insid === value.insid){
+const changeEdition = (value: any) => {
+  if (editionChangeItme.value.insid === value.insid) {
     return
   }
   editionChangeItme.value = value
@@ -478,18 +500,20 @@ const sureChangeEdition = () => {
 const switchShow = ref(false)
 const changeInsid = ref(0)
 const selectIns = () => {
-  if(changeInsid.value){
+  if (changeInsid.value) {
     window.location.replace(`/product/${nowProduct.value}?insid=` + changeInsid.value)
   }
 }
 
 const hasInsPower = (nowRoute: RouteLocationNormalizedLoaded) => {
-  if(nowRoute.meta.insPower && nowRoute.query.insid){
-    const nowInsPowerList = computed(() => store.state.insPowerListInfo[nowRoute.query.insid as string])
-    if(!nowInsPowerList.value){
+  if (nowRoute.meta.insPower && nowRoute.query.insid) {
+    const nowInsPowerList = computed(
+      () => store.state.insPowerListInfo[nowRoute.query.insid as string]
+    )
+    if (!nowInsPowerList.value) {
       return
     }
-    if(!nowInsPowerList.value.includes(nowRoute.meta.insPower)){
+    if (!nowInsPowerList.value.includes(nowRoute.meta.insPower)) {
       noIns.value = true
       ElMessageBox.alert('当前身份/版本无此权限。', '温馨提示', {
         confirmButtonText: '关闭',
@@ -500,11 +524,11 @@ const hasInsPower = (nowRoute: RouteLocationNormalizedLoaded) => {
   }
 }
 store.setInstance().then(() => {
-  if(route.path.includes('/product/')){
+  if (route.path.includes('/product/')) {
     nowProduct.value = route.path.split('/')[2]
     changeIns()
     hasInsPower(route)
-  }else{
+  } else {
     noIns.value = false
   }
 })
@@ -515,37 +539,36 @@ const noIns = ref(true)
 const changeIns = () => {
   const insList = insListInfo.value[nowProduct.value]
   const setIns = () => {
-    if(insList.length > 1){
+    if (insList.length > 1) {
       noIns.value = true
       switchShow.value = true
-    }else{
+    } else {
       window.location.replace(`/product/${nowProduct.value}?insid=` + insList[0].insid)
     }
   }
-  if(!route.query.insid){
-    if(!insList || !insList.length){
+  if (!route.query.insid) {
+    if (!insList || !insList.length) {
       // 没有实例的情况
       noIns.value = true
       insid.value = ''
       return
-    }else{
-      noIns.value = false
     }
+    noIns.value = false
+
     setIns()
-  }else{
+  } else {
     insid.value = route.query.insid as string
-    if(!insList || !insList.length){
+    if (!insList || !insList.length) {
       // 没有实例的情况
       noIns.value = true
       insid.value = ''
       return
-    }else{
-      noIns.value = false
     }
-    if(insList && insList.findIndex(v => v.insid === Number(route.query.insid)) === -1){
+    noIns.value = false
+
+    if (insList && insList.findIndex((v) => v.insid === Number(route.query.insid)) === -1) {
       // 地址栏有insid但是insid错误的情况
       setIns()
-      return
     }
   }
 }
@@ -553,27 +576,27 @@ const changeIns = () => {
 
 // const routes = router.getRoutes()
 onBeforeRouteUpdate((to, from) => {
-  if(to.path.includes('/product/')){
+  if (to.path.includes('/product/')) {
     const toPathArr = to.path.split('/')
     nowProduct.value = toPathArr[2]
     changeIns()
-    if(toPathArr[2] !== from.path.split('/')[2]){
+    if (toPathArr[2] !== from.path.split('/')[2]) {
       // 即类似dmp切换到cms，清空insid
       noIns.value = true
       insid.value = ''
     }
-    if(insid.value && !to.query.insid){
+    if (insid.value && !to.query.insid) {
       return {
         replace: true,
         path: to.path,
         query: {
           ...to.query,
-          insid: insid.value
-        }
+          insid: insid.value,
+        },
       }
     }
     hasInsPower(to)
-  }else{
+  } else {
     noIns.value = false
     nowProduct.value = ''
   }
@@ -587,7 +610,6 @@ onBeforeRouteUpdate((to, from) => {
     store.setKeepList([from.name as string])
   } else if (to.meta.keepAlive && from.meta.father === to.path) {
     // 从详情返回上一级 什么都不做
-    return
   } else {
     // 兄弟列表切换 或者 详情进入非父级列表
     store.setKeepList([])
@@ -689,11 +711,11 @@ emiter.on('lookVideo', (video: string) => {
         padding: 16px;
         position: relative;
         z-index: 11;
-        .no_ins{
-          img{
+        .no_ins {
+          img {
             width: 100%;
           }
-          .buy_btn{
+          .buy_btn {
             z-index: 1;
             position: fixed;
             right: 16px;
@@ -718,7 +740,7 @@ emiter.on('lookVideo', (video: string) => {
       &.layout_content_big {
         max-width: calc(100% - 64px);
       }
-      .layout_content_page_top{
+      .layout_content_page_top {
         height: 40px;
         width: 100%;
         padding-left: 16px;
@@ -729,7 +751,7 @@ emiter.on('lookVideo', (video: string) => {
         background-color: #fff;
         border-left: 1px solid $coloreee;
         border-bottom: 1px solid $coloreee;
-        .now_edition{
+        .now_edition {
           color: $dfcolor;
           margin-right: 4px;
         }
@@ -847,18 +869,18 @@ emiter.on('lookVideo', (video: string) => {
     padding: 16px 16px 0;
   }
 }
-.ins_edition_dot{
+.ins_edition_dot {
   width: 16px;
   height: 16px;
   border-radius: 50%;
   margin-right: 8px;
-  background: #FFFFFF;
+  background: #ffffff;
   border: 1px solid #ddd;
-  &.active{
+  &.active {
     background-color: $dfcolor;
     border: none;
     position: relative;
-    &::after{
+    &::after {
       content: '';
       background-color: #fff;
       width: 6px;

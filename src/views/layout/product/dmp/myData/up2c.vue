@@ -12,10 +12,10 @@
 
     <div class="mytable">
       <el-table
+        v-loading="loading"
         :data="tableList"
         size="large"
         row-class-name="my-data-table-row"
-        v-loading="loading"
       >
         <el-table-column type="selection" width="50" />
         <el-table-column property="id" label="ID" />
@@ -38,7 +38,7 @@
             <div>{{ formatDate(new Date(Number(row.create_time)), 'yyyy-MM-dd') }}</div>
           </template>
         </el-table-column>
-          <el-table-column property="count" label="创建人" />
+        <el-table-column property="count" label="创建人" />
         <el-table-column label="操作" width="300">
           <template #default="{ row }">
             <div class="fcs">
@@ -89,8 +89,6 @@ const getList = async () => {
 }
 getList()
 </script>
-
-
 
 <style scoped lang="scss">
 .my_up2c_page {
