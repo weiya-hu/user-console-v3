@@ -4,7 +4,7 @@
       <div class="card_title">上传2B数据</div>
       <div class="btns">
         <el-button type="primary" plain>同步数据</el-button>
-        <el-button type="primary"
+        <el-button type="primary" @click="dialogVisible = true"
           ><el-icon size="14px" margin-right="4px"><Plus /></el-icon>上传数据</el-button
         >
       </div>
@@ -26,7 +26,7 @@
             <div class="ss">
               <div
                 class="point"
-                :style="row.state == 1 ? 'background:#67C23A' : 'background:#C0C4CC'"
+                :style="row.state == 1 ? 'background:#67C23A' : 'background:#2150ec'"
               ></div>
               <span>{{ row.state == 1 ? '已受理' : '已完结' }}</span>
             </div>
@@ -55,6 +55,7 @@
       </el-table>
     </div>
     <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
+    <KzDataUpUser v-model="dialogVisible" @submitSuccess="submitsuccess" />
   </div>
 </template>
 
@@ -62,9 +63,11 @@
 import { ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
+import KzDataUpUser from '@/components/KzDataUpUser.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import { getKzStatus, getSource } from '@/utils/index'
+import { useRouter } from 'vue-router'
 import { upRecordList } from '@/api/product/dmp/myData'
 
 const tableList = ref([])
@@ -72,12 +75,14 @@ const totle = ref(0)
 const size = ref(10)
 const page = ref(1)
 const loading = ref(false)
+
+const dialogVisible = ref(false)
 const getList = async () => {
   loading.value = true
   const data = {
     current: page.value,
     type: 1,
-    size: 10,
+    size: size.value,
   }
   const { status, body } = await upRecordList(data)
   loading.value = false
@@ -87,6 +92,11 @@ const getList = async () => {
   }
 }
 getList()
+
+const submitsuccess = () => {
+  page.value = 1
+  getList()
+}
 </script>
 
 <style scoped lang="scss">

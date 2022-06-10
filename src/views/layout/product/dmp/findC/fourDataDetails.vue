@@ -2,11 +2,11 @@
   <div class="tips">
     为您找到 <span>0</span> 家符合条件的客户（*根据政策与监管法规要求，联系人手机号脱敏展示）
   </div>
-  <KzUserDataDetails :get-list-api="getBaiduUserList_api" />
+  <KzUserDataDetails :get-list-api="getFourUserList_api" />
 </template>
 
 <script setup lang="ts">
-import { getBaiduUserList_api } from '@/api/product/dmp/findC'
+import { getFourUserList_api } from '@/api/product/dmp/findC'
 import KzUserDataDetails from '@/components/dmp/KzUserDataDetails.vue'
 </script>
 

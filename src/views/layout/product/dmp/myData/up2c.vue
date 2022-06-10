@@ -26,7 +26,7 @@
             <div class="ss">
               <div
                 class="point"
-                :style="row.state == 1 ? 'background:#67C23A' : 'background:#C0C4CC'"
+                :style="row.state == 1 ? 'background:#67C23A' : 'background:#2150ec'"
               ></div>
               <span>{{ row.state == 1 ? '已受理' : '已完结' }}</span>
             </div>
@@ -38,7 +38,7 @@
             <div>{{ formatDate(new Date(Number(row.create_time)), 'yyyy-MM-dd') }}</div>
           </template>
         </el-table-column>
-        <el-table-column property="count" label="创建人" />
+        <el-table-column property="user_name" label="创建人" />
         <el-table-column label="操作" width="300">
           <template #default="{ row }">
             <div class="fcs">
@@ -56,6 +56,7 @@
       </el-table>
     </div>
     <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
+    <KzDataUpUser v-model="dialogVisible" @submitSuccess="submitsuccess" />
   </div>
 </template>
 
@@ -63,6 +64,7 @@
 import { ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
+import KzDataUpUser from '@/components/KzDataUpUser.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import { getKzStatus, getSource } from '@/utils/index'
@@ -73,12 +75,14 @@ const totle = ref(0)
 const size = ref(10)
 const page = ref(1)
 const loading = ref(false)
+
+const dialogVisible = ref(false)
 const getList = async () => {
   loading.value = true
   const data = {
     current: page.value,
-    type: 1,
-    size: 10,
+    type: 2,
+    size: size.value,
   }
   const { status, body } = await upRecordList(data)
   loading.value = false
@@ -88,6 +92,11 @@ const getList = async () => {
   }
 }
 getList()
+
+const submitsuccess = () => {
+  page.value = 1
+  getList()
+}
 </script>
 
 <style scoped lang="scss">
