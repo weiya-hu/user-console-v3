@@ -8,7 +8,7 @@
         >
         <el-button type="primary" plain>同步数据</el-button>
         <el-button type="primary" @click="addShow = true"
-          ><el-icon size="14px" margin-right="4px"><Plus /></el-icon>上传数据</el-button
+          ><el-icon size="14px" style="margin-right:4px"><Plus /></el-icon>上传数据</el-button
         >
       </div>
     </div>
