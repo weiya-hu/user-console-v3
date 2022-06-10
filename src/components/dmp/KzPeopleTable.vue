@@ -57,11 +57,7 @@
           </div>
           <div v-if="scope.row.status == 2" class="fcs">---</div>
           <div v-if="scope.row.status == 3" class="fcs">
-            <el-link
-              type="primary"
-              @click="showFail(scope.row.fail_reason)"
-              >拒绝原因</el-link
-            >
+            <el-link type="primary" @click="showFail(scope.row.fail_reason)">拒绝原因</el-link>
             <div class="line"></div>
             <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
           </div>

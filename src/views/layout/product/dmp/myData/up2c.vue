@@ -64,7 +64,7 @@
 import { ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
-import KzDataUpUser from '@/components/KzDataUpUser.vue'
+import KzDataUpUser from '@/components/dmp/KzDataUpUser.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import { getKzStatus, getSource } from '@/utils/index'

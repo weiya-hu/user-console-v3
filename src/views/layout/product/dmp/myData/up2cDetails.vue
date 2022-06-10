@@ -19,10 +19,18 @@
         <el-table-column type="selection" width="50" />
 
         <el-table-column property="contact" label="姓名" />
-        <el-table-column property="sex" label="性别" />
+        <el-table-column property="sex" label="性别">
+          <template #default="{ row }">
+            {{ row.sex === 1 ? '男' : '女' }}
+          </template>
+        </el-table-column>
         <el-table-column property="mobiles" label="联系方式" />
         <el-table-column property="email" label="邮箱" />
-        <el-table-column property="industry_id" label="从事行业" />
+        <el-table-column property="industry_id" label="从事行业">
+          <template #default="scope">
+            <div>{{ getHashStr(scope.row.industry_id.split(','), typeHash, 'last') }}</div>
+          </template>
+        </el-table-column>
         <el-table-column property="city" label="地区">
           <template #default="{ row }">
             <el-tooltip effect="dark" placement="top">
@@ -48,21 +56,22 @@
         </template>
       </el-table>
     </div>
-    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
+    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getDetailList" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import { getHash, getHashStr, strToArr } from '@/utils/index'
 import { mainStore } from '@/store/index'
 import { useRoute } from 'vue-router'
-import { upRecordList } from '@/api/product/dmp/myData'
+import { upRecordDetail, setSync_api, getSyncInfo_api } from '@/api/product/dmp/myData'
 
 const store = mainStore()
+const typeHash = computed(() => store.state.typeHash)
 const addressHash = ref(store.state.addressHash)
 const route = useRoute()
 const id = route.query.id
@@ -72,21 +81,45 @@ const totle = ref(0)
 const size = ref(10)
 const page = ref(1)
 const loading = ref(false)
-const getList = async () => {
+
+const getDetailList = async () => {
   loading.value = true
   const data = {
     current: page.value,
-    type: 1,
-    size: 10,
+    size: size.value,
+    id: route.query.id,
   }
-  const { status, body } = await upRecordList(data)
+  const { status, body } = await upRecordDetail(data)
   loading.value = false
   if (status) {
     totle.value = body.total
     tableList.value = body.records
   }
 }
-getList()
+getDetailList()
+
+const multipleSelection = ref<(string | number)[]>([])
+const handleSelectionChange = (val: any[]) => {
+  multipleSelection.value = val.map((v) => v.id)
+}
+
+const tableRef = ref()
+const clear = () => {
+  multipleSelection.value = []
+  tableRef.value.clearSelection()
+}
+
+const topBtnRef = ref()
+const syncDisabled = computed(() => !multipleSelection.value.length)
+const setSync = async () => {
+  topBtnRef.value.setLoading(true)
+  const res = await setSync_api({
+    list: multipleSelection.value,
+    type: 2,
+  })
+  topBtnRef.value.close(res.message)
+  clear()
+}
 </script>
 
 <style scoped lang="scss">
