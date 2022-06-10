@@ -3,7 +3,7 @@
     <div class="fsc f1">
       <div class="card_title">供应商</div>
       <el-button type="primary" class="btns"
-        ><el-icon size="14px" margin-right="4px"><Plus /></el-icon>上传数据</el-button
+        ><el-icon size="14px" style="margin-right:4px"><Plus /></el-icon>上传数据</el-button
       >
     </div>
     <div class="mytable">
@@ -38,7 +38,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column property="count" label="创建人" />
+        <el-table-column property="user_name" label="创建人" />
         <el-table-column label="操作" width="300">
           <template #default="{ row }">
             <div class="fcs">

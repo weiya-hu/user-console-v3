@@ -26,6 +26,7 @@
           <el-form-item label="文件上传" prop="updateFile" required>
             <KzUpload
               ref="upload"
+              site="dmp_excel"
               v-model="formValue.updateFile"
               :down-link="downloadUrl"
               :exname-list="['.doc', '.docx', '.pdf', '.xls', '.xlsx']"

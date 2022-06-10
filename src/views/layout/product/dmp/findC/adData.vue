@@ -2,10 +2,18 @@
   <div class="kz_card addata_page_c">
     <div class="fsc f1">
       <div class="card_title">广告投放获客</div>
-      <div class="btns">
-        <el-button type="primary" plain>同步数据</el-button>
+      <div class="btns fsc">
+        <KzTopBtns
+          ref="topBtnRef"
+          type="sync"
+          syncbtn
+          :sync-api="getSyncInfo_api"
+          :sync-disabled="syncDisabled"
+          class="topbtns"
+          @sync="setSync"
+        />
         <el-button type="primary" @click="addShow = true"
-          ><el-icon size="14px" margin-right="4px"><Plus /></el-icon>新增数据</el-button
+          ><el-icon size="14px" style="margin-right:4px"><Plus /></el-icon>新增数据</el-button
         >
       </div>
     </div>
@@ -22,17 +30,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
+import { ref, computed } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import KzPage from '@/components/KzPage.vue'
 import KzPeopleTable from '@/components/dmp/KzPeopleTable.vue'
 import KzAddPeople from '@/components/dmp/KzAddPeople.vue'
-import { addAd_api, getAdList_api, delAd_api } from '@/api/product/dmp/findC'
+import {
+  addAd_api,
+  getAdList_api,
+  delAd_api,
+  getSyncInfo_api,
+  setSync_api,
+} from '@/api/product/dmp/findC'
 
 const page = ref(1)
 const size = ref(10)
 const totle = ref(0)
-
+const topBtnRef = ref()
+const tableRef = ref()
+const syncDisabled = computed(() => tableRef.value && !tableRef.value.selIdList.length)
+const setSync = async () => {
+  topBtnRef.value.setLoading(true)
+  const res = await setSync_api({
+    list: tableRef.value.selIdList,
+  })
+  topBtnRef.value.close(res.message)
+  tableRef.value.clear()
+}
 const getList = () => {
   getAdList_api({
     size: size.value,
@@ -96,7 +121,13 @@ const submitAddForm = (val: any) => {
 </script>
 
 <style scoped lang="scss">
-:deep(.el-dialog) {
-  padding: 20px;
+.addata_page_c {
+  padding: 20px 24px;
+  .topbtns{
+    margin-right: 12px;
+  }
+  :deep(.el-dialog) {
+    padding: 20px;
+  }
 }
 </style>

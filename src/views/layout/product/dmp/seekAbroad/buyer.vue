@@ -3,7 +3,7 @@
     <div class="fsc f1">
       <div class="card_title">采购商</div>
       <el-button type="primary" class="btns"
-        ><el-icon size="14px" margin-right="4px"><Plus /></el-icon>上传数据</el-button
+        ><el-icon size="14px" style="margin-right:4px"><Plus /></el-icon>上传数据</el-button
       >
     </div>
     <div class="mytable">
@@ -15,7 +15,11 @@
       >
         <el-table-column type="selection" width="50" />
         <el-table-column property="id" label="ID" />
-        <el-table-column property="industry_id" label="行业分类" />
+        <el-table-column property="industry_id" label="行业分类" >
+          <template #default="scope">
+            <div>{{ getHashStr(scope.row.industry_id.split(','), typeHash, 'last') }}</div>
+          </template>
+        </el-table-column>
         <el-table-column property="country_id" label="地区" />
         <el-table-column property="product_name" label="供应商品" />
         <el-table-column property="product_desc" label="描述" />
@@ -34,7 +38,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column property="count" label="创建人" />
+        <el-table-column property="user_name" label="创建人" />
         <el-table-column label="操作" width="300">
           <template #default="{ row }">
             <div class="fcs">
@@ -60,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref,computed } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
 import KzEmpty from '@/components/KzEmpty.vue'
@@ -71,7 +75,7 @@ import { upRecordList } from '@/api/product/dmp/myData'
 
 const store = mainStore()
 const addressHash = ref(store.state.addressHash)
-
+const typeHash = computed(() => store.state.typeHash)
 const tableList = ref([])
 const totle = ref(0)
 const size = ref(10)

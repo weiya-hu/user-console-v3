@@ -214,6 +214,18 @@ export const routes: RouteRecordRaw[] = [
                     meta: { title: '微信获客详细页', father: '/product/dmp/findc/addata' },
                   },
                   {
+                    path: '/product/dmp/findc/addata',
+                    name: 'AdData',
+                    component: () => import('@/views/layout/product/dmp/findC/adData.vue'),
+                    meta: { title: '广告获客' },
+                  },
+                  {
+                    path: '/product/dmp/findc/addatadetails',
+                    name: 'AdDataDetails',
+                    component: () => import('@/views/layout/product/dmp/findC/adDataDetails.vue'),
+                    meta: { title: '广告获客详细页', father: '/product/dmp/findc/addata' },
+                  },
+                  {
                     path: '/product/dmp/findc/baidudata',
                     name: 'BaiduData',
                     component: () => import('@/views/layout/product/dmp/findC/baiduData.vue'),
