@@ -3,7 +3,15 @@
     <div class="fsc f1">
       <div class="tips">供应商详情</div>
       <div class="btns">
-        <el-button type="primary" plain>同步数据</el-button>
+        <KzTopBtns
+          ref="topBtnRef"
+          type="sync"
+          syncbtn
+          :sync-api="getSyncInfo_api"
+          :sync-disabled="syncDisabled"
+          class="topbtns mr20"
+          @sync="setSync"
+        />
       </div>
     </div>
 
@@ -40,13 +48,13 @@
         </template>
       </el-table>
     </div>
-    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
+    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getDetailList" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-
+import { ref, computed } from 'vue'
+import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import { getHash, getHashStr, strToArr } from '@/utils/index'
@@ -54,7 +62,7 @@ import { mainStore } from '@/store/index'
 import { useRoute } from 'vue-router'
 import { formatDate } from '@/utils/date'
 
-import { upRecordList } from '@/api/product/dmp/myData'
+import { overseasDetailPage, setSync_api, getSyncInfo_api } from '@/api/product/dmp/seekAbroad'
 
 const store = mainStore()
 const addressHash = ref(store.state.addressHash)
@@ -66,21 +74,44 @@ const totle = ref(0)
 const size = ref(10)
 const page = ref(1)
 const loading = ref(false)
-const getList = async () => {
+
+const getDetailList = async () => {
   loading.value = true
   const data = {
     current: page.value,
-    type: 1,
-    size: 10,
+    size: 50,
+    id: route.query.id,
   }
-  const { status, body } = await upRecordList(data)
+  const { status, body } = await overseasDetailPage(data)
   loading.value = false
   if (status) {
     totle.value = body.total
     tableList.value = body.records
   }
 }
-getList()
+getDetailList()
+
+const multipleSelection = ref<(string | number)[]>([])
+const handleSelectionChange = (val: any[]) => {
+  multipleSelection.value = val.map((v) => v.id)
+}
+
+const tableRef = ref()
+const clear = () => {
+  multipleSelection.value = []
+  tableRef.value.clearSelection()
+}
+
+const topBtnRef = ref()
+const syncDisabled = computed(() => !multipleSelection.value.length)
+const setSync = async () => {
+  topBtnRef.value.setLoading(true)
+  const res = await setSync_api({
+    list: multipleSelection.value,
+  })
+  topBtnRef.value.close(res.message)
+  clear()
+}
 </script>
 
 <style scoped lang="scss">

@@ -187,7 +187,6 @@ const submit = async (type: number) => {
       editRef.value.clearImgs()
       if (!titleImg.value) {
         submitAddForm()
-        return
       }
       // getAliToken_api({ site: 'cms_article' }).then((res: res) => {
       //   if (res.status == 1) {

@@ -2,11 +2,19 @@
   <div class="kz_card my_wx_page">
     <div class="fsc f1">
       <div class="card_title">微信获客</div>
-      <div class="btns">
+      <div class="btns fsc">
         <span
-          ><el-icon class="help_icon"><QuestionFilled /></el-icon>帮助</span
+          ><el-icon class="help_icon" color="#999"><QuestionFilled /></el-icon>帮助</span
         >
-        <el-button type="primary" plain>同步数据</el-button>
+        <KzTopBtns
+          ref="topBtnRef"
+          type="sync"
+          syncbtn
+          :sync-api="getSyncInfo_api"
+          :sync-disabled="syncDisabled"
+          class="topbtns mr20"
+          @sync="setSync"
+        />
         <el-button type="primary" @click="addShow = true"
           ><el-icon size="14px" style="margin-right: 4px"><Plus /></el-icon>上传数据</el-button
         >
@@ -89,7 +97,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
+import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
 import { Plus, QuestionFilled } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
 import KzEmpty from '@/components/KzEmpty.vue'
@@ -97,7 +106,7 @@ import KzPage from '@/components/KzPage.vue'
 import { useRouter } from 'vue-router'
 import { getSource, getKzStatus } from '@/utils/index'
 import { mainStore } from '@/store/index'
-import { getWxList_api, addWx_api } from '@/api/product/dmp/findC'
+import { getWxList_api, addWx_api, getSyncInfo_api, setSync_api } from '@/api/product/dmp/findC'
 import { ElForm } from 'element-plus'
 
 const store = mainStore()
@@ -116,7 +125,17 @@ interface SData {
   source: number
 }
 const tableData = ref([])
-
+const topBtnRef = ref()
+const tableRef = ref()
+const syncDisabled = computed(() => tableRef.value && !tableRef.value.selIdList.length)
+const setSync = async () => {
+  topBtnRef.value.setLoading(true)
+  const res = await setSync_api({
+    list: tableRef.value.selIdList,
+  })
+  topBtnRef.value.close(res.message)
+  tableRef.value.clear()
+}
 const getList = () => {
   getWxList_api({
     size: size.value,
@@ -199,7 +218,8 @@ export default { name: '微信获客C' }
   .btns {
     margin-right: 24px;
     span {
-      margin-right: 16px;
+      margin: 9px 16px 0 0;
+      color: #909399;
       .help_icon {
         margin-right: 6px;
         vertical-align: middle;

@@ -1,11 +1,17 @@
 <template>
   <div v-loading="loading" class="kz_card teldata_details_c">
     <div class="fsc f1">
-      <div class="tips">
-        为您找到<span>0</span> 家符合条件的客户（*根据政策与监管法规要求，联系人手机号脱敏展示）
-      </div>
+      <KzDmpTitle :total="totle" class="pt20 pb20 ml16" />
       <div class="btns">
-        <el-button type="primary" plain>同步数据</el-button>
+        <KzTopBtns
+          ref="topBtnRef"
+          type="sync"
+          syncbtn
+          :sync-api="getSyncInfo_api"
+          :sync-disabled="syncDisabled"
+          class="topbtns mr20"
+          @sync="setSync"
+        />
       </div>
     </div>
 
@@ -53,7 +59,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Plus } from '@element-plus/icons-vue'
+import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
 import { formatDate } from '@/utils/date'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
@@ -61,7 +67,7 @@ import { getHashStr, strToArr, getSource } from '@/utils/index'
 import { mainStore } from '@/store/index'
 import { useRoute } from 'vue-router'
 
-import { getInsetUserList_api, setSync_api } from '@/api/product/dmp/findC'
+import { getInsetUserList_api, setSync_api, getSyncInfo_api } from '@/api/product/dmp/findC'
 
 const store = mainStore()
 const addressHash = ref(store.state.addressHash)

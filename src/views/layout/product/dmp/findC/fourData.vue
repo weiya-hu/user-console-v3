@@ -2,8 +2,16 @@
   <div class="kz_card baidudata_page_c">
     <div class="fsc f1">
       <div class="card_title">400获客</div>
-      <div class="btns">
-        <el-button type="primary" plain>同步数据</el-button>
+      <div class="btns fsc">
+        <KzTopBtns
+          ref="topBtnRef"
+          type="sync"
+          syncbtn
+          :sync-api="getSyncInfo_api"
+          :sync-disabled="syncDisabled"
+          class="topbtns mr20"
+          @sync="setSync"
+        />
         <el-button type="primary" @click="addShow = true"
           ><el-icon size="14px" style="margin-right: 4px"><Plus /></el-icon>新增数据</el-button
         >
@@ -22,17 +30,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
+import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
 import KzPage from '@/components/KzPage.vue'
 import KzPeopleTable from '@/components/dmp/KzPeopleTable.vue'
 import KzAddPeople from '@/components/dmp/KzAddPeople.vue'
-import { addFour_api, getFourList_api, delFour_api } from '@/api/product/dmp/findC'
+import {
+  addFour_api,
+  getFourList_api,
+  delFour_api,
+  getSyncInfo_api,
+  setSync_api,
+} from '@/api/product/dmp/findC'
 
 const page = ref(1)
 const size = ref(10)
 const totle = ref(0)
-
+const topBtnRef = ref()
+const tableRef = ref()
+const syncDisabled = computed(() => tableRef.value && !tableRef.value.selIdList.length)
+const setSync = async () => {
+  topBtnRef.value.setLoading(true)
+  const res = await setSync_api({
+    list: tableRef.value.selIdList,
+  })
+  topBtnRef.value.close(res.message)
+  tableRef.value.clear()
+}
 const getList = () => {
   getFourList_api({
     size: size.value,

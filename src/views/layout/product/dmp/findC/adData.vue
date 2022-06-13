@@ -9,7 +9,7 @@
           syncbtn
           :sync-api="getSyncInfo_api"
           :sync-disabled="syncDisabled"
-          class="topbtns"
+          class="topbtns mr20"
           @sync="setSync"
         />
         <el-button type="primary" @click="addShow = true"
@@ -123,9 +123,6 @@ const submitAddForm = (val: any) => {
 <style scoped lang="scss">
 .addata_page_c {
   padding: 20px 24px;
-  .topbtns {
-    margin-right: 12px;
-  }
   :deep(.el-dialog) {
     padding: 20px;
   }

@@ -168,7 +168,9 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const toSalonLOgin = () => {
-  router.push(location.search?('/salon/login' + location.search + '&agree=1'):('/salon/login?agree=1'))
+  router.push(
+    location.search ? '/salon/login' + location.search + '&agree=1' : '/salon/login?agree=1'
+  )
 }
 </script>
 <style lang="scss" scoped>

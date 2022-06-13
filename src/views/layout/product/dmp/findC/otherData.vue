@@ -47,7 +47,15 @@
     <div class="kz_card">
       <div class="fsc f1">
         <div class="card_title">第三方数据源</div>
-        <el-button type="primary" class="btns mr16" plain>同步数据</el-button>
+        <KzTopBtns
+          ref="topBtnRef"
+          type="sync"
+          syncbtn
+          :sync-api="getSyncInfo_api"
+          :sync-disabled="syncDisabled"
+          class="topbtns mr20"
+          @sync="setSync"
+        />
       </div>
       <div class="tips">
         为您找到 <span>0</span> 家符合条件的客户（*根据政策与监管法规要求，联系人手机号脱敏展示）
@@ -141,6 +149,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import KzCascader from '@/components/KzCascader.vue'
+import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import { mainStore } from '@/store/index'
@@ -154,7 +163,6 @@ import {
 } from '@/api/product/dmp/findC'
 import { errMsg } from '@/utils/index'
 
-const tableList = ref([])
 const totle = ref(0)
 const size = ref(10)
 const page = ref(1)
@@ -199,6 +207,7 @@ const searchParams = ref({
   current: 1,
   source: 1,
 })
+
 const educationList = ref<any[]>([])
 const getEducationList = async () => {
   const res = await getEducationList_api()

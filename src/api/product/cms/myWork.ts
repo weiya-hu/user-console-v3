@@ -114,7 +114,10 @@ export const videoAdd_api = (data: { thumb_url: string; source_name?: string }):
 /**
  * @name 我的内容库修改海报名称接口
  */
-export const videoEdit_api = (data: { id: string | number; source_name: string }): Promise<IRes> => {
+export const videoEdit_api = (data: {
+  id: string | number
+  source_name: string
+}): Promise<IRes> => {
   return post('cms', '/cms/videos.up', data, true)
 }
 

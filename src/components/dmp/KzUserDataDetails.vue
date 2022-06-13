@@ -1,5 +1,6 @@
 <template>
   <div v-loading="loading" class="user_data_details">
+    <KzDmpTitle :total="totle" class="pt20 pb20 ml16" />
     <KzUserTable ref="tableRef" :data="tableData" />
     <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
   </div>
@@ -11,7 +12,7 @@
  * @author chn
  */
 import { ref, computed } from 'vue'
-import TopBtns from '@/components/TopBtns.vue'
+import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
 import KzPage from '@/components/KzPage.vue'
 import KzUserTable from '@/components/dmp/KzUserTable.vue'
 import { setSync_api, getSyncInfo_api } from '@/api/product/dmp/findC'
@@ -45,7 +46,7 @@ const getList = () => {
   loading.value = true
   props
     .getListApi({
-      size: 50,
+      size: size.value,
       current: page.value,
       did: route.query.id,
     })

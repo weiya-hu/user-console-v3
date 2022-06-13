@@ -2,10 +2,18 @@
   <div class="kz_card teldata_page_c">
     <div class="fsc f1">
       <div class="card_title">号码段获客</div>
-      <div class="btns">
-        <el-button type="primary" plain>同步数据</el-button>
+      <div class="btns fsc">
+        <KzTopBtns
+          ref="topBtnRef"
+          type="sync"
+          syncbtn
+          :sync-api="getSyncInfo_api"
+          :sync-disabled="syncDisabled"
+          class="topbtns mr20"
+          @sync="setSync"
+        />
         <el-button type="primary" @click="addShow = true"
-          ><el-icon size="14px" style="margin-right: 4px"><Plus /></el-icon>新建数据</el-button
+          ><el-icon size="14px" style="margin-right: 4px"><Plus /></el-icon>新增数据</el-button
         >
       </div>
     </div>
@@ -123,6 +131,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
 import { Plus } from '@element-plus/icons-vue'
 import { reactive, ref, computed } from 'vue'
 import type { ElForm } from 'element-plus'
@@ -132,7 +141,13 @@ import KzCascader from '@/components/KzCascader.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
 import { mainStore } from '@/store/index'
 import { getHashStr, strToArr, getSource, getKzStatus } from '@/utils/index'
-import { addInset_api, getInsetList_api, getTelList_api } from '@/api/product/dmp/findC'
+import {
+  addInset_api,
+  getInsetList_api,
+  getTelList_api,
+  getSyncInfo_api,
+  setSync_api,
+} from '@/api/product/dmp/findC'
 
 const store = mainStore()
 const addressHash = computed(() => store.state.addressHash)
@@ -144,7 +159,17 @@ const goDetails = (id: string) => {
 const totle = ref(0)
 const size = ref(10)
 const page = ref(1)
-
+const topBtnRef = ref()
+const tableRef = ref()
+const syncDisabled = computed(() => tableRef.value && !tableRef.value.selIdList.length)
+const setSync = async () => {
+  topBtnRef.value.setLoading(true)
+  const res = await setSync_api({
+    list: tableRef.value.selIdList,
+  })
+  topBtnRef.value.close(res.message)
+  tableRef.value.clear()
+}
 const getList = () => {
   getInsetList_api({
     current: page.value,
@@ -247,9 +272,6 @@ const submitAddForm = () => {
 
 <style scoped lang="scss">
 .teldata_page_c {
-  .topbtns {
-    margin-bottom: 20px;
-  }
   :deep(.el-form-item__label) {
     width: 90px;
   }
