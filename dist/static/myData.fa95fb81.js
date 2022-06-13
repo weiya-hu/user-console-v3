@@ -1,0 +1,1 @@
+import{g as p,p as a}from"./index.74b5253d.js";const d=a=>p("dmp","/dmp/source/upload.page",a),o=a=>p("dmp","/dmp/source/upload/detail.page",a),s=p=>a("dmp","/dmp/source/upload.in",p,!0);export{s as a,o as b,d as u};

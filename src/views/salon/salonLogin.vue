@@ -1,5 +1,9 @@
 <template>
   <div class="salon_login">
+    <div class="fleximg logo_img" @click="toIndex">
+      <img src="@/assets/images/logo-white.svg" />
+    </div>
+    <div class="register_txt">注册康洲数智科技</div>
     <div class="login_content">
       <el-form ref="loginFormRef" :model="formValue" :rules="loginRules" :show-message="false">
         <div class="flexl form_item">
@@ -39,6 +43,7 @@
               v-model="formValue.sms"
               placeholder="请输入验证码"
               auto-complete="new-password"
+              :maxlength="6"
               @input="isSubmit"
             />
           </el-form-item>
@@ -58,18 +63,18 @@
       >
         注册并登录
       </div>
-      <div class="fleximg user_permision">
+      <div class="fleximg user_permision" @click="userAgree = !userAgree">
         <div class="fleximg agree_img">
           <img v-if="userAgree" src="@/assets/images/salon/user_agreed.png" />
           <img v-else src="@/assets/images/salon/user_agree.png" />
         </div>
-        <div class="user_permision_txt" @click="userAgree = !userAgree">
+        <div class="user_permision_txt">
           我已阅读并同意 <span @click="toUseragreement($event)">《康洲数智用户须知》</span>
         </div>
       </div>
     </div>
     <MessageVue v-model="errorShow" :message="messageTxt" :send="messageSendFlag" />
-    <div class="web_logo" @click="toIndex"></div>
+    <!-- <div class="web_logo" @click="toIndex"></div> -->
   </div>
 </template>
 
@@ -81,6 +86,7 @@ import { sendSms, doLogin, loginForceDo_api } from '@/api/login'
 import debounce from 'lodash/debounce'
 import MessageVue from './message.vue'
 import { useRouter } from 'vue-router'
+import '@/utils/rem.js'
 
 const router = useRouter()
 const formValue = ref<ILoginForm>({
@@ -223,6 +229,13 @@ const toUseragreement = (event: any) => {
 const toIndex = () => {
   location.href = 'https://m.kzszh.com/'
 }
+
+const setMiddle = (e: any) => {
+  e.target.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center',
+  })
+}
 </script>
 
 <script lang="ts"></script>
@@ -232,9 +245,22 @@ const toIndex = () => {
   max-width: 750px !important;
   width: 3.75rem;
   height: 100vh;
+  padding-top: 0.46rem;
   background: url(@/assets/images/salon/login_background.jpg) no-repeat;
   background-size: cover;
   position: relative;
+  .logo_img {
+    width: 1rem;
+    margin: 0 auto;
+  }
+  .register_txt {
+    font-size: 0.38rem;
+    color: #ffffff;
+    line-height: 0.38rem;
+    font-weight: 600;
+    text-align: center;
+    margin: 0.36rem auto 0;
+  }
   .login_content {
     width: 100%;
     height: 2.68rem;
@@ -259,6 +285,7 @@ const toIndex = () => {
             color: #333333;
             font-size: 0.14rem;
             font-weight: 600;
+            background: #f4f4f4;
             &::-webkit-input-placeholder {
               font-weight: 400;
             }
@@ -345,7 +372,7 @@ const toIndex = () => {
       // }
       .yzm_input_pre {
         width: 1.93rem;
-        background: #ffffff;
+        background: #f4f4f4;
         border-radius: 6px;
         padding-left: 0.2rem;
         height: 0.48rem;

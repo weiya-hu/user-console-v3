@@ -165,6 +165,7 @@
 </template>
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
+import '@/utils/rem.js'
 
 const router = useRouter()
 const toSalonLOgin = () => {
