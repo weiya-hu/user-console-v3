@@ -68,15 +68,15 @@ import tp_i from '@/assets/images/tp.png'
 import type { UploadFile, UploadProgressEvent } from 'element-plus'
 import KzEdit from '@/components/KzEdit.vue'
 import { errMsg } from '@/utils/index'
-import { getAliToken_api } from '@/api/login'
-import { articleAdd_api, articleDetail_api, articleUpdate_api } from '@/api/cms/myWork'
+// import { getAliToken_api } from '@/api/login'
+import { articleAdd_api, articleDetail_api, articleUpdate_api } from '@/api/product/cms/myWork'
 import { mainStore } from '@/store/index'
 const store = mainStore()
 const route = useRoute()
 const router = useRouter()
 const id = route.query.id //有id就是编辑
 if (id) {
-  articleDetail_api({ id: id as string }).then((res: res) => {
+  articleDetail_api({ id: id as string }).then((res: IRes) => {
     aForm.value = res.body
     if (res.body.thumb_url) {
       // titleImg.value = res.body.thumb_url
@@ -189,23 +189,23 @@ const submit = async (type: number) => {
         submitAddForm()
         return
       }
-      getAliToken_api({ site: 'cms_article' }).then((res: res) => {
-        if (res.status == 1) {
-          hostUrl.value = res.body.host
-          upData.value = {
-            key: res.body.dir + '/' + res.body.uuid + timg_exname.value,
-            OSSAccessKeyId: res.body.accessid,
-            success_action_status: 200,
-            policy: res.body.policy,
-            signature: res.body.signature,
-          }
-          aForm.value.thumb_url =
-            res.body.host + '/' + res.body.dir + '/' + res.body.uuid + timg_exname.value
-          upload.value!.submit()
-        } else {
-          errMsg('上传参数获取失败')
-        }
-      })
+      // getAliToken_api({ site: 'cms_article' }).then((res: res) => {
+      //   if (res.status == 1) {
+      //     hostUrl.value = res.body.host
+      //     upData.value = {
+      //       key: res.body.dir + '/' + res.body.uuid + timg_exname.value,
+      //       OSSAccessKeyId: res.body.accessid,
+      //       success_action_status: 200,
+      //       policy: res.body.policy,
+      //       signature: res.body.signature,
+      //     }
+      //     aForm.value.thumb_url =
+      //       res.body.host + '/' + res.body.dir + '/' + res.body.uuid + timg_exname.value
+      //     upload.value!.submit()
+      //   } else {
+      //     errMsg('上传参数获取失败')
+      //   }
+      // })
     } else {
       console.log('error submit!')
       return false

@@ -17,8 +17,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { articleDetail_api } from '@/api/myWork'
-import { customDetails_api } from '@/api/custom'
+import { articleDetail_api } from '@/api/product/cms/myWork'
+import { customDetails_api } from '@/api/product/cms/custom'
 const route = useRoute()
 const fatherUrl = route.meta.father as string
 const path = fatherUrl.split('/')[1]

@@ -101,7 +101,7 @@
         </template>
       </el-table>
     </div>
-    <KzPage v-model="page" :total="total" @change="changePage" />
+    <!-- <KzPage v-model="page" :total="total" @change="changePage" /> -->
     <KzDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="sureDel" />
     <KzDialog v-model="errorShow" :msg="errorMsg" :title="'拒绝原因'" :btn="1" />
     <el-image-viewer
@@ -120,7 +120,7 @@ import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import KzDialog from '@/components/KzDialog.vue'
 import KzIconVue from '@/components/KzIcon.vue'
-import { articleList_api, articleDel_api } from '@/api/cms/myWork'
+import { articleList_api, articleDel_api } from '@/api/product/cms/myWork'
 import { getKzMyStatus } from '@/utils/index'
 interface SData {
   id: number | string
@@ -162,7 +162,7 @@ const goDel = (id: string) => {
 }
 const sureDel = () => {
   //确认删除
-  articleDel_api({ id: delId.value }).then((res: res) => {
+  articleDel_api({ id: delId.value }).then((res: IRes) => {
     if (res.status == 1) {
       getList()
       delShow.value = false
