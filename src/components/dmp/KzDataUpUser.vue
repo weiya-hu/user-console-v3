@@ -26,8 +26,8 @@
           <el-form-item label="文件上传" prop="updateFile" required>
             <KzUpload
               ref="upload"
-              site="dmp_excel"
               v-model="formValue.updateFile"
+              site="dmp_excel"
               :down-link="downloadUrl"
               :exname-list="['.doc', '.docx', '.pdf', '.xls', '.xlsx']"
               msg="数据文件大小不超过2M"

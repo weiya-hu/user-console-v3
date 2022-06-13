@@ -35,8 +35,8 @@
         <el-form-item label="上传附件" prop="file">
           <KzUpload
             ref="upload"
-            site="dmp_attach"
             v-model="addForm.file"
+            site="dmp_attach"
             @change="upChange"
             @error="upError"
             @success="upSuccess"

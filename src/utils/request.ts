@@ -61,6 +61,7 @@ axios.interceptors.response.use(
       message: '接口错误，请联系管理员',
       type: 'error',
       grouping: true,
+      customClass: 'el_message',
     })
     return error
   }

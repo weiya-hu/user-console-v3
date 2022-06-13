@@ -159,13 +159,18 @@
       </p>
     </div>
     <div class="agree_btn fleximg">
-      <div class="fleximg" tabindex="1" @click="$router.push('/salon/login?agree=1')">
-        我已阅读并同意
-      </div>
+      <div class="fleximg" tabindex="1" @click="toSalonLOgin">我已阅读并同意</div>
     </div>
   </div>
 </template>
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const toSalonLOgin = () => {
+  router.push('/salon/login' + location.search + '&agree=1')
+}
+</script>
 <style lang="scss" scoped>
 .userAgreement {
   padding: 0.24rem 0.24rem 0.9rem;

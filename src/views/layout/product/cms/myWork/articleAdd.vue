@@ -16,9 +16,9 @@
           <el-form-item label="文章封面" prop="thumb_url">
             <div class="upload fcs">
               <el-upload
+                ref="upload"
                 :action="hostUrl"
                 :auto-upload="false"
-                ref="upload"
                 :limit="1"
                 :multiple="false"
                 :show-file-list="false"

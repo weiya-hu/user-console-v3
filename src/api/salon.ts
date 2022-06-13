@@ -1,14 +1,14 @@
 import { get, post } from '@/utils/request'
 
 /**
- * @name 新闻类别
+ * @name 获取服务列表
  */
 export const slServiceList_api = (): Promise<IRes> => {
   return get('official ', '/sl/service/list.get')
 }
 
 /**
- * @name 新闻列表
+ * @name 保存记录信息
  */
 export const slRrecordIn_api = (data: {
   company_name: any

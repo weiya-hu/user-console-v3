@@ -5,7 +5,7 @@
       <div class="btns">
         <el-button type="primary" plain>同步数据</el-button>
         <el-button type="primary" @click="addShow = true"
-          ><el-icon size="14px" style="margin-right:4px"><Plus /></el-icon>新增数据</el-button
+          ><el-icon size="14px" style="margin-right: 4px"><Plus /></el-icon>新增数据</el-button
         >
       </div>
     </div>

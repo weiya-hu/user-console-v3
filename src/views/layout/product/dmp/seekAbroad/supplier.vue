@@ -3,7 +3,7 @@
     <div class="fsc f1">
       <div class="card_title">供应商</div>
       <el-button type="primary" class="btns"
-        ><el-icon size="14px" style="margin-right:4px"><Plus /></el-icon>上传数据</el-button
+        ><el-icon size="14px" style="margin-right: 4px"><Plus /></el-icon>上传数据</el-button
       >
     </div>
     <div class="mytable">

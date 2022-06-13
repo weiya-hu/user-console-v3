@@ -13,7 +13,7 @@
           @sync="setSync"
         />
         <el-button type="primary" @click="addShow = true"
-          ><el-icon size="14px" style="margin-right:4px"><Plus /></el-icon>新增数据</el-button
+          ><el-icon size="14px" style="margin-right: 4px"><Plus /></el-icon>新增数据</el-button
         >
       </div>
     </div>
@@ -123,7 +123,7 @@ const submitAddForm = (val: any) => {
 <style scoped lang="scss">
 .addata_page_c {
   padding: 20px 24px;
-  .topbtns{
+  .topbtns {
     margin-right: 12px;
   }
   :deep(.el-dialog) {

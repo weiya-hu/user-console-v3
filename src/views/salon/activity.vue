@@ -1,150 +1,256 @@
 <template>
   <div class="salon_activity">
-    <div class="flexl top_logo">
-      <div class="fleximg"><img src="@/assets/images/logo-white.svg"></div>
+    <div class="flexl top_logo" @click="toIndex">
+      <div class="fleximg"><img src="@/assets/images/logo-white.svg" /></div>
     </div>
-    <div class="fleximg salon_txt_img"><img src="@/assets/images/salon/salon_top.png"></div>
+    <div class="fleximg salon_txt_img"><img src="@/assets/images/salon/salon_top.png" /></div>
     <div class="video_pre">
-      <video controls ref="videoRef" >
-        <source src="https://res.kzszh.com/web/index/video/6849e3c8e355648c3b61c189478fab15.mp4" type="video/mp4">
+      <video ref="videoRef" controls>
+        <source
+          src="https://res.kzszh.com/web/index/video/6849e3c8e355648c3b61c189478fab15.mp4"
+          type="video/mp4"
+        />
         您的浏览器不支持Video标签。
       </video>
-      <div v-if="!videoPlaying" class="video_cover fleximg" >
-        <div class="fleximg" @click="videoPlay"><img src="@/assets/images/salon/video_button.png"></div>
+      <div v-if="!videoPlaying" class="video_cover fleximg">
+        <div class="fleximg" @click="videoPlay">
+          <img src="@/assets/images/salon/video_button.png" />
+        </div>
       </div>
     </div>
     <div class="salon_form">
       <el-form ref="formRef" :model="formValue" :rules="salonRules" :show-message="false">
         <el-form-item prop="aname">
           <div class="flexl name_label">
-            <div class="fleximg"><img src="@/assets/images/salon/star.png"></div>
+            <div class="fleximg"><img src="@/assets/images/salon/star.png" /></div>
             <span class="name_txt">您的姓名&nbsp;</span>
             <span class="name_english">/ NAME</span>
           </div>
-          <el-input class="name_input" v-model="formValue.aname" autocomplete="password" placeholder="请输入您的姓名"/>
+          <el-input
+            v-model="formValue.aname"
+            class="name_input"
+            autocomplete="password"
+            placeholder="请输入您的姓名"
+          />
         </el-form-item>
         <el-form-item prop="benterprise">
           <div class="flexl name_label">
-            <div class="fleximg"><img src="@/assets/images/salon/star.png"></div>
+            <div class="fleximg"><img src="@/assets/images/salon/star.png" /></div>
             <span class="name_txt">您的企业&nbsp;</span>
             <span class="name_english">/ ENTERPRISE</span>
           </div>
-          <el-input class="name_input" v-model="formValue.benterprise" placeholder="请输入您的企业"/>
+          <el-input
+            v-model="formValue.benterprise"
+            class="name_input"
+            placeholder="请输入您的企业"
+          />
         </el-form-item>
-        
+
         <div class="flexl name_label">
-          <div class="fleximg"><img src="@/assets/images/salon/star.png"></div>
+          <div class="fleximg"><img src="@/assets/images/salon/star.png" /></div>
           <span class="name_txt">您希望在哪一方面获得帮助&nbsp;</span>
           <span class="name_english">/ HELP</span>
         </div>
         <div class="select_pre">
           <div class="service_top">
-            <div class="fleximg service_top_title"><img src="@/assets/images/salon/salon_title1.png"></div>
+            <div class="fleximg service_top_title">
+              <img src="@/assets/images/salon/salon_title1.png" />
+            </div>
             <div class="select_more_txt fleximg"><span>*</span>&nbsp;&nbsp;内容可多选</div>
           </div>
           <div class="checks_pre">
             <el-form-item prop="cyxtService">
-              <el-checkbox-group v-if="services" v-model="formValue.cyxtService" class="check_groups">
-                <el-checkbox  v-for="(v,i) in services[Object.keys(services)[0]]" :key="i" :label="Number(i)" :autopostback="false">{{v}}</el-checkbox>
-                <el-checkbox  :label="0" disabled>其他</el-checkbox>
+              <el-checkbox-group
+                v-if="services"
+                v-model="formValue.cyxtService"
+                class="check_groups"
+              >
+                <el-checkbox
+                  v-for="(v, i) in services[Object.keys(services)[0]]"
+                  :key="i"
+                  :label="Number(i)"
+                  :autopostback="false"
+                  >{{ v }}</el-checkbox
+                >
+                <el-checkbox :label="0" disabled>其他</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
           </div>
           <el-form-item prop="yxtServiceOther" class="yxtServiceOther">
-            <el-input class="yxtServiceOther_input" type="textarea" v-model="formValue.yxtServiceOther" autocomplete="new-password" placeholder="请具体描述您的需求，我们会在适合的时候与您联系，为您提供1对1的服务支持"/>
+            <el-input
+              v-model="formValue.yxtServiceOther"
+              class="yxtServiceOther_input"
+              type="textarea"
+              autocomplete="new-password"
+              placeholder="请具体描述您的需求，我们会在适合的时候与您联系，为您提供1对1的服务支持"
+              @input="textareaChange($event, 0)"
+            />
           </el-form-item>
         </div>
         <div class="select_pre">
           <div class="service_top">
-            <div class="fleximg service_top_title"><img src="@/assets/images/salon/salon_title2.png"></div>
+            <div class="fleximg service_top_title">
+              <img src="@/assets/images/salon/salon_title2.png" />
+            </div>
             <div class="select_more_txt fleximg"><span>*</span>&nbsp;&nbsp;内容可多选</div>
           </div>
           <div class="checks_pre">
             <el-form-item prop="dbigDataService">
-              <el-checkbox-group v-if="services" v-model="formValue.dbigDataService" class="check_groups">
-                <el-checkbox  v-for="(v,i) in services[Object.keys(services)[1]]" :key="i" :label="Number(i)" :autopostback="false">{{v}}</el-checkbox>
-                <el-checkbox  :label="0" disabled>其他</el-checkbox>
+              <el-checkbox-group
+                v-if="services"
+                v-model="formValue.dbigDataService"
+                class="check_groups"
+              >
+                <el-checkbox
+                  v-for="(v, i) in services[Object.keys(services)[1]]"
+                  :key="i"
+                  :label="Number(i)"
+                  :autopostback="false"
+                  >{{ v }}</el-checkbox
+                >
+                <el-checkbox :label="0" disabled>其他</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
           </div>
           <el-form-item prop="bigDataServiceOther" class="yxtServiceOther">
-            <el-input class="yxtServiceOther_input" type="textarea" v-model="formValue.bigDataServiceOther" @input="textareaChange($event,1)" autocomplete="new-password" placeholder="请具体描述您的需求，我们会在适合的时候与您联系，为您提供1对1的服务支持"/>
+            <el-input
+              v-model="formValue.bigDataServiceOther"
+              class="yxtServiceOther_input"
+              type="textarea"
+              autocomplete="new-password"
+              placeholder="请具体描述您的需求，我们会在适合的时候与您联系，为您提供1对1的服务支持"
+              @input="textareaChange($event, 1)"
+            />
           </el-form-item>
         </div>
       </el-form>
     </div>
-    <div class="fleximg salon_submit" @click="submit"><img src="@/assets/images/salon/submit.png"></div>
+    <div class="fleximg salon_submit" @click="submit">
+      <img src="@/assets/images/salon/submit.png" />
+    </div>
     <div class="salon_bottom">
       <p>本服务由康洲数智科技（重庆）有限公司提供</p>
       <p><span>Copyright 2022-2023 康洲数智(科技)科技有限公司 | 渝ICP2021012132号-2</span></p>
     </div>
-    <MessageVue v-model="errorShow" :message="messageTxt" :send='messageSendFlag'/>
+    <MessageVue v-model="errorShow" :message="messageTxt" :send="messageSendFlag" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import {slServiceList_api, slRrecordIn_api } from '@/api/salon'
+import { slServiceList_api, slRrecordIn_api } from '@/api/salon'
 import MessageVue from './message.vue'
-const messageTxt= ref('')
+const messageTxt = ref('')
 const errorShow = ref(false)
 const messageSendFlag = ref()
 const videoRef = ref()
 const videoPlaying = ref(false)
-const formRef=ref()
-const formValue=ref({
-  aname:'',
-  benterprise:'',
-  cyxtService:[],
-  yxtServiceOther:'',
-  dbigDataService:[],
-  bigDataServiceOther:''
+const formRef = ref()
+const formValue = ref({
+  aname: '',
+  benterprise: '',
+  cyxtService: [],
+  yxtServiceOther: '',
+  dbigDataService: [],
+  bigDataServiceOther: '',
 })
 const salonRules = ref({
-  aname: [{ required: true, message: '请输入您的姓名', trigger: 'blur' },],
+  aname: [{ required: true, message: '请输入您的姓名', trigger: 'blur' }],
   benterprise: [{ required: true, message: '请输入您的企业', trigger: 'blur' }],
   cyxtService: [{ required: true, message: '请选择数智化营销服务', trigger: 'blur' }],
   dbigDataService: [{ required: true, message: '请选择医械大健康数据服务', trigger: 'blur' }],
 })
-const services= <any>ref()
+const services = ref()
 
-const videoPlay = ()=>{
+const videoPlay = () => {
   videoRef.value.play()
-  videoPlaying.value=true
+  videoPlaying.value = true
 }
-const getSalonList = async()=>{
-  const {status,body} = await slServiceList_api()
+const getSalonList = async () => {
+  const { status, body } = await slServiceList_api()
   status && (services.value = body)
 }
 getSalonList()
 
-const submit=async()=>{
-  console.log(formValue.value)
-  formRef.value.validate(async (valid: boolean,invalidFields:any) => {
-    console.log(valid,invalidFields)
-    if(!valid){
+const submit = async () => {
+  formRef.value.validate(async (valid: boolean, invalidFields: any) => {
+    if (!valid) {
       message(invalidFields[Object.keys(invalidFields)[0]][0].message)
+    } else {
+      const {
+        aname,
+        benterprise,
+        cyxtService,
+        yxtServiceOther,
+        dbigDataService,
+        bigDataServiceOther,
+      } = formValue.value
+      const data = {
+        user_name: aname,
+        company_name: benterprise,
+        list: [
+          {
+            describe: yxtServiceOther,
+            service_ids: addItemToArr(JSON.parse(JSON.stringify(cyxtService)), 0, false),
+            service_type: Number(Object.keys(services.value)[0]),
+          },
+          {
+            describe: bigDataServiceOther,
+            service_ids: addItemToArr(JSON.parse(JSON.stringify(dbigDataService)), 0, false),
+            service_type: Number(Object.keys(services.value)[1]),
+          },
+        ],
+      }
+      const res = await slRrecordIn_api(data)
+      res.status && message(res.message)
     }
   })
 }
-const message=(str:any)=>{
-  errorShow.value=true
-  messageTxt.value=str
-  messageSendFlag.value = (new Date()).getTime()
+const message = (str: any) => {
+  errorShow.value = true
+  messageTxt.value = str
+  messageSendFlag.value = new Date().getTime()
 }
 
 //如果文字有输入就给其他赋值
-const textareaChange=(value:any,type:any)=>{
-  if(value){
-    type?formValue.value.dbigDataService.push(0):formValue.value.cyxtService.push(0)
+const textareaChange = (value: any, type: any) => {
+  if (value) {
+    type
+      ? addItemToArr(formValue.value.dbigDataService, 0, true)
+      : addItemToArr(formValue.value.cyxtService, 0, true)
+  } else {
+    type
+      ? addItemToArr(formValue.value.dbigDataService, 0, false)
+      : addItemToArr(formValue.value.cyxtService, 0, false)
   }
+}
+
+//type:true=>检查当前数组中中是否有参数元素，有就不管没有就添加,type:false=>检查当前数组中是否有参数元素，有就删除没有就不管
+const addItemToArr = (arr: any, item: any, type: boolean) => {
+  const i = arr.indexOf(item)
+  type
+    ? (() => {
+        if (i === -1) {
+          arr.push(item)
+        }
+      })()
+    : (() => {
+        if (i > -1) {
+          arr.splice(i, 1)
+        }
+      })()
+  return arr
+}
+
+const toIndex = () => {
+  location.href = 'https://m.kzszh.com/'
 }
 </script>
 
 <script lang="ts"></script>
 
 <style scoped lang="scss">
-.salon_activity{
+.salon_activity {
   max-width: 750px !important;
   width: 3.75rem;
   padding: 0.14rem 0.2rem 0.12rem;
@@ -152,23 +258,23 @@ const textareaChange=(value:any,type:any)=>{
   background-size: cover;
   background-position-y: -0.46rem;
   position: relative;
-  .top_logo{
-    &>div{
+  .top_logo {
+    & > div {
       width: 1rem;
     }
   }
-  .salon_txt_img{
+  .salon_txt_img {
     width: 3.35rem;
     margin: 0.4rem 0 0.6rem;
   }
-  .video_pre{
+  .video_pre {
     position: relative;
     margin-bottom: 0.28rem;
-    video{
+    video {
       width: 3.35rem;
       height: 1.9rem;
     }
-    .video_cover{
+    .video_cover {
       width: 100%;
       height: 100%;
       background: url(@/assets/images/salon/video_cover.png) no-repeat;
@@ -176,168 +282,166 @@ const textareaChange=(value:any,type:any)=>{
       position: absolute;
       top: 0;
       left: 0;
-      >div{
+      > div {
         width: 0.48rem;
       }
     }
   }
-  .salon_form{
-    :deep(.el-form-item){
+  .salon_form {
+    :deep(.el-form-item) {
       margin-bottom: 0.2rem;
     }
-    :deep(.is-error){
-       .el-input__wrapper{
-        box-shadow:none
+    :deep(.is-error) {
+      .el-input__wrapper {
+        box-shadow: none;
       }
     }
-    .name_label{
-      margin-bottom:0.08rem;
-      &>div:first-child{
+    .name_label {
+      margin-bottom: 0.08rem;
+      & > div:first-child {
         width: 0.13rem;
         margin-right: 0.06rem;
       }
-      .name_txt{
+      .name_txt {
         font-size: 0.16rem;
-        color: #FFFFFF;
+        color: #ffffff;
         font-weight: 600;
-        background-image:-webkit-linear-gradient(bottom,#FEB437,#FFFFFF); 
+        background-image: -webkit-linear-gradient(bottom, #feb437, #ffffff);
         line-height: 0.32rem;
-        -webkit-background-clip:text; 
-        -webkit-text-fill-color:transparent; 
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
-      .name_english{
+      .name_english {
         font-size: 0.14rem;
-        color: #044BB5;
+        color: #044bb5;
         line-height: 0.14rem;
         font-weight: 700;
       }
     }
-    .name_input{
+    .name_input {
       height: 0.46rem;
-      :deep(.el-input__wrapper){
+      :deep(.el-input__wrapper) {
         padding: 0 0.16rem;
-        input{
+        input {
           font-size: 0.16rem;
-          color: #333E53;
+          color: #333e53;
           font-weight: 600;
-          &::-webkit-input-placeholder{
+          &::-webkit-input-placeholder {
             font-size: 0.16rem;
-            color: #6FA4E5;
+            color: #6fa4e5;
             text-align: left;
             font-weight: 400;
           }
         }
-        
       }
     }
-    .select_pre{
+    .select_pre {
       width: 100%;
-      background-image: linear-gradient(180deg, #2D5AD8 0%, #254EA6 98%);
+      background-image: linear-gradient(180deg, #2d5ad8 0%, #254ea6 98%);
       border-radius: 4px;
-      .service_top{
+      .service_top {
         width: 100%;
         height: 0.46rem;
         position: relative;
-        .service_top_title{
+        .service_top_title {
           width: 2.1rem;
           position: absolute;
           left: -0.13rem;
           bottom: -0.08rem;
         }
-        .select_more_txt{
+        .select_more_txt {
           font-size: 0.12rem;
-          color: #7FA0F9;
+          color: #7fa0f9;
           line-height: 0.12rem;
           position: absolute;
           top: 0.23rem;
           right: 0.16rem;
-          &>span{
+          & > span {
             font-size: 0.14rem;
             position: relative;
             top: 0.03rem;
           }
         }
       }
-      .checks_pre{
-        .check_groups{
+      .checks_pre {
+        .check_groups {
           display: flex;
           flex-direction: column;
-          :deep(.el-checkbox){
+          :deep(.el-checkbox) {
             padding: 0 0.16rem;
             height: 0.48rem;
-            width:3.35rem;
+            width: 3.35rem;
             box-sizing: border-box;
             position: relative;
-            margin-right:0;
-           .el-checkbox__input{
-             position: absolute;
+            margin-right: 0;
+            .el-checkbox__input {
+              position: absolute;
               right: 0.16rem;
-           }
-            .el-checkbox__label{
+            }
+            .el-checkbox__label {
               font-size: 0.14rem;
-              color: #FFFFFF;
+              color: #ffffff;
               line-height: 0.14rem;
               font-weight: 400;
-              
             }
-            .el-checkbox__inner{
+            .el-checkbox__inner {
               background: url('@/assets/images/salon/salon_select.png');
               background-size: contain;
               display: inline-block;
               width: 0.16rem;
               height: 0.16rem;
               border: none;
-              &::after{
-                  content: none;
-                }
+              &::after {
+                content: none;
+              }
             }
-            &>.is-checked{
-              .el-checkbox__inner{
+            & > .is-checked {
+              .el-checkbox__inner {
                 background: url('@/assets/images/salon/salon_selected.png');
                 background-size: contain;
                 display: inline-block;
                 width: 0.16rem;
                 height: 0.16rem;
-                &::after{
+                &::after {
                   content: none;
                 }
               }
             }
           }
-          :deep(.el-checkbox:nth-child(2n)){
-           background: rgba(#14367E,0.16);
+          :deep(.el-checkbox:nth-child(2n)) {
+            background: rgba(#14367e, 0.16);
           }
-          :deep(.el-checkbox:last-child){
-          //  background: red;
-           .el-checkbox__input{
-             display: none;
-           }
+          :deep(.el-checkbox:last-child) {
+            //  background: red;
+            .el-checkbox__input {
+              display: none;
+            }
           }
         }
       }
-      .yxtServiceOther{
+      .yxtServiceOther {
         position: relative;
         top: -0.2rem;
-         width: 3.03rem;
-        background: #D5E8FF;
+        width: 3.03rem;
+        background: #d5e8ff;
         margin-left: 0.16rem;
         border-radius: 4px;
         overflow: hidden;
         height: 1rem;
-        .yxtServiceOther_input{
+        .yxtServiceOther_input {
           height: 100%;
-          :deep(.el-textarea__inner){
+          :deep(.el-textarea__inner) {
             height: 100%;
-            background: #D5E8FF;
+            background: #d5e8ff;
             padding: 0.12rem;
             font-size: 0.14rem;
-            color: #333E53;
+            color: #333e53;
             text-align: justify;
             line-height: 0.22rem;
             font-weight: 600;
-            &::-webkit-input-placeholder{
+            &::-webkit-input-placeholder {
               font-size: 0.14rem;
-              color: #6FA4E5;
+              color: #6fa4e5;
               text-align: justify;
               line-height: 0.22rem;
               font-weight: 400;
@@ -347,42 +451,41 @@ const textareaChange=(value:any,type:any)=>{
       }
     }
   }
-  .salon_submit{
+  .salon_submit {
     width: 3.35rem;
     margin-top: 0.22rem;
   }
-  .salon_bottom{
+  .salon_bottom {
     width: 100%;
     height: 0.61rem;
     padding-top: 0.16rem;
-    background: #00194C;
+    background: #00194c;
     position: absolute;
     bottom: -0.61rem;
     left: 0;
     overflow: hidden;
-    >p:nth-child(1){
+    > p:nth-child(1) {
       margin: 0;
       font-size: 0.12rem;
-      color: #6B8BC9;
+      color: #6b8bc9;
       text-align: center;
-      line-height:0.12rem;
+      line-height: 0.12rem;
       font-weight: 400;
       margin-bottom: 0.04rem;
     }
-    >p:nth-child(2){
+    > p:nth-child(2) {
       width: 200%;
       margin: 0;
-      span{
+      span {
         display: inline-block;
         font-size: 0.12rem;
-        color: #6B8BC9;
+        color: #6b8bc9;
         text-align: center;
         font-weight: 400;
         transform: scale(0.75);
         position: relative;
         left: -0.12rem;
       }
-      
     }
   }
 }

@@ -3,7 +3,7 @@
     <div class="fsc f1">
       <div class="card_title">采购商</div>
       <el-button type="primary" class="btns"
-        ><el-icon size="14px" style="margin-right:4px"><Plus /></el-icon>上传数据</el-button
+        ><el-icon size="14px" style="margin-right: 4px"><Plus /></el-icon>上传数据</el-button
       >
     </div>
     <div class="mytable">
@@ -15,7 +15,7 @@
       >
         <el-table-column type="selection" width="50" />
         <el-table-column property="id" label="ID" />
-        <el-table-column property="industry_id" label="行业分类" >
+        <el-table-column property="industry_id" label="行业分类">
           <template #default="scope">
             <div>{{ getHashStr(scope.row.industry_id.split(','), typeHash, 'last') }}</div>
           </template>
@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref,computed } from 'vue'
+import { ref, computed } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
 import KzEmpty from '@/components/KzEmpty.vue'

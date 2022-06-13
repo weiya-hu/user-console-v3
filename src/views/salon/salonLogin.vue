@@ -69,6 +69,7 @@
       </div>
     </div>
     <MessageVue v-model="errorShow" :message="messageTxt" :send="messageSendFlag" />
+    <div class="web_logo" @click="toIndex"></div>
   </div>
 </template>
 
@@ -82,7 +83,11 @@ import MessageVue from './message.vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const formValue = ref<ILoginForm>({ acode: '86' })
+const formValue = ref<ILoginForm>({
+  acode: getUrlParam('acode') || '86',
+  mobile: getUrlParam('mobile') || '',
+  sms: getUrlParam('sms') || '',
+})
 const loginFormRef = ref()
 const loginRules = ref({
   mobile: [
@@ -165,7 +170,6 @@ getSmsTime()
 
 const isSubmit = () => {
   loginFormRef.value.validate(async (valid: boolean, invalidFields: any) => {
-    console.log(valid, invalidFields)
     submitFlag.value = valid
   })
 }
@@ -204,7 +208,20 @@ const submit = debounce(() => {
 }, 300)
 const toUseragreement = (event: any) => {
   event.stopPropagation()
-  router.push('/useragreementh5')
+  formValue.value.mobile
+    ? router.push(
+        '/useragreementh5?mobile=' +
+          formValue.value.mobile +
+          '&sms=' +
+          formValue.value.sms +
+          '&acode=' +
+          formValue.value.acode
+      )
+    : router.push('/useragreementh5')
+}
+
+const toIndex = () => {
+  location.href = 'https://m.kzszh.com/'
 }
 </script>
 
@@ -402,6 +419,14 @@ const toUseragreement = (event: any) => {
         color: #2685ff;
       }
     }
+  }
+  .web_logo {
+    width: 1rem;
+    height: 0.24rem;
+    position: absolute;
+    top: 0.5rem;
+    left: 1.38rem;
+    cursor: pointer;
   }
 }
 </style>
