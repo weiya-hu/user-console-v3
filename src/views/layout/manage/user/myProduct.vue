@@ -7,7 +7,7 @@
         <div class="img_box fcc">
           <img :src="v.thumb_url" alt="" />
         </div>
-        <div class="name fcs">
+        <div class="name fcs mb20">
           <div class="text">{{ v.product_name }}</div>
           <div class="tag">
             <div>{{ v.version_name }}</div>

@@ -46,7 +46,7 @@
     </div>
     <div class="kz_card">
       <div class="fsc f1">
-        <div class="card_title">第三方数据源</div>
+        <KzDmpTitle :total="totle"  class="pt20 pb20 ml16"/>
         <KzTopBtns
           ref="topBtnRef"
           type="sync"
@@ -57,10 +57,8 @@
           @sync="setSync"
         />
       </div>
-      <div class="tips">
-        为您找到 <span>0</span> 家符合条件的客户（*根据政策与监管法规要求，联系人手机号脱敏展示）
-      </div>
-      <div class="mytable">
+
+      <div class="dmp_table">
         <el-table
           ref="tableRef"
           :data="tableData"
@@ -152,6 +150,7 @@ import KzCascader from '@/components/KzCascader.vue'
 import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
+import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
 import { mainStore } from '@/store/index'
 import { getHashStr, strToArr, getSource } from '@/utils/index'
 import {
@@ -199,7 +198,7 @@ interface IData {
   tel_prefixs: string[] // 固话号码段
   telephone: string // 固话
 }
-const total = ref(0)
+
 const loading = ref(false)
 const tableData = ref<IData[]>([])
 const searchParams = ref({
@@ -264,7 +263,7 @@ const search = async () => {
   })
   loading.value = false
   if (res.status === 1) {
-    total.value = res.body.total
+    totle.value = res.body.total
     tableData.value = res.body.records
   } else {
     errMsg('查询失败')

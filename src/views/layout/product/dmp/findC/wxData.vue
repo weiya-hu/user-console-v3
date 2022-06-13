@@ -20,7 +20,7 @@
         >
       </div>
     </div>
-    <div class="mytable">
+    <div class="dmp_table">
       <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" />
         <el-table-column property="wechat_id" label="好友微信号" />
@@ -110,7 +110,7 @@ import { getWxList_api, addWx_api, getSyncInfo_api, setSync_api } from '@/api/pr
 import { ElForm } from 'element-plus'
 
 const store = mainStore()
-const addressHash = ref(store.state.addressHash)
+const addressHash = computed(() => store.state.addressHash)
 
 const totle = ref(0)
 const size = ref(10)

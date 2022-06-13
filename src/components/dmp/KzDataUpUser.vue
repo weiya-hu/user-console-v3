@@ -141,7 +141,7 @@ const downloadUrl = ref('')
 onMounted(() => {
   console.log(route.path)
   const url =
-    route.path === '/myData/up2b'
+    route.path === '/product/dmp/mydata/up2b'
       ? '/dmp/source/template/download.do?type=1'
       : '/dmp/source/template/download.do?type=2'
   //下载模板要设置返回类型，不然文件会损坏

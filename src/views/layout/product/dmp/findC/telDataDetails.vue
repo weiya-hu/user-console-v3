@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <div class="mytable">
+    <div class="dmp_table">
       <el-table
         v-loading="loading"
         :data="tableData"
@@ -70,7 +70,8 @@ import { useRoute } from 'vue-router'
 import { getInsetUserList_api, setSync_api, getSyncInfo_api } from '@/api/product/dmp/findC'
 
 const store = mainStore()
-const addressHash = ref(store.state.addressHash)
+const addressHash = computed(() => store.state.addressHash)
+
 const totle = ref(0)
 const size = ref(10)
 

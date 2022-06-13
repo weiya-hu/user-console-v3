@@ -17,7 +17,7 @@
         >
       </div>
     </div>
-    <div class="mytable">
+    <div class="dmp_table">
       <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" />
         <el-table-column property="id" label="ID" />

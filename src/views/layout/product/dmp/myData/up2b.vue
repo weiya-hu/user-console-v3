@@ -2,15 +2,23 @@
   <div class="kz_card my_up2b_page">
     <div class="fsc f1">
       <div class="card_title">上传2B数据</div>
-      <div class="btns">
-        <el-button type="primary" plain>同步数据</el-button>
+      <div class="btns fsc">
+        <KzTopBtns
+          ref="topBtnRef"
+          type="sync"
+          syncbtn
+          :sync-api="getSyncInfo_api"
+          :sync-disabled="syncDisabled"
+          class="topbtns mr20"
+          @sync="setSync"
+        />
         <el-button type="primary" @click="dialogVisible = true"
           ><el-icon size="14px" style="margin-right: 4px"><Plus /></el-icon>上传数据</el-button
         >
       </div>
     </div>
 
-    <div class="mytable">
+    <div class="dmp_table">
       <el-table
         v-loading="loading"
         :data="tableList"
@@ -43,7 +51,7 @@
             <div class="fcs">
               <el-link
                 type="primary"
-                @click="$router.push('/product/dmp/myData/up2bdetails?id=' + row.id)"
+                @click="$router.push('/product/dmp/mydata/up2bdetails?id=' + row.id)"
                 >详情</el-link
               >
             </div>
@@ -60,15 +68,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
+import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
 import { formatDate } from '@/utils/date'
 import KzDataUpUser from '@/components/dmp/KzDataUpUser.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import { getKzStatus, getSource } from '@/utils/index'
 import { useRouter } from 'vue-router'
-import { upRecordList } from '@/api/product/dmp/myData'
+import { upRecordList, setSync_api, getSyncInfo_api } from '@/api/product/dmp/myData'
 
 const tableList = ref([])
 const totle = ref(0)
@@ -77,6 +86,18 @@ const page = ref(1)
 const loading = ref(false)
 
 const dialogVisible = ref(false)
+const topBtnRef = ref()
+const tableRef = ref()
+const syncDisabled = computed(() => tableRef.value && !tableRef.value.selIdList.length)
+const setSync = async () => {
+  topBtnRef.value.setLoading(true)
+  const res = await setSync_api({
+    list: tableRef.value.selIdList,
+    type: 1,
+  })
+  topBtnRef.value.close(res.message)
+  tableRef.value.clear()
+}
 const getList = async () => {
   loading.value = true
   const data = {

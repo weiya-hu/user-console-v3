@@ -60,17 +60,11 @@
               <el-tooltip effect="dark" placement="top">
                 <template #content>
                   <div style="width: 100px">
-                    {{
-                      row.province > 0 &&
-                      getHashStr(strToArr(row.province, row.city, row.district), addressHash)
-                    }}
+                    {{ getHashStr(strToArr(row.province, row.city, row.district), addressHash) }}
                   </div>
                 </template>
                 <div>
-                  {{
-                    row.province > 0 &&
-                    getHashStr(strToArr(row.province, row.city, row.district), addressHash)
-                  }}
+                  {{ getHashStr(strToArr(row.province, row.city, row.district), addressHash) }}
                 </div>
               </el-tooltip>
             </template>
@@ -131,7 +125,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref,computed } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { companyAdd_api, companyExam_api, delCompanyInfo_api } from '@/api/manage/user/myinfo'
 import { getKzComStatus, getHash, getHashStr, strToArr } from '@/utils/index'
@@ -142,7 +136,7 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const store = mainStore()
-const addressHash = ref(store.state.addressHash)
+const addressHash = computed(() => store.state.addressHash)
 const tab = ref(1)
 const companyDate = ref([])
 const cAddList = async () => {

@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <div class="mytable">
+    <div class="dmp_table">
       <el-table
         v-loading="loading"
         :data="tableList"
@@ -65,7 +65,7 @@ import { formatDate } from '@/utils/date'
 import { overseasDetailPage, setSync_api, getSyncInfo_api } from '@/api/product/dmp/seekAbroad'
 
 const store = mainStore()
-const addressHash = ref(store.state.addressHash)
+const addressHash = computed(() => store.state.addressHash)
 const route = useRoute()
 const id = route.query.id
 

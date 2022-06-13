@@ -190,7 +190,7 @@
                   </div>
                   <div class="item">
                     <div class="item_title">绑定邮箱</div>
-                    <div class="item_content fcs">
+                    <div class="item_content fcs user_email">
                       {{ userInfoDate.email === '' ? '未绑定邮箱' : userInfoDate.email }}
                     </div>
                     <el-link type="primary" @click="goChangoEmail">{{
@@ -217,11 +217,11 @@
                   <div class="item">
                     <div class="item_title">会员等级</div>
                     <div class="item_content fcs">
-                      <img :src="changeMemberImg[userInfoDate.level]" alt="" />
-                      <!-- <img
-                      :src="memberList.find(v => Number(v.id) === userInfoDate.level)!.icon"
+                      <!-- <img :src="changeMemberImg[userInfoDate.level]" alt="" /> -->
+                      <img
+                      :src="memberList.find(v => Number(v.id) === userInfoDate.level)?.icon"
                       alt=""
-                    /> -->
+                    />
                     </div>
                   </div>
                   <div class="item">
@@ -231,7 +231,7 @@
                   <div class="item">
                     <div class="item_title">会员特权</div>
                     <div class="item_content fcs">
-                      <div class="benefits fcs"><img :src="icon_benefits" alt="" />权益一</div>
+                      <div class="benefits fcc"><img :src="icon_benefits" alt="" />权益一</div>
                     </div>
                   </div>
                   <div class="item">
@@ -545,10 +545,6 @@ import {
   editMmTel_api,
   editMm_api,
 } from '@/api/manage/user/myinfo'
-import icon_general from '@/assets/images/user_general.svg'
-import icon_silver from '@/assets/images/user_silver.svg'
-import icon_gold from '@/assets/images/user_gold.svg'
-import icon_star from '@/assets/images/user_star.svg'
 import icon_company from '@/assets/images/my_company.png'
 import icon_benefits from '@/assets/images/user_member.png'
 import icon_user_company from '@/assets/images/user_company_empty.png'
@@ -569,6 +565,7 @@ const router = useRouter()
 const store = mainStore()
 
 const addressHash = computed(() => store.state.addressHash)
+const memberList = computed(() => store.state.memberList)
 
 const loginUrl = computed(() => store.state.yxtUrl.mobile)
 const invate_code = computed(() => store.state.userInfo.invite_code)
@@ -644,7 +641,6 @@ const editData = async () => {
     editName.value = true
     upLoading.value = false
     editAvatershow.value = false
-    okMsg('用户信息修改成功!')
   }
 }
 const editCancel = () => {
@@ -690,13 +686,6 @@ const userMember = async () => {
   }
 }
 userMember()
-// userInfoDate.level
-const changeMemberImg: Record<string, string> = {
-  '1': icon_general,
-  '2': icon_silver,
-  '3': icon_gold,
-  '4': icon_star,
-}
 //下载二维码
 
 const qrUrl = ref('')
@@ -720,7 +709,7 @@ const { toClipboard } = useClipboard()
 const copyCode = async (val: any) => {
   try {
     await toClipboard(val)
-    okMsg('复制成功！')
+    okMsg('邀请码复制成功！')
   } catch (e) {
     errMsg('该浏览器不支持自动复制')
   }
@@ -1046,7 +1035,11 @@ const closeEdit = () => {
         .item_content {
           color: #303133;
           width: 360px;
+         
         }
+         .user_email{
+            color:#C0C4CC;
+          }
         .item_links {
           width: 164px;
         }

@@ -6,7 +6,7 @@
         ><el-icon size="14px" style="margin-right: 4px"><Plus /></el-icon>上传数据</el-button
       >
     </div>
-    <div class="mytable">
+    <div class="dmp_table">
       <el-table
         v-loading="loading"
         :data="tableList"

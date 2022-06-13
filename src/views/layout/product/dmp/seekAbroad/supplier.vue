@@ -6,7 +6,7 @@
         ><el-icon size="14px" style="margin-right: 4px"><Plus /></el-icon>上传数据</el-button
       >
     </div>
-    <div class="mytable">
+    <div class="dmp_table">
       <el-table
         v-loading="loading"
         :data="tableList"
@@ -22,7 +22,7 @@
         </el-table-column>
         <el-table-column property="country_id" label="地区" />
         <el-table-column property="product_name" label="采购商品" />
-        <el-table-column property="product_desc" label="描述" />
+        <el-table-column property="demand_desc" label="描述" />
         <el-table-column property="create_time" label="发起时间">
           <template #default="{ row }">
             <div>{{ formatDate(new Date(Number(row.create_time)), 'yyyy-MM-dd') }}</div>

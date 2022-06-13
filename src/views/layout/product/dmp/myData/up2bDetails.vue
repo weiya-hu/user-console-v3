@@ -1,15 +1,19 @@
 <template>
   <div v-loading="loading" class="kz_card my_up2b_page">
     <div class="fsc f1">
-      <div class="tips">
-        为您找到 0 家符合条件的客户（*根据政策与监管法规要求，联系人手机号脱敏展示）
-      </div>
-      <div class="btns">
-        <el-button type="primary" plain>同步数据</el-button>
-      </div>
+       <KzDmpTitle :total="totle" class="pt20 pb20 ml16" />
+      <KzTopBtns
+          ref="topBtnRef"
+          type="sync"
+          syncbtn
+          :sync-api="getSyncInfo_api"
+          :sync-disabled="syncDisabled"
+          class="topbtns mr20"
+          @sync="setSync"
+        />
     </div>
 
-    <div class="mytable">
+    <div class="dmp_table">
       <el-table
         v-loading="loading"
         :data="tableList"
@@ -17,7 +21,7 @@
         row-class-name="my-data-table-row"
       >
         <el-table-column type="selection" width="50" />
-        <el-table-column property="num" label="序号" />
+        <el-table-column property="id" label="序号" />
         <el-table-column property="name" label="企业名称" />
         <el-table-column property="contact" label="联系人" />
         <el-table-column property="mobiles" label="联系方式" />
@@ -32,17 +36,11 @@
             <el-tooltip effect="dark" placement="top">
               <template #content>
                 <div style="width: 100px">
-                  {{
-                    row.province > 0 &&
-                    getHashStr(strToArr(row.province, row.city, row.district), addressHash)
-                  }}
+                  {{ getHashStr(strToArr(row.province, row.city, row.district), addressHash) }}
                 </div>
               </template>
               <div>
-                {{
-                  row.province > 0 &&
-                  getHashStr(strToArr(row.province, row.city, row.district), addressHash)
-                }}
+                {{ getHashStr(strToArr(row.province, row.city, row.district), addressHash) }}
               </div>
             </el-tooltip>
           </template>
@@ -64,7 +62,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Plus } from '@element-plus/icons-vue'
+import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
+import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
 import { formatDate } from '@/utils/date'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
@@ -74,7 +73,7 @@ import { useRoute } from 'vue-router'
 import { upRecordDetail, setSync_api, getSyncInfo_api } from '@/api/product/dmp/myData'
 
 const store = mainStore()
-const addressHash = ref(store.state.addressHash)
+const addressHash = computed(() => store.state.addressHash)
 const typeHash = computed(() => store.state.typeHash)
 const route = useRoute()
 const id = route.query.id
