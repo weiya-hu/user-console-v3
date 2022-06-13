@@ -6,7 +6,7 @@
         <el-table-column property="wechat_id" label="好友微信号" />
         <el-table-column property="avatar_url" label="头像">
           <template #default="scope">
-            <el-avatar :size="42" :src="scope.row.avatar_url"></el-avatar>
+            <img  :src="scope.row.avatar_url|| df_avatar_i" alt="" class="firstimg" />
           </template>
         </el-table-column>
         <el-table-column property="nick_name" label="昵称" />
@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { formatDate } from '@/utils/date'
-
+import df_avatar_i from '@/assets/images/dfavatar.svg'
 import KzPage from '@/components/KzPage.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
 import { getWxUser_api, setSync_api, getSyncInfo_api } from '@/api/product/dmp/findC'
@@ -123,8 +123,10 @@ const setSync = async () => {
 <style scoped lang="scss">
 .wxdata_details_c {
   height: 100%;
-  .mytable {
-    height: calc(100% - 126px);
-  }
+  .firstimg {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
 }
 </style>

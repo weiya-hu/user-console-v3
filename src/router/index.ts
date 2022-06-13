@@ -245,7 +245,7 @@ export const routes: RouteRecordRaw[] = [
                     component: () => import('@/views/layout/product/dmp/findC/wxDataDetails.vue'),
                     meta: {
                       title: '微信获客详细页',
-                      father: '/product/dmp/findc/addata',
+                      father: '/product/dmp/findc/wxdata',
                       insPower: insPowerHash.dmp_c_wx,
                     },
                   },
