@@ -36,7 +36,7 @@
             />
           </el-form-item>
         </el-form>
-        <div class="fcs fjend">
+        <div class="fcs fjend pb20">
           <el-button @click="close">取消</el-button>
           <el-button type="primary" @click="sure">提交</el-button>
         </div>
@@ -50,7 +50,7 @@ import { reactive, ref, onMounted, computed } from 'vue'
 import KzUpload from '@/components/KzUpload.vue'
 import { errMsg, kzConfirm } from '@/utils/index'
 import { useRoute } from 'vue-router'
-// import { customAdd_api } from '@/api/custom'
+import { customAdd_api } from '@/api/product/cms/custom'
 //父组件传的值
 const props = withDefaults(
   defineProps<{
@@ -177,18 +177,18 @@ const upError = (err: any) => {
   errMsg('上传失败')
 }
 const upSuccess = async (path: string) => {
-  //   const res = await customAdd_api(
-  //     {
-  //       attach_url: path,
-  //       detail: formValue.value.desc,
-  //       title: formValue.value.title,
-  //     },
-  //     props.type
-  //   )
-  //   loading.value = false
-  //   if (res.status == 1) {
-  //     emit('submitSuccess')
-  //   }
+  const res = await customAdd_api(
+    {
+      attach_url: path,
+      detail: formValue.value.desc,
+      title: formValue.value.title,
+    },
+    props.type
+  )
+  loading.value = false
+  if (res.status === 1) {
+    emit('submitSuccess')
+  }
 }
 </script>
 
@@ -215,6 +215,9 @@ const upSuccess = async (path: string) => {
       margin-top: 12px;
       cursor: pointer;
     }
+  }
+  .pd_btns {
+    padding-bottom: 24px;
   }
 }
 </style>

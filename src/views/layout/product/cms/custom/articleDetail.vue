@@ -10,6 +10,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { customDetails_api } from '@/api/product/cms/custom'
 const route = useRoute()
 const id = route.query.id as string
 const body = ref<{ title: string; content: string }>({
@@ -17,9 +18,9 @@ const body = ref<{ title: string; content: string }>({
   content: '',
 })
 const getData = async () => {
-  // const res = await articleDetail_api({ id })
-  // console.log(res)
-  // res.status == 1 && (body.value = res.body)
+  const res = await customDetails_api({ id }, 1)
+  console.log(res)
+  res.status == 1 && (body.value = res.body)
 }
 getData()
 </script>

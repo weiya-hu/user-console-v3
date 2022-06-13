@@ -87,7 +87,6 @@ const getIndustry = async () => {
 getIndustry()
 const getList = async () => {
   const { status, body } = await getUserCompanyList_api({
-    page: current.value,
     size: size.value,
     industryId: value.value,
     current: current.value,

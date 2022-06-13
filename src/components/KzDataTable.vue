@@ -1,7 +1,7 @@
 <template>
   <el-table-column v-if="type === 'text'" :property="prop" :label="lable" :min-width="width">
     <template #default="{ row }">
-      <div class="fleximg">
+      <div class="facc">
         <div>{{ prop && row[prop] ? row[prop] : '---' }}</div>
       </div>
     </template>
@@ -13,20 +13,20 @@
     :min-width="width"
   >
     <template #default="{ row }">
-      <div class="fleximg">
+      <div class="facc">
         <el-tooltip v-if="prop && row[prop]" class="box-item" effect="dark" placement="top-start">
           <template #content
             ><div class="text-tooltip-style">{{ prop && row[prop] }}</div></template
           >
-          <div class="text-style fleximg">{{ prop && row[prop] }}</div>
+          <div class="text-style facc">{{ prop && row[prop] }}</div>
         </el-tooltip>
-        <div v-else class="fleximg">---</div>
+        <div v-else class="facc">---</div>
       </div>
     </template>
   </el-table-column>
   <el-table-column v-if="type === 'num'" :label="lable" :min-width="width">
     <template #default="{ row, $index }">
-      <div class="fleximg">
+      <div class="facc">
         <div v-if="row">{{ $index + 1 }}</div>
       </div>
     </template>
@@ -39,7 +39,7 @@
   <el-table-column v-if="type === 'select'" type="selection" :width="width" />
   <el-table-column v-if="type === 'status'" :property="prop" :label="lable" :min-width="width">
     <template #default="{ row }">
-      <div class="fleximg">
+      <div class="facc">
         <div :class="getStatus(row.status).className"></div>
         <div>{{ getStatus(row.status).text }}</div>
       </div>
@@ -47,7 +47,7 @@
   </el-table-column>
   <el-table-column v-if="type === 'status_do'" :property="prop" :label="lable" :min-width="width">
     <template #default="{ row }">
-      <div class="fleximg">
+      <div class="facc">
         <div class="status_dot" :class="getKzStatus(row.status).className"></div>
         <div>
           {{ getKzStatus(row.status).text }}
@@ -131,12 +131,22 @@
       <div>{{ getCountry(row.country_id) }}</div>
     </template>
   </el-table-column>
+  <el-table-column v-if="type === 'img'" :property="prop" :label="lable" :min-width="width">
+    <template #default="{ row }">
+      <img :src="row.thumb_url" alt="" @click="lookImage([row.thumb_url], 0)" />
+    </template>
+  </el-table-column>
+  <el-table-column v-if="type === 'video'" :property="prop" :label="lable" :min-width="width">
+    <template #default="{ row }">
+      <video :src="row.video_url" alt="" class="firstimg" @click="lookVideo(row.video_url)" />
+    </template>
+  </el-table-column>
 </template>
 
 <script setup lang="ts">
 import { toRefs, ref } from 'vue'
 import { Format } from '@/utils/date'
-import { getHashStr, strToArr, getSource, getKzStatus } from '@/utils/index'
+import { getHashStr, strToArr, getSource, getKzStatus, lookImage, lookVideo } from '@/utils/index'
 import { mainStore } from '@/store/index'
 // import { businessCompanyType, overseasCountry } from '@/api/dmp/findb'
 const store = mainStore()
@@ -287,5 +297,9 @@ const getCountry = (val: any) => {
 }
 .text-alyn {
   text-align: center;
+}
+img {
+  width: 75px;
+  height: 42px;
 }
 </style>

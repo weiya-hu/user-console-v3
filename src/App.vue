@@ -417,13 +417,6 @@ body .el-dialog {
     td.el-table__cell div {
       color: #666666;
     }
-    .person_table_operate {
-      margin-right: 12px;
-    }
-    img {
-      width: 75px;
-      height: 42px;
-    }
   }
 }
 @media screen and (min-width: 750px) {
