@@ -8,15 +8,17 @@
         <KzDmpTitle :total="total" />
         <div class="fcs">
           <div class="fcs word_search">
-            <el-input
+            <el-autocomplete
               v-model.trim="word"
               placeholder="请输入企业名称、联系人、经营范围关键词"
+              :fetch-suggestions="querySearch"
+              value-key="keyword"
               @keyup.enter="wordSearch"
             >
               <template #prefix>
                 <el-icon class="searchicon"><Search /></el-icon>
               </template>
-            </el-input>
+            </el-autocomplete>
             <el-button type="primary" class="ml16" @click="wordSearch">查询一下</el-button>
             <el-link class="heisearch ml16 fs0" type="primary" @click="topSearchShow = true"
               >高级查询</el-link
@@ -28,7 +30,6 @@
             syncbtn
             :sync-api="getSyncInfo_api"
             :sync-disabled="syncDisabled"
-            class="topbtns"
             @sync="setSync"
           />
         </div>
@@ -65,13 +66,27 @@ import { Search } from '@element-plus/icons-vue'
 
 const topSearchShow = ref(false)
 
-const words = ref([])
+interface ISearchHisWord {
+  keyword: string
+  id: number
+}
+const words = ref<ISearchHisWord[]>([])
 const getWord = () => {
   getSearchWord_api().then((res) => {
     words.value = res.body
   })
 }
 getWord()
+
+const querySearch = (queryString: string, cb: Function) => {
+  const results = queryString ? words.value.filter(createFilter(queryString)) : words.value
+  cb(results)
+}
+const createFilter = (queryString: string) => {
+  return (restaurant: ISearchHisWord) => {
+    return restaurant.keyword.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+  }
+}
 
 interface Params {
   size: number
@@ -176,7 +191,7 @@ const setSync = async () => {
     padding: 20px 24px;
   }
   .word_search {
-    .el-input {
+    :deep(.el-autocomplete) {
       width: 320px;
     }
   }

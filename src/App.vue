@@ -384,6 +384,9 @@ body .el-dialog {
     padding: 0 24px 24px;
   }
 }
+.dmp_page {
+  padding: 20px 24px;
+}
 .dmp_table {
   thead {
     th.el-table__cell {

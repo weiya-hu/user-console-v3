@@ -2,6 +2,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 
 import emiter from '@/utils/bus'
 
+import { KZ_STATUS, KZ_MY_STATUS, KZ_COM_STATUS, sourceObj } from '@/utils/config'
+
 export const getUrlParams = (search: string, name: string) => {
   //search方式跳转获取参数
   const paramsString = search.substring(1)
@@ -10,33 +12,33 @@ export const getUrlParams = (search: string, name: string) => {
   return params || ''
 }
 
-export function okMsg(msg: string, time?: number) {
+export function okMsg(msg: string, time = 3000) {
   ElMessage({
     showClose: true,
     message: msg,
     grouping: true,
     type: 'success',
-    duration: typeof time === 'number' ? time : 3000,
+    duration: time,
   })
 }
 
-export function errMsg(msg: string, time?: number) {
+export function errMsg(msg: string, time = 3000) {
   ElMessage({
     showClose: true,
     message: msg,
     grouping: true,
     type: 'error',
-    duration: typeof time === 'number' ? time : 3000,
+    duration: time,
   })
 }
 
-export function warnMsg(msg: string, time?: number) {
+export function warnMsg(msg: string, time = 3000) {
   ElMessage({
     showClose: true,
     message: msg,
     grouping: true,
     type: 'warning',
-    duration: time || 3000,
+    duration: time,
   })
 }
 
@@ -201,19 +203,10 @@ export function strToArr(str1: string | number, str2?: string | number, str3?: s
   }
 }
 
+/**
+ * 获取dmp来源
+ */
 export function getSource(source: number) {
-  const sourceObj: Record<number, string> = {
-    1: '康州数智',
-    2: '第三方数据',
-    3: '号码段',
-    4: '广告投放',
-    5: '微信好友',
-    6: '百度关键词',
-    7: '大数据获客',
-    8: '400获客',
-    9: '竞价获客',
-    10: '短信获客',
-  }
   try {
     if (sourceObj[source as keyof typeof sourceObj]) {
       return sourceObj[source as keyof typeof sourceObj]
@@ -302,80 +295,37 @@ export const downLoadVideo = (videoSrc: string, videoName?: string) => {
     })
 }
 
-/**
- * 全局状态
- */
-export const KZ_COM_STATUS: Record<number, { text: string; className: string }> = {
-  0: { text: '---', className: '' },
-  1: { text: '草稿', className: 'sdot_c0' },
-  2: { text: '审核中', className: 'sdot_fe' },
-  3: { text: '审核通过', className: 'sdot_g' },
-  4: { text: '审核失败', className: 'sdot_ff' },
+function getStatus(key: number, status: Record<number, { text: string; className: string }>) {
+  const obj = { text: '---', className: '' }
+  try {
+    if (status[key as keyof typeof status]) {
+      return status[key as keyof typeof status]
+    }
+  } catch (error) {
+    return obj
+  }
+  return obj
 }
 
 /**
  * 获取我的企业状态
  */
 export function getKzComStatus(key: number) {
-  const obj = { text: '---', className: '' }
-  try {
-    if (KZ_COM_STATUS[key as keyof typeof KZ_COM_STATUS]) {
-      return KZ_COM_STATUS[key as keyof typeof KZ_COM_STATUS]
-    }
-  } catch (error) {
-    return obj
-  }
-  return obj
-}
-/**
- * 全局状态
- */
-export const KZ_STATUS: Record<number, { text: string; className: string }> = {
-  0: { text: '---', className: '' },
-  1: { text: '待处理', className: 'sdot_y' },
-  2: { text: '已受理', className: 'sdot_g' },
-  3: { text: '被驳回', className: 'sdot_r' },
-  4: { text: '已完结', className: 'sdot_b' },
+  return getStatus(key, KZ_COM_STATUS)
 }
 
 /**
  * 获取状态
  */
 export function getKzStatus(key: number) {
-  const obj = { text: '---', className: '' }
-  try {
-    if (KZ_STATUS[key as keyof typeof KZ_STATUS]) {
-      return KZ_STATUS[key as keyof typeof KZ_STATUS]
-    }
-  } catch (error) {
-    return obj
-  }
-  return obj
-}
-/**
- * cms我的作品库状态
- */
-export const KZ_MY_STATUS: Record<number, { text: string; className: string }> = {
-  0: { text: '---', className: '' },
-  1: { text: '草稿', className: 'sdot_9' },
-  2: { text: '待处理', className: 'sdot_y' },
-  3: { text: '已完结', className: 'sdot_b' },
-  4: { text: '被驳回', className: 'sdot_r' },
+  return getStatus(key, KZ_STATUS)
 }
 
 /**
  * cms获取我的作品库状态
  */
 export function getKzMyStatus(key: any) {
-  const obj = { text: '---', className: '' }
-  try {
-    if (KZ_MY_STATUS[key as keyof typeof KZ_MY_STATUS]) {
-      return KZ_MY_STATUS[key as keyof typeof KZ_MY_STATUS]
-    }
-  } catch (error) {
-    return obj
-  }
-  return obj
+  return getStatus(key, KZ_MY_STATUS)
 }
 
 /**

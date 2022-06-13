@@ -190,7 +190,8 @@ export const routes: RouteRecordRaw[] = [
                     component: () =>
                       import('@/views/layout/product/dmp/findB/specificDataDetails.vue'),
                     meta: {
-                      title: '个性化数据详细页',
+                      title: '个性化数据详情',
+                      scroll: true,
                       father: '/product/dmp/findb/specificdata',
                       insPower: insPowerHash.dmp_b_diy,
                     },
@@ -317,76 +318,80 @@ export const routes: RouteRecordRaw[] = [
                 ],
               },
               {
-                path: '/product/dmp/seekPathPro',
+                path: '/product/dmp/seekpathpro',
                 name: 'SeekPathPro',
                 component: () => import('@/views/layout/rView.vue'),
                 meta: { title: '找渠道/项目' },
-                redirect: '/product/dmp/seekPathPro/seekpath',
+                redirect: '/product/dmp/seekpathpro/seekpath',
                 children: [
                   {
-                    path: '/product/dmp/seekPathPro/seekpath',
+                    path: '/product/dmp/seekpathpro/seekpath',
                     name: 'SeekPath',
                     component: () => import('@/views/layout/product/dmp/seekPathPro/seekPath.vue'),
                     meta: { title: '找渠道' },
                   },
                   {
-                    path: '/product/dmp/seekPathPro/seekpathdetails',
+                    path: '/product/dmp/seekpathpro/seekpathdetails',
                     name: 'SeekPathDetails',
                     component: () =>
                       import('@/views/layout/product/dmp/seekPathPro/seekPathDetails.vue'),
-                    meta: { title: '找渠道详细页', father: '/product/dmp/seekPathPro/seekpath' },
+                    meta: {
+                      title: '找渠道详情',
+                      scroll: true,
+                      father: '/product/dmp/seekpathpro/seekpath',
+                    },
                   },
                   {
-                    path: '/product/dmp/seekPathPro/seekproject',
+                    path: '/product/dmp/seekpathpro/seekproject',
                     name: 'SeekProject',
                     component: () =>
                       import('@/views/layout/product/dmp/seekPathPro/seekProject.vue'),
                     meta: { title: '找项目' },
                   },
                   {
-                    path: '/product/dmp/seekPathPro/seekprojectdetails',
+                    path: '/product/dmp/seekpathpro/seekprojectdetails',
                     name: 'SeekProjectDetails',
                     component: () =>
                       import('@/views/layout/product/dmp/seekPathPro/seekProjectDetails.vue'),
                     meta: {
-                      title: '找项目数据详细页',
-                      father: '/product/dmp/seekPathPro/seekproject',
+                      title: '找项目详情',
+                      father: '/product/dmp/seekpathpro/seekproject',
                     },
                   },
                 ],
               },
               {
-                path: '/product/dmp/seekAbroad',
+                path: '/product/dmp/seekabroad',
                 name: 'SeekAbroad',
                 component: () => import('@/views/layout/rView.vue'),
                 meta: { title: '找海外' },
-                redirect: '/product/dmp/seekAbroad/buyer',
+                redirect: '/product/dmp/seekabroad/buyer',
                 children: [
                   {
-                    path: '/product/dmp/seekAbroad/buyer',
+                    path: '/product/dmp/seekabroad/buyer',
                     name: 'Buyer',
                     component: () => import('@/views/layout/product/dmp/seekAbroad/buyer.vue'),
                     meta: { title: '采购商' },
                   },
                   {
-                    path: '/product/dmp/seekAbroad/buyerdetails',
+                    path: '/product/dmp/seekabroad/buyerdetails',
                     name: 'BuyerDetails',
                     component: () =>
                       import('@/views/layout/product/dmp/seekAbroad/buyerDetails.vue'),
-                    meta: { title: '采购商详细页', father: '/product/dmp/seekAbroad/buyer' },
+                    meta: { title: '采购商详情', father: '/product/dmp/seekabroad/buyer' },
                   },
                   {
-                    path: '/product/dmp/seekAbroad/supplier',
+                    path: '/product/dmp/seekabroad/supplier',
                     name: 'Supplier',
                     component: () => import('@/views/layout/product/dmp/seekAbroad/supplier.vue'),
                     meta: { title: '供应商' },
                   },
                   {
-                    path: '/product/dmp/seekAbroad/supplierdetails',
+                    path: '/product/dmp/seekabroad/supplierdetails',
                     name: 'SupplierDetails',
                     component: () =>
                       import('@/views/layout/product/dmp/seekAbroad/supplierDetails.vue'),
-                    meta: { title: '供应商详细页', father: '/product/dmp/seekAbroad/supplier' },
+                    meta: { title: '供应商详情', father: '/product/dmp/seekabroad/supplier' },
                   },
                 ],
               },

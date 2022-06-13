@@ -1,18 +1,25 @@
 <template>
-  <div class="kz_card my_up2b_page">
-    <div class="fsc f1">
-      <div class="tips">渠道详情</div>
-      <div class="btns">
-        <el-button type="primary" plain>同步数据</el-button>
-      </div>
+  <div class="kz_card dmp_page">
+    <div class="fsc mb20">
+      <KzDmpTitle :total="total" />
+      <KzTopBtns
+        ref="topBtnRef"
+        type="sync"
+        syncbtn
+        :sync-api="getSyncInfo_api"
+        :sync-disabled="syncDisabled"
+        @sync="setSync"
+      />
     </div>
 
-    <div class="mytable">
+    <div class="dmp_table" style="height: calc(100% - 120px)">
       <el-table
+        ref="tableRef"
         v-loading="loading"
         :data="tableList"
-        size="large"
-        row-class-name="my-data-table-row"
+        style="width: 100%"
+        height="100%"
+        @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="50" />
         <el-table-column property="num" label="序号" />
@@ -66,30 +73,28 @@
         </template>
       </el-table>
     </div>
-    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
+    <KzPage v-model:page="page" v-model:size="size" :total="total" @change="getList" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
-import { getHash, getHashStr, strToArr } from '@/utils/index'
+import { getHashStr, strToArr } from '@/utils/index'
 import { mainStore } from '@/store/index'
 import { useRoute } from 'vue-router'
 import { formatDate } from '@/utils/date'
+import { channelDetailPage_api, setSync_api, getSyncInfo_api } from '@/api/product/dmp/seekPathPro'
+import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
 
-import { upRecordList } from '@/api/product/dmp/myData'
-
+const route = useRoute()
 const store = mainStore()
 const addressHash = ref(store.state.addressHash)
-const route = useRoute()
-const id = route.query.id
 const typeHash = computed(() => store.state.typeHash)
 const tableList = ref([])
-const totle = ref(0)
-const size = ref(10)
+const total = ref(0)
+const size = ref(50)
 const page = ref(1)
 const loading = ref(false)
 const getList = async () => {
@@ -97,22 +102,44 @@ const getList = async () => {
   const data = {
     current: page.value,
     type: 1,
-    size: 10,
+    size: size.value,
+    id: route.query.id,
   }
-  const { status, body } = await upRecordList(data)
+  const { status, body } = await channelDetailPage_api(data)
   loading.value = false
   if (status) {
-    totle.value = body.total
+    total.value = body.total
     tableList.value = body.records
   }
 }
 getList()
+
+const multipleSelection = ref<(string | number)[]>([])
+const handleSelectionChange = (val: any[]) => {
+  multipleSelection.value = val.map((v) => v.id)
+}
+
+const tableRef = ref()
+const clear = () => {
+  multipleSelection.value = []
+  tableRef.value.clearSelection()
+}
+
+const topBtnRef = ref()
+const syncDisabled = computed(() => !multipleSelection.value.length)
+const setSync = async () => {
+  topBtnRef.value.setLoading(true)
+  const res = await setSync_api({
+    list: multipleSelection.value,
+    type: 1,
+  })
+  topBtnRef.value.close(res.message)
+  clear()
+}
 </script>
 
 <style scoped lang="scss">
-.my_up2b_page {
-  .btns {
-    margin-right: 24px;
-  }
+.dmp_page {
+  height: 100%;
 }
 </style>

@@ -7,9 +7,13 @@
       @click="showSync"
       >同步数据</el-button
     >
-    <el-button v-if="type === 'all' || type === 'add'" type="primary" @click="emit('add')">{{
-      btnText
-    }}</el-button>
+    <el-button
+      v-if="type === 'all' || type === 'add'"
+      type="primary"
+      :icon="Plus"
+      @click="emit('add')"
+      >{{ btnText }}</el-button
+    >
 
     <el-dialog
       v-model="show"
@@ -59,6 +63,7 @@
  */
 import { ref } from 'vue'
 import KzDialog from '@/components/KzDialog.vue'
+import { Plus } from '@element-plus/icons-vue'
 const props = withDefaults(
   defineProps<{
     type?: 'all' | 'sync' | 'add'

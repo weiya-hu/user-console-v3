@@ -173,7 +173,7 @@ defineExpose({
   display: none !important;
 }
 #kz_left_nav_box {
-  height: 100%;
+  min-height: calc(100vh - 64px);
   display: flex;
   position: relative;
   .kz_left_nav {

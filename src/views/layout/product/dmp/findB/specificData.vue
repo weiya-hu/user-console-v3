@@ -1,8 +1,8 @@
 <template>
-  <div class="specific_data_page kz_card">
-    <div class="fsc topbtns">
+  <div class="dmp_page kz_card">
+    <div class="fsc mb20">
       <KzDmpTitle />
-      <el-button type="primary" @click="addShow = true">新增需求</el-button>
+      <el-button type="primary" :icon="Plus" @click="addShow = true">新增需求</el-button>
     </div>
     <div class="dmp_table">
       <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
@@ -15,14 +15,26 @@
         </el-table-column>
         <el-table-column property="addr" label="地区" width="180">
           <template #default="scope">
-            <div>
-              {{
-                getHashStr(
-                  strToArr(scope.row.province, scope.row.city, scope.row.district),
-                  addressHash
-                )
-              }}
-            </div>
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div style="width: 100px" class="fcc">
+                  {{
+                    getHashStr(
+                      strToArr(scope.row.province, scope.row.city, scope.row.district),
+                      addressHash
+                    )
+                  }}
+                </div>
+              </template>
+              <div class="els2">
+                {{
+                  getHashStr(
+                    strToArr(scope.row.province, scope.row.city, scope.row.district),
+                    addressHash
+                  )
+                }}
+              </div>
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column property="group_name" label="人群名称" width="200">
@@ -101,6 +113,7 @@
         class="myform"
         :model="addForm"
         :rules="addRules"
+        label-width="80px"
       >
         <el-form-item label="行业分类" prop="type">
           <KzCascader v-model="addForm.type" type="type" />
@@ -119,7 +132,6 @@
             maxlength="150"
             show-word-limit
             rows="4"
-            resize="none"
           ></el-input>
         </el-form-item>
 
@@ -142,14 +154,7 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model="errorShow" title="拒绝原因" width="400px">
-      <div class="fcc msg">{{ errorMsg }}</div>
-      <template #footer>
-        <div class="fcc">
-          <el-button type="primary" @click="errorShow = false">我知道了</el-button>
-        </div>
-      </template>
-    </el-dialog>
+    <KzDialog v-model="errorShow" title="拒绝原因" :msg="errorMsg" :btn="1" />
     <KzDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="sureDel" />
   </div>
 </template>
@@ -169,6 +174,7 @@ import { errMsg, getHashStr, strToArr, getKzStatus } from '@/utils/index'
 import { ElMessageBox } from 'element-plus'
 import { addDemand_api, demandList_api, delDemand_api } from '@/api/product/dmp/findB'
 import { formatDate } from '@/utils/date'
+import { Plus } from '@element-plus/icons-vue'
 
 const store = mainStore()
 const typeHash = computed(() => store.state.typeHash)
@@ -176,7 +182,7 @@ const addressHash = computed(() => store.state.addressHash)
 
 const router = useRouter()
 const goDetails = (id: string) => {
-  router.push('/findB/specificDataDetails?id=' + id)
+  router.push('/product/dmp/findb/specificDataDetails?id=' + id)
 }
 interface SData {
   id: number | string
@@ -406,37 +412,7 @@ const sureDel = () => {
 </script>
 
 <script lang="ts">
-export default { name: '个性化数据' }
+export default { name: 'BSpecificData' }
 </script>
 
-<style scoped lang="scss">
-.specific_data_page {
-  padding: 20px 24px;
-  .myform {
-    :deep(.el-form-item__label) {
-      width: 90px;
-    }
-  }
-  .topbtns {
-    margin-bottom: 20px;
-    font-size: 14px;
-    color: $dfcolor;
-    img {
-      width: 32px;
-      height: 32px;
-      margin-right: 4px;
-    }
-    .fcs:hover {
-      cursor: pointer;
-    }
-  }
-  .mytable {
-    .line {
-      height: 14px;
-      width: 1px;
-      margin: 0 16px;
-      background-color: $coloreee;
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>

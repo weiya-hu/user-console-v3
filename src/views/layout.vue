@@ -130,7 +130,14 @@
           <div v-if="$route.path !== '/console'" class="fsc layout_content_page_top">
             <KzDetailsHeader ref="detailsHeaderRef" />
             <div v-if="insListInfo[nowProduct]" class="fcs">
-              <div class="">{{ nowIdentity.name }}</div>
+              <div class="fcs">
+                <img
+                  :src="is_company_i"
+                  alt=""
+                  style="width: 16px; height: 16px; margin-right: 4px"
+                />
+                <div>{{ nowIdentity.name }}</div>
+              </div>
               <div class="vline"></div>
               <el-dropdown v-if="insListInfo[nowProduct].length" @command="changeEdition">
                 <div class="fcs">
@@ -289,7 +296,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute, onBeforeRouteUpdate, RouteLocationNormalizedLoaded } from 'vue-router'
 import { mainStore } from '@/store/index'
 import emiter from '@/utils/bus'
@@ -306,6 +313,7 @@ import { ElMessageBox } from 'element-plus'
 import { ArrowDown } from '@element-plus/icons-vue'
 import KzDialog from '@/components/KzDialog.vue'
 import { noInsImg } from '@/utils/insPower'
+import is_company_i from '@/assets/images/is_company.svg'
 
 // demo start
 import KzImgUpload from '@/components/KzImgUpload.vue'

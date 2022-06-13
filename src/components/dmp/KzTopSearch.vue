@@ -144,7 +144,7 @@ const emit = defineEmits(['close', 'search'])
 const store = mainStore()
 
 const closeTopSearch = () => {
-  conditionShow.value = false
+  // conditionShow.value = false
   emit('close')
 }
 

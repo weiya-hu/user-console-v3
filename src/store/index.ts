@@ -23,11 +23,11 @@ import user_star_i from '@/assets/images/user_star.svg'
 type IStoreObj = Record<string | number, any>
 
 export const mainStore = defineStore('mainStore', () => {
-  // 这样写第一个参数就是$id
+  // 这样写第一个参数就是$id: 'mainStore'
   const state = reactive({
     yxtUrl: {} as IStoreObj, // 跳转地址
     userInfo: {} as IStoreObj, // 用户信息
-    memberList: [] as IStoreObj[], // 会员等级列表
+    memberList: [] as IStoreObj[], // 会员等级列表  [银牌会员。。。]
     userCompany: {} as IStoreObj, // 用户个人/企业列表
     nowUserIdentity: {} as IStoreObj, // 当前用户身份
     insListInfo: {} as { [x: string]: { insid: number; name: string; product_id: number }[] }, // 当前用户当前身份下可用实例 { dmp: [...], cms: [...] }

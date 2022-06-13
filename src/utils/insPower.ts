@@ -1,7 +1,11 @@
+/**
+ * 产品介绍页图片
+ */
 export const noInsImg = {
   dmp: 'https://res.kzszh.com/dev/web/index/image/5850940396c41a72c181eaa202d02123.jpg',
   cms: 'https://res.kzszh.com/dev/web/index/image/966cdce67688806609fb0826a9303134.jpg',
 }
+
 /**
  * 权限字段列表，key 不变
  */
@@ -31,4 +35,5 @@ const insPowerHash = {
   dmp_overseas_purchase: 'dmp_overseas_purchase', // 采购商
   dmp_overseas_supplier: 'dmp_overseas_supplier', // 供应商
 }
+
 export default insPowerHash

@@ -132,7 +132,7 @@ const props = withDefaults(
     oheight?: number
   }>(),
   {
-    oheight: 112,
+    oheight: 120,
   }
 )
 

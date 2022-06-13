@@ -64,7 +64,7 @@
               <el-link
                 v-if="row.status === 4"
                 type="primary"
-                @click="$router.push('/product/dmp/seekPathPro/seekprojectdetails?id=' + row.id)"
+                @click="$router.push('/product/dmp/seekpathpro/seekprojectdetails?id=' + row.id)"
                 >详情</el-link
               >
               <el-link v-if="row.status === 2" type="primary">---</el-link>
