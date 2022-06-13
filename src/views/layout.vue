@@ -83,7 +83,7 @@
                 <div class="fcs fjend">
                   <div class="tags fcc">
                     <img
-                      :src="memberList.find(v => Number(v.id) === userInfo.level)!.icon"
+                      :src="memberList.find((v) => Number(v.id) === userInfo.level)?.icon"
                       alt=""
                     />
                   </div>
@@ -170,7 +170,7 @@
             style="height: 100%"
             :style="{ padding: noIns ? '0px' : '16px' }"
           >
-            <el-scrollbar v-if="noIns">
+            <el-scrollbar v-if="noIns" :noresize="true">
               <div class="no_ins" style="padding: 16px">
                 <img :src="noInsImg[nowProduct as keyof typeof noInsImg]" alt="" />
                 <el-button type="primary" class="buy_btn">立即购买</el-button>

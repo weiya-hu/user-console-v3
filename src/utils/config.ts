@@ -1,4 +1,14 @@
 /**
+ * 产品hash
+ * @key 产品product_id
+ * @value 产品名称
+ */
+export const KzProduct = {
+  1: 'cms',
+  2: 'dmp',
+}
+
+/**
  * 工单全局状态
  */
 export const KZ_STATUS: Record<number, { text: string; className: string }> = {

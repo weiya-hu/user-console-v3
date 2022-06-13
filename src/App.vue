@@ -20,6 +20,7 @@ body {
   // min-width: 1440px;
 }
 body {
+  overflow: hidden;
   .el-button--primary {
     --el-button-bg-color: #2150ec;
     --el-button-border-color: #2150ec;
@@ -389,8 +390,8 @@ body .el-dialog {
 }
 .dmp_table {
   thead {
+    --el-table-header-bg-color: #f2f2f3;
     th.el-table__cell {
-      background-color: #f2f2f3;
       color: $color333;
     }
   }

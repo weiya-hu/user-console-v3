@@ -20,7 +20,7 @@
       <div class="kz_card user_card fc">
         <div v-if="memberList.length && userInfo.level" class="fcs fjend user_top">
           <div class="tags fcc">
-            <img :src="memberList.find(v => Number(v.id) === userInfo.level)!.icon" alt="" />
+            <img :src="memberList.find((v) => Number(v.id) === userInfo.level)?.icon" alt="" />
           </div>
           <div
             class="tags fcc"

@@ -3,14 +3,6 @@
     <div id="kz_left_nav_box" :class="flag && 'col_nav'">
       <div ref="leftLine" class="left_vline" :style="{ transform: `translate(0, ${top}px)` }"></div>
       <div class="kz_left_nav" @mouseenter="changeFlag(false)" @mouseleave="changeFlag(true)">
-        <div class="fold_btn fcs fjend">
-          <KzIcon
-            :href="flag ? '#icon-zhankai' : '#icon-shouqi'"
-            size="16px"
-            class="chover"
-            @click="changeFlag()"
-          />
-        </div>
         <div
           class="nav_item_lv2"
           :class="nowPath === '/console' && 'kz_active'"
@@ -172,14 +164,20 @@ defineExpose({
 :deep(.el-scrollbar__bar.is-horizontal) {
   display: none !important;
 }
+:deep(.el-scrollbar__view) {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 #kz_left_nav_box {
-  min-height: calc(100vh - 64px);
+  flex: 1;
+  // min-height: calc(100vh - 64px);
   display: flex;
   position: relative;
   .kz_left_nav {
     font-size: 14px;
     overflow: hidden;
-    padding: 0 16px;
+    padding: 20px 16px;
     transition: width var(--el-transition-duration), padding var(--el-transition-duration-fast);
     width: 100%;
     flex-shrink: 0;
@@ -248,7 +246,7 @@ defineExpose({
   &.col_nav {
     .kz_left_nav {
       width: 64px;
-      padding: 0 8px;
+      padding: 20px 8px;
       .nav_item_lv1 {
         .all_text {
           margin-right: 0;
@@ -263,11 +261,11 @@ defineExpose({
     margin-left: 16px;
   }
   .kz_sec_nav {
-    // height: 100%;
     flex: 1;
     border-left: 1px solid $bdcolor;
     word-break: keep-all;
     padding: 0 8px;
+    padding-bottom: 20px;
     .sec_title {
       height: 40px;
       color: #303133;

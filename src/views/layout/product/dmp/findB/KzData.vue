@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar v-loading="loading" height="100%" class="kzdata_page">
+  <el-scrollbar v-loading="loading" height="100%" class="kzdata_page" :noresize="true">
     <el-collapse-transition>
       <KzTopSearch v-show="topSearchShow" @search="heightSearch" @close="topSearchShow = false" />
     </el-collapse-transition>

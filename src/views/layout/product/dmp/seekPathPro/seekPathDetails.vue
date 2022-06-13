@@ -26,7 +26,7 @@
         <el-table-column property="name" label="企业名称" />
         <el-table-column property="contact" label="联系人" />
         <el-table-column property="mobiles" label="联系方式" />
-        <el-table-column property="mobiles" label="固定电话" />
+        <el-table-column property="telephone" label="固定电话" />
         <el-table-column property="industry_id" label="行业分类">
           <template #default="scope">
             <div>{{ getHashStr(scope.row.industry_id.split(','), typeHash, 'last') }}</div>
@@ -87,6 +87,7 @@ import { useRoute } from 'vue-router'
 import { formatDate } from '@/utils/date'
 import { channelDetailPage_api, setSync_api, getSyncInfo_api } from '@/api/product/dmp/seekPathPro'
 import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
+import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
 
 const route = useRoute()
 const store = mainStore()

@@ -31,7 +31,6 @@
             class="name_input"
             autocomplete="password"
             placeholder="请输入您的姓名"
-            
           />
         </el-form-item>
         <el-form-item prop="benterprise">
@@ -44,7 +43,6 @@
             v-model="formValue.benterprise"
             class="name_input"
             placeholder="请输入您的企业"
-            
           />
         </el-form-item>
 
@@ -86,7 +84,6 @@
               autocomplete="new-password"
               placeholder="请具体描述您的需求，我们会在适合的时候与您联系，为您提供1对1的服务支持"
               @input="textareaChange($event, 0)"
-              
             />
           </el-form-item>
         </div>
@@ -123,7 +120,6 @@
               autocomplete="new-password"
               placeholder="请具体描述您的需求，我们会在适合的时候与您联系，为您提供1对1的服务支持"
               @input="textareaChange($event, 1)"
-              
             />
           </el-form-item>
         </div>

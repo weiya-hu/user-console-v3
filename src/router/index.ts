@@ -388,6 +388,7 @@ export const routes: RouteRecordRaw[] = [
                       import('@/views/layout/product/dmp/seekPathPro/seekProjectDetails.vue'),
                     meta: {
                       title: '找项目详情',
+                      scroll: true,
                       father: '/product/dmp/seekpathpro/seekproject',
                       insPower: insPowerHash.dmp_find_project,
                     },
