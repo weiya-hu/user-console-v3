@@ -125,7 +125,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref,computed } from 'vue'
+import { ref, computed } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { companyAdd_api, companyExam_api, delCompanyInfo_api } from '@/api/manage/user/myinfo'
 import { getKzComStatus, getHash, getHashStr, strToArr } from '@/utils/index'

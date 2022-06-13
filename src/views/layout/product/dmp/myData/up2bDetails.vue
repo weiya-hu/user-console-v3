@@ -1,16 +1,16 @@
 <template>
   <div v-loading="loading" class="kz_card my_up2b_page">
     <div class="fsc f1">
-       <KzDmpTitle :total="totle" class="pt20 pb20 ml16" />
+      <KzDmpTitle :total="totle" class="pt20 pb20 ml16" />
       <KzTopBtns
-          ref="topBtnRef"
-          type="sync"
-          syncbtn
-          :sync-api="getSyncInfo_api"
-          :sync-disabled="syncDisabled"
-          class="topbtns mr20"
-          @sync="setSync"
-        />
+        ref="topBtnRef"
+        type="sync"
+        syncbtn
+        :sync-api="getSyncInfo_api"
+        :sync-disabled="syncDisabled"
+        class="topbtns mr20"
+        @sync="setSync"
+      />
     </div>
 
     <div class="dmp_table">

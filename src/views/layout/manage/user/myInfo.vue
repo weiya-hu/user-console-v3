@@ -219,9 +219,9 @@
                     <div class="item_content fcs">
                       <!-- <img :src="changeMemberImg[userInfoDate.level]" alt="" /> -->
                       <img
-                      :src="memberList.find(v => Number(v.id) === userInfoDate.level)?.icon"
-                      alt=""
-                    />
+                        :src="memberList.find((v) => Number(v.id) === userInfoDate.level)?.icon"
+                        alt=""
+                      />
                     </div>
                   </div>
                   <div class="item">
@@ -1035,11 +1035,10 @@ const closeEdit = () => {
         .item_content {
           color: #303133;
           width: 360px;
-         
         }
-         .user_email{
-            color:#C0C4CC;
-          }
+        .user_email {
+          color: #c0c4cc;
+        }
         .item_links {
           width: 164px;
         }

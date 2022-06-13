@@ -20,7 +20,7 @@
         height="100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="50" />
+        <el-table-column type="selection" width="50" fixed="left" />
         <el-table-column property="num" label="序号" />
         <el-table-column property="name" label="企业名称" />
         <el-table-column property="contact" label="联系人" />

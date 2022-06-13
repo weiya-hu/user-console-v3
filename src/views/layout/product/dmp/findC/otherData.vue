@@ -46,7 +46,7 @@
     </div>
     <div class="kz_card">
       <div class="fsc f1">
-        <KzDmpTitle :total="totle"  class="pt20 pb20 ml16"/>
+        <KzDmpTitle :total="totle" class="pt20 pb20 ml16" />
         <KzTopBtns
           ref="topBtnRef"
           type="sync"

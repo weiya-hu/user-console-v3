@@ -87,10 +87,7 @@
                 @click="$router.push('/product/cms/mywork/articledetails?id=' + row.id)"
                 >查看</el-link
               >
-              <el-link
-                v-if="row.status == 4"
-                type="primary"
-                @click="errorMsg = row.fail_reasonerrorShow = true"
+              <el-link v-if="row.status == 4" type="primary" @click="showError(row.fail_reason)"
                 >拒绝原因</el-link
               >
             </div>
@@ -168,6 +165,11 @@ const sureDel = () => {
       delShow.value = false
     }
   })
+}
+
+const showError = (fail: string) => {
+  errorMsg.value = fail
+  errorShow.value = true
 }
 
 const errorShow = ref(false)

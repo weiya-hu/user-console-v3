@@ -667,12 +667,6 @@ export const routes: RouteRecordRaw[] = [
                 meta: { title: '我的产品与服务详情', father: '/manage/user/myproduct' },
               },
               {
-                path: '/manage/user/order',
-                name: 'Order',
-                component: () => import('@/views/layout/manage/user/order.vue'),
-                meta: { title: '订购产品', scroll: true },
-              },
-              {
                 path: '/manage/user/myinfo',
                 name: 'MyInfo',
                 component: () => import('@/views/layout/manage/user/myInfo.vue'),

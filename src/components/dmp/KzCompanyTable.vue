@@ -7,7 +7,7 @@
       height="100%"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="50" />
+      <el-table-column type="selection" width="50" fixed="left" />
       <el-table-column type="index" label="序号" width="60" />
       <el-table-column property="name" label="企业名称">
         <template #default="scope">
