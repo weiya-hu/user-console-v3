@@ -7,7 +7,7 @@
       </div>
       <div v-loading="upLoading" class="form_content">
         <div class="tip fcs">
-          <img :src="tip_i" alt="" />
+          <!-- <img :src="tip_i" alt="" /> -->
           <span
             >请注意：根据国家相关法律法规要求，切勿发布任何色情、低俗、涉政等违法违规内容。一旦出现，我们将会根据法规进行审核处理。</span
           >
@@ -38,7 +38,7 @@
                     class="title_img"
                     alt=""
                   />
-                  <img v-else :src="tp_i" alt="" />
+                  <!-- <img v-else :src="tp_i" alt="" /> -->
                 </div>
               </el-upload>
               <div class="img_tip flex">仅支持 JPG、PNG 、JPEG等图片格式，大小不超过2M</div>
@@ -63,8 +63,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import tip_i from '@/assets/images/tip.png'
-import tp_i from '@/assets/images/tp.png'
+// import tip_i from '@/assets/images/tip.png'
+// import tp_i from '@/assets/images/tp.png'
 import type { UploadFile, UploadProgressEvent } from 'element-plus'
 import KzEdit from '@/components/KzEdit.vue'
 import { errMsg } from '@/utils/index'

@@ -1,1 +1,0 @@
-import{H as s,o as e,I as r}from"./vue.a94c4214.js";const o=s({setup:s=>(s,o)=>(e(),r("div",{class:"m_article",onClick:o[0]||(o[0]=e=>s.$router.push("/product/cms/resource/resourceDetail"))},"资源"))});export{o as default};
