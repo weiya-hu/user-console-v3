@@ -29,6 +29,7 @@
           </template>
         </el-table-column>
         <el-table-column property="mobiles" label="联系方式" />
+        <el-table-column property="telephone" label="固定电话" />
         <el-table-column property="email" label="邮箱" />
         <el-table-column property="industry_id" label="从事行业">
           <template #default="scope">
@@ -45,6 +46,20 @@
               </template>
               <div>
                 {{ getHashStr(strToArr(row.province, row.city, row.district), addressHash) }}
+              </div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column property="address" label="详细地址">
+          <template #default="{ row }">
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div style="width: 100px">
+                  {{ row.address }}
+                </div>
+              </template>
+              <div class="els">
+                {{ row.address }}
               </div>
             </el-tooltip>
           </template>

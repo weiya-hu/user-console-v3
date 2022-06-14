@@ -1,7 +1,7 @@
 <template>
   <div class="kz_card my_supplier_page dmp_page">
     <div class="fsc f1">
-      <div class="tips">供应商详情</div>
+      <div class="card_title">供应商详情</div>
       <div class="btns">
         <KzTopBtns
           ref="topBtnRef"
@@ -24,7 +24,7 @@
       >
         <el-table-column type="selection" width="50" />
 
-        <el-table-column property="num" label="序号" />
+        <el-table-column property="id" label="序号" />
         <el-table-column property="name" label="企业名称" />
         <el-table-column property="contact" label="联系人" />
         <el-table-column property="mobiles" label="联系方式" />
@@ -79,7 +79,7 @@ const getDetailList = async () => {
   loading.value = true
   const data = {
     current: page.value,
-    size: 50,
+    size: size.value,
     id: route.query.id,
   }
   const { status, body } = await overseasDetailPage(data)

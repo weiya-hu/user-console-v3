@@ -45,12 +45,41 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column property="address" label="地址" />
-        <el-table-column property="company_type" label="企业类型" />
+        <el-table-column property="address" label="详细地址">
+          <template #default="{ row }">
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div style="width: 100px">
+                  {{ row.address }}
+                </div>
+              </template>
+              <div class="els">
+                {{ row.address }}
+              </div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="ctypeArr.length" property="company_type" label="企业类型">
+          <template #default="scope">
+            <div>{{ ctypeArr.find((v) => v.id == scope.row.company_type)?.name }}</div>
+          </template>
+        </el-table-column>
         <el-table-column property="code" label="统一社会信用代码" />
         <el-table-column property="url" label="企业官网" />
-        <el-table-column property="business_scope" label="经营范围" />
-
+        <el-table-column property="business_scope" label="经营范围">
+          <template #default="{ row }">
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div style="width: 100px">
+                  {{ row.business_scope }}
+                </div>
+              </template>
+              <div class="els">
+                {{ row.business_scope }}
+              </div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <template #empty>
           <KzEmpty />
         </template>
@@ -75,6 +104,7 @@ import { upRecordDetail, setSync_api, getSyncInfo_api } from '@/api/product/dmp/
 const store = mainStore()
 const addressHash = computed(() => store.state.addressHash)
 const typeHash = computed(() => store.state.typeHash)
+const ctypeArr = computed(() => store.state.companyType)
 const route = useRoute()
 const id = route.query.id
 

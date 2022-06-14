@@ -45,12 +45,15 @@
               <el-link
                 v-if="row.status === 4"
                 type="primary"
-                @click="$router.push('/product/dmp/myData/buyerdetails?id=' + row.id)"
+                @click="$router.push('/product/dmp/seekabroad/supplierdetails?id=' + row.id)"
                 >详情</el-link
               >
               <el-link v-if="row.status === 2" type="primary">---</el-link>
-              <el-link v-if="row.status === 3" type="primary">驳回原因</el-link>
-              <el-link v-if="row.status !== 2" type="primary">删除</el-link>
+              <el-link v-if="row.status === 3" type="primary" @click="reject(row)"
+                >驳回原因</el-link
+              >
+              <div v-if="row.status !== 2 && row.status !== 1" class="line"></div>
+              <el-link v-if="row.status !== 2" type="primary" @click="deleteBt(row)">删除</el-link>
             </div>
           </template>
         </el-table-column>
@@ -354,6 +357,12 @@ const upSuccess = (path?: string) => {
 .my_supplier_page {
   .btns {
     margin-right: 24px;
+  }
+  .line {
+    height: 14px;
+    width: 1px;
+    margin: 0 16px;
+    background-color: $coloreee;
   }
   .my_form {
     .el-dialog .el-dialog__header {

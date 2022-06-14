@@ -42,7 +42,20 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column property="address" label="详细地址" />
+          <el-table-column property="address" label="详细地址">
+            <template #default="{ row }">
+              <el-tooltip effect="dark" placement="top">
+                <template #content>
+                  <div style="width: 100px">
+                    {{ row.address }}
+                  </div>
+                </template>
+                <div class="els">
+                  {{ row.address }}
+                </div>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column property="business_scope" label="经营范围" />
           <template #empty>
             <KzEmpty />

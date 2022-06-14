@@ -190,7 +190,10 @@
                   </div>
                   <div class="item">
                     <div class="item_title">绑定邮箱</div>
-                    <div class="item_content fcs user_email">
+                    <div
+                      class="item_content fcs"
+                      :class="userInfoDate.email === '' ? 'user_email' : ''"
+                    >
                       {{ userInfoDate.email === '' ? '未绑定邮箱' : userInfoDate.email }}
                     </div>
                     <el-link type="primary" @click="goChangoEmail">{{

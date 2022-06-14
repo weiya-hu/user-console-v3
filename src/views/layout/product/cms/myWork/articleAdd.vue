@@ -1,6 +1,5 @@
 <template>
   <div class="article_add">
-    
     <div class="addform">
       <div class="fjend btns">
         <el-button @click="submit(1)">&ensp;保存&ensp;</el-button>
@@ -41,8 +40,8 @@
                     alt=""
                   />
                   <div v-else class="fleximg fc upbox_noimg">
-                    <KzIconVue href="#icon-shangchuan" size="32px"/>
-                    <div>把文件拖到此处或<span>点击上传</span> </div>
+                    <KzIconVue href="#icon-shangchuan" size="32px" />
+                    <div>把文件拖到此处或<span>点击上传</span></div>
                   </div>
                 </div>
               </el-upload>
@@ -300,10 +299,9 @@ const submit = async (type: number) => {
       &:hover {
         border-color: $dfcolor;
       }
-      .upbox_noimg{
+      .upbox_noimg {
         padding-top: 36px;
-        &>div{
-          
+        & > div {
         }
       }
     }

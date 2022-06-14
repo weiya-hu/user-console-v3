@@ -20,7 +20,6 @@ body {
   // min-width: 1440px;
 }
 body {
-  
   .el-button--primary {
     --el-button-bg-color: #2150ec;
     --el-button-border-color: #2150ec;
