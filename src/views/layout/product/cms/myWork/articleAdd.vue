@@ -1,19 +1,20 @@
 <template>
   <div class="article_add">
     <div class="addform">
-      <div class="title">
-        发布文章
-        <!-- <span>草稿自动保存</span> -->
+      <div class="fjend btns">
+        <el-button @click="submit(1)">&ensp;保存&ensp;</el-button>
+        <el-button type="primary" @click="submit(2)">&ensp;提交&ensp;</el-button>
       </div>
       <div v-loading="upLoading" class="form_content">
-        <div class="tip fcs">
-          <!-- <img :src="tip_i" alt="" /> -->
+        <!-- <div class="tip fcs">
+          <KzIconVue href="&#xe62a;"/>
           <span
             >请注意：根据国家相关法律法规要求，切勿发布任何色情、低俗、涉政等违法违规内容。一旦出现，我们将会根据法规进行审核处理。</span
           >
-        </div>
+        </div> -->
         <el-form ref="aFormRef" :model="aForm" :rules="aRules" size="large" @submit.prevent>
-          <el-form-item label="文章封面" prop="thumb_url">
+          <el-form-item prop="thumb_url" class="up_cover">
+            <div class="up_cover_txt">上传封面</div>
             <div class="upload fcs">
               <el-upload
                 ref="upload"
@@ -31,16 +32,20 @@
                 accept=".jpg,.png,.jpeg,.JPG,.PNG,.JPEG"
                 class="flex"
               >
-                <div class="upbox fcc">
-                  <img
+                <div class="upbox">
+                  <!-- <img
                     v-if="titleImg || aForm.thumb_url"
                     :src="titleImg || aForm.thumb_url"
                     class="title_img"
                     alt=""
-                  />
+                  /> -->
                   <!-- <img v-else :src="tp_i" alt="" /> -->
+                  <KzIconVue href="#icon-tianjia" size="14px" color="#333333" />
+                  <!-- <KzIcon href="#icon-tianjia" size="14px" color="red" /> -->
+                  <div>把文件拖到此处或点击上传</div>
                 </div>
               </el-upload>
+              <KzIconVue href="icon-shangchuan" color="red" size="32px" />
               <div class="img_tip flex">仅支持 JPG、PNG 、JPEG等图片格式，大小不超过2M</div>
             </div>
           </el-form-item>
@@ -71,6 +76,7 @@ import { errMsg } from '@/utils/index'
 // import { getAliToken_api } from '@/api/login'
 import { articleAdd_api, articleDetail_api, articleUpdate_api } from '@/api/product/cms/myWork'
 import { mainStore } from '@/store/index'
+import KzIconVue from '@/components/KzIcon.vue'
 const store = mainStore()
 const route = useRoute()
 const router = useRouter()
@@ -219,8 +225,6 @@ const submit = async (type: number) => {
     font-size: 12px;
   }
   .addform {
-    background-color: #fff;
-    // margin-top: 20px;
     border-radius: 6px;
     .title {
       padding: 21px 50px;
@@ -236,7 +240,22 @@ const submit = async (type: number) => {
       }
     }
     .form_content {
-      padding: 24px 50px 30px;
+      .up_cover {
+        padding: 20px 24px;
+        background: #ffffff;
+        margin-bottom: 16px;
+        border-radius: 8px;
+        :deep(.el-form-item__content) {
+          display: block;
+          .up_cover_txt {
+            font-size: 16px;
+            color: #303133;
+            line-height: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+          }
+        }
+      }
     }
     .tip {
       background-color: #fff8e5;
@@ -296,7 +315,10 @@ const submit = async (type: number) => {
     }
   }
   .btns {
-    padding-top: 10px;
+    padding: 20px 24px;
+    background: #ffffff;
+    margin-bottom: 16px;
+    border-radius: 8px;
   }
 }
 </style>

@@ -34,6 +34,18 @@ const insPowerHash = {
   dmp_overseas: 'dmp_overseas', // 找海外
   dmp_overseas_purchase: 'dmp_overseas_purchase', // 采购商
   dmp_overseas_supplier: 'dmp_overseas_supplier', // 供应商
+  cms_works: 'cms_works', //cms我的作品库
+  cms_works_article: 'cms_works_article', //cms我的作品库-软文
+  cms_works_poster: 'cms_works_poster', //cms我的作品库-海报
+  cms_works_image: 'cms_works_image', //cms我的作品库-图片
+  cms_works_video: 'cms_works_video', //cms我的作品库-视频
+  cms_diy: 'cms_diy', //cms个性化数据
+  cms_diy_article: 'cms_diy_article', //cms个性化数据-软文
+  cms_diy_poster: 'cms_diy_poster', //cms个性化数据-海报
+  cms_diy_image: 'cms_diy_image', //cms个性化数据-图片
+  cms_diy_video: 'cms_diy_video', //cms个性化数据-视频
+  cms_resource: 'cms_resource', //cms资源内容库
+  cms_resource_file: 'cms_resource_file', //cms资源内容库-内容库
 }
 
 export default insPowerHash

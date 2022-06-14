@@ -69,14 +69,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref,computed } from 'vue'
+import { ref, computed } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
 import KzDataUpUser from '@/components/dmp/KzDataUpUser.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import { getKzStatus, getSource } from '@/utils/index'
-import { upRecordList,setSync_api, getSyncInfo_api  } from '@/api/product/dmp/myData'
+import { upRecordList, setSync_api, getSyncInfo_api } from '@/api/product/dmp/myData'
 
 const tableList = ref([])
 const totle = ref(0)

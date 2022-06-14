@@ -46,7 +46,7 @@
     </div>
     <div class="kz_card dmp_page">
       <div class="fsc f1">
-        <KzDmpTitle :total="totle"  class="pt20 pb20 ml16"/>
+        <KzDmpTitle :total="totle" class="pt20 pb20 ml16" />
         <KzTopBtns
           ref="topBtnRef"
           type="sync"
@@ -74,12 +74,12 @@
             </template>
           </el-table-column>
           <el-table-column property="age" label="年龄" />
-          <el-table-column property="education" label="学历" >
+          <el-table-column property="education" label="学历">
             <template #default="scope">{{
               educationList.find((v) => v.id === scope.row.education).name
             }}</template>
           </el-table-column>
-          <el-table-column property="mobiles" label="联系方式" >
+          <el-table-column property="mobiles" label="联系方式">
             <template #default="scope">
               <div v-html="scope.row.mobiles"></div>
             </template>
@@ -97,7 +97,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column property="job" label="职业"  />
+          <el-table-column property="job" label="职业" />
           <el-table-column property="tags" label="行为兴趣" width="250">
             <template #default="{ row }">
               <el-tag v-for="(v, i) in row.tags" :key="i" class="user_tag" :type="tagTypes[i]">{{

@@ -6,7 +6,7 @@
         <el-table-column property="wechat_id" label="好友微信号" />
         <el-table-column property="avatar_url" label="头像">
           <template #default="scope">
-            <img  :src="scope.row.avatar_url|| df_avatar_i" alt="" class="firstimg" />
+            <img :src="scope.row.avatar_url || df_avatar_i" alt="" class="firstimg" />
           </template>
         </el-table-column>
         <el-table-column property="nick_name" label="昵称" />
@@ -124,9 +124,9 @@ const setSync = async () => {
 .wxdata_details_c {
   height: 100%;
   .firstimg {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-}
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+  }
 }
 </style>

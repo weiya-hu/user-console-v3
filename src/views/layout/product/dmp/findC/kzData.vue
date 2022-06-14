@@ -1,5 +1,5 @@
 <template>
-  <div class="dmp_kz_data ">
+  <div class="dmp_kz_data">
     <div class="kz_card">
       <div class="top_search">
         <el-form ref="formRef" :model="form">
@@ -46,7 +46,7 @@
     </div>
     <div class="kz_card dmp_page">
       <div class="fsc f1">
-        <KzDmpTitle :total="totle"  class="pt20 pb20 ml16"/>
+        <KzDmpTitle :total="totle" class="pt20 pb20 ml16" />
         <KzTopBtns
           ref="topBtnRef"
           type="sync"
@@ -67,13 +67,13 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="50" />
-          <el-table-column property="name" label="姓名"/>
+          <el-table-column property="name" label="姓名" />
           <el-table-column property="sex" label="性别">
             <template #default="scope">
               <div>{{ scope.row.sex == 0 ? '未知' : scope.row.sex == 1 ? '男' : '女' }}</div>
             </template>
           </el-table-column>
-          <el-table-column property="age" label="年龄"  />
+          <el-table-column property="age" label="年龄" />
           <el-table-column property="education" label="学历">
             <template #default="scope">{{
               educationList.find((v) => v.id === scope.row.education).name
@@ -105,7 +105,7 @@
               }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column property="address" label="地区" >
+          <el-table-column property="address" label="地区">
             <template #default="scope">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -129,7 +129,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column property="source" label="来源" >
+          <el-table-column property="source" label="来源">
             <template #default="scope">
               <div>{{ getSource(scope.row.source) }}</div>
             </template>

@@ -23,10 +23,3 @@
     set()
   })
 })()
-
-const isIos = () => {
-  const m = navigator.userAgent
-  const isIos = !!m.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-  const result = isIos ? true : false
-  return result
-}
