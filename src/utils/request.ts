@@ -79,6 +79,7 @@ export function get(module: string, url: string, params?: any, showmsg?: boolean
             message: res.data.message,
             type: 'success',
             grouping: true,
+            customClass: 'el_message',
           })
         }
         resolve(res.data)
@@ -102,6 +103,7 @@ export function post(module: string, url: string, params?: any, showmsg?: boolea
             message: res.data.message,
             type: 'success',
             grouping: true,
+            customClass: 'el_message',    
           })
         }
         resolve(res.data)

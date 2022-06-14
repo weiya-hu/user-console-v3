@@ -20,7 +20,7 @@ body {
   // min-width: 1440px;
 }
 body {
-  overflow: hidden;
+  
   .el-button--primary {
     --el-button-bg-color: #2150ec;
     --el-button-border-color: #2150ec;
@@ -423,6 +423,7 @@ body .el-dialog {
   html,
   body {
     min-width: 1440px;
+    overflow: hidden;
   }
 }
 @media screen and (max-width: 750px) {

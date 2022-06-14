@@ -1,0 +1,1 @@
+import{g as s,p as c}from"./index.fde176ed.js";const a=c=>s("cms","/cms/articles.page",c),e=s=>c("cms","/cms/articles.in",s,!0),m=c=>s("cms","/cms/articles/detail.get",c),t=s=>c("cms","/cms/articles.del",s,!0),i=s=>c("cms","/cms/articles.up",s,!0);export{a,t as b,m as c,i as d,e};

@@ -1,5 +1,6 @@
 <template>
   <div class="article_add">
+    
     <div class="addform">
       <div class="fjend btns">
         <el-button @click="submit(1)">&ensp;保存&ensp;</el-button>
@@ -33,19 +34,18 @@
                 class="flex"
               >
                 <div class="upbox">
-                  <!-- <img
+                  <img
                     v-if="titleImg || aForm.thumb_url"
                     :src="titleImg || aForm.thumb_url"
                     class="title_img"
                     alt=""
-                  /> -->
-                  <!-- <img v-else :src="tp_i" alt="" /> -->
-                  <KzIconVue href="#icon-tianjia" size="14px" color="#333333" />
-                  <!-- <KzIcon href="#icon-tianjia" size="14px" color="red" /> -->
-                  <div>把文件拖到此处或点击上传</div>
+                  />
+                  <div v-else class="fleximg fc upbox_noimg">
+                    <KzIconVue href="#icon-shangchuan" size="32px"/>
+                    <div>把文件拖到此处或<span>点击上传</span> </div>
+                  </div>
                 </div>
               </el-upload>
-              <KzIconVue href="icon-shangchuan" color="red" size="32px" />
               <div class="img_tip flex">仅支持 JPG、PNG 、JPEG等图片格式，大小不超过2M</div>
             </div>
           </el-form-item>
@@ -299,6 +299,12 @@ const submit = async (type: number) => {
       }
       &:hover {
         border-color: $dfcolor;
+      }
+      .upbox_noimg{
+        padding-top: 36px;
+        &>div{
+          
+        }
       }
     }
     .is-error {
