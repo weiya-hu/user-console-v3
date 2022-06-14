@@ -1,5 +1,5 @@
 <template>
-  <div class="kz_card my_buyer_page">
+  <div class="kz_card my_buyer_page dmp_page">
     <div class="fsc f1">
       <div class="card_title">采购商</div>
       <el-button type="primary" class="btns" @click="add"

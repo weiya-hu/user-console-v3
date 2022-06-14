@@ -1,5 +1,5 @@
 <template>
-  <div class="mytable user_table" :style="{ height: `calc( 100% - ${oheight}px )` }">
+  <div class="dmp_table user_table" :style="{ height: `calc( 100% - ${oheight}px )` }">
     <el-table
       ref="tableRef"
       :data="data"

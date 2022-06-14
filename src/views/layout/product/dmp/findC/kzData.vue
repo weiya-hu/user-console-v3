@@ -1,5 +1,5 @@
 <template>
-  <div class="dmp_kz_data">
+  <div class="dmp_kz_data ">
     <div class="kz_card">
       <div class="top_search">
         <el-form ref="formRef" :model="form">
@@ -44,9 +44,9 @@
         </el-form>
       </div>
     </div>
-    <div class="kz_card">
+    <div class="kz_card dmp_page">
       <div class="fsc f1">
-        <KzDmpTitle :total="totle" class="pt20 pb20 ml16" />
+        <KzDmpTitle :total="totle"  class="pt20 pb20 ml16"/>
         <KzTopBtns
           ref="topBtnRef"
           type="sync"
@@ -67,25 +67,25 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="50" />
-          <el-table-column property="name" label="姓名" width="70" />
-          <el-table-column property="sex" label="性别" width="60">
+          <el-table-column property="name" label="姓名"/>
+          <el-table-column property="sex" label="性别">
             <template #default="scope">
               <div>{{ scope.row.sex == 0 ? '未知' : scope.row.sex == 1 ? '男' : '女' }}</div>
             </template>
           </el-table-column>
-          <el-table-column property="age" label="年龄" width="70" />
-          <el-table-column property="education" label="学历" width="130">
+          <el-table-column property="age" label="年龄"  />
+          <el-table-column property="education" label="学历">
             <template #default="scope">{{
               educationList.find((v) => v.id === scope.row.education).name
             }}</template>
           </el-table-column>
-          <el-table-column property="mobiles" label="联系方式" width="120">
+          <el-table-column property="mobiles" label="联系方式">
             <template #default="scope">
               <div v-html="scope.row.mobiles"></div>
             </template>
           </el-table-column>
-          <el-table-column property="email" label="邮箱" width="180" />
-          <el-table-column property="industry_id" label="从事行业" width="110">
+          <el-table-column property="email" label="邮箱" />
+          <el-table-column property="industry_id" label="从事行业">
             <template #default="scope">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -97,7 +97,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column property="job" label="职业" width="120" />
+          <el-table-column property="job" label="职业" />
           <el-table-column property="tags" label="行为兴趣" width="250">
             <template #default="{ row }">
               <el-tag v-for="(v, i) in row.tags" :key="i" class="user_tag" :type="tagTypes[i]">{{
@@ -105,7 +105,7 @@
               }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column property="address" label="地区" width="140">
+          <el-table-column property="address" label="地区" >
             <template #default="scope">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -129,7 +129,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column property="source" label="来源" width="100">
+          <el-table-column property="source" label="来源" >
             <template #default="scope">
               <div>{{ getSource(scope.row.source) }}</div>
             </template>

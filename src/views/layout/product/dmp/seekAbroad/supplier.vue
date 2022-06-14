@@ -1,5 +1,5 @@
 <template>
-  <div class="kz_card my_up2c_page">
+  <div class="kz_card my_supplier_page dmp_page">
     <div class="fsc f1">
       <div class="card_title">供应商</div>
       <el-button type="primary" class="btns" @click="add"
@@ -351,7 +351,7 @@ const upSuccess = (path?: string) => {
 </script>
 
 <style scoped lang="scss">
-.my_up2c_page {
+.my_supplier_page {
   .btns {
     margin-right: 24px;
   }

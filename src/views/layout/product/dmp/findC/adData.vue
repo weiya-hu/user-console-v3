@@ -1,5 +1,5 @@
 <template>
-  <div class="kz_card addata_page_c">
+  <div class="kz_card addata_page_c dmp_page">
     <div class="fsc f1">
       <div class="card_title">广告投放获客</div>
       <div class="btns fsc">

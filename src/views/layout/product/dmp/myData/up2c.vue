@@ -1,5 +1,5 @@
 <template>
-  <div class="kz_card my_up2c_page">
+  <div class="kz_card my_up2c_page dmp_page">
     <div class="fsc f1">
       <div class="card_title">上传2C数据</div>
       <div class="btns fsc">
@@ -69,14 +69,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref,computed } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
 import KzDataUpUser from '@/components/dmp/KzDataUpUser.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import { getKzStatus, getSource } from '@/utils/index'
-import { upRecordList, setSync_api, getSyncInfo_api } from '@/api/product/dmp/myData'
+import { upRecordList,setSync_api, getSyncInfo_api  } from '@/api/product/dmp/myData'
 
 const tableList = ref([])
 const totle = ref(0)

@@ -1,5 +1,5 @@
 <template>
-  <div class="kz_card my_up2b_page">
+  <div class="kz_card my_up2b_page dmp_page">
     <div class="fsc f1">
       <div class="card_title">上传2B数据</div>
       <div class="btns fsc">

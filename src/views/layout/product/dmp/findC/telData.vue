@@ -1,5 +1,5 @@
 <template>
-  <div class="kz_card teldata_page_c">
+  <div class="kz_card teldata_page_c dmp_page">
     <div class="fsc f1">
       <div class="card_title">号码段获客</div>
       <div class="btns fsc">

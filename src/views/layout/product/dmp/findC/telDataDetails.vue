@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="loading" class="kz_card teldata_details_c">
+  <div v-loading="loading" class="kz_card teldata_details_c dmp_page">
     <div class="fsc f1">
       <KzDmpTitle :total="totle" class="pt20 pb20 ml16" />
       <div class="btns">

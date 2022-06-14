@@ -1,5 +1,5 @@
 <template>
-  <div class="kz_card my_up2b_page">
+  <div class="kz_card my_buyer_page dmp_page">
     <div class="fsc f1">
       <div class="tips">采购商详情</div>
       <div class="btns">
@@ -115,7 +115,7 @@ const setSync = async () => {
 </script>
 
 <style scoped lang="scss">
-.my_up2b_page {
+.my_buyer_page {
   .btns {
     margin-right: 24px;
   }

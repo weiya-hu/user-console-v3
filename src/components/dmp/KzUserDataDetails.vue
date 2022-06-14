@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="loading" class="user_data_details">
+  <div v-loading="loading" class="user_data_details kz_card dmp_page">
     <KzDmpTitle :total="totle" class="pt20 pb20 ml16" />
     <KzUserTable ref="tableRef" :data="tableData" />
     <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />

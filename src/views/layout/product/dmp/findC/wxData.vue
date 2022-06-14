@@ -1,5 +1,5 @@
 <template>
-  <div class="kz_card my_wx_page">
+  <div class="kz_card my_wx_page dmp_page">
     <div class="fsc f1">
       <div class="card_title">微信获客</div>
       <div class="btns fsc">

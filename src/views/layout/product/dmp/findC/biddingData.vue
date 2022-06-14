@@ -1,5 +1,5 @@
 <template>
-  <div class="kz_card baidudata_page_c">
+  <div class="kz_card baidudata_page_c dmp_page">
     <div class="fsc f1">
       <div class="card_title">竞价获客</div>
       <div class="btns fsc">
