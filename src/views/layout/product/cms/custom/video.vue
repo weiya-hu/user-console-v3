@@ -32,7 +32,7 @@
                   <el-link
                     v-if="row.status == 4"
                     type="primary"
-                    @click="$router.push('/product/cms/custom/articledetail?id=' + row.id)"
+                    @click="$router.push('/product/cms/custom/videodetail?id=' + row.id)"
                     >详情</el-link
                   >
                   <el-link
@@ -67,10 +67,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import icon_add from '@/assets/images/artile_add.png'
-import KzDataTable from '@/components/KzDataTable.vue'
+import KzDataTable from '@/components/cms/KzDataTable.vue'
 import KzPage from '@/components/KzPage.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
-import KzUpUser from '@/components/KzUpUser.vue'
+import KzUpUser from '@/components/cms/KzUpUser.vue'
 import KzDialog from '@/components/KzDialog.vue'
 import { customList_api, customDel_api } from '@/api/product/cms/custom'
 const tableList = ref([])

@@ -9,8 +9,32 @@
         </div>
         <div class="name fcs">
           <div class="text">{{ v.product_name }}</div>
-          <div class="tag">
-            <div>{{ v.version_name }}</div>
+          <div
+            class="tag"
+            :class="
+              v.version_type === 1
+                ? v.type === 1
+                  ? 'try'
+                  : 'u_paid'
+                : v.type === 1
+                ? 'try'
+                : 'c_paid'
+            "
+          >
+            <div
+              class="tag_box"
+              :class="
+                v.version_type === 1
+                  ? v.type === 1
+                    ? 'try'
+                    : 'u_paid'
+                  : v.type === 1
+                  ? 'try'
+                  : 'c_paid'
+              "
+            >
+              {{ v.version_name }}
+            </div>
           </div>
         </div>
         <div v-if="showtime(v.left_time) > 0" class="time fsc">
@@ -18,7 +42,7 @@
             <KzIcon
               href="#icon-riqi"
               size="14px"
-              :color="Number(showtime(v.left_time)) <= 5 && '#FF4736'"
+              :color="showtime(v.left_time) <= 5 ? '#FF4736' : '#000'"
             />
             <div :class="showtime(v.left_time) <= 5 && 'time_tips'">
               剩余{{ showtime(v.left_time) }}天
@@ -55,9 +79,13 @@ import trial_i from '@/assets/images/trial.png'
 import KzEmpty from '@/components/KzEmpty.vue'
 import { companyInstance_api, companySwitch_api } from '@/api/manage/company/companyService'
 import { formatDate } from '@/utils/date'
+import { KzProduct } from '@/utils/config'
+import { errMsg, getProduct } from '@/utils/index'
 import { Clock } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'
+import { useRouter } from 'vue-router'
 import { okMsg } from '@/utils'
+const router = useRouter()
 const totle = ref(100)
 const size = ref(10)
 const page = ref(1)
@@ -83,12 +111,13 @@ const showtime = (time: any) => {
 }
 const sysId = ref(0) //系统ID
 const sysType = ref(0) //1：个人 2：企业
-const proId = ref(0) //1:cms 2:dmp
+const proId = ref(0)
 const goSystem = (id: number, pid: number, type: number) => {
   sysType.value = type
   sysId.value = id
   proId.value = pid
   userSystem()
+  store.setUserCompany()
 }
 const userSystem = async () => {
   const data = {
@@ -97,11 +126,12 @@ const userSystem = async () => {
   }
   const res = await companySwitch_api({ ...data })
   if (res.status === 1) {
-    if (proId.value === 1) {
-      window.open('//' + cmsUrl.value, '_blank')
-    } else if (proId.value === 2) {
-      window.open('//' + dmpUrl, '_blank')
+    if (proId.value) {
+      getProduct(proId.value) &&
+        window.location.replace(`/product/${getProduct(proId.value)}?insid=` + sysId.value)
     }
+  } else {
+    errMsg('操作失败!')
   }
 }
 </script>
@@ -149,12 +179,21 @@ export default { name: 'MyProduct' }
         }
         .tag {
           border-radius: 8px;
-          background-image: linear-gradient(270deg, rgba(252, 87, 72, 1), rgba(255, 149, 0, 1));
+          border: 2px;
           height: 16px;
           line-height: 16px;
           padding: 0 5px;
           position: relative;
           margin-left: 4px;
+          &.c_paid {
+            background-image: linear-gradient(270deg, rgba(252, 87, 72, 1), rgba(255, 149, 0, 1));
+          }
+          &.u_paid {
+            background-image: linear-gradient(270deg, rgba(55, 151, 249, 1), rgba(45, 104, 235, 1));
+          }
+          &.try {
+            background: #909399;
+          }
           &::after {
             content: '';
             position: absolute;
@@ -166,18 +205,39 @@ export default { name: 'MyProduct' }
             top: 1px;
             z-index: 0;
           }
-          div {
+
+          .tag_box {
             font-size: 12px;
             position: relative;
             z-index: 1;
             transform: scale(0.9);
-            background: linear-gradient(270deg, #ff4736 0%, #ff9500 100%);
-            color: transparent;
-            background-clip: text;
-            -webkit-background-clip: text;
-            -moz-background-clip: text;
-            -ms-background-clip: text;
-            -o-background-clip: text;
+            &.c_paid {
+              background: linear-gradient(270deg, #ff4736 0%, #ff9500 100%);
+              color: transparent;
+              background-clip: text;
+              -webkit-background-clip: text;
+              -moz-background-clip: text;
+              -ms-background-clip: text;
+              -o-background-clip: text;
+            }
+            &.u_paid {
+              background: linear-gradient(90deg, #3893fa 0%, #2d68eb 100%);
+              color: transparent;
+              background-clip: text;
+              -webkit-background-clip: text;
+              -moz-background-clip: text;
+              -ms-background-clip: text;
+              -o-background-clip: text;
+            }
+            &.try {
+              background: #909399;
+              color: transparent;
+              background-clip: text;
+              -webkit-background-clip: text;
+              -moz-background-clip: text;
+              -ms-background-clip: text;
+              -o-background-clip: text;
+            }
           }
         }
       }

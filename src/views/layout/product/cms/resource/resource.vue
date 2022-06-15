@@ -18,7 +18,7 @@
             <el-button class="bdc_btn" @click="getList">&emsp;查询&emsp;</el-button>
           </div>
         </div>
-        <el-table :data="resourceList" style="width: 100%">
+        <el-table v-loading="loading" :data="resourceList" style="width: 100%">
           <el-table-column type="selection" width="104" align="center" />
           <el-table-column label="ID">
             <template #default="{ row }">{{ row.id }}</template>
@@ -67,10 +67,10 @@
 import { ref } from 'vue'
 import KzPage from '@/components/KzPage.vue'
 import { formatDate } from '@/utils/date'
-import KzShare from '@/components/KzShare.vue'
+import KzShare from '@/components/cms/KzShare.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
-import KzDown from '@/components/KzDown.vue'
-import { lookImage, getSource } from '@/utils/index'
+import KzDown from '@/components//cms/KzDown.vue'
+import { lookImage } from '@/utils/index'
 import { geIndustry_api, getUserCompanyList_api } from '@/api/product/cms/resource'
 const current = ref(1) //人员当前页数
 const size = ref(10) //人员列表每页条数
@@ -78,6 +78,7 @@ const total = ref(0) //人员列表总条数
 const value = ref('')
 const kfShow = ref(false)
 const myDownRef = ref()
+const loading = ref(false)
 const resourceList = ref()
 const options = ref<any>({})
 const getIndustry = async () => {
@@ -86,11 +87,13 @@ const getIndustry = async () => {
 }
 getIndustry()
 const getList = async () => {
+  loading.value = true
   const { status, body } = await getUserCompanyList_api({
     size: size.value,
     industryId: value.value,
     current: current.value,
   })
+  loading.value = false
   if (status === 1) {
     total.value = body.total
     resourceList.value = body.records

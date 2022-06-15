@@ -47,7 +47,7 @@
   </el-table-column>
   <el-table-column v-if="type === 'status_do'" :property="prop" :label="lable" :min-width="width">
     <template #default="{ row }">
-      <div class="facc">
+      <div class="dfc">
         <div class="status_dot" :class="getKzStatus(row.status).className"></div>
         <div>
           {{ getKzStatus(row.status).text }}
@@ -301,5 +301,13 @@ const getCountry = (val: any) => {
 img {
   width: 75px;
   height: 42px;
+}
+video {
+  width: 75px;
+  height: 42px;
+}
+.dfc {
+  display: flex;
+  align-items: center;
 }
 </style>

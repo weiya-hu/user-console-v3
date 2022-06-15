@@ -17,8 +17,8 @@
             :prop="item.prop"
           />
           <el-table-column width="180" label="操作">
-            <template #default>
-              <div><el-link>删除</el-link></div>
+            <template #default="{ row }">
+              <div><el-link type="primary" @click="del(row.id)">删除</el-link></div>
             </template>
           </el-table-column>
           <template #empty>
@@ -27,28 +27,59 @@
         </el-table>
       </div>
       <KzPage v-model:page="current" v-model:size="size" :total="total" />
+      <KzDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="delImags" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import KzDataTable from '@/components/KzDataTable.vue'
+import { useRoute } from 'vue-router'
+import KzDataTable from '@/components/cms/KzDataTable.vue'
 import KzPage from '@/components/KzPage.vue'
+import KzDialog from '@/components/Kzdialog.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
+import { customDetails_api, customVideoDel_api } from '@/api/product/cms/custom'
 const loading = ref(false)
-const tableList = ref([])
+const tableList = ref<any[]>([])
 const current = ref(1) //人员当前页数
 const size = ref(10) //人员列表每页条数
 const total = ref(0) //人员列表总条数
+const delId = ref()
+const route = useRoute()
+const delShow = ref(false)
+const id = route.query.id as string
 const tableTitle = ref([
   { type: 'select', width: 80, prop: 'select' },
   { type: 'text', lable: 'ID', prop: 'id', width: 150 },
-  { type: 'img', lable: '图片', prop: 'id', width: 150 },
-  { type: 'text', lable: '名称', prop: 'title', width: 140 },
+  { type: 'video', lable: '视频', prop: 'video_url', width: 150 },
+  { type: 'text', lable: '名称', prop: 'name', width: 160 },
   { type: 'date', lable: '创建日期', prop: 'create_time', width: 130 },
-  { type: 'status_do', lable: '状态', prop: 'status', width: 100 },
 ])
+const getList = async () => {
+  const { status, body } = await customDetails_api(
+    {
+      id,
+    },
+    4
+  )
+  if (status === 1) {
+    tableList.value = body.id ? [body] : []
+  }
+}
+getList()
+const del = (id: string) => {
+  delId.value = id
+  delShow.value = true
+}
+const delImags = async () => {
+  const { status } = await customVideoDel_api({ id: delId.value })
+  console.log(delId.value)
+  if (status === 1) {
+    getList()
+    delShow.value = false
+  }
+}
 </script>
 
 <script lang="ts"></script>

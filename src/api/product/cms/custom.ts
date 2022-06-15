@@ -47,3 +47,21 @@ export const customDel_api = (data: { id: string }, type: number): Promise<IRes>
 export const customDetails_api = (data: { id: string }, type: number): Promise<IRes> => {
   return get('cms', `/cms/${getPath(type)}/diy/detail.get`, data)
 }
+/**
+ * @name 删除图片详情
+ */
+export const customImgDel_api = (data: { id: string }): Promise<IRes> => {
+  return post('cms', `/cms/images.del`, data)
+}
+/**
+ * @name 删除海报详情
+ */
+export const customPosterDel_api = (data: { id: string }): Promise<IRes> => {
+  return post('cms', `/cms/posters.del`, data)
+}
+/**
+ * @name 删除视频详情
+ */
+export const customVideoDel_api = (data: { id: string }): Promise<IRes> => {
+  return post('cms', `/cms/videos.del`, data)
+}
