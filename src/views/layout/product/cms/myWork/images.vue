@@ -45,6 +45,11 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column property="user_name" label="创作人" min-width="120">
+          <template #default="{ row }">
+            <div class="els">{{ row.user_name }}</div>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" fixed="right" width="240">
           <template #default="{ row }">
             <div v-if="row.status == 4" class="fcs">
@@ -55,8 +60,10 @@
               <el-link
                 type="primary"
                 @click="
-                  errorMsg = row.fail_reason
-                  errorShow = true
+                  () => {
+                    errorMsg = row.fail_reason
+                    errorShow = true
+                  }
                 "
                 >驳回原因</el-link
               >

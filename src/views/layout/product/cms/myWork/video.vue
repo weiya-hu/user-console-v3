@@ -16,8 +16,8 @@
     <div class="dmp_table">
       <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" />
-        <el-table-column property="id" label="ID" min-width="150" />
-        <el-table-column property="video" label="视频" min-width="150">
+        <el-table-column property="id" label="ID" min-width="120" />
+        <el-table-column property="video" label="视频" min-width="100">
           <template #default="{ row }">
             <video
               :src="row.video_url"
@@ -27,12 +27,12 @@
             />
           </template>
         </el-table-column>
-        <el-table-column property="source_name" label="视频名" min-width="150">
+        <el-table-column property="source_name" label="视频名" min-width="160">
           <template #default="{ row }">
             <div class="els">{{ row.source_name }}</div>
           </template>
         </el-table-column>
-        <el-table-column property="create_time" label="创建日期" min-width="150">
+        <el-table-column property="create_time" label="创建日期" min-width="110">
           <template #default="{ row }">
             <div>{{ formatDate(new Date(row.create_time), 'yyyy-MM-dd') }}</div>
           </template>
@@ -45,6 +45,11 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column property="user_name" label="创作人" min-width="100">
+          <template #default="{ row }">
+            <div class="els">{{ row.user_name }}</div>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" fixed="right" width="240">
           <template #default="{ row }">
             <div v-if="row.status == 4" class="fcs">
@@ -55,8 +60,10 @@
               <el-link
                 type="primary"
                 @click="
-                  errorMsg = row.fail_reason
-                  errorShow = true
+                  () => {
+                    errorMsg = row.fail_reason
+                    errorShow = true
+                  }
                 "
                 >拒绝原因</el-link
               >
@@ -75,7 +82,7 @@
         </template>
       </el-table>
     </div>
-    <MyPage v-model="page" :total="total" @change="changePage" />
+    <KzPage v-model:page="page" v-model:size="size" :total="total" @change="changePage" />
     <MyDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="sureDel" />
     <MyDialog v-model="errorShow" :msg="errorMsg" :title="'拒绝原因'" :btn="1" />
     <el-dialog
@@ -135,7 +142,7 @@
 import { ref } from 'vue'
 import { formatDate } from '@/utils/date'
 import MyEmpty from '@/components/KzEmpty.vue'
-import MyPage from '@/components/KzPage.vue'
+import KzPage from '@/components/KzPage.vue'
 import MyDialog from '@/components/KzDialog.vue'
 import KzUpload from '@/components/KzUpload.vue'
 import { errMsg, okMsg, kzConfirm, getKzMyStatus } from '@/utils/index'
@@ -150,10 +157,11 @@ interface SData {
 }
 const page = ref(1)
 const total = ref(0)
+const size = ref(10)
 const tableData = ref<SData[]>([])
 const getList = async () => {
   const res = await videoList_api({
-    size: 10,
+    size: size.value,
     current: page.value,
   })
   if (res.status == 1) {

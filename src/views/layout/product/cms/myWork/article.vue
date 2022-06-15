@@ -19,8 +19,8 @@
     <div class="dmp_table">
       <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" />
-        <el-table-column property="id" label="ID" width="230" />
-        <el-table-column property="thumb_url" label="封面图片" width="160">
+        <el-table-column property="id" label="ID" min-width="100" />
+        <el-table-column property="thumb_url" label="封面图片" min-width="100">
           <template #default="{ row }">
             <img
               :src="row.thumb_url"
@@ -30,7 +30,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column property="title" label="标题">
+        <el-table-column property="title" label="标题" min-width="160">
           <template #default="{ row }">
             <el-link
               v-if="row.status != 4"
@@ -56,17 +56,22 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column property="create_time" label="创建日期" width="200">
+        <el-table-column property="create_time" label="创建日期" min-width="100">
           <template #default="{ row }">
             <div>{{ formatDate(new Date(row.create_time), 'yyyy-MM-dd') }}</div>
           </template>
         </el-table-column>
-        <el-table-column property="status" label="状态" width="180">
+        <el-table-column property="status" label="状态" min-width="100">
           <template #default="{ row }">
             <div class="fcs">
               <div class="status_dot" :class="getKzMyStatus(row.status).className"></div>
               <div>{{ getKzMyStatus(row.status).text }}</div>
             </div>
+          </template>
+        </el-table-column>
+        <el-table-column property="user_name" label="创作人" min-width="120">
+          <template #default="{ row }">
+            <div class="els">{{ row.user_name }}</div>
           </template>
         </el-table-column>
         <el-table-column label="操作" fixed="right" width="150">

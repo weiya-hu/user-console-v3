@@ -16,8 +16,8 @@
     <div class="dmp_table">
       <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" />
-        <el-table-column property="id" label="ID" width="230" />
-        <el-table-column property="thumb_url" label="海报">
+        <el-table-column property="id" label="ID" min-width="120" />
+        <el-table-column property="thumb_url" label="海报" min-width="100">
           <template #default="{ row }">
             <img
               :src="row.thumb_url"
@@ -27,22 +27,27 @@
             />
           </template>
         </el-table-column>
-        <el-table-column property="source_name" label="海报名" width="250">
+        <el-table-column property="source_name" label="海报名" min-width="160">
           <template #default="{ row }">
             <div class="els">{{ row.source_name }}</div>
           </template>
         </el-table-column>
-        <el-table-column property="create_time" label="创建日期" width="200">
+        <el-table-column property="create_time" label="创建日期" min-width="110">
           <template #default="{ row }">
             <div>{{ formatDate(new Date(row.create_time), 'yyyy-MM-dd') }}</div>
           </template>
         </el-table-column>
-        <el-table-column property="status" label="状态" width="180">
+        <el-table-column property="status" label="状态" min-width="100">
           <template #default="{ row }">
             <div class="fcs">
               <div class="status_dot" :class="getKzMyStatus(row.status).className"></div>
               <div>{{ getKzMyStatus(row.status).text }}</div>
             </div>
+          </template>
+        </el-table-column>
+        <el-table-column property="user_name" label="创作人" min-width="120">
+          <template #default="{ row }">
+            <div class="els">{{ row.user_name }}</div>
           </template>
         </el-table-column>
         <el-table-column label="操作" fixed="right" width="240">
@@ -55,8 +60,10 @@
               <el-link
                 type="primary"
                 @click="
-                  errorMsg = row.fail_reason
-                  errorShow = true
+                  () => {
+                    errorMsg = row.fail_reason
+                    errorShow = true
+                  }
                 "
                 >拒绝原因</el-link
               >
