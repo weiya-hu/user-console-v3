@@ -60,7 +60,7 @@
         </div>
         <div class="layout_top_rt fcs f1 fjend">
           <div class="top_links fcs">
-            <el-button class="mr20" @click="showDemo">上传demo</el-button>
+            <!-- <el-button class="mr20" @click="showDemo">上传demo</el-button> -->
             <el-link class="mr20" @click="$router.push('/console')">控制台</el-link>
             <el-link :href="'//' + yxtUrl.offical" target="_blank">官网</el-link>
           </div>
@@ -521,11 +521,11 @@ const hasInsPower = (nowRoute: RouteLocationNormalizedLoaded) => {
     }
     if (!nowInsPowerList.value.includes(nowRoute.meta.insPower)) {
       noInsPower.value = true
-      ElMessageBox.alert('当前身份/版本无此权限。', '温馨提示', {
-        confirmButtonText: '关闭',
-        type: 'error',
-        callback: () => null,
-      })
+      // ElMessageBox.alert('当前身份/版本无此权限。', '温馨提示', {
+      //   confirmButtonText: '关闭',
+      //   type: 'error',
+      //   callback: () => null,
+      // })
       return
     }
     noInsPower.value = false
@@ -627,7 +627,7 @@ onBeforeRouteUpdate((to, from) => {
         },
       }
     }
-    hasInsPower(to)
+    // hasInsPower(to)
   }
 
   leftNavRef.value.getSecNav(to.meta.father || to.path)
@@ -643,6 +643,10 @@ onBeforeRouteUpdate((to, from) => {
     // 兄弟列表切换 或者 详情进入非父级列表
     store.setKeepList([])
   }
+})
+
+router.afterEach((to) => {
+  hasInsPower(to)
 })
 
 onMounted(() => {
