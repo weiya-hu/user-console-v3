@@ -15,10 +15,12 @@
 
     <div class="dmp_table">
       <el-table
+        ref="tableRef"
         v-loading="loading"
         :data="tableList"
         size="large"
         row-class-name="my-data-table-row"
+        @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="50" />
         <el-table-column property="id" label="序号" />
@@ -59,9 +61,9 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column v-if="ctypeArr.length" property="company_type" label="企业类型">
+        <el-table-column property="company_type" label="企业类型">
           <template #default="scope">
-            <div>{{ ctypeArr.find((v) => v.id == scope.row.company_type)?.name }}</div>
+            <div>{{ ctypeArr.find((v) => v.id === scope.row.company_type)?.name }}</div>
           </template>
         </el-table-column>
         <el-table-column property="code" label="统一社会信用代码" />
@@ -105,9 +107,9 @@ const store = mainStore()
 const addressHash = computed(() => store.state.addressHash)
 const typeHash = computed(() => store.state.typeHash)
 const ctypeArr = computed(() => store.state.companyType)
+
 const route = useRoute()
 const id = route.query.id
-
 const tableList = ref([])
 const totle = ref(0)
 const size = ref(10)

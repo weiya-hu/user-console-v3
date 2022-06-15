@@ -2,7 +2,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 
 import emiter from '@/utils/bus'
 
-import { KZ_STATUS, KZ_MY_STATUS, KZ_COM_STATUS, sourceObj } from '@/utils/config'
+import { KZ_STATUS, KZ_MY_STATUS, KZ_COM_STATUS, sourceObj, KzProduct } from '@/utils/config'
 
 export const getUrlParams = (search: string, name: string) => {
   //search方式跳转获取参数
@@ -215,6 +215,19 @@ export function getSource(source: number) {
     return '---'
   }
   return '---'
+}
+/**
+ * 获取产品名称
+ */
+export function getProduct(id: number) {
+  try {
+    if (KzProduct[id as keyof typeof KzProduct]) {
+      return KzProduct[id as keyof typeof KzProduct]
+    }
+  } catch (error) {
+    return ''
+  }
+  return ''
 }
 
 export const telReg = new RegExp(
