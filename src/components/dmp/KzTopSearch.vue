@@ -133,7 +133,7 @@
  * @author chn
  */
 import { CloseBold, ArrowDown } from '@element-plus/icons-vue'
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import type { ElForm } from 'element-plus'
 import { conditionsList_api, subConditions_api, delConditions_api } from '@/api/product/dmp/findB'
 import KzCascader from '@/components/KzCascader.vue'
@@ -171,12 +171,8 @@ type HeightSearchForm = {
   // conditions_name:'',//	条件组名称 输入
 }
 
-const ctypeArr = ref<CAndC[]>([])
-const contactArr = ref<CAndC[]>([])
-store.getCAndC().then((body) => {
-  ctypeArr.value = body.c_type
-  contactArr.value = body.contact
-})
+const ctypeArr = computed(() => store.state.companyType)
+const contactArr = computed(() => store.state.contactList)
 
 const form = reactive<HeightSearchForm>({
   // mobile:'', //手机号 位运算
@@ -311,7 +307,7 @@ const changeDrop = (v: any) => {
   // form.industry_id = v.industry_id
   form.industry_id = v.industry_id.split(',')
   form.business_scope = v.business_scope
-  ctypeArr.value.forEach((value: CAndC) => {
+  ctypeArr.value.forEach((value) => {
     v.company_type & value.value && form.ctype.push(value.value)
   })
   changeLables()

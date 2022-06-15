@@ -97,7 +97,7 @@
         </template>
       </el-table>
     </div>
-    <KzPage v-model:page="page" :total="total"  v-model:size="size" @change="changePage" />
+    <KzPage v-model:page="page" v-model:size="size" :total="total" @change="changePage" />
     <KzDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="sureDel" />
     <KzDialog v-model="errorShow" :msg="errorMsg" :title="'拒绝原因'" :btn="1" />
     <el-image-viewer

@@ -3,10 +3,7 @@
     <div class="article_top flexb">
       <div>图片库</div>
       <div>
-        <el-button
-          type="primary"
-          class="add_need_btn"
-          @click="addShow=true"
+        <el-button type="primary" class="add_need_btn" @click="addShow = true"
           ><KzIconVue
             href="#icon-tianjia"
             size="14px"
@@ -17,46 +14,54 @@
       </div>
     </div>
     <div class="dmp_table">
-      <el-table
-        :data="tableData"
-        style="width: 100%"
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column type="selection" width="50"/>
-        <el-table-column property="id" label="ID" min-width="150"/>
+      <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="50" />
+        <el-table-column property="id" label="ID" min-width="150" />
         <el-table-column property="video" label="视频" min-width="150">
-          <template #default="{row}">
-            <video :src="row.video_url" alt="" class="firstimg lookhover" @click="look(row.video_url)"/>
+          <template #default="{ row }">
+            <video
+              :src="row.video_url"
+              alt=""
+              class="firstimg lookhover"
+              @click="look(row.video_url)"
+            />
           </template>
         </el-table-column>
         <el-table-column property="source_name" label="视频名" min-width="150">
-          <template #default="{row}">
-            <div class="els">{{row.source_name}}</div>
+          <template #default="{ row }">
+            <div class="els">{{ row.source_name }}</div>
           </template>
         </el-table-column>
         <el-table-column property="create_time" label="创建日期" min-width="150">
-          <template #default="{row}">
-            <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
+          <template #default="{ row }">
+            <div>{{ formatDate(new Date(row.create_time), 'yyyy-MM-dd') }}</div>
           </template>
         </el-table-column>
         <el-table-column property="status" label="状态" min-width="120">
-          <template #default="{row}">
+          <template #default="{ row }">
             <div class="fcs">
               <div class="status_dot" :class="getKzMyStatus(row.status).className"></div>
-              <div>{{getKzMyStatus(row.status).text}}</div>
+              <div>{{ getKzMyStatus(row.status).text }}</div>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="操作" fixed="right" width="240">
-          <template #default="{row}">
-            <div class="fcs" v-if="row.status == 4">
+          <template #default="{ row }">
+            <div v-if="row.status == 4" class="fcs">
               <el-link type="primary" @click="showEdit(row.id, row.source_name)">修改名称</el-link>
               <div class="line"></div>
               <el-link type="primary" @click="goDel(row.id)">删除</el-link>
               <div class="line"></div>
-              <el-link type="primary" @click="errorMsg = row.fail_reason;errorShow=true">拒绝原因</el-link>
+              <el-link
+                type="primary"
+                @click="
+                  errorMsg = row.fail_reason
+                  errorShow = true
+                "
+                >拒绝原因</el-link
+              >
             </div>
-            <div class="fcs" v-else>
+            <div v-else class="fcs">
               <el-link type="primary" @click="showEdit(row.id, row.source_name)">修改名称</el-link>
               <div class="line"></div>
               <el-link type="primary" @click="goDel(row.id)">删除</el-link>
@@ -66,106 +71,122 @@
           </template>
         </el-table-column>
         <template #empty>
-          <MyEmpty/>
+          <MyEmpty />
         </template>
       </el-table>
     </div>
-    <MyPage :total="total" v-model="page" @change="changePage"/>
-    <MyDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="sureDel"/>
-    <MyDialog v-model="errorShow" :msg="errorMsg" :title="'拒绝原因'" :btn="1"/>
-    <el-dialog v-model="addShow" title="上传视频" width="400px" @close="close" custom-class="upimgs" :before-close="beforeCloseAdd">
+    <MyPage v-model="page" :total="total" @change="changePage" />
+    <MyDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="sureDel" />
+    <MyDialog v-model="errorShow" :msg="errorMsg" :title="'拒绝原因'" :btn="1" />
+    <el-dialog
+      v-model="addShow"
+      title="上传视频"
+      width="400px"
+      custom-class="upimgs"
+      :before-close="beforeCloseAdd"
+      @close="close"
+    >
       <div v-loading="loading" class="add_img_content">
         <KzUpload
-          type="video"
-          v-model="fileUrls"
-          :maxSize="200"
-          @error="upError"
-          @success="upSuccess" 
-          @change="upChange"
-          :exnameList="exnameList"
-          :msg="'视频尺寸：宽高16:9或9:16；<br/>不超过200M；<br/>支持'+exnameList.join('、')+'格式'"
           ref="upload"
+          v-model="fileUrls"
+          type="video"
+          :max-size="200"
+          :exname-list="exnameList"
+          :msg="
+            '视频尺寸：宽高16:9或9:16；<br/>不超过200M；<br/>支持' + exnameList.join('、') + '格式'
+          "
           site="cms_video"
+          @error="upError"
+          @success="upSuccess"
+          @change="upChange"
         />
         <div class="fcs btns fjend">
           <el-button @click="close">取消</el-button>
-          <el-button v-if="upload" type="primary" @click="goSubmit" :disabled="!fileUrls">提交</el-button>
+          <el-button v-if="upload" type="primary" :disabled="!fileUrls" @click="goSubmit"
+            >提交</el-button
+          >
         </div>
       </div>
     </el-dialog>
     <el-dialog v-model="editShow" title="修改名称" width="380px">
       <el-form>
         <el-form-item label="输入名称">
-          <el-input v-model="editName" placeholder="请输入名称"/>
+          <el-input v-model="editName" placeholder="请输入名称" />
         </el-form-item>
       </el-form>
       <div class="flex fjend">
         <el-button type="primary" :disabled="!editName" @click="sureEdit">确定</el-button>
       </div>
     </el-dialog>
-    <el-dialog v-model="lookShow" title="查看视频" fullscreen @close="lookVideo = ''" custom-class="videobox">
+    <el-dialog
+      v-model="lookShow"
+      title="查看视频"
+      fullscreen
+      custom-class="videobox"
+      @close="lookVideo = ''"
+    >
       <video :src="lookVideo" controls class="show_video"></video>
     </el-dialog>
-
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { formatDate } from '@/utils/date'
-import MyEmpty from "@/components/KzEmpty.vue";
-import MyPage from "@/components/KzPage.vue";
-import MyDialog from "@/components/KzDialog.vue";
-import KzUpload from "@/components/KzUpload.vue";
-import { errMsg ,okMsg ,kzConfirm, getKzMyStatus } from '@/utils/index'
+import MyEmpty from '@/components/KzEmpty.vue'
+import MyPage from '@/components/KzPage.vue'
+import MyDialog from '@/components/KzDialog.vue'
+import KzUpload from '@/components/KzUpload.vue'
+import { errMsg, okMsg, kzConfirm, getKzMyStatus } from '@/utils/index'
 import { videoList_api, videoAdd_api, videoDel_api, videoEdit_api } from '@/api/product/cms/myWork'
 
 interface SData {
-  id: number|string,
-  video_url:string,
-  create_time:number,
-  status:number,
-  fail_reason?:string,
+  id: number | string
+  video_url: string
+  create_time: number
+  status: number
+  fail_reason?: string
 }
 const page = ref(1)
 const total = ref(0)
 const tableData = ref<SData[]>([])
-const getList =async ()=>{
+const getList = async () => {
   const res = await videoList_api({
     size: 10,
-    current: page.value
+    current: page.value,
   })
-  if(res.status == 1){
+  if (res.status == 1) {
     tableData.value = res.body.records
     total.value = res.body.total
   }
 }
 getList()
-const changePage =()=>{
+const changePage = () => {
   getList()
 }
 const multipleSelection = ref<SData[]>([])
-const handleSelectionChange = (val:SData[]) => {
+const handleSelectionChange = (val: SData[]) => {
   //表格选择
   multipleSelection.value = val
 }
 
 const delId = ref('')
 const delShow = ref(false)
-const goDel = (id:string)=>{
+const goDel = (id: string) => {
   //删除
   delId.value = id
   delShow.value = true
 }
-const sureDel = async ()=>{
+const sureDel = async () => {
   //确认删除
-  const res = await videoDel_api({id:delId.value})
+  const res = await videoDel_api({ id: delId.value })
   res.status == 1 && getList()
   delShow.value = false
 }
 const lookShow = ref(false)
 const lookVideo = ref('')
-const look = (url:string)=>{
+const look = (url: string) => {
   // window.open(url)
   lookVideo.value = url
   lookShow.value = true
@@ -177,58 +198,59 @@ const errorMsg = ref('')
 const addShow = ref(false)
 const loading = ref(false)
 const exnameList = ['.mp4']
-const upload = ref()//上传组件ref
-const close = ()=>{
+const upload = ref() //上传组件ref
+const close = () => {
   fileUrls.value = ''
   upload.value.clear()
   addShow.value = false
   loading.value = false
 }
 
-const goSubmit = ()=>{
+const goSubmit = () => {
   loading.value = true
   upload.value.submit()
 }
 
 const fileUrls = ref('')
-const upChange = (errorType:string)=>{
+const upChange = (errorType: string) => {
   //上传组件状态改变时
-  console.log(errorType);
+  console.log(errorType)
 }
-const upSuccess = async (videoUrl:string)=>{
+const upSuccess = async (videoUrl: string) => {
   //上传成功
-  
+
   const suffix = fileUrls.value.split('.').pop()
-  const fxname = fileUrls.value.substring(0, fileUrls.value.indexOf(suffix as string)-1) // 文件名
-  const res = await videoAdd_api({ thumb_url:videoUrl, source_name:fxname})
-  if(res.status == 1){
+  const fxname = fileUrls.value.substring(0, fileUrls.value.indexOf(suffix as string) - 1) // 文件名
+  const res = await videoAdd_api({ thumb_url: videoUrl, source_name: fxname })
+  if (res.status == 1) {
     okMsg('上传成功')
     close()
     getList()
   }
 }
-const upError = (err:string)=>{
+const upError = (err: string) => {
   //上传失败时
-  errMsg(err,0)
+  errMsg(err, 0)
   loading.value = false
 }
 
-const beforeCloseAdd = (done:Function)=>{
-  if(loading.value){
-    kzConfirm().then(() => {
-      upload.value.doAbort()
-      done()
-    })
-    .catch(() => {})
-  }else{
+const beforeCloseAdd = (done: Function) => {
+  if (loading.value) {
+    kzConfirm()
+      .then(() => {
+        upload.value.doAbort()
+        done()
+      })
+      .catch(() => {})
+  } else {
     done()
   }
 }
 
 const editShow = ref(false)
-const editId = ref<number|string>('')
+const editId = ref<number | string>('')
 const editName = ref('')
-const showEdit = (id:number|string, name:string) => {
+const showEdit = (id: number | string, name: string) => {
   editId.value = id
   editName.value = name
   editShow.value = true
@@ -236,9 +258,9 @@ const showEdit = (id:number|string, name:string) => {
 const sureEdit = async () => {
   const { status } = await videoEdit_api({
     id: editId.value,
-    source_name: editName.value
+    source_name: editName.value,
   })
-  if(status == 1){
+  if (status == 1) {
     editShow.value = false
     getList()
   }
@@ -246,11 +268,11 @@ const sureEdit = async () => {
 </script>
 
 <script lang="ts">
-export default { name:'我的作品库-视频库' }
+export default { name: '我的作品库-视频库' }
 </script>
 
 <style scoped lang="scss">
-.m_video{
+.m_video {
   background: #ffffff;
   padding: 20px 24px;
   border-radius: 8px;
@@ -270,41 +292,40 @@ export default { name:'我的作品库-视频库' }
       }
     }
   }
-  .firstimg{
+  .firstimg {
     width: 48px;
     height: 48px;
     border-radius: 4px;
   }
 }
-.upimgs{
-  
-  .tips{
-    color:$color999;
+.upimgs {
+  .tips {
+    color: $color999;
     font-size: 12px;
     line-height: 20px;
     margin-bottom: 20px;
   }
-  .btns{
+  .btns {
     margin-top: 20px;
   }
 }
-.pimg{
+.pimg {
   width: 100%;
   height: 100%;
 }
-:deep(.videobox){
-  .el-dialog__body{
+:deep(.videobox) {
+  .el-dialog__body {
     padding: 0;
     height: calc(100% - 55px);
   }
 }
-.add_img_content{
+.add_img_content {
   padding-bottom: 20px;
-  :deep(.el-upload-dragger){
+  :deep(.el-upload-dragger) {
     padding: 0;
   }
 }
-.show_video{
+.show_video {
   width: 100%;
   height: 100%;
 }

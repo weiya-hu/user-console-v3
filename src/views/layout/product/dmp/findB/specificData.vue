@@ -110,7 +110,6 @@
       <el-form
         ref="addFormRef"
         v-loading="upLoading"
-        class="myform"
         :model="addForm"
         :rules="addRules"
         label-width="80px"
@@ -147,7 +146,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <div class="fcs btns fjend">
+        <div class="fcs fjend">
           <el-button @click="closeAdd">取消</el-button>
           <el-button type="primary" @click="submitAddForm(addFormRef)">提交</el-button>
         </div>

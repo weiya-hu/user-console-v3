@@ -30,9 +30,8 @@ getData()
 
 <style scoped lang="scss">
 .article_details {
-  
   .content {
-    background: #FFFFFF;
+    background: #ffffff;
     border-radius: 8px;
     padding: 32px 50px;
     .title {
@@ -43,11 +42,11 @@ getData()
       font-weight: 600;
       margin-bottom: 20px;
     }
-    .article_content{
-      :deep(p){
+    .article_content {
+      :deep(p) {
         font-size: 14px;
         color: #606266;
-      }      
+      }
     }
   }
 }

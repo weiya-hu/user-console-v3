@@ -1,29 +1,25 @@
 <template>
   <div v-loading="loading" class="kz_card teldata_details_c dmp_page">
-    <div class="fsc f1">
-      <KzDmpTitle :total="totle" class="pt20 pb20 ml16" />
-      <div class="btns">
-        <KzTopBtns
-          ref="topBtnRef"
-          type="sync"
-          syncbtn
-          :sync-api="getSyncInfo_api"
-          :sync-disabled="syncDisabled"
-          class="topbtns mr20"
-          @sync="setSync"
-        />
-      </div>
+    <div class="fsc mb20">
+      <KzDmpTitle :total="totle" />
+      <KzTopBtns
+        ref="topBtnRef"
+        type="sync"
+        syncbtn
+        :sync-api="getSyncInfo_api"
+        :sync-disabled="syncDisabled"
+        @sync="setSync"
+      />
     </div>
 
     <div class="dmp_table">
       <el-table
-        v-loading="loading"
+        ref="tableRef"
         :data="tableData"
-        size="large"
-        row-class-name="my-data-table-row"
+        height="100%"
+        @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="50" />
-
+        <el-table-column type="selection" width="50" fixed="left" />
         <el-table-column property="mobiles" label="联系方式" />
         <el-table-column property="address" label="归属地">
           <template #default="scope">
@@ -63,10 +59,10 @@ import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
 import { formatDate } from '@/utils/date'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
+import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
 import { getHashStr, strToArr, getSource } from '@/utils/index'
 import { mainStore } from '@/store/index'
 import { useRoute } from 'vue-router'
-
 import { getInsetUserList_api, setSync_api, getSyncInfo_api } from '@/api/product/dmp/findC'
 
 const store = mainStore()
@@ -136,20 +132,8 @@ const setSync = async () => {
 <style scoped lang="scss">
 .teldata_details_c {
   height: 100%;
-  .tips {
-    margin: 0px 0 24px 24px;
-    font-size: 14px;
-    color: #363636;
-    display: inline-block;
-    span {
-      color: #e40000;
-    }
-  }
-  .btns {
-    margin-right: 24px;
-  }
-  .mytable {
-    height: calc(100% - 126px);
+  .dmp_table {
+    height: calc(100% - 120px);
   }
 }
 </style>

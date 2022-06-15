@@ -422,7 +422,7 @@ body .el-dialog {
   html,
   body {
     min-width: 1440px;
-    overflow: hidden;
+    overflow-y: hidden;
   }
 }
 @media screen and (max-width: 750px) {

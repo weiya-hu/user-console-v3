@@ -209,13 +209,13 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/findc/kzdata',
                     name: 'CKzData',
                     component: () => import('@/views/layout/product/dmp/findC/kzData.vue'),
-                    meta: { title: '康州数据源', insPower: insPowerHash.dmp_c_kz },
+                    meta: { title: '康州数据源', scroll: true, insPower: insPowerHash.dmp_c_kz },
                   },
                   {
                     path: '/product/dmp/findc/otherdata',
                     name: 'COtherData',
                     component: () => import('@/views/layout/product/dmp/findC/otherData.vue'),
-                    meta: { title: '第三方数据源', insPower: insPowerHash.dmp_c_dsf },
+                    meta: { title: '第三方数据源', scroll: true, insPower: insPowerHash.dmp_c_dsf },
                   },
                   {
                     path: '/product/dmp/findc/teldata',
@@ -229,6 +229,7 @@ export const routes: RouteRecordRaw[] = [
                     component: () => import('@/views/layout/product/dmp/findC/telDataDetails.vue'),
                     meta: {
                       title: '号码段获客详细页',
+                      scroll: true,
                       father: '/product/dmp/findc/teldata',
                       insPower: insPowerHash.dmp_c_number,
                     },

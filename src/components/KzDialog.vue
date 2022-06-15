@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="show"
-    :width="width ? width : type === 'kf' ? '280px' : '430px'"
+    :width="width ? width : type === 'kf' ? '330px' : '430px'"
     :show-close="!type"
     :custom-class="type ? 'no_header_dialog' : 'kz_dialog'"
     @close="close"
@@ -14,6 +14,10 @@
         <div v-if="type === 'kf'" class="fcc fc">
           <img :src="kf_code_i" alt="" />
           <div class="tip">请扫描上方二维码，联系客服人员</div>
+          <div class="kf_tel fcc">
+            <img :src="kzkf_i" alt="" />
+            <div>客服热线：023-62797926</div>
+          </div>
         </div>
         <div v-else class="fcs msg">{{ msg }}</div>
       </slot>
@@ -41,6 +45,7 @@
  * @author chn
  */
 import kf_code_i from '@/assets/images/kf_code.png'
+import kzkf_i from '@/assets/images/kzkf.png'
 import { computed } from 'vue'
 const props = withDefaults(
   defineProps<{
@@ -99,6 +104,17 @@ const sure = () => {
   .long_btn {
     .el-button {
       width: 160px;
+    }
+  }
+  .kf_tel {
+    font-size: 20px;
+    border-top: 1px dashed #ddd;
+    margin-top: 24px;
+    padding-top: 30px;
+    img {
+      width: 30px;
+      height: 30px;
+      margin-right: 12px;
     }
   }
 }

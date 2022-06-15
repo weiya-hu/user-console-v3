@@ -30,13 +30,16 @@ export const mainStore = defineStore('mainStore', () => {
     memberList: [] as IStoreObj[], // 会员等级列表  [银牌会员。。。]
     userCompany: {} as IStoreObj, // 用户个人/企业列表
     nowUserIdentity: {} as IStoreObj, // 当前用户身份
-    insListInfo: {} as { [x: string]: { insid: number; name: string; product_id: number }[] }, // 当前用户当前身份下可用实例 { dmp: [...], cms: [...] }
+    insListInfo: {} as {
+      [x: string]: { insid: number; name: string; product_id: number; valid: 0 | 1 }[]
+    }, // 当前用户当前身份下可用实例 { dmp: [...], cms: [...] }
     insPowerListInfo: {} as any, // 用户全部实例权限列表 键为insid，值为对应的权限字符数组
     typeList: [] as IStoreObj[], // 行业分类
     typeHash: {} as IStoreObj, // 行业分类哈希表
     addressList: [] as IStoreObj[], // 地区列表
     addressHash: {} as IStoreObj, // 地区列表哈希表
     companyType: [] as IStoreObj[], // 企业类型
+    contactList: [] as IStoreObj[], // 联系方式列表
     countryList: [] as IStoreObj[], // 国家列表
     keepList: [] as string[], // 需要缓存的路由组件列表，须要在组件文件中设置name属性，并且name必须和组件对应的路由的name一致，路由的meta属性中也必须添加keepAlive:true,下级路由的meta中也要加入father字段为需要缓存的路由的path
     userPower: [] as string[], // 用户权限数组，现仅用于是否企业管理员（能否进入企业管理页面）判断
@@ -115,6 +118,7 @@ export const mainStore = defineStore('mainStore', () => {
     const res = await getCAndC_api()
     if (res.status == 1) {
       state.companyType = res.body.c_type
+      state.contactList = res.body.contact
       return res.body
     }
   }

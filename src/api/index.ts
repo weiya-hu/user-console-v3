@@ -32,14 +32,14 @@ export const getYxtUrl_api = (): Promise<IRes> => {
  * @name 获取联系方式列表与企业类型列表
  */
 export const getCAndC_api = (): Promise<IRes> => {
-  return get('dmp', '/dmp/business/condition/check.list')
+  return get('dmp', '/public/condition/check.list')
 }
 
 /**
  * @name 获取国家名称
  */
 export const getCountryList_api = (): Promise<IRes> => {
-  return get('dmp', '/dmp/overseas/country.list')
+  return get('dmp', '/public/country.list')
 }
 
 /**

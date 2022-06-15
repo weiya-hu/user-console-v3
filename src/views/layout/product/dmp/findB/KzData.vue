@@ -1,9 +1,9 @@
 <template>
-  <el-scrollbar v-loading="loading" height="100%" class="kzdata_page" :noresize="true">
+  <el-scrollbar v-loading="loading" height="100%" class="dmp_b_kzdata_page" :noresize="true">
     <el-collapse-transition>
       <KzTopSearch v-show="topSearchShow" @search="heightSearch" @close="topSearchShow = false" />
     </el-collapse-transition>
-    <div class="kz_card kzdata_page_content">
+    <div class="dmp_b_kzdata_content kz_card dmp_page">
       <div class="fsc mb20">
         <KzDmpTitle :total="total" />
         <div class="fcs">
@@ -181,14 +181,12 @@ const setSync = async () => {
 </script>
 
 <style scoped lang="scss">
-.kzdata_page {
-  height: 100%;
+.dmp_b_kzdata_page {
   :deep(.el-scrollbar__view) {
     height: 100%;
   }
-  .kzdata_page_content {
+  .dmp_b_kzdata_content {
     height: 100%;
-    padding: 20px 24px;
   }
   .word_search {
     :deep(.el-autocomplete) {

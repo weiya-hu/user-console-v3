@@ -202,7 +202,8 @@ const submit = debounce(() => {
           message(res.message)
           router.push('/salon')
         })()
-      !res.status &&(async () => {
+      !res.status &&
+        (async () => {
           if (res.errno === 10200) {
             const forceRes = await loginForceDo_api()
             forceRes.status && router.push('/salon')

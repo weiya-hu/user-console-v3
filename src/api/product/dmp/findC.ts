@@ -11,14 +11,14 @@ export const getSearchWord_api = (): Promise<IRes> => {
  * @name 获取学历列表
  */
 export const getEducationList_api = (): Promise<IRes> => {
-  return get('dmp', '/dmp/customer/education.list')
+  return get('dmp', '/public/education.list')
 }
 
 /**
  * @name 条件组搜索
  */
 export const getUserPageList_api = (data: IPageParams): Promise<IRes> => {
-  return post('dmp', '/dmp/customer/condition/user.page', data, true)
+  return post('dmp', '/dmp/customer/condition/user.page', data)
 }
 
 /**

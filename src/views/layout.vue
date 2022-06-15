@@ -124,12 +124,24 @@
           <KzLeftNav ref="leftNavRef" @change="onChangeLeftNav" />
         </el-col>
         <el-col
+          v-if="$route.path.includes('/product/') && (!$route.query.insid || noInsPower)"
+          class="layout_content"
+        >
+          <el-scrollbar :noresize="true">
+            <KzIntroduction
+              :product="nowProduct"
+              :type="noInsPower ? 3 : insList && insList.length ? 2 : 1"
+            />
+          </el-scrollbar>
+        </el-col>
+        <el-col
+          v-else
           class="layout_content"
           :class="{ layout_details_page: $route.path !== '/console', layout_content_big: isSmall }"
         >
           <div v-if="$route.path !== '/console'" class="fsc layout_content_page_top">
             <KzDetailsHeader ref="detailsHeaderRef" />
-            <div v-if="insListInfo[nowProduct]" class="fcs">
+            <div v-if="cInsList.length" class="fcs">
               <div class="fcs">
                 <img
                   :src="is_company_i"
@@ -139,19 +151,16 @@
                 <div>{{ nowIdentity.name }}</div>
               </div>
               <div class="vline"></div>
-              <el-dropdown v-if="insListInfo[nowProduct].length" @command="changeEdition">
+              <el-dropdown @command="changeEdition">
                 <div class="fcs">
                   <div class="now_edition">
-                    {{
-                      insListInfo[nowProduct].find((v) => v.insid === Number($route.query.insid))
-                        ?.name
-                    }}
+                    {{ cInsList.find((v) => v.insid === Number($route.query.insid))?.name }}
                   </div>
                   <el-icon size="14px"><arrow-down /></el-icon>
                 </div>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item v-for="v in insListInfo[nowProduct]" :key="v" :command="v">
+                    <el-dropdown-item v-for="v in cInsList" :key="v" :command="v">
                       <div
                         class="ins_edition_dot"
                         :class="Number($route.query.insid) === v.insid && 'active'"
@@ -164,41 +173,26 @@
             </div>
           </div>
 
-          <div
-            v-if="$route.meta.scroll"
-            class="layout_content_box"
-            style="height: 100%"
-            :style="{ padding: noIns ? '0px' : '16px' }"
-          >
-            <el-scrollbar v-if="noIns" :noresize="true">
-              <div class="no_ins" style="padding: 16px">
-                <img :src="noInsImg[nowProduct as keyof typeof noInsImg]" alt="" />
-                <el-button type="primary" class="buy_btn">立即购买</el-button>
-              </div>
-            </el-scrollbar>
-            <router-view v-else v-slot="{ Component }">
+          <div v-if="$route.meta.scroll" class="layout_content_box" style="height: 100%">
+            <router-view v-slot="{ Component }">
               <transition name="fade">
                 <component :is="Component" />
               </transition>
             </router-view>
           </div>
           <el-scrollbar v-else wrap-class="layout_content_box" :noresize="true">
-            <div v-if="noIns" class="no_ins">
-              <img :src="noInsImg[nowProduct as keyof typeof noInsImg]" alt="" />
-              <el-button type="primary" class="buy_btn">立即购买</el-button>
-            </div>
-            <router-view v-else v-slot="{ Component }">
+            <router-view v-slot="{ Component }">
               <transition name="fade">
                 <component :is="Component" />
               </transition>
             </router-view>
           </el-scrollbar>
-          <div class="kz_copyright">
-            Copyright © 2022-2023 康洲数智(科技)科技有限公司 | 渝ICP2021012132号-2 | 渝公网安备
-            50010802004553号
-          </div>
         </el-col>
       </el-row>
+      <div class="kz_copyright">
+        Copyright © 2022-2023 康洲数智(科技)科技有限公司 | 渝ICP2021012132号-2 | 渝公网安备
+        50010802004553号
+      </div>
     </template>
     <el-skeleton v-else :rows="5" animated />
 
@@ -218,9 +212,7 @@
       :close-on-click-modal="false"
     >
       <el-radio-group v-model="changeInsid">
-        <el-radio v-for="v in insListInfo[nowProduct]" :key="v.insid" :label="v.insid">{{
-          v.name
-        }}</el-radio>
+        <el-radio v-for="v in cInsList" :key="v.insid" :label="v.insid">{{ v.name }}</el-radio>
       </el-radio-group>
       <template #footer>
         <el-button type="primary" :disabled="!changeInsid" @click="selectIns">确定</el-button>
@@ -312,7 +304,7 @@ import { changeIdentity_api } from '@/api/index'
 import { ElMessageBox } from 'element-plus'
 import { ArrowDown } from '@element-plus/icons-vue'
 import KzDialog from '@/components/KzDialog.vue'
-import { noInsImg } from '@/utils/insPower'
+import KzIntroduction from '@/components/KzIntroduction.vue'
 import is_company_i from '@/assets/images/is_company.svg'
 
 // demo start
@@ -384,6 +376,9 @@ const store = mainStore()
 
 store.getTypeList()
 store.getAddressList()
+
+store.getCAndC()
+store.getCountryList()
 
 store.getYxtUrl()
 const yxtUrl = computed(() => store.state.yxtUrl)
@@ -485,7 +480,9 @@ const handUserBtn = (url: string) => {
   if (url === 'login_out') {
     loginOut_api().then(() => {
       store.setUserinfo(true)
-      router.replace('/login?url=' + encodeURIComponent(window.location.origin + '/console'))
+      window.location.replace(
+        '/login?url=' + encodeURIComponent(window.location.origin + '/console')
+      )
     })
     return
   }
@@ -496,7 +493,7 @@ const handUserBtn = (url: string) => {
 const editionChangeShow = ref(false)
 const editionChangeItme = ref<Record<string, string | number>>({})
 const changeEdition = (value: any) => {
-  if (editionChangeItme.value.insid === value.insid) {
+  if (Number(route.query.insid) === value.insid) {
     return
   }
   editionChangeItme.value = value
@@ -519,66 +516,83 @@ const hasInsPower = (nowRoute: RouteLocationNormalizedLoaded) => {
       () => store.state.insPowerListInfo[nowRoute.query.insid as string]
     )
     if (!nowInsPowerList.value) {
+      noInsPower.value = false
       return
     }
     if (!nowInsPowerList.value.includes(nowRoute.meta.insPower)) {
-      noIns.value = true
+      noInsPower.value = true
       ElMessageBox.alert('当前身份/版本无此权限。', '温馨提示', {
         confirmButtonText: '关闭',
         type: 'error',
         callback: () => null,
       })
+      return
     }
+    noInsPower.value = false
+    return
   }
+  noInsPower.value = false
 }
 store.setInstance().then(() => {
   if (route.path.includes('/product/')) {
     nowProduct.value = route.path.split('/')[2]
-    changeIns()
+    const oneInsid = changeIns(route)
+    if (oneInsid) {
+      router.replace({
+        replace: true,
+        path: route.path,
+        query: {
+          ...route.query,
+          insid: oneInsid,
+        },
+      })
+    }
     hasInsPower(route)
-  } else {
-    noIns.value = false
   }
 })
-const insListInfo = computed(() => store.state.insListInfo)
 const nowProduct = ref('') // 当前产品 'dmp'/'cms'...
+const insListInfo = computed(() => store.state.insListInfo)
+const insList = computed(() => insListInfo.value[nowProduct.value])
+const cInsList = computed(() =>
+  insListInfo.value[nowProduct.value]
+    ? insListInfo.value[nowProduct.value].filter((v) => v.valid === 1)
+    : []
+) // 没过期的实例列表
 const insid = ref('')
-const noIns = ref(true)
-const changeIns = () => {
-  const insList = insListInfo.value[nowProduct.value]
+const noInsPower = ref(false) // 实例没有权限
+
+const changeIns = (nRoute: RouteLocationNormalizedLoaded) => {
   const setIns = () => {
-    if (insList.length > 1) {
-      noIns.value = true
+    if (cInsList.value.length > 1) {
       switchShow.value = true
     } else {
-      window.location.replace(`/product/${nowProduct.value}?insid=` + insList[0].insid)
+      // window.location.replace(`/product/${nowProduct.value}?insid=` + insList[0].insid)
+      // router.replace(`/product/${nowProduct.value}?insid=` + insList[0].insid)
+      insid.value = nRoute.query.insid as string
+      return cInsList.value[0].insid
     }
   }
-  if (!route.query.insid) {
-    if (!insList || !insList.length) {
+  if (!nRoute.query.insid) {
+    if (!cInsList.value || !cInsList.value.length) {
       // 没有实例的情况
-      noIns.value = true
       insid.value = ''
       return
     }
-    noIns.value = false
-
-    setIns()
-  } else {
-    insid.value = route.query.insid as string
-    if (!insList || !insList.length) {
-      // 没有实例的情况
-      noIns.value = true
-      insid.value = ''
-      return
-    }
-    noIns.value = false
-
-    if (insList && insList.findIndex((v) => v.insid === Number(route.query.insid)) === -1) {
-      // 地址栏有insid但是insid错误的情况
-      setIns()
-    }
+    return setIns()
   }
+  if (!cInsList.value || !cInsList.value.length) {
+    // 没有实例的情况
+    insid.value = ''
+    return
+  }
+  if (
+    cInsList.value &&
+    cInsList.value.findIndex((v) => v.insid === Number(nRoute.query.insid)) === -1
+  ) {
+    // 地址栏有insid但是insid错误的情况
+    return setIns()
+  }
+  insid.value = nRoute.query.insid as string
 }
 // 切换实例版本end
 
@@ -586,12 +600,24 @@ const changeIns = () => {
 onBeforeRouteUpdate((to, from) => {
   if (to.path.includes('/product/')) {
     const toPathArr = to.path.split('/')
+    const fromPathArr = from.path.split('/')
     nowProduct.value = toPathArr[2]
-    changeIns()
-    if (toPathArr[2] !== from.path.split('/')[2]) {
+    if (toPathArr[2] !== fromPathArr[2]) {
       // 即类似dmp切换到cms，清空insid
-      noIns.value = true
       insid.value = ''
+    }
+    if (!from.path.includes('/product/') || toPathArr[2] !== fromPathArr[2]) {
+      const oneInsid = changeIns(to)
+      if (oneInsid) {
+        return {
+          replace: true,
+          path: to.path,
+          query: {
+            ...to.query,
+            insid: oneInsid,
+          },
+        }
+      }
     }
     if (insid.value && !to.query.insid) {
       return {
@@ -604,9 +630,6 @@ onBeforeRouteUpdate((to, from) => {
       }
     }
     hasInsPower(to)
-  } else {
-    noIns.value = false
-    nowProduct.value = ''
   }
 
   leftNavRef.value.getSecNav(to.meta.father || to.path)
@@ -623,6 +646,7 @@ onBeforeRouteUpdate((to, from) => {
     store.setKeepList([])
   }
 })
+
 onMounted(() => {
   leftNavRef.value && leftNavRef.value.getSecNav(route.meta.father || route.path)
 })
@@ -697,6 +721,7 @@ emiter.on('lookVideo', (video: string) => {
   }
   .layout_container {
     height: calc(100% - 64px);
+    z-index: 3;
     .layout_nav {
       height: 100%;
       width: 220px;
@@ -717,30 +742,9 @@ emiter.on('lookVideo', (video: string) => {
       transition: max-width var(--el-transition-duration);
       :deep(.layout_content_box) {
         padding: 16px;
-        position: relative;
-        z-index: 11;
-        .no_ins {
-          img {
-            width: 100%;
-          }
-          .buy_btn {
-            z-index: 1;
-            position: fixed;
-            right: 16px;
-            top: 120px;
-          }
-        }
       }
-      .kz_copyright {
-        position: absolute;
-        left: 50%;
-        bottom: 16px;
-        transform: translate(-50%, 0);
-        word-break: keep-all;
-        white-space: nowrap;
-        z-index: 0;
-        font-size: 11px;
-        color: #c0c4cc;
+      :deep(.no_ins_box) {
+        padding: 0;
       }
       &.layout_details_page {
         padding-top: 40px;
@@ -765,6 +769,17 @@ emiter.on('lookVideo', (video: string) => {
         }
       }
     }
+  }
+  .kz_copyright {
+    position: fixed;
+    left: 50%;
+    bottom: 16px;
+    transform: translate(-50%, 0);
+    word-break: keep-all;
+    white-space: nowrap;
+    z-index: 0;
+    font-size: 11px;
+    color: #c0c4cc;
   }
 }
 :deep(.view_videobox) {
