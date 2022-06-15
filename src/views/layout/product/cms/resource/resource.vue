@@ -69,7 +69,7 @@ import KzPage from '@/components/KzPage.vue'
 import { formatDate } from '@/utils/date'
 import KzShare from '@/components/cms/KzShare.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
-import KzDown from '@/components//cms/KzDown.vue'
+import KzDown from '@/components/cms/KzDown.vue'
 import { lookImage } from '@/utils/index'
 import { geIndustry_api, getUserCompanyList_api } from '@/api/product/cms/resource'
 const current = ref(1) //人员当前页数

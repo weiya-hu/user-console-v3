@@ -17,8 +17,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import KzShare from '@/components/KzShare.vue'
-import KzDown from '@/components/KzDown.vue'
+import KzShare from '@/components/cms/KzShare.vue'
+import KzDown from '@/components/cms/KzDown.vue'
 import { getDetail_api } from '@/api/product/cms/resource'
 const route = useRoute()
 const id = route.query.id as string
