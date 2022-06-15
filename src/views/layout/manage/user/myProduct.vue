@@ -74,24 +74,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import trial_i from '@/assets/images/trial.png'
 import KzEmpty from '@/components/KzEmpty.vue'
 import { productList_api, userEnter_api } from '@/api/manage/user/product'
 import { formatDate } from '@/utils/date'
-import { KzProduct } from '@/utils/config'
 import { errMsg, getProduct } from '@/utils/index'
 import { Clock } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'
-import { useRouter } from 'vue-router'
-import { okMsg } from '@/utils'
-const router = useRouter()
-const totle = ref(100)
-const size = ref(10)
-const page = ref(1)
 const store = mainStore()
-const cmsUrl = computed(() => store.state.yxtUrl.cms)
-const dmpUrl = store.state.yxtUrl.dmp
 
 const proList = ref<any>({})
 const productList = async () => {
