@@ -1,18 +1,11 @@
 <template>
-  <div class="kz_card my_buyer_page dmp_page">
-    <div class="fsc f1">
-      <div class="card_title">采购商</div>
-      <el-button type="primary" class="btns" @click="add"
-        ><el-icon size="14px" style="margin-right: 4px"><Plus /></el-icon>上传数据</el-button
-      >
+  <div class="kz_card dmp_page" v-loading="loading">
+     <div class="fsc mb20">
+      <KzDmpTitle />
+      <el-button type="primary" :icon="Plus" @click="addShow = true">新增需求</el-button>
     </div>
     <div class="dmp_table">
-      <el-table
-        v-loading="loading"
-        :data="tableList"
-        size="large"
-        row-class-name="my-data-table-row"
-      >
+      <el-table :data="tableList">
         <el-table-column type="selection" width="50" />
         <el-table-column property="id" label="ID" />
         <el-table-column property="industry_id" label="行业分类">
@@ -52,7 +45,7 @@
               <el-link v-if="row.status === 3" type="primary" @click="reject(row)"
                 >驳回原因</el-link
               >
-              <div class="line"></div>
+              <div v-if="row.status !== 2 && row.status !== 1" class="line"></div>
               <el-link v-if="row.status !== 2" type="primary" @click="deleteBt(row)">删除</el-link>
             </div>
           </template>
@@ -62,7 +55,7 @@
         </template>
       </el-table>
     </div>
-    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
+    <KzPage v-model:page="page" v-model:size="size" :total="total" @change="getList" />
     <el-dialog
       v-model="addShow"
       :width="500"
@@ -143,7 +136,8 @@ import { formatDate } from '@/utils/date'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import KzUpload from '@/components/KzUpload.vue'
-import { getHash, getHashStr, strToArr, getKzStatus } from '@/utils/index'
+import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
+import { getHash, getHashStr, getKzStatus } from '@/utils/index'
 import { mainStore } from '@/store/index'
 import { errMsg } from '@/utils/index'
 import { ElMessageBox } from 'element-plus'
@@ -153,7 +147,7 @@ import { overseasPage, overseasIn, overseasDel } from '@/api/product/dmp/seekAbr
 const store = mainStore()
 const typeHash = computed(() => store.state.typeHash)
 
-const totle = ref(0)
+const total = ref(0)
 const size = ref(10)
 const page = ref(1)
 const router = useRouter()
@@ -260,7 +254,7 @@ const getList = async () => {
   const { status, body } = await overseasPage(data)
   loading.value = false
   if (status) {
-    totle.value = body.total
+    total.value = body.total
     tableList.value = body.records
   }
 }
@@ -357,29 +351,11 @@ const upSuccess = (path?: string) => {
 
 <style scoped lang="scss">
 .my_buyer_page {
-  .btns {
-    margin-right: 24px;
-  }
   .line {
     height: 14px;
     width: 1px;
     margin: 0 16px;
     background-color: $coloreee;
-  }
-  .my_form {
-    .el-dialog .el-dialog__header {
-      border: none;
-    }
-    .el-input {
-      width: 370px;
-    }
-    .el-select--default {
-      width: 370px;
-    }
-
-    :deep(.el-select) {
-      width: 370px;
-    }
   }
 }
 </style>

@@ -416,6 +416,7 @@ export const routes: RouteRecordRaw[] = [
                       import('@/views/layout/product/dmp/seekAbroad/buyerDetails.vue'),
                     meta: {
                       title: '采购商详情',
+                      scroll: true,
                       father: '/product/dmp/seekabroad/buyer',
                       insPower: insPowerHash.dmp_overseas_purchase,
                     },
@@ -433,6 +434,7 @@ export const routes: RouteRecordRaw[] = [
                       import('@/views/layout/product/dmp/seekAbroad/supplierDetails.vue'),
                     meta: {
                       title: '供应商详情',
+                      scroll: true,
                       father: '/product/dmp/seekabroad/supplier',
                       insPower: insPowerHash.dmp_overseas_supplier,
                     },
@@ -458,6 +460,7 @@ export const routes: RouteRecordRaw[] = [
                     component: () => import('@/views/layout/product/dmp/myData/up2bDetails.vue'),
                     meta: {
                       title: '上传2B数据详细页',
+                      scroll: true,
                       father: '/product/dmp/mydata/up2b',
                       insPower: insPowerHash.dmp_data_b,
                     },
@@ -474,6 +477,7 @@ export const routes: RouteRecordRaw[] = [
                     component: () => import('@/views/layout/product/dmp/myData/up2cDetails.vue'),
                     meta: {
                       title: '上传2C数据详细页',
+                      scroll: true,
                       father: '/product/dmp/mydata/up2c',
                       insPower: insPowerHash.dmp_data_c,
                     },

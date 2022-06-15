@@ -1,14 +1,13 @@
 <template>
   <div v-loading="loading" class="kz_card my_up2b_page dmp_page">
-    <div class="fsc f1">
-      <KzDmpTitle :total="totle" class="pt20 pb20 ml16" />
+    <div class="fsc mb20">
+      <KzDmpTitle :total="total"/>
       <KzTopBtns
         ref="topBtnRef"
         type="sync"
         syncbtn
         :sync-api="getSyncInfo_api"
         :sync-disabled="syncDisabled"
-        class="topbtns mr20"
         @sync="setSync"
       />
     </div>
@@ -16,10 +15,8 @@
     <div class="dmp_table">
       <el-table
         ref="tableRef"
-        v-loading="loading"
         :data="tableList"
-        size="large"
-        row-class-name="my-data-table-row"
+        height="100%"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="50" />
@@ -87,7 +84,7 @@
         </template>
       </el-table>
     </div>
-    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getDetailList" />
+    <KzPage v-model:page="page" v-model:size="size" :total="total" @change="getDetailList" />
   </div>
 </template>
 
@@ -95,10 +92,9 @@
 import { ref, computed } from 'vue'
 import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
 import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
-import { formatDate } from '@/utils/date'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
-import { getHash, getHashStr, strToArr } from '@/utils/index'
+import { getHashStr, strToArr } from '@/utils/index'
 import { mainStore } from '@/store/index'
 import { useRoute } from 'vue-router'
 import { upRecordDetail, setSync_api, getSyncInfo_api } from '@/api/product/dmp/myData'
@@ -111,7 +107,7 @@ const ctypeArr = computed(() => store.state.companyType)
 const route = useRoute()
 const id = route.query.id
 const tableList = ref([])
-const totle = ref(0)
+const total = ref(0)
 const size = ref(10)
 const page = ref(1)
 const loading = ref(false)
@@ -126,7 +122,7 @@ const getDetailList = async () => {
   const { status, body } = await upRecordDetail(data)
   loading.value = false
   if (status) {
-    totle.value = body.total
+    total.value = body.total
     tableList.value = body.records
   }
 }
@@ -158,8 +154,9 @@ const setSync = async () => {
 
 <style scoped lang="scss">
 .my_up2b_page {
-  .btns {
-    margin-right: 24px;
+  height: 100%;
+  .dmp_table {
+    height: calc(100% - 120px);
   }
 }
 </style>

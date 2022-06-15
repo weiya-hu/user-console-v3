@@ -1,26 +1,23 @@
 <template>
-  <div class="kz_card my_supplier_page dmp_page">
-    <div class="fsc f1">
-      <div class="card_title">供应商详情</div>
-      <div class="btns">
-        <KzTopBtns
-          ref="topBtnRef"
-          type="sync"
-          syncbtn
-          :sync-api="getSyncInfo_api"
-          :sync-disabled="syncDisabled"
-          class="topbtns mr20"
-          @sync="setSync"
-        />
-      </div>
+  <div class="kz_card my_supplier_page dmp_page" v-loading="loading">
+   <div class="fsc mb20">
+      <KzDmpTitle :total="total"/>
+      <KzTopBtns
+        ref="topBtnRef"
+        type="sync"
+        syncbtn
+        :sync-api="getSyncInfo_api"
+        :sync-disabled="syncDisabled"
+        @sync="setSync"
+      />
     </div>
 
     <div class="dmp_table">
       <el-table
-        v-loading="loading"
+        ref="tableRef"
         :data="tableList"
-        size="large"
-        row-class-name="my-data-table-row"
+        height="100%"
+        @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="50" />
 
@@ -30,7 +27,20 @@
         <el-table-column property="mobiles" label="联系方式" />
         <el-table-column property="email" label="邮箱" />
         <el-table-column property="country_id" label="地区" />
-        <el-table-column property="address" label="公司地址" />
+        <el-table-column property="address" label="公司地址" >
+          <template #default="{ row }">
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div style="width: 100px">
+                  {{ row.address }}
+                </div>
+              </template>
+              <div class="els">
+                {{ row.address }}
+              </div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column property="url" label="企业官网" />
         <el-table-column property="code" label="HS编码" />
         <el-table-column property="product_number" label="数量" />
@@ -48,7 +58,7 @@
         </template>
       </el-table>
     </div>
-    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getDetailList" />
+    <KzPage v-model:page="page" v-model:size="size" :total="total" @change="getDetailList" />
   </div>
 </template>
 
@@ -56,21 +66,15 @@
 import { ref, computed } from 'vue'
 import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
+import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
 import KzPage from '@/components/KzPage.vue'
-import { getHash, getHashStr, strToArr } from '@/utils/index'
-import { mainStore } from '@/store/index'
 import { useRoute } from 'vue-router'
 import { formatDate } from '@/utils/date'
-
 import { overseasDetailPage, setSync_api, getSyncInfo_api } from '@/api/product/dmp/seekAbroad'
 
-const store = mainStore()
-const addressHash = computed(() => store.state.addressHash)
 const route = useRoute()
-const id = route.query.id
-
 const tableList = ref([])
-const totle = ref(0)
+const total = ref(0)
 const size = ref(10)
 const page = ref(1)
 const loading = ref(false)
@@ -85,7 +89,7 @@ const getDetailList = async () => {
   const { status, body } = await overseasDetailPage(data)
   loading.value = false
   if (status) {
-    totle.value = body.total
+    total.value = body.total
     tableList.value = body.records
   }
 }
@@ -116,8 +120,9 @@ const setSync = async () => {
 
 <style scoped lang="scss">
 .my_supplier_page {
-  .btns {
-    margin-right: 24px;
+   height: 100%;
+  .dmp_table {
+    height: calc(100% - 120px);
   }
 }
 </style>
