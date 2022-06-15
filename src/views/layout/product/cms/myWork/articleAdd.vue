@@ -1,17 +1,13 @@
 <template>
   <div class="article_add">
+    
     <div class="addform">
       <div class="fjend btns">
         <el-button @click="submit(1)">&ensp;保存&ensp;</el-button>
         <el-button type="primary" @click="submit(2)">&ensp;提交&ensp;</el-button>
       </div>
       <div v-loading="upLoading" class="form_content">
-        <!-- <div class="tip fcs">
-          <KzIconVue href="&#xe62a;"/>
-          <span
-            >请注意：根据国家相关法律法规要求，切勿发布任何色情、低俗、涉政等违法违规内容。一旦出现，我们将会根据法规进行审核处理。</span
-          >
-        </div> -->
+       
         <el-form ref="aFormRef" :model="aForm" :rules="aRules" size="large" @submit.prevent>
           <el-form-item prop="thumb_url" class="up_cover">
             <div class="up_cover_txt">上传封面</div>
@@ -40,25 +36,28 @@
                     alt=""
                   />
                   <div v-else class="fleximg fc upbox_noimg">
-                    <KzIconVue href="#icon-shangchuan" size="32px" />
-                    <div>把文件拖到此处或<span>点击上传</span></div>
+                    <KzIconVue href="#icon-shangchuan" size="32px"/>
+                    <div>把文件拖到此处，或<span>点击上传</span> </div>
                   </div>
                 </div>
               </el-upload>
               <div class="img_tip flex">仅支持 JPG、PNG 、JPEG等图片格式，大小不超过2M</div>
             </div>
           </el-form-item>
-          <el-form-item label="文章标题" prop="title">
+          <el-form-item prop="title" class="up_cover">
+            <div class="up_cover_txt">文章标题</div>
             <el-input v-model="aForm.title" placeholder="请输入文章标题（5~30个字）"></el-input>
           </el-form-item>
-          <el-form-item label="文章内容" prop="content">
+          <el-form-item prop="content" class="up_cover">
+            <div class="up_cover_txt flexl">文章内容
+              <div class="fcs content_tip">
+                <KzIconVue href="#icon-zhuyi" size='14px'/>
+                <span>请注意：根据国家相关法律法规要求，切勿发布任何色情、低俗、涉政等违法违规内容。一旦出现，我们将会根据法规进行审核处理。</span>
+              </div>
+            </div>
             <KzEdit ref="editRef" v-model="aForm.content" />
           </el-form-item>
         </el-form>
-        <div class="fjend btns">
-          <el-button size="large" @click="submit(1)">&ensp;保存&ensp;</el-button>
-          <el-button size="large" type="primary" @click="submit(2)">&ensp;提交&ensp;</el-button>
-        </div>
       </div>
     </div>
   </div>
@@ -67,12 +66,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-// import tip_i from '@/assets/images/tip.png'
-// import tp_i from '@/assets/images/tp.png'
 import type { UploadFile, UploadProgressEvent } from 'element-plus'
 import KzEdit from '@/components/KzEdit.vue'
 import { errMsg } from '@/utils/index'
-// import { getAliToken_api } from '@/api/login'
+import { getAliToken_api } from '@/api/index'
 import { articleAdd_api, articleDetail_api, articleUpdate_api } from '@/api/product/cms/myWork'
 import { mainStore } from '@/store/index'
 import KzIconVue from '@/components/KzIcon.vue'
@@ -174,7 +171,7 @@ const submitAddForm = async () => {
   upLoading.value = false
   if (res.status == 1) {
     store.setKeepList([])
-    router.replace('/myWork/article')
+    router.back()
   }
 }
 const hostUrl = ref('') //封面图片上传路径
@@ -184,7 +181,8 @@ const submit = async (type: number) => {
   //点击提交
 
   aForm.value.status = type
-  aFormRef.value.validate(async (valid: any) => {
+  aFormRef.value.validate(async (valid: any,fields:any) => {
+    console.log(valid,fields)
     if (valid) {
       console.log('submit!', titleImg.value)
       upLoading.value = true
@@ -193,23 +191,23 @@ const submit = async (type: number) => {
       if (!titleImg.value) {
         submitAddForm()
       }
-      // getAliToken_api({ site: 'cms_article' }).then((res: res) => {
-      //   if (res.status == 1) {
-      //     hostUrl.value = res.body.host
-      //     upData.value = {
-      //       key: res.body.dir + '/' + res.body.uuid + timg_exname.value,
-      //       OSSAccessKeyId: res.body.accessid,
-      //       success_action_status: 200,
-      //       policy: res.body.policy,
-      //       signature: res.body.signature,
-      //     }
-      //     aForm.value.thumb_url =
-      //       res.body.host + '/' + res.body.dir + '/' + res.body.uuid + timg_exname.value
-      //     upload.value!.submit()
-      //   } else {
-      //     errMsg('上传参数获取失败')
-      //   }
-      // })
+      getAliToken_api({ site: 'cms_article' }).then((res: IRes) => {
+        if (res.status === 1) {
+          hostUrl.value = res.body.host
+          upData.value = {
+            key: res.body.dir + '/' + res.body.uuid + timg_exname.value,
+            OSSAccessKeyId: res.body.accessid,
+            success_action_status: 200,
+            policy: res.body.policy,
+            signature: res.body.signature,
+          }
+          aForm.value.thumb_url =
+            res.body.host + '/' + res.body.dir + '/' + res.body.uuid + timg_exname.value
+          upload.value!.submit()
+        } else {
+          errMsg('上传参数获取失败')
+        }
+      })
     } else {
       console.log('error submit!')
       return false
@@ -252,6 +250,16 @@ const submit = async (type: number) => {
             line-height: 16px;
             font-weight: 600;
             margin-bottom: 20px;
+          }
+        }
+        .content_tip{
+          font-size: 12px;
+          color: #909399;
+          line-height: 12px;
+          font-weight: 400;
+          margin-left: 20px;
+          &>span{
+            margin-left: 8px;
           }
         }
       }
@@ -299,9 +307,17 @@ const submit = async (type: number) => {
       &:hover {
         border-color: $dfcolor;
       }
-      .upbox_noimg {
+      .upbox_noimg{
         padding-top: 36px;
-        & > div {
+        &>div{
+          font-size: 12px;
+          color: #909399;
+          line-height: 12px;
+          font-weight: 400;
+          margin-top: 8px;
+          &>span{
+            color: #2D68EB;
+          }
         }
       }
     }

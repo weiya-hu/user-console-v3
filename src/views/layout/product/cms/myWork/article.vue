@@ -3,7 +3,6 @@
     <div class="article_top flexb">
       <div>软文库</div>
       <div>
-        <el-button class="bdc_btn">同步官网</el-button>
         <el-button
           type="primary"
           class="add_need_btn"
@@ -17,7 +16,7 @@
         >
       </div>
     </div>
-    <div class="mytable">
+    <div class="dmp_table">
       <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" />
         <el-table-column property="id" label="ID" width="230" />
@@ -88,7 +87,7 @@
                 >查看</el-link
               >
               <el-link v-if="row.status == 4" type="primary" @click="showError(row.fail_reason)"
-                >拒绝原因</el-link
+                >驳回原因</el-link
               >
             </div>
           </template>
@@ -98,7 +97,7 @@
         </template>
       </el-table>
     </div>
-    <!-- <KzPage v-model="page" :total="total" @change="changePage" /> -->
+    <KzPage v-model:page="page" :total="total"  v-model:size="size" @change="changePage" />
     <KzDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="sureDel" />
     <KzDialog v-model="errorShow" :msg="errorMsg" :title="'拒绝原因'" :btn="1" />
     <el-image-viewer
@@ -129,13 +128,14 @@ interface SData {
 }
 const page = ref(1)
 const total = ref(0)
+const size = ref(10)
 const tableData = ref<SData[]>([])
 const getList = async () => {
   const res = await articleList_api({
-    size: 10,
+    size: size.value,
     current: page.value,
   })
-  if (res.status == 1) {
+  if (res.status === 1) {
     tableData.value = res.body.records
     total.value = res.body.total
   }
@@ -198,6 +198,7 @@ export default { name: '我的作品库-软文' }
 .m_article {
   background: #ffffff;
   padding: 20px 24px;
+  border-radius: 8px;
   .article_top {
     margin-bottom: 20px;
     & > div:nth-child(1) {

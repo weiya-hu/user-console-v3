@@ -1,15 +1,8 @@
 <template>
   <div class="article_details">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/' + path }">{{
-        path == 'myWork' ? '我的作品库' : '个性化内容库'
-      }}</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/' + path + '/article' }">软文</el-breadcrumb-item>
-      <el-breadcrumb-item>软文详情</el-breadcrumb-item>
-    </el-breadcrumb>
     <div class="content">
       <div class="title">{{ body.title }}</div>
-      <div v-html="body.content"></div>
+      <div class="article_content" v-html="body.content"></div>
     </div>
   </div>
 </template>
@@ -21,8 +14,7 @@ import { articleDetail_api } from '@/api/product/cms/myWork'
 import { customDetails_api } from '@/api/product/cms/custom'
 const route = useRoute()
 const fatherUrl = route.meta.father as string
-const path = fatherUrl.split('/')[1]
-
+const path = fatherUrl.split('/')[3]
 const id = route.query.id as string
 const body = ref<{ title: string; content: string }>({
   title: '',
@@ -30,27 +22,32 @@ const body = ref<{ title: string; content: string }>({
 })
 const getData = async () => {
   const res =
-    path == 'myWork' ? await articleDetail_api({ id }) : await customDetails_api({ id }, 1)
-  res.status == 1 && (body.value = res.body)
+    path === 'mywork' ? await articleDetail_api({ id }) : await customDetails_api({ id }, 1)
+  res.status && (body.value = res.body)
 }
 getData()
 </script>
 
 <style scoped lang="scss">
 .article_details {
-  .el-breadcrumb {
-    font-size: 12px;
-  }
+  
   .content {
-    background-color: #fff;
-    border-radius: 6px;
-    padding: 30px 16%;
-    margin-top: 20px;
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 32px 50px;
     .title {
-      font-size: 28px;
+      font-size: 24px;
+      color: #303133;
+      text-align: justify;
+      line-height: 24px;
       font-weight: 600;
-      margin-bottom: 30px;
-      color: $color333;
+      margin-bottom: 20px;
+    }
+    .article_content{
+      :deep(p){
+        font-size: 14px;
+        color: #606266;
+      }      
     }
   }
 }
