@@ -1,1 +1,0 @@
-import{H as e,o as a,c as s,w as t,a as o,r,T as f,b as m}from"./vue.fa004e33.js";import{m as n}from"./index.f91ef24c.js";import"./tinymce.50e98bcc.js";const u=e({setup:e=>(n().getYxtUrl(),(e,n)=>{const u=m("router-view");return a(),s(u,null,{default:t((({Component:e})=>[o(f,{name:"fade"},{default:t((()=>[(a(),s(r(e)))])),_:2},1024)])),_:1})})});export{u as default};

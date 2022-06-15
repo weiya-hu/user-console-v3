@@ -7,7 +7,7 @@
           type="primary"
           class="add_need_btn"
           @click="$router.push('/product/cms/mywork/articleadd')"
-          ><KzIconVue
+          ><KzIcon
             href="#icon-tianjia"
             size="14px"
             color="white"
@@ -120,7 +120,6 @@ import { formatDate } from '@/utils/date'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import KzDialog from '@/components/KzDialog.vue'
-import KzIconVue from '@/components/KzIcon.vue'
 import { articleList_api, articleDel_api } from '@/api/product/cms/myWork'
 import { getKzMyStatus } from '@/utils/index'
 interface SData {

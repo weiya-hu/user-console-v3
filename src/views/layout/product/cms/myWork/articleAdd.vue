@@ -34,7 +34,7 @@
                     alt=""
                   />
                   <div v-else class="fleximg fc upbox_noimg">
-                    <KzIconVue href="#icon-shangchuan" size="32px" />
+                    <KzIcon href="#icon-shangchuan" size="32px" />
                     <div>把文件拖到此处，或<span>点击上传</span></div>
                   </div>
                 </div>
@@ -50,7 +50,7 @@
             <div class="up_cover_txt flexl">
               文章内容
               <div class="fcs content_tip">
-                <KzIconVue href="#icon-zhuyi" size="14px" />
+                <KzIcon href="#icon-zhuyi" size="14px" />
                 <span
                   >请注意：根据国家相关法律法规要求，切勿发布任何色情、低俗、涉政等违法违规内容。一旦出现，我们将会根据法规进行审核处理。</span
                 >
@@ -73,7 +73,6 @@ import { errMsg } from '@/utils/index'
 import { getAliToken_api } from '@/api/index'
 import { articleAdd_api, articleDetail_api, articleUpdate_api } from '@/api/product/cms/myWork'
 import { mainStore } from '@/store/index'
-import KzIconVue from '@/components/KzIcon.vue'
 const store = mainStore()
 const route = useRoute()
 const router = useRouter()

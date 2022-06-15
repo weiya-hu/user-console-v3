@@ -4,7 +4,7 @@
       <div>海报库</div>
       <div>
         <el-button type="primary" class="add_need_btn" @click="addShow = true"
-          ><KzIconVue
+          ><KzIcon
             href="#icon-tianjia"
             size="14px"
             color="white"
