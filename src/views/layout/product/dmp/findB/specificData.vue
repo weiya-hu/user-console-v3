@@ -102,7 +102,7 @@
 
     <el-dialog
       v-model="addShow"
-      title="新建数据"
+      title="新增需求"
       width="500px"
       :before-close="beforeCloseAdd"
       @close="closeAdd"
@@ -147,8 +147,10 @@
       </el-form>
       <template #footer>
         <div class="fcs fjend">
-          <el-button @click="closeAdd">取消</el-button>
-          <el-button type="primary" @click="submitAddForm(addFormRef)">提交</el-button>
+          <el-button :disabled="upLoading" @click="closeAdd">取消</el-button>
+          <el-button type="primary" :disabled="upLoading" @click="submitAddForm(addFormRef)"
+            >提交</el-button
+          >
         </div>
       </template>
     </el-dialog>

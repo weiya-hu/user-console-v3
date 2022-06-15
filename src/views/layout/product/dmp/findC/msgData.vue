@@ -1,21 +1,8 @@
 <template>
   <div class="kz_card baidudata_page_c dmp_page">
-    <div class="fsc f1">
-      <div class="card_title">短信获客</div>
-      <div class="btns fsc">
-        <KzTopBtns
-          ref="topBtnRef"
-          type="sync"
-          syncbtn
-          :sync-api="getSyncInfo_api"
-          :sync-disabled="syncDisabled"
-          class="topbtns mr20"
-          @sync="setSync"
-        />
-        <el-button type="primary" @click="addShow = true"
-          ><el-icon size="14px" style="margin-right: 4px"><Plus /></el-icon>新增数据</el-button
-        >
-      </div>
+    <div class="fsc mb20">
+      <KzDmpTitle />
+      <el-button type="primary" :icon="Plus" @click="addShow = true">新增需求</el-button>
     </div>
     <KzPeopleTable
       :data="tableData"
@@ -24,47 +11,31 @@
       @del="sureDel"
     />
 
-    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
+    <KzPage v-model:page="page" v-model:size="size" :total="total" @change="getList" />
     <KzAddPeople ref="addref" v-model="addShow" @success="submitAddForm" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
-import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
 import KzPage from '@/components/KzPage.vue'
 import KzPeopleTable from '@/components/dmp/KzPeopleTable.vue'
 import KzAddPeople from '@/components/dmp/KzAddPeople.vue'
-import {
-  addMsg_api,
-  getMsgList_api,
-  delMsg_api,
-  getSyncInfo_api,
-  setSync_api,
-} from '@/api/product/dmp/findC'
+import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
+import { addMsg_api, getMsgList_api, delMsg_api } from '@/api/product/dmp/findC'
 
 const page = ref(1)
 const size = ref(10)
-const totle = ref(0)
-const topBtnRef = ref()
-const tableRef = ref()
-const syncDisabled = computed(() => tableRef.value && !tableRef.value.selIdList.length)
-const setSync = async () => {
-  topBtnRef.value.setLoading(true)
-  const res = await setSync_api({
-    list: tableRef.value.selIdList,
-  })
-  topBtnRef.value.close(res.message)
-  tableRef.value.clear()
-}
+const total = ref(0)
+
 const getList = () => {
   getMsgList_api({
     size: size.value,
     current: page.value,
   }).then((res) => {
     if (res.status == 1) {
-      totle.value = res.body.total
+      total.value = res.body.total
       tableData.value = res.body.records
     }
   })
@@ -120,8 +91,8 @@ const submitAddForm = (val: any) => {
 }
 </script>
 
-<style scoped lang="scss">
-:deep(.el-dialog) {
-  padding: 20px;
-}
-</style>
+<script lang="ts">
+export default { name: 'MsgData' }
+</script>
+
+<style scoped lang="scss"></style>

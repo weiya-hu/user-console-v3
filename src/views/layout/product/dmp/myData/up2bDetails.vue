@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading" class="kz_card my_up2b_page dmp_page">
     <div class="fsc mb20">
-      <KzDmpTitle :total="total"/>
+      <KzDmpTitle :total="total" />
       <KzTopBtns
         ref="topBtnRef"
         type="sync"

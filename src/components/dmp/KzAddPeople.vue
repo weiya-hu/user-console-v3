@@ -1,55 +1,55 @@
 <template>
-  <div class="add_people">
-    <el-dialog
-      v-model="show"
-      title="新建数据"
-      width="500px"
-      :before-close="beforeCloseAdd"
-      @close="closeAdd"
+  <el-dialog
+    v-model="show"
+    title="新增需求"
+    width="500px"
+    :before-close="beforeCloseAdd"
+    @close="closeAdd"
+  >
+    <el-form
+      ref="addFormRef"
+      v-loading="upLoading"
+      class="myform"
+      :model="addForm"
+      :rules="addRules"
+      label-width="80px"
     >
-      <el-form
-        ref="addFormRef"
-        v-loading="upLoading"
-        class="myform"
-        :model="addForm"
-        :rules="addRules"
-      >
-        <el-form-item label="人群名称" prop="people">
-          <el-input v-model="addForm.people" placeholder="请输入人群名称"></el-input>
-        </el-form-item>
-        <el-form-item label="选择地区" prop="addr">
-          <KzCascader v-model="addForm.addr" type="address" />
-        </el-form-item>
-        <el-form-item label="人群描述" prop="desc">
-          <el-input
-            v-model="addForm.desc"
-            placeholder="可对人群进行简单的描述"
-            type="textarea"
-            maxlength="150"
-            show-word-limit
-            rows="4"
-            resize="none"
-          ></el-input>
-        </el-form-item>
+      <el-form-item label="人群名称" prop="people">
+        <el-input v-model="addForm.people" placeholder="请输入人群名称"></el-input>
+      </el-form-item>
+      <el-form-item label="选择地区" prop="addr">
+        <KzCascader v-model="addForm.addr" type="address" />
+      </el-form-item>
+      <el-form-item label="人群描述" prop="desc">
+        <el-input
+          v-model="addForm.desc"
+          placeholder="可对人群进行简单的描述"
+          type="textarea"
+          maxlength="150"
+          show-word-limit
+          rows="4"
+          resize="none"
+        ></el-input>
+      </el-form-item>
 
-        <el-form-item label="上传附件" prop="file">
-          <KzUpload
-            ref="upload"
-            v-model="addForm.file"
-            site="dmp_attach"
-            @change="upChange"
-            @error="upError"
-            @success="upSuccess"
-          />
-        </el-form-item>
-
-        <div class="fcs fjend">
-          <el-button @click="closeAdd">取消</el-button>
-          <el-button type="primary" @click="submitAddForm">提交</el-button>
-        </div>
-      </el-form>
-    </el-dialog>
-  </div>
+      <el-form-item label="上传附件" prop="file">
+        <KzUpload
+          ref="upload"
+          v-model="addForm.file"
+          site="dmp_attach"
+          @change="upChange"
+          @error="upError"
+          @success="upSuccess"
+        />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="fcs fjend">
+        <el-button :disabled="upLoading" @click="closeAdd">取消</el-button>
+        <el-button type="primary" :disabled="upLoading" @click="submitAddForm">提交</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -224,12 +224,4 @@ defineExpose({
 })
 </script>
 
-<style scoped lang="scss">
-.add_people {
-  .myform {
-    :deep(.el-form-item__label) {
-      width: 90px;
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>

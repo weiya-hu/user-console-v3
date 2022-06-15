@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading" class="kz_card teldata_details_c dmp_page">
     <div class="fsc mb20">
-      <KzDmpTitle :total="totle" />
+      <KzDmpTitle :total="total" />
       <KzTopBtns
         ref="topBtnRef"
         type="sync"
@@ -49,17 +49,17 @@
         </template>
       </el-table>
     </div>
-    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
+    <KzPage v-model:page="page" v-model:size="size" :total="total" @change="getList" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
 import { formatDate } from '@/utils/date'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
+import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
 import { getHashStr, strToArr, getSource } from '@/utils/index'
 import { mainStore } from '@/store/index'
 import { useRoute } from 'vue-router'
@@ -68,8 +68,8 @@ import { getInsetUserList_api, setSync_api, getSyncInfo_api } from '@/api/produc
 const store = mainStore()
 const addressHash = computed(() => store.state.addressHash)
 
-const totle = ref(0)
-const size = ref(10)
+const total = ref(0)
+const size = ref(50)
 
 interface IData {
   city: number
@@ -95,7 +95,7 @@ const getList = () => {
   })
     .then((res: any) => {
       if (res.status == 1) {
-        totle.value = res.body.total
+        total.value = res.body.total
         tableData.value = res.body.records
       }
       loading.value = false

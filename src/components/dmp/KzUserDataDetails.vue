@@ -1,8 +1,19 @@
 <template>
   <div v-loading="loading" class="user_data_details kz_card dmp_page">
-    <KzDmpTitle :total="totle" class="pt20 pb20 ml16" />
+    <div class="fsc mb20">
+      <KzDmpTitle :total="total" />
+      <KzTopBtns
+        ref="topBtnRef"
+        type="sync"
+        syncbtn
+        :sync-api="getSyncInfo_api"
+        :sync-disabled="syncDisabled"
+        @sync="setSync"
+      />
+    </div>
+
     <KzUserTable ref="tableRef" :data="tableData" />
-    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
+    <KzPage v-model:page="page" v-model:size="size" :total="total" @change="getList" />
   </div>
 </template>
 
@@ -15,6 +26,7 @@ import { ref, computed } from 'vue'
 import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
 import KzPage from '@/components/KzPage.vue'
 import KzUserTable from '@/components/dmp/KzUserTable.vue'
+import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
 import { setSync_api, getSyncInfo_api } from '@/api/product/dmp/findC'
 import { useRoute } from 'vue-router'
 
@@ -37,9 +49,9 @@ interface IData {
   update_time: number //更新时间
 }
 const tableData = ref<IData[]>([])
-const totle = ref(0)
+const total = ref(0)
 const page = ref(1)
-const size = ref(10)
+const size = ref(50)
 const loading = ref(false)
 const route = useRoute()
 const getList = () => {
@@ -52,7 +64,7 @@ const getList = () => {
     })
     .then((res: any) => {
       if (res.status == 1) {
-        totle.value = res.body.total
+        total.value = res.body.total
         tableData.value = res.body.records
       }
       loading.value = false

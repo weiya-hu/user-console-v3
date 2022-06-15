@@ -1,5 +1,16 @@
 <template>
   <div v-loading="loading" class="kz_card wxdata_details_c dmp_page">
+    <div class="fsc mb20">
+      <KzDmpTitle :total="total" />
+      <KzTopBtns
+        ref="topBtnRef"
+        type="sync"
+        syncbtn
+        :sync-api="getSyncInfo_api"
+        :sync-disabled="syncDisabled"
+        @sync="setSync"
+      />
+    </div>
     <div class="dmp_table">
       <el-table ref="tableRef" :data="tableData" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" />
@@ -39,7 +50,7 @@
         </template>
       </el-table>
     </div>
-    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
+    <KzPage v-model:page="page" v-model:size="size" :total="total" @change="getList" />
   </div>
 </template>
 
@@ -49,6 +60,8 @@ import { formatDate } from '@/utils/date'
 import df_avatar_i from '@/assets/images/dfavatar.svg'
 import KzPage from '@/components/KzPage.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
+import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
+import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
 import { getWxUser_api, setSync_api, getSyncInfo_api } from '@/api/product/dmp/findC'
 import { useRoute } from 'vue-router'
 import { mainStore } from '@/store/index'
@@ -75,8 +88,8 @@ const tableData = ref<IData[]>([])
 const route = useRoute()
 const page = ref(1)
 
-const size = ref(10)
-const totle = ref(1)
+const size = ref(50)
+const total = ref(0)
 const loading = ref(false)
 const getList = () => {
   loading.value = true
@@ -88,7 +101,7 @@ const getList = () => {
     .then((res) => {
       if (res.status == 1) {
         tableData.value = res.body.records
-        totle.value = res.body.total
+        total.value = res.body.total
       }
       loading.value = false
     })
@@ -123,6 +136,9 @@ const setSync = async () => {
 <style scoped lang="scss">
 .wxdata_details_c {
   height: 100%;
+  .dmp_table {
+    height: calc(100% - 120px);
+  }
   .firstimg {
     width: 48px;
     height: 48px;

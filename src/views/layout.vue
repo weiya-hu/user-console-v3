@@ -566,8 +566,6 @@ const changeIns = (nRoute: RouteLocationNormalizedLoaded) => {
     if (cInsList.value.length > 1) {
       switchShow.value = true
     } else {
-      // window.location.replace(`/product/${nowProduct.value}?insid=` + insList[0].insid)
-      // router.replace(`/product/${nowProduct.value}?insid=` + insList[0].insid)
       insid.value = nRoute.query.insid as string
       return cInsList.value[0].insid
     }

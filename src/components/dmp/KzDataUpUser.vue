@@ -1,57 +1,55 @@
 <template>
-  <div class="upload-users">
-    <el-dialog v-model="show" :width="500" draggable @close="close">
-      <template #title>
-        <div class="up-user-title">上传客户</div>
-      </template>
-      <div>
-        <el-form ref="formRef" v-loading="loading" :model="formValue" :rules="upUserRule">
-          <el-form-item label="人群名称" required prop="personsName">
-            <el-input
-              v-model="formValue.personsName"
-              placeholder="请输入人群名称"
-              clearable
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="人群描述" required prop="personsDesc">
-            <el-input
-              v-model="formValue.personsDesc"
-              type="textarea"
-              maxlength="150"
-              show-word-limit
-              class="input-textarea"
-              placeholder="请对人群进行简单的描述"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="文件上传" prop="updateFile" required>
-            <KzUpload
-              ref="upload"
-              v-model="formValue.updateFile"
-              site="dmp_excel"
-              :down-link="downloadUrl"
-              :exname-list="['.doc', '.docx', '.pdf', '.xls', '.xlsx']"
-              msg="数据文件大小不超过2M"
-              @change="upChange"
-              @error="upError"
-              @success="upSuccess"
-            />
-          </el-form-item>
-        </el-form>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="close">取消</el-button>
-          <el-button type="primary" @click="sure">上传</el-button>
-        </span>
-      </template>
-    </el-dialog>
-  </div>
+  <el-dialog v-model="show" :width="500" draggable :before-close="beforeCloseAdd" @close="close">
+    <template #title>
+      <div class="up-user-title">上传客户</div>
+    </template>
+    <el-form
+      ref="formRef"
+      v-loading="loading"
+      :model="formValue"
+      :rules="upUserRule"
+      label-width="80px"
+    >
+      <el-form-item label="人群名称" required prop="personsName">
+        <el-input v-model="formValue.personsName" placeholder="请输入人群名称" clearable></el-input>
+      </el-form-item>
+      <el-form-item label="人群描述" required prop="personsDesc">
+        <el-input
+          v-model="formValue.personsDesc"
+          type="textarea"
+          maxlength="150"
+          show-word-limit
+          class="input-textarea"
+          placeholder="请对人群进行简单的描述"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="文件上传" prop="updateFile" required>
+        <KzUpload
+          ref="upload"
+          v-model="formValue.updateFile"
+          site="dmp_excel"
+          :down-link="downloadUrl"
+          :exname-list="['.doc', '.docx', '.pdf', '.xls', '.xlsx']"
+          msg="数据文件大小不超过2M"
+          @change="upChange"
+          @error="upError"
+          @success="upSuccess"
+        />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button :disabled="loading" @click="close">取消</el-button>
+        <el-button type="primary" :disabled="loading" @click="sure">上传</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
 import { reactive, ref, onMounted, computed } from 'vue'
 import KzUpload from '@/components/KzUpload.vue'
-import { errMsg } from '@/utils/index'
+import { errMsg, kzConfirm } from '@/utils/index'
 import { upRecordAdd } from '@/api/product/dmp/myData'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
@@ -160,6 +158,10 @@ onMounted(() => {
 
 const emit = defineEmits(['update:modelValue', 'submitSuccess'])
 const close = () => {
+  loading.value = false
+  fileErrorType.value = 'none'
+  upload.value.clear()
+  formRef.value!.resetFields()
   emit('update:modelValue', false)
 }
 const sure = () => {
@@ -220,56 +222,19 @@ const upSuccess = (path: string) => {
       upError('')
     })
 }
-</script>
 
-<style scoped lang="scss">
-.upload-users {
-  .upbox {
-    .up_lt {
-      width: 100px;
-      height: 100px;
-      border: 1px dashed $colorddd;
-      flex-shrink: 0;
-      position: relative;
-      .file_name {
-        font-size: 12px;
-        line-height: 12px;
-      }
-      .el-icon {
-        font-size: 28px;
-        color: $colorddd;
-      }
-    }
-
-    .up_rt {
-      padding-left: 12px;
-      div {
-        font-size: 12px;
-      }
-      color: $color999;
-      line-height: 20px;
-      text-align: left;
-      .up_tip {
-        margin-top: 8px;
-      }
-    }
-  }
-  .tips {
-    margin-left: 12px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-direction: column;
-    > div {
-      font-size: 12px;
-      color: $color999;
-      line-height: 12px;
-    }
-    .tips-download {
-      color: $dfcolor;
-      margin-top: 12px;
-      cursor: pointer;
-    }
+const beforeCloseAdd = (done: Function) => {
+  //关闭添加弹窗之前
+  if (loading.value) {
+    kzConfirm()
+      .then(() => {
+        done()
+      })
+      .catch(() => {})
+  } else {
+    done()
   }
 }
-</style>
+</script>
+
+<style scoped lang="scss"></style>

@@ -1,8 +1,8 @@
 <template>
-  <div class="kz_card dmp_page" v-loading="loading">
+  <div v-loading="loading" class="kz_card dmp_page">
     <div class="fsc mb20">
       <KzDmpTitle />
-      <el-button type="primary" :icon="Plus" @click="dialogVisible = true">新增需求</el-button>
+      <el-button type="primary" :icon="Plus" @click="dialogVisible = true">上传客户</el-button>
     </div>
 
     <div class="dmp_table">
@@ -51,14 +51,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
 import KzDataUpUser from '@/components/dmp/KzDataUpUser.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
-import { upRecordList, setSync_api} from '@/api/product/dmp/myData'
+import { upRecordList } from '@/api/product/dmp/myData'
 
 const tableList = ref([])
 const total = ref(0)
@@ -67,8 +67,6 @@ const page = ref(1)
 const loading = ref(false)
 
 const dialogVisible = ref(false)
-const topBtnRef = ref()
-const tableRef = ref()
 
 const getList = async () => {
   loading.value = true
@@ -90,6 +88,10 @@ const submitsuccess = () => {
   page.value = 1
   getList()
 }
+</script>
+
+<script lang="ts">
+export default { name: 'Up2C' }
 </script>
 
 <style scoped lang="scss">

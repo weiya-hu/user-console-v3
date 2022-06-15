@@ -1,6 +1,11 @@
 <template>
   <div class="dmp_table people_table">
-    <el-table :data="data" style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table
+      :data="data"
+      style="width: 100%"
+      height="100%"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="50" />
       <el-table-column property="id" label="ID" width="100" />
       <el-table-column property="group_name" label="人群名称" width="150" />
@@ -46,7 +51,7 @@
         </template>
       </el-table-column>
       <el-table-column property="user_name" label="创建人" width="130" />
-      <el-table-column property="source" label="操作" width="150" fixed="right">
+      <el-table-column property="status" label="操作" width="150" fixed="right">
         <template #default="scope">
           <div v-if="scope.row.status == 1" class="fcs">
             <el-link v-if="scope.row.attachment" type="primary" :href="scope.row.attachment"
@@ -159,6 +164,7 @@ const showFail = (fail: string) => {
 
 <style scoped lang="scss">
 .people_table {
+  height: calc(100% - 120px);
   .line {
     height: 14px;
     width: 1px;

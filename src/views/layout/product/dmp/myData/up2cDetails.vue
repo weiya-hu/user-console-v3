@@ -1,5 +1,5 @@
 <template>
-  <div class="kz_card my_up2c_page dmp_page" v-loading="loading">
+  <div v-loading="loading" class="kz_card my_up2c_page dmp_page">
     <div class="fsc mb20">
       <KzDmpTitle :total="total" />
       <KzTopBtns

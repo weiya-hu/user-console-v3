@@ -1,6 +1,6 @@
 <template>
-  <div class="kz_card dmp_page" v-loading="loading">
-     <div class="fsc mb20">
+  <div v-loading="loading" class="kz_card dmp_page">
+    <div class="fsc mb20">
       <KzDmpTitle />
       <el-button type="primary" :icon="Plus" @click="addShow = true">新增需求</el-button>
     </div>
@@ -61,68 +61,58 @@
       :width="500"
       draggable
       title="添加需求"
-      :close-on-click-modal="false"
+      :before-close="beforeCloseAdd"
+      @close="closeAdd"
     >
-      <div>
-        <el-form
-          ref="formRef"
-          v-loading="formLoading"
-          :model="formValue"
-          :rules="upRule"
-          label-position="left"
-          label-width="80px"
-          class="my_form"
-        >
-          <el-form-item label="行业分类" required prop="industryType">
-            <KzCascader v-model="formValue.industryType" type="type" />
-          </el-form-item>
-          <el-form-item label="地区" prop="country">
-            <el-select
-              v-model="formValue.country"
-              class="sele_add"
-              placeholder="请选择地区"
-              size="large"
-              clearable
-            >
-              <el-option
-                v-for="item in countryList"
-                :key="item.code"
-                :label="item.country_name"
-                :value="item.code"
-                size="large"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="供应商品" required prop="name" size="large">
-            <el-input v-model="formValue.name" placeholder="请输入产品名称" clearable></el-input>
-          </el-form-item>
-          <el-form-item label="描述" required prop="desc">
-            <el-input
-              v-model="formValue.desc"
-              type="textarea"
-              maxlength="150"
-              show-word-limit
-              class="input_textarea"
-              placeholder="可简要描述对寻找地区的采购服务商的要求。"
-              :rows="3"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="上传附件" prop="updateFile">
-            <KzUpload
-              ref="upload"
-              v-model="formValue.updateFile"
-              site="dmp_attach"
-              @change="upChange"
-              @error="upError"
-              @success="upSuccess"
+      <el-form
+        ref="formRef"
+        v-loading="formLoading"
+        :model="formValue"
+        :rules="upRule"
+        label-width="80px"
+      >
+        <el-form-item label="行业分类" required prop="industryType">
+          <KzCascader v-model="formValue.industryType" type="type" />
+        </el-form-item>
+        <el-form-item label="选择地区" prop="country">
+          <el-select v-model="formValue.country" placeholder="请选择地区" clearable class="f1">
+            <el-option
+              v-for="item in countryList"
+              :key="item.code"
+              :label="item.country_name"
+              :value="item.code"
             />
-          </el-form-item>
-        </el-form>
-      </div>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="采购产品" required prop="name">
+          <el-input v-model="formValue.name" placeholder="请输入产品名称" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="需求描述" required prop="desc">
+          <el-input
+            v-model="formValue.desc"
+            type="textarea"
+            maxlength="150"
+            show-word-limit
+            class="input_textarea"
+            placeholder="可简要描述对寻找地区的采购服务商的要求。"
+            :rows="3"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="上传附件" prop="updateFile">
+          <KzUpload
+            ref="upload"
+            v-model="formValue.updateFile"
+            site="dmp_attach"
+            @change="upChange"
+            @error="upError"
+            @success="upSuccess"
+          />
+        </el-form-item>
+      </el-form>
       <template #footer>
         <div class="flexr">
-          <el-button @click="addShow = false">取消</el-button>
-          <el-button type="primary" @click="addSure">确认</el-button>
+          <el-button :disabled="formLoading" @click="addShow = false">取消</el-button>
+          <el-button type="primary" :disabled="formLoading" @click="addSure">确认</el-button>
         </div>
       </template>
     </el-dialog>
@@ -137,7 +127,7 @@ import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
 import KzUpload from '@/components/KzUpload.vue'
 import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
-import { getHash, getHashStr, getKzStatus } from '@/utils/index'
+import { getHashStr, getKzStatus, kzConfirm } from '@/utils/index'
 import { mainStore } from '@/store/index'
 import { errMsg } from '@/utils/index'
 import { ElMessageBox } from 'element-plus'
@@ -146,6 +136,7 @@ import { useRouter } from 'vue-router'
 import { overseasPage, overseasIn, overseasDel } from '@/api/product/dmp/seekAbroad'
 const store = mainStore()
 const typeHash = computed(() => store.state.typeHash)
+const countryList = computed(() => store.state.countryList)
 
 const total = ref(0)
 const size = ref(10)
@@ -156,14 +147,6 @@ const formLoading = ref(false)
 const addShow = ref(false)
 const formRef = ref()
 const upload = ref() //上传组件ref
-const countryList = ref()
-const getCountryList = () => {
-  store.getCountryList().then((res) => {
-    countryList.value = res
-    console.log(countryList.value)
-  })
-}
-getCountryList()
 
 const formValue = ref({
   industryType: [],
@@ -185,7 +168,8 @@ const fileVali = (rule: any, value: any, callback: any) => {
       callback(new Error('请添加 .doc、.docx、.pdf、.xls、.xlsx 格式的文件'))
       break
     case 'none':
-      callback(new Error('请添加文件'))
+      // callback(new Error('请添加文件'))
+      callback()
       break
     default:
       callback()
@@ -347,6 +331,31 @@ const upSuccess = (path?: string) => {
       upError('')
     })
 }
+
+const closeAdd = () => {
+  //关闭添加弹窗
+  formLoading.value = false
+  fileErrorType.value = 'none'
+  upload.value.clear()
+  formRef.value!.resetFields()
+}
+
+const beforeCloseAdd = (done: Function) => {
+  //关闭添加弹窗之前
+  if (formLoading.value) {
+    kzConfirm()
+      .then(() => {
+        done()
+      })
+      .catch(() => {})
+  } else {
+    done()
+  }
+}
+</script>
+
+<script lang="ts">
+export default { name: 'Buyer' }
 </script>
 
 <style scoped lang="scss">

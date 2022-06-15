@@ -1,8 +1,8 @@
 <template>
-  <div class="kz_card dmp_page"  v-loading="loading">
+  <div v-loading="loading" class="kz_card dmp_page">
     <div class="fsc mb20">
       <KzDmpTitle />
-      <el-button type="primary" :icon="Plus" @click="dialogVisible = true">新增需求</el-button>
+      <el-button type="primary" :icon="Plus" @click="dialogVisible = true">上传客户</el-button>
     </div>
 
     <div class="dmp_table">
@@ -44,7 +44,7 @@
         </template>
       </el-table>
     </div>
-    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
+    <KzPage v-model:page="page" v-model:size="size" :total="total" @change="getList" />
     <KzDataUpUser v-model="dialogVisible" @submitSuccess="submitsuccess" />
   </div>
 </template>
@@ -60,7 +60,7 @@ import { upRecordList } from '@/api/product/dmp/myData'
 import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
 
 const tableList = ref([])
-const totle = ref(0)
+const total = ref(0)
 const size = ref(10)
 const page = ref(1)
 const loading = ref(false)
@@ -77,7 +77,7 @@ const getList = async () => {
   const { status, body } = await upRecordList(data)
   loading.value = false
   if (status) {
-    totle.value = body.total
+    total.value = body.total
     tableList.value = body.records
   }
 }
@@ -87,6 +87,10 @@ const submitsuccess = () => {
   page.value = 1
   getList()
 }
+</script>
+
+<script lang="ts">
+export default { name: 'Up2B' }
 </script>
 
 <style scoped lang="scss">

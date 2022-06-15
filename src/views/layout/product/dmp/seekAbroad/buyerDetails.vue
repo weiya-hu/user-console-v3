@@ -1,7 +1,7 @@
 <template>
-  <div class="kz_card my_buyer_page dmp_page" v-loading="loading">
-   <div class="fsc mb20">
-      <KzDmpTitle :total="total"/>
+  <div v-loading="loading" class="kz_card my_buyer_page dmp_page">
+    <div class="fsc mb20">
+      <KzDmpTitle :total="total" />
       <KzTopBtns
         ref="topBtnRef"
         type="sync"
@@ -26,7 +26,7 @@
         <el-table-column property="mobiles" label="联系方式" />
         <el-table-column property="email" label="邮箱" />
         <el-table-column property="country_id" label="地区" />
-        <el-table-column property="address" label="公司地址" >
+        <el-table-column property="address" label="公司地址">
           <template #default="{ row }">
             <el-tooltip effect="dark" placement="top">
               <template #content>
@@ -69,7 +69,6 @@ import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
 import { useRoute } from 'vue-router'
 import { formatDate } from '@/utils/date'
 import { overseasDetailPage, setSync_api, getSyncInfo_api } from '@/api/product/dmp/seekAbroad'
-
 
 const route = useRoute()
 const tableList = ref([])
@@ -119,7 +118,7 @@ const setSync = async () => {
 
 <style scoped lang="scss">
 .my_buyer_page {
-   height: 100%;
+  height: 100%;
   .dmp_table {
     height: calc(100% - 120px);
   }

@@ -1,24 +1,8 @@
 <template>
-  <div class="kz_card my_wx_page dmp_page">
-    <div class="fsc f1">
-      <div class="card_title">微信获客</div>
-      <div class="btns fsc">
-        <span
-          ><el-icon class="help_icon" color="#999"><QuestionFilled /></el-icon>帮助</span
-        >
-        <KzTopBtns
-          ref="topBtnRef"
-          type="sync"
-          syncbtn
-          :sync-api="getSyncInfo_api"
-          :sync-disabled="syncDisabled"
-          class="topbtns mr20"
-          @sync="setSync"
-        />
-        <el-button type="primary" @click="addShow = true"
-          ><el-icon size="14px" style="margin-right: 4px"><Plus /></el-icon>上传数据</el-button
-        >
-      </div>
+  <div v-loading="loading" class="kz_card my_wx_page dmp_page">
+    <div class="fsc mb20">
+      <KzDmpTitle />
+      <el-button type="primary" :icon="Plus" @click="addShow = true">新增需求</el-button>
     </div>
     <div class="dmp_table">
       <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
@@ -47,7 +31,7 @@
             <div>{{ formatDate(new Date(scope.row.create_time), 'yyyy-MM-dd') }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" fixed="right">
           <template #default="scope">
             <el-link v-if="scope.row.status == 4" type="primary" @click="goDetails(scope.row.id)"
               >查看</el-link
@@ -66,21 +50,29 @@
         </template>
       </el-table>
     </div>
-    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
-    <el-dialog v-model="addShow" title="新建数据" width="500px" @close="closeAdd">
+    <KzPage v-model:page="page" v-model:size="size" :total="total" @change="getList" />
+    <el-dialog v-model="addShow" title="新增需求" width="500px" @close="closeAdd">
       <div class="fcs tips">
-        <img src="" alt="" />
+        <el-icon color="#2150EC"><WarningFilled /></el-icon>
         <div>根据输入好友微信号，系统可获取好友更多信息。</div>
       </div>
-      <el-form ref="addFormRef" class="myform no_margin" :model="Addform" :rules="addRules">
+      <el-form
+        ref="addFormRef"
+        v-loading="upLoading"
+        class="myform no_margin"
+        :model="Addform"
+        :rules="addRules"
+      >
         <el-form-item label="好友微信号" prop="acc">
           <el-input v-model="Addform.acc" placeholder="请输入好友微信号"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
         <span class="flex fjend">
-          <el-button @click="closeAdd">取消</el-button>
-          <el-button type="primary" :disabled="!Addform.acc" @click="goAdd">提交</el-button>
+          <el-button :disabled="upLoading" @click="closeAdd">取消</el-button>
+          <el-button type="primary" :disabled="!Addform.acc || upLoading" @click="goAdd"
+            >提交</el-button
+          >
         </span>
       </template>
     </el-dialog>
@@ -97,22 +89,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
-import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
-import { Plus, QuestionFilled } from '@element-plus/icons-vue'
+import { ref, reactive } from 'vue'
+import { Plus, WarningFilled } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
+import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
 import { useRouter } from 'vue-router'
 import { getSource, getKzStatus } from '@/utils/index'
-import { mainStore } from '@/store/index'
-import { getWxList_api, addWx_api, getSyncInfo_api, setSync_api } from '@/api/product/dmp/findC'
+import { getWxList_api, addWx_api } from '@/api/product/dmp/findC'
 import { ElForm } from 'element-plus'
 
-const store = mainStore()
-const addressHash = computed(() => store.state.addressHash)
-
-const totle = ref(0)
+const total = ref(0)
 const size = ref(10)
 const page = ref(1)
 const loading = ref(false)
@@ -125,26 +113,17 @@ interface SData {
   source: number
 }
 const tableData = ref([])
-const topBtnRef = ref()
-const tableRef = ref()
-const syncDisabled = computed(() => tableRef.value && !tableRef.value.selIdList.length)
-const setSync = async () => {
-  topBtnRef.value.setLoading(true)
-  const res = await setSync_api({
-    list: tableRef.value.selIdList,
-  })
-  topBtnRef.value.close(res.message)
-  tableRef.value.clear()
-}
 const getList = () => {
+  loading.value = true
   getWxList_api({
     size: size.value,
     current: page.value,
   }).then((res) => {
     if (res.status == 1) {
       tableData.value = res.body.records
-      totle.value = res.body.total
+      total.value = res.body.total
     }
+    loading.value = false
   })
 }
 getList()
@@ -210,39 +189,19 @@ const errorMsg = ref('')
 </script>
 
 <script lang="ts">
-export default { name: '微信获客C' }
+export default { name: 'WxData' }
 </script>
 
 <style scoped lang="scss">
-.my_wx_page {
-  .btns {
-    margin-right: 24px;
-    span {
-      margin: 9px 16px 0 0;
-      color: #909399;
-      .help_icon {
-        margin-right: 6px;
-        vertical-align: middle;
-      }
-    }
-  }
-  .no_margin {
-    .el-form-item {
-      margin-bottom: 0;
-    }
-  }
-  .tips {
-    margin-bottom: 20px;
-    height: 30px;
-    border: 1px solid #b3caf9;
-    background-color: #edf5ff;
-    border-radius: 2px;
-    padding-left: 12px;
-    img {
-      width: 14px;
-      height: 14px;
-      margin-right: 8px;
-    }
+.tips {
+  margin-bottom: 20px;
+  height: 30px;
+  border: 1px solid #b3caf9;
+  background-color: #edf5ff;
+  border-radius: 2px;
+  padding-left: 12px;
+  div {
+    margin-left: 10px;
   }
 }
 </style>

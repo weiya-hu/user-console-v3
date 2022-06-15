@@ -221,14 +221,18 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/findc/teldata',
                     name: 'TelData',
                     component: () => import('@/views/layout/product/dmp/findC/telData.vue'),
-                    meta: { title: '号码段获客', insPower: insPowerHash.dmp_c_number },
+                    meta: {
+                      title: '号码段获客',
+                      keepAlive: true,
+                      insPower: insPowerHash.dmp_c_number,
+                    },
                   },
                   {
                     path: '/product/dmp/findc/teldatadetails',
                     name: 'TelDataDetails',
                     component: () => import('@/views/layout/product/dmp/findC/telDataDetails.vue'),
                     meta: {
-                      title: '号码段获客详细页',
+                      title: '号码段获客详情',
                       scroll: true,
                       father: '/product/dmp/findc/teldata',
                       insPower: insPowerHash.dmp_c_number,
@@ -238,14 +242,15 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/findc/wxdata',
                     name: 'WxData',
                     component: () => import('@/views/layout/product/dmp/findC/wxData.vue'),
-                    meta: { title: '微信获客', insPower: insPowerHash.dmp_c_wx },
+                    meta: { title: '微信获客', keepAlive: true, insPower: insPowerHash.dmp_c_wx },
                   },
                   {
                     path: '/product/dmp/findc/wxdatadetails',
                     name: 'WxDataDetails',
                     component: () => import('@/views/layout/product/dmp/findC/wxDataDetails.vue'),
                     meta: {
-                      title: '微信获客详细页',
+                      title: '微信获客详情',
+                      scroll: true,
                       father: '/product/dmp/findc/wxdata',
                       insPower: insPowerHash.dmp_c_wx,
                     },
@@ -254,14 +259,19 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/findc/addata',
                     name: 'AdData',
                     component: () => import('@/views/layout/product/dmp/findC/adData.vue'),
-                    meta: { title: '广告获客', insPower: insPowerHash.dmp_c_advert },
+                    meta: {
+                      title: '广告获客',
+                      keepAlive: true,
+                      insPower: insPowerHash.dmp_c_advert,
+                    },
                   },
                   {
                     path: '/product/dmp/findc/addatadetails',
                     name: 'AdDataDetails',
                     component: () => import('@/views/layout/product/dmp/findC/adDataDetails.vue'),
                     meta: {
-                      title: '广告获客详细页',
+                      title: '广告获客详情',
+                      scroll: true,
                       father: '/product/dmp/findc/addata',
                       insPower: insPowerHash.dmp_c_advert,
                     },
@@ -270,7 +280,11 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/findc/baidudata',
                     name: 'BaiduData',
                     component: () => import('@/views/layout/product/dmp/findC/baiduData.vue'),
-                    meta: { title: '百度关键词获客', insPower: insPowerHash.dmp_c_baidu },
+                    meta: {
+                      title: '百度关键词获客',
+                      keepAlive: true,
+                      insPower: insPowerHash.dmp_c_baidu,
+                    },
                   },
                   {
                     path: '/product/dmp/findc/baidudatadetails',
@@ -278,7 +292,8 @@ export const routes: RouteRecordRaw[] = [
                     component: () =>
                       import('@/views/layout/product/dmp/findC/baiduDataDetails.vue'),
                     meta: {
-                      title: '百度关键词获客详细页',
+                      title: '百度关键词获客详情',
+                      scroll: true,
                       father: '/product/dmp/findc/baidudata',
                       insPower: insPowerHash.dmp_c_baidu,
                     },
@@ -287,14 +302,19 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/findc/bigdata',
                     name: 'BigData',
                     component: () => import('@/views/layout/product/dmp/findC/bigData.vue'),
-                    meta: { title: '大数据获客', insPower: insPowerHash.dmp_c_bigdata },
+                    meta: {
+                      title: '大数据获客',
+                      keepAlive: true,
+                      insPower: insPowerHash.dmp_c_bigdata,
+                    },
                   },
                   {
                     path: '/product/dmp/findc/bigdatadetails',
                     name: 'BigDataDetails',
                     component: () => import('@/views/layout/product/dmp/findC/bigDataDetails.vue'),
                     meta: {
-                      title: '大数据获客详细页',
+                      title: '大数据获客详情',
+                      scroll: true,
                       father: '/product/dmp/findc/bigdata',
                       insPower: insPowerHash.dmp_c_bigdata,
                     },
@@ -303,14 +323,15 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/findc/fourdata',
                     name: 'FourData',
                     component: () => import('@/views/layout/product/dmp/findC/fourData.vue'),
-                    meta: { title: '400获客', insPower: insPowerHash.dmp_c_400 },
+                    meta: { title: '400获客', keepAlive: true, insPower: insPowerHash.dmp_c_400 },
                   },
                   {
                     path: '/product/dmp/findc/fourdatadetails',
                     name: 'FourDataDetails',
                     component: () => import('@/views/layout/product/dmp/findC/fourDataDetails.vue'),
                     meta: {
-                      title: '400获客详细页',
+                      title: '400获客详情',
+                      scroll: true,
                       father: '/product/dmp/findc/fourdata',
                       insPower: insPowerHash.dmp_c_400,
                     },
@@ -319,7 +340,11 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/findc/biddingdata',
                     name: 'BiddingData',
                     component: () => import('@/views/layout/product/dmp/findC/biddingData.vue'),
-                    meta: { title: '竞价获客', insPower: insPowerHash.dmp_c_bidding },
+                    meta: {
+                      title: '竞价获客',
+                      keepAlive: true,
+                      insPower: insPowerHash.dmp_c_bidding,
+                    },
                   },
                   {
                     path: '/product/dmp/findc/biddingdatadetails',
@@ -327,7 +352,8 @@ export const routes: RouteRecordRaw[] = [
                     component: () =>
                       import('@/views/layout/product/dmp/findC/biddingDataDetails.vue'),
                     meta: {
-                      title: '竞价获客详细页',
+                      title: '竞价获客详情',
+                      scroll: true,
                       father: '/product/dmp/findc/biddingdata',
                       insPower: insPowerHash.dmp_c_bidding,
                     },
@@ -336,14 +362,15 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/findc/msgdata',
                     name: 'MsgData',
                     component: () => import('@/views/layout/product/dmp/findC/msgData.vue'),
-                    meta: { title: '短信获客', insPower: insPowerHash.dmp_c_sms },
+                    meta: { title: '短信获客', keepAlive: true, insPower: insPowerHash.dmp_c_sms },
                   },
                   {
                     path: '/product/dmp/findc/msgdatadetails',
                     name: 'MsgDataDetails',
                     component: () => import('@/views/layout/product/dmp/findC/msgDataDetails.vue'),
                     meta: {
-                      title: '短信获客详细页',
+                      title: '短信获客详情',
+                      scroll: true,
                       father: '/product/dmp/findc/msgdata',
                       insPower: insPowerHash.dmp_c_sms,
                     },
@@ -361,7 +388,11 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/seekpathpro/seekpath',
                     name: 'SeekPath',
                     component: () => import('@/views/layout/product/dmp/seekPathPro/seekPath.vue'),
-                    meta: { title: '找渠道', insPower: insPowerHash.dmp_find_channel },
+                    meta: {
+                      title: '找渠道',
+                      keepAlive: true,
+                      insPower: insPowerHash.dmp_find_channel,
+                    },
                   },
                   {
                     path: '/product/dmp/seekpathpro/seekpathdetails',
@@ -380,7 +411,11 @@ export const routes: RouteRecordRaw[] = [
                     name: 'SeekProject',
                     component: () =>
                       import('@/views/layout/product/dmp/seekPathPro/seekProject.vue'),
-                    meta: { title: '找项目', insPower: insPowerHash.dmp_find_project },
+                    meta: {
+                      title: '找项目',
+                      keepAlive: true,
+                      insPower: insPowerHash.dmp_find_project,
+                    },
                   },
                   {
                     path: '/product/dmp/seekpathpro/seekprojectdetails',
@@ -407,7 +442,11 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/seekabroad/buyer',
                     name: 'Buyer',
                     component: () => import('@/views/layout/product/dmp/seekAbroad/buyer.vue'),
-                    meta: { title: '采购商', insPower: insPowerHash.dmp_overseas_purchase },
+                    meta: {
+                      title: '采购商',
+                      keepAlive: true,
+                      insPower: insPowerHash.dmp_overseas_purchase,
+                    },
                   },
                   {
                     path: '/product/dmp/seekabroad/buyerdetails',
@@ -425,7 +464,11 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/seekabroad/supplier',
                     name: 'Supplier',
                     component: () => import('@/views/layout/product/dmp/seekAbroad/supplier.vue'),
-                    meta: { title: '供应商', insPower: insPowerHash.dmp_overseas_supplier },
+                    meta: {
+                      title: '供应商',
+                      keepAlive: true,
+                      insPower: insPowerHash.dmp_overseas_supplier,
+                    },
                   },
                   {
                     path: '/product/dmp/seekabroad/supplierdetails',
@@ -452,14 +495,18 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/mydata/up2b',
                     name: 'Up2B',
                     component: () => import('@/views/layout/product/dmp/myData/up2b.vue'),
-                    meta: { title: '上传2B数据', insPower: insPowerHash.dmp_data_b },
+                    meta: {
+                      title: '上传2B数据',
+                      keepAlive: true,
+                      insPower: insPowerHash.dmp_data_b,
+                    },
                   },
                   {
                     path: '/product/dmp/mydata/up2bdetails',
                     name: 'Up2BDetails',
                     component: () => import('@/views/layout/product/dmp/myData/up2bDetails.vue'),
                     meta: {
-                      title: '上传2B数据详细页',
+                      title: '上传2B数据详情',
                       scroll: true,
                       father: '/product/dmp/mydata/up2b',
                       insPower: insPowerHash.dmp_data_b,
@@ -469,14 +516,18 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/mydata/up2c',
                     name: 'Up2C',
                     component: () => import('@/views/layout/product/dmp/myData/up2c.vue'),
-                    meta: { title: '上传2C数据', insPower: insPowerHash.dmp_data_c },
+                    meta: {
+                      title: '上传2C数据',
+                      keepAlive: true,
+                      insPower: insPowerHash.dmp_data_c,
+                    },
                   },
                   {
                     path: '/product/dmp/mydata/up2cdetails',
                     name: 'Up2CDetails',
                     component: () => import('@/views/layout/product/dmp/myData/up2cDetails.vue'),
                     meta: {
-                      title: '上传2C数据详细页',
+                      title: '上传2C数据详情',
                       scroll: true,
                       father: '/product/dmp/mydata/up2c',
                       insPower: insPowerHash.dmp_data_c,

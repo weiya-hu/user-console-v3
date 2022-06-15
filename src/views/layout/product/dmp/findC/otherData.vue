@@ -1,59 +1,56 @@
 <template>
-  <div class="dmp_other_data">
-    <div class="kz_card">
-      <div class="top_search">
-        <el-form ref="formRef" :model="form">
-          <div class="fcs">
-            <el-form-item label="行业" prop="industry_id">
-              <KzCascader ref="typeCRef" v-model="form.industry_id" type="type" />
-            </el-form-item>
-            <el-form-item label="地区" prop="address">
-              <KzCascader ref="addrCRef" v-model="form.address" type="address" />
-            </el-form-item>
-            <el-form-item label="关键字" prop="keyword">
-              <el-input
-                v-model="form.keyword"
-                placeholder="请输入职业、兴趣等关键词"
-                maxlength="15"
-              ></el-input>
-            </el-form-item>
-          </div>
-          <el-form-item label="年龄" prop="age">
-            <el-radio-group v-model="form.age">
-              <el-radio v-for="v in ageList" :key="v.id" :label="v.id">{{
-                v.min ? (v.max ? v.min + '岁-' + v.max + '岁' : v.min + '+岁') : '不限'
-              }}</el-radio>
-            </el-radio-group>
+  <el-scrollbar v-loading="loading" class="dmp_c_kzdata_page">
+    <div class="top_search kz_card dmp_page mb16">
+      <el-form ref="formRef" :model="form">
+        <div class="fcs">
+          <el-form-item label="行业" prop="industry_id">
+            <KzCascader ref="typeCRef" v-model="form.industry_id" type="type" />
           </el-form-item>
-          <el-form-item label="学历" prop="education">
-            <el-radio-group v-model="form.education">
-              <el-radio v-for="v in educationList" :key="v.id" :label="v.value">{{
-                v.id ? v.name : '不限'
-              }}</el-radio>
-            </el-radio-group>
+          <el-form-item label="地区" prop="address">
+            <KzCascader ref="addrCRef" v-model="form.address" type="address" />
           </el-form-item>
-          <el-form-item label="性别" prop="sex">
-            <el-radio-group v-model="form.sex">
-              <el-radio v-for="v in sexList" :key="v.id" :label="v.id">{{ v.value }}</el-radio>
-            </el-radio-group>
+          <el-form-item label="关键字" prop="keyword">
+            <el-input
+              v-model="form.keyword"
+              placeholder="请输入职业、兴趣等关键词"
+              maxlength="15"
+            ></el-input>
           </el-form-item>
-          <div>
-            <el-button type="primary" @click="goSearch">&emsp;查询&emsp;</el-button>
-            <el-button @click="reset">&emsp;重置&emsp;</el-button>
-          </div>
-        </el-form>
-      </div>
+        </div>
+        <el-form-item label="年龄" prop="age">
+          <el-radio-group v-model="form.age">
+            <el-radio v-for="v in ageList" :key="v.id" :label="v.id">{{
+              v.min ? (v.max ? v.min + '岁-' + v.max + '岁' : v.min + '+岁') : '不限'
+            }}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="学历" prop="education">
+          <el-radio-group v-model="form.education">
+            <el-radio v-for="v in educationList" :key="v.id" :label="v.value">{{
+              v.id ? v.name : '不限'
+            }}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="性别" prop="sex">
+          <el-radio-group v-model="form.sex">
+            <el-radio v-for="v in sexList" :key="v.id" :label="v.id">{{ v.value }}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <div>
+          <el-button type="primary" @click="goSearch">&emsp;查询&emsp;</el-button>
+          <el-button @click="reset">&emsp;重置&emsp;</el-button>
+        </div>
+      </el-form>
     </div>
-    <div class="kz_card dmp_page">
-      <div class="fsc f1">
-        <KzDmpTitle :total="totle" class="pt20 pb20 ml16" />
+    <div class="dmp_c_kzdata_content kz_card dmp_page">
+      <div class="fsc mb20">
+        <KzDmpTitle :total="total" />
         <KzTopBtns
           ref="topBtnRef"
           type="sync"
           syncbtn
           :sync-api="getSyncInfo_api"
           :sync-disabled="syncDisabled"
-          class="topbtns mr20"
           @sync="setSync"
         />
       </div>
@@ -139,9 +136,14 @@
           </template>
         </el-table>
       </div>
-      <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="changePage" />
+      <KzPage
+        v-model:page="searchParams.current"
+        v-model:size="searchParams.size"
+        :total="total"
+        @change="changePage"
+      />
     </div>
-  </div>
+  </el-scrollbar>
 </template>
 
 <script setup lang="ts">
@@ -149,8 +151,8 @@ import { ref, computed } from 'vue'
 import KzCascader from '@/components/KzCascader.vue'
 import KzTopBtns from '@/components/dmp/KzTopBtns.vue'
 import KzEmpty from '@/components/KzEmpty.vue'
-import KzPage from '@/components/KzPage.vue'
 import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
+import KzPage from '@/components/KzPage.vue'
 import { mainStore } from '@/store/index'
 import { getHashStr, strToArr, getSource } from '@/utils/index'
 import {
@@ -161,10 +163,6 @@ import {
   getSyncInfo_api,
 } from '@/api/product/dmp/findC'
 import { errMsg } from '@/utils/index'
-
-const totle = ref(0)
-const size = ref(10)
-const page = ref(1)
 
 const store = mainStore()
 const addressHash = computed(() => store.state.addressHash)
@@ -189,7 +187,7 @@ interface IData {
   origin_id: number
   province: number // 省
   sex: 0 | 1 | 2 // 性别
-  source: 1 // 来源
+  source: 2 // 来源
   tags: any[] // 标签
   job: string // 职业
   industry_id: string[] // 行业id
@@ -199,14 +197,14 @@ interface IData {
   telephone: string // 固话
 }
 
+const total = ref(0)
 const loading = ref(false)
 const tableData = ref<IData[]>([])
 const searchParams = ref({
-  size: size.value,
+  size: 50,
   current: 1,
-  source: 1,
+  source: 2,
 })
-
 const educationList = ref<any[]>([])
 const getEducationList = async () => {
   const res = await getEducationList_api()
@@ -263,7 +261,7 @@ const search = async () => {
   })
   loading.value = false
   if (res.status === 1) {
-    totle.value = res.body.total
+    total.value = res.body.total
     tableData.value = res.body.records
   } else {
     errMsg('查询失败')
@@ -300,37 +298,27 @@ const setSync = async () => {
 <script lang="ts"></script>
 
 <style scoped lang="scss">
-.dmp_other_data {
-  height: 100%;
+.dmp_c_kzdata_page {
+  :deep(.el-scrollbar__view) {
+    height: 100%;
+  }
   .top_search {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 6px;
     .fcs {
       .el-form-item {
         margin-right: 36px;
       }
     }
   }
-  .topbtns {
-    padding-top: 30px;
-  }
-  .mytable {
-    height: calc(100% - 126px);
-    .user_tag {
-      margin-right: 10px;
-      &:last-child {
-        margin-right: 0;
+  .dmp_c_kzdata_content {
+    height: 100%;
+    .dmp_table {
+      height: calc(100% - 120px);
+      .user_tag {
+        margin-right: 10px;
+        &:last-child {
+          margin-right: 0;
+        }
       }
-    }
-  }
-  .tips {
-    margin: 0px 0 24px 24px;
-    font-size: 14px;
-    color: #363636;
-    display: inline-block;
-    span {
-      color: #e40000;
     }
   }
 }

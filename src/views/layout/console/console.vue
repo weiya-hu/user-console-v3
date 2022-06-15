@@ -59,12 +59,11 @@
       <div class="card_title">已订购产品与服务</div>
       <div class="card_body">
         <KzEmpty>
-          <el-button type="primary" size="large" @click="$router.push('/manage/user/order')"
-            >订购产品与服务</el-button
-          >
+          <el-button type="primary" size="large" @click="kfShow = true">订购产品与服务</el-button>
         </KzEmpty>
       </div>
     </div>
+    <KzDialog v-model="kfShow" type="kf" />
   </div>
 </template>
 
@@ -78,12 +77,15 @@ import no_company_i from '@/assets/images/no_company.svg'
 import { SortDown } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
 import { mainStore } from '@/store/index'
+import KzDialog from '@/components/KzDialog.vue'
 
 const store = mainStore()
 const userInfo = computed(() => store.state.userInfo)
 const memberList = computed(() => store.state.memberList)
 const nowUserIdentity = computed(() => store.state.nowUserIdentity)
 const userCompany = computed(() => store.state.userCompany)
+
+const kfShow = ref(false)
 </script>
 
 <style lang="scss" scoped>

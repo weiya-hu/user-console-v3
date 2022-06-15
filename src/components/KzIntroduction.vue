@@ -1,7 +1,8 @@
 <template>
   <div class="kz_introduction">
     <div class="fcc tip_msg">
-      <div>亲爱的用户，{{ contents[props.type].msg }}</div>
+      <el-icon color="#2150EC"><WarningFilled /></el-icon>
+      <div class="tip_content">亲爱的用户，{{ contents[props.type].msg }}</div>
       <el-link type="primary" @click="show = true">{{ contents[props.type].link }}</el-link>
     </div>
     <img :src="product ? noInsImg[product as keyof typeof noInsImg] : ''" alt="" />
@@ -16,6 +17,7 @@
  */
 import { ref, computed } from 'vue'
 import KzDialog from '@/components/KzDialog.vue'
+import { WarningFilled } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'
 const props = withDefaults(
   defineProps<{
@@ -53,8 +55,12 @@ const contents = ref({
 
 <style scoped lang="scss">
 .kz_introduction {
+  padding-top: 44px;
   img {
     width: 100%;
+  }
+  .tip_content {
+    margin-left: 10px;
   }
   .tip_msg {
     position: absolute;

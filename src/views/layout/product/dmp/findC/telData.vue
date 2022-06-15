@@ -1,5 +1,5 @@
 <template>
-  <div class="kz_card teldata_page_c dmp_page">
+  <div v-loading="loading" class="kz_card teldata_page_c dmp_page">
     <div class="fsc mb20">
       <KzDmpTitle />
       <el-button type="primary" :icon="Plus" @click="addShow = true">新增需求</el-button>
@@ -46,7 +46,7 @@
             <div>{{ formatDate(new Date(scope.row.create_time), 'yyyy-MM-dd') }}</div>
           </template>
         </el-table-column>
-        <el-table-column property="source" label="操作" fixed="right">
+        <el-table-column label="操作" fixed="right">
           <template #default="scope">
             <el-link v-if="scope.row.status == 4" type="primary" @click="goDetails(scope.row.id)"
               >查看</el-link
@@ -59,9 +59,9 @@
         </template>
       </el-table>
     </div>
-    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
+    <KzPage v-model:page="page" v-model:size="size" :total="total" @change="getList" />
     <!-- 新建数据 -->
-    <el-dialog v-model="addShow" title="新建数据" width="500px" @close="closeAdd">
+    <el-dialog v-model="addShow" title="新增需求" width="500px" @close="closeAdd">
       <el-form
         ref="addFormRef"
         v-loading="upLoading"
@@ -110,8 +110,8 @@
       </el-form>
       <template #footer>
         <div class="fcs fjend">
-          <el-button @click="closeAdd">取消</el-button>
-          <el-button type="primary" @click="submitAddForm">提交</el-button>
+          <el-button :disabled="upLoading" @click="closeAdd">取消</el-button>
+          <el-button type="primary" :disabled="upLoading" @click="submitAddForm">提交</el-button>
         </div>
       </template>
     </el-dialog>
@@ -139,19 +139,22 @@ const router = useRouter()
 const goDetails = (id: string) => {
   router.push('/product/dmp/findc/telDataDetails?id=' + id)
 }
-const totle = ref(0)
+const total = ref(0)
 const size = ref(10)
 const page = ref(1)
+const loading = ref(false)
 
 const getList = () => {
+  loading.value = true
   getInsetList_api({
     current: page.value,
     size: size.value,
   }).then((res: any) => {
     if (res.status == 1) {
       tableData.value = res.body.records
-      totle.value = res.body.total
+      total.value = res.body.total
     }
+    loading.value = false
   })
 }
 getList()
@@ -241,6 +244,10 @@ const submitAddForm = () => {
     }
   })
 }
+</script>
+
+<script lang="ts">
+export default { name: 'TelData' }
 </script>
 
 <style scoped lang="scss"></style>

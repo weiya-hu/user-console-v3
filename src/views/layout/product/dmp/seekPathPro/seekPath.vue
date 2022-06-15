@@ -98,7 +98,7 @@
         </template>
       </el-table>
     </div>
-    <KzPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
+    <KzPage v-model:page="page" v-model:size="size" :total="total" @change="getList" />
     <KzDialog v-model="errorShow" title="拒绝原因" :msg="errorMsg" :btn="1" />
     <KzDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="sureDel" />
 
@@ -106,8 +106,9 @@
       v-model="addShow"
       :width="500"
       draggable
-      title="添加需求"
-      :close-on-click-modal="false"
+      title="新增需求"
+      :before-close="beforeCloseAdd"
+      @close="closeAdd"
     >
       <div>
         <el-form
@@ -150,8 +151,8 @@
       </div>
       <template #footer>
         <div class="flexr">
-          <el-button @click="addShow = false">取消</el-button>
-          <el-button type="primary" @click="addSure">确认</el-button>
+          <el-button :disabled="formLoading" @click="addShow = false">取消</el-button>
+          <el-button type="primary" :disabled="formLoading" @click="addSure">确认</el-button>
         </div>
       </template>
     </el-dialog>
@@ -164,7 +165,7 @@ import { Plus } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
 import KzEmpty from '@/components/KzEmpty.vue'
 import KzPage from '@/components/KzPage.vue'
-import { getHashStr, strToArr, getKzStatus, errMsg } from '@/utils/index'
+import { getHashStr, strToArr, getKzStatus, errMsg, kzConfirm } from '@/utils/index'
 import { mainStore } from '@/store/index'
 import { channelPage_api, channelIn_api, channelDel_api } from '@/api/product/dmp/seekPathPro'
 import KzDmpTitle from '@/components/dmp/KzDmpTitle.vue'
@@ -176,7 +177,7 @@ const store = mainStore()
 const addressHash = ref(store.state.addressHash)
 const typeHash = computed(() => store.state.typeHash)
 const tableList = ref([])
-const totle = ref(0)
+const total = ref(0)
 const size = ref(10)
 const page = ref(1)
 const loading = ref(false)
@@ -190,7 +191,7 @@ const getList = async () => {
   const { status, body } = await channelPage_api(data)
   loading.value = false
   if (status) {
-    totle.value = body.total
+    total.value = body.total
     tableList.value = body.records
   }
 }
@@ -350,6 +351,31 @@ const addSure = () => {
     }
   })
 }
+
+const beforeCloseAdd = (done: Function) => {
+  //关闭添加弹窗之前
+  if (formLoading.value) {
+    kzConfirm()
+      .then(() => {
+        done()
+      })
+      .catch(() => {})
+  } else {
+    done()
+  }
+}
+
+const closeAdd = () => {
+  //关闭添加弹窗
+  formLoading.value = false
+  fileErrorType.value = 'none'
+  upload.value.clear()
+  formRef.value!.resetFields()
+}
+</script>
+
+<script lang="ts">
+export default { name: 'SeekPath' }
 </script>
 
 <style scoped lang="scss"></style>

@@ -73,7 +73,7 @@ const props = withDefaults(
     oheight?: number
   }>(),
   {
-    oheight: 126,
+    oheight: 120,
   }
 )
 const emit = defineEmits(['select'])

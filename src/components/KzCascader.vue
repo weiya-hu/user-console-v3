@@ -51,12 +51,7 @@ const valueArr = computed({
 })
 
 const emit = defineEmits(['update:modelValue', 'change'])
-const show = computed({
-  get: () => props.modelValue,
-  set: (val) => {
-    emit('update:modelValue', val)
-  },
-})
+
 const store = mainStore()
 const typeList = computed(() => store.state.typeList)
 const addressList = computed(() => store.state.addressList)
