@@ -130,6 +130,7 @@
           <el-scrollbar :noresize="true">
             <KzIntroduction
               :product="nowProduct"
+              :show-msg="!switchShow"
               :type="noInsPower ? 3 : insList && insList.length ? 2 : 1"
             />
           </el-scrollbar>

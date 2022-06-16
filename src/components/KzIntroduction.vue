@@ -1,6 +1,6 @@
 <template>
   <div class="kz_introduction">
-    <div class="fcc tip_msg">
+    <div v-if="showMsg" class="fcc tip_msg">
       <el-icon color="#2150EC"><WarningFilled /></el-icon>
       <div class="tip_content">亲爱的用户，{{ contents[props.type].msg }}</div>
       <el-link type="primary" @click="show = true">{{ contents[props.type].link }}</el-link>
@@ -21,10 +21,12 @@ import { WarningFilled } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'
 const props = withDefaults(
   defineProps<{
-    product: string
+    product: string // 产品名称，dmp cms ...
+    showMsg?: boolean // 是否显示提示
     type?: 1 | 2 | 3 // 1：没有订购过，2：订购过到期了，3：没有权限
   }>(),
   {
+    showMsg: false,
     type: 1,
   }
 )
