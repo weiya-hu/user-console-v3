@@ -144,7 +144,7 @@
             <div v-if="$route.path.includes('/product/') && cInsList.length" class="fcs">
               <div class="fcs">
                 <img
-                  :src="is_company_i"
+                  :src="nowIdentity.iconType === 'user' ? no_company_i : is_company_i"
                   alt=""
                   style="width: 16px; height: 16px; margin-right: 4px"
                 />
@@ -306,6 +306,7 @@ import { ArrowDown } from '@element-plus/icons-vue'
 import KzDialog from '@/components/KzDialog.vue'
 import KzIntroduction from '@/components/KzIntroduction.vue'
 import is_company_i from '@/assets/images/is_company.svg'
+import no_company_i from '@/assets/images/no_company.svg'
 
 // demo start
 import KzImgUpload from '@/components/KzImgUpload.vue'

@@ -742,7 +742,7 @@ export const routes: RouteRecordRaw[] = [
                 path: '/manage/user/myproduct',
                 name: 'MyProduct',
                 component: () => import('@/views/layout/manage/user/myProduct.vue'),
-                meta: { title: '我的产品与服务', keepAlive: true },
+                meta: { title: '我的产品与服务' },
               },
               {
                 path: '/manage/user/productdetails',
