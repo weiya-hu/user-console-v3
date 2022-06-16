@@ -243,7 +243,7 @@
                       {{ userInfoDate.invite_users }}
                     </div>
                     <div class="fsc item_links">
-                      <el-link type="primary" @click="$router.push('invitation')">查看</el-link>
+                      <!-- <el-link type="primary" @click="$router.push('invitation')">查看</el-link> -->
                     </div>
                   </div>
                 </div>
