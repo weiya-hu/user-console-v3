@@ -83,7 +83,6 @@ import KzEmpty from '@/components/KzEmpty.vue'
 import { productList_api, userEnter_api } from '@/api/manage/user/product'
 import { formatDate } from '@/utils/date'
 import { errMsg, getProduct } from '@/utils/index'
-import { Clock } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'
 import KzDialog from '@/components/KzDialog.vue'
 
