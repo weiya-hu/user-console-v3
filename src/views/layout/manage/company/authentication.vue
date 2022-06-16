@@ -96,7 +96,7 @@
       </el-form-item>
       <div class="preser">
         <el-link type="primary" class="fcc" :disabled="state === 2" @click="submitForm(1)"
-          ><KzIcon href="#icon-baocun" />保存认证消息</el-link
+          ><KzIcon href="#icon-baocun" />保存认证信息</el-link
         >
       </div>
       <el-form-item>

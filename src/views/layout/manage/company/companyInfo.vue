@@ -61,9 +61,11 @@
                   >
                 </div>
 
-                <el-descriptions-item label="企业编码" label-align="right">{{
-                  basic.invite_code
-                }}</el-descriptions-item>
+                <el-descriptions-item label="企业编码" label-align="right">
+                  <div :class="basic.invite_code ? '' : 'no_content'">
+                    {{ basic.invite_code ? basic.invite_code : '未填写' }}
+                  </div></el-descriptions-item
+                >
                 <el-descriptions-item
                   ><el-link type="primary" @click="copyCode(basic.invite_code)"
                     >复制</el-link
@@ -106,13 +108,17 @@
                   contact.contact
                 }}</el-descriptions-item>
 
-                <el-descriptions-item label="联系人邮箱" label-align="right">{{
-                  contact.email
-                }}</el-descriptions-item>
+                <el-descriptions-item label="联系人邮箱" label-align="right">
+                  <div :class="contact.email ? '' : 'no_content'">
+                    {{ contact.email ? contact.email : '未填写' }}
+                  </div></el-descriptions-item
+                >
 
-                <el-descriptions-item label="企业座机" label-align="right">{{
-                  contact.tel
-                }}</el-descriptions-item>
+                <el-descriptions-item label="企业座机" label-align="right">
+                  <div :class="contact.tel ? '' : 'no_content'">
+                    {{ contact.tel ? contact.tel : '未填写' }}
+                  </div></el-descriptions-item
+                >
 
                 <el-descriptions-item v-if="contact.province" label="所在区域" label-align="right">
                   {{
@@ -123,11 +129,17 @@
                   }}</el-descriptions-item
                 >
 
-                <el-descriptions-item label="详细地址" label-align="right"
-                  >{{ contact.address }}
+                <el-descriptions-item label="详细地址" label-align="right">
+                  <div :class="contact.address ? '' : 'no_content'">
+                    {{ contact.address ? contact.address : '未填写' }}
+                  </div>
                 </el-descriptions-item>
                 <el-descriptions-item label="官网地址" label-align="right"
-                  ><span class="urlAdr">{{ contact.url }}</span>
+                  ><span class="urlAdr">
+                    <div :class="contact.url ? '' : 'no_content'">
+                      {{ contact.url ? contact.url : '未填写' }}
+                    </div></span
+                  >
                 </el-descriptions-item>
               </el-descriptions>
             </div>
@@ -166,7 +178,7 @@
         </div>
         <div class="conten_item conten_item2 kz_card conten_item3">
           <div class="flex">
-            <div class="card_title">认证消息</div>
+            <div class="card_title">认证信息</div>
             <!-- <el-button
               v-show="audit.status === 3"
               class="bdc_btn"
@@ -425,7 +437,7 @@ getInfo()
       }
       :deep(.el-descriptions__cell) {
         padding-bottom: 24px;
-        width: 475px;
+        width: 565px;
         padding-right: 32px;
       }
       :deep(.el-descriptions__content) {
@@ -433,6 +445,9 @@ getInfo()
         font-family: PingFangSC-Medium, PingFang SC;
         font-weight: 500;
         color: #303133;
+        .no_content {
+          color: #c0c4cc;
+        }
       }
       .urlAdr {
         color: #2d68eb !important;
