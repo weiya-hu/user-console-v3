@@ -47,7 +47,7 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column property="group_desc" label="人群描述" width="300">
+        <el-table-column property="group_desc" label="人群描述">
           <template #default="{ row }">
             <el-tooltip effect="dark" placement="top">
               <template #content>

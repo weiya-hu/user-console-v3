@@ -27,6 +27,7 @@ const props = withDefaults(
 <style scoped lang="scss">
 .kz_empty {
   padding-top: 20px;
+  padding-bottom: 40px;
   .kz_empty_text {
     font-size: 14px;
     color: #c0c4cc;

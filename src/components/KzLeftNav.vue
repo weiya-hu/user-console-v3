@@ -1,54 +1,68 @@
 <template>
-  <el-scrollbar :noresize="true">
-    <div id="kz_left_nav_box" :class="flag && 'col_nav'">
-      <div ref="leftLine" class="left_vline" :style="{ transform: `translate(0, ${top}px)` }"></div>
-      <div class="kz_left_nav" @mouseenter="changeFlag(false)" @mouseleave="changeFlag(true)">
-        <div
-          class="nav_item_lv2"
-          :class="nowPath === '/console' && 'kz_active'"
-          @click="goRoute('/console', true)"
-        >
-          <div class="nav_icon">
-            <KzIcon href="#icon-lanmu-kongzhitai" />
-          </div>
-          <transition name="el-fade-in-linear">
-            <div v-show="!flag" class="nav_text nowrap">控制台</div>
-          </transition>
-        </div>
-        <div v-for="v in navRoutes" :key="v.name" class="nav_item_lv1">
-          <div class="nav_item_lv1_title">
-            <transition name="el-fade-in-linear">
-              <div v-show="!flag" class="nowrap">{{v.meta!.title}}</div>
-            </transition>
-            <transition name="el-fade-in-linear">
-              <div v-show="flag" v-if="v.name !== 'Product'" class="hline"></div>
-            </transition>
-            <div v-if="v.name === 'Product'" class="fcs chover all_btn">
-              <transition name="el-fade-in-linear">
-                <div v-show="!flag" class="nowrap all_text">全部</div>
-              </transition>
-              <el-icon size="16px"><my-icon-menu /></el-icon>
-            </div>
-          </div>
-          <template v-for="j in v.children" :key="j.name">
-            <div
-              v-if="j.meta?.power ? store.isCanDo(j.meta.power as string) : true"
-              class="nav_item_lv2"
-              :class="nowPath.indexOf(j.path) > -1 && 'kz_active'"
-              @click="goRoute(j.path, false)"
-            >
-              <div class="nav_icon">
-                <KzIcon :href="j.meta!.icon" />
-              </div>
-              <transition name="el-fade-in-linear">
-                <div v-show="!flag" class="nav_text nowrap">{{j.meta!.title}}</div>
-              </transition>
-            </div>
-          </template>
-        </div>
+  <div id="kz_left_nav_box" :class="flag && 'col_nav'" @mouseleave="changeFlag(true)">
+    <div class="kz_left_nav" @mouseenter="changeFlag(false)">
+      <div class="is_show_icon">
+        <KzIcon size="14px" :href="flag ? '#icon-zhankai' : '#icon-shouqi'" />
       </div>
-      <div v-show="flag" v-if="secNav" class="kz_sec_nav">
-        <div class="sec_title fcs">{{ secNav.meta!.title }}</div>
+
+      <el-scrollbar :noresize="true">
+        <div class="kz_left_nav_scroll">
+          <div
+            ref="leftLine"
+            class="left_vline"
+            :style="{ transform: `translate(0, ${top}px)` }"
+          ></div>
+          <div
+            class="nav_item_lv2"
+            :class="nowPath === '/console' && 'kz_active'"
+            @click="goRoute('/console', true)"
+          >
+            <div class="nav_icon">
+              <KzIcon href="#icon-lanmu-kongzhitai" />
+            </div>
+            <transition name="el-fade-in-linear">
+              <div v-show="!flag" class="nav_text nowrap">控制台</div>
+            </transition>
+          </div>
+
+          <div v-for="v in navRoutes" :key="v.name" class="nav_item_lv1">
+            <div class="nav_item_lv1_title">
+              <transition name="el-fade-in-linear">
+                <div v-show="!flag" class="nowrap">{{v.meta!.title}}</div>
+              </transition>
+              <transition name="el-fade-in-linear">
+                <div v-show="flag" v-if="v.name !== 'Product'" class="hline"></div>
+              </transition>
+              <div v-if="v.name === 'Product'" class="fcs chover all_btn">
+                <transition name="el-fade-in-linear">
+                  <div v-show="!flag" class="nowrap all_text">全部</div>
+                </transition>
+                <el-icon size="16px" class="fs0"><my-icon-menu /></el-icon>
+              </div>
+            </div>
+            <template v-for="j in v.children" :key="j.name">
+              <div
+                v-if="j.meta?.power ? store.isCanDo(j.meta.power as string) : true"
+                class="nav_item_lv2"
+                :class="nowPath.indexOf(j.path) > -1 && 'kz_active'"
+                @click="goRoute(j.path, false)"
+              >
+                <div class="nav_icon">
+                  <KzIcon :href="j.meta!.icon" />
+                </div>
+                <transition name="el-fade-in-linear">
+                  <div v-show="!flag" class="nav_text nowrap">{{j.meta!.title}}</div>
+                </transition>
+              </div>
+            </template>
+          </div>
+        </div>
+      </el-scrollbar>
+    </div>
+
+    <div v-show="flag" v-if="secNav" class="kz_sec_nav">
+      <div class="sec_title fcs">{{ secNav.meta!.title }}</div>
+      <el-scrollbar :noresize="true" style="height: calc(100% - 40px)">
         <el-menu v-if="secNav.children" router :default-active="nowPath">
           <template v-for="v in secNav.children" :key="v.path">
             <el-sub-menu v-if="v.children" :index="v.path">
@@ -68,9 +82,9 @@
             >
           </template>
         </el-menu>
-      </div>
+      </el-scrollbar>
     </div>
-  </el-scrollbar>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -120,16 +134,7 @@ const getSecNav = (path?: string) => {
 
 const router = useRouter()
 const store = mainStore()
-const yxtUrl = computed(() => store.state.yxtUrl)
 const goRoute = (path: string, isSmall: boolean) => {
-  // if (path === '/product/dmp') {
-  //   window.open('//' + yxtUrl.value.dmp, '_blank')
-  //   return
-  // }
-  // if (path === '/product/cms') {
-  //   window.open('//' + yxtUrl.value.cms, '_blank')
-  //   return
-  // }
   if (flag.value) {
     emit('change', isSmall)
   }
@@ -164,25 +169,42 @@ defineExpose({
 :deep(.el-scrollbar__bar.is-horizontal) {
   display: none !important;
 }
-:deep(.el-scrollbar__view) {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-}
 #kz_left_nav_box {
   flex: 1;
   // min-height: calc(100vh - 64px);
   display: flex;
   position: relative;
+  height: 100%;
+  .is_show_icon {
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background-color: #fff;
+    box-sizing: border-box;
+    border-top: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 25px;
+    .kzicon {
+      cursor: pointer;
+    }
+    .text {
+      color: #909399;
+      margin-right: 9px;
+    }
+  }
   .kz_left_nav {
+    height: 100%;
     font-size: 14px;
     overflow: hidden;
-    padding: 20px 16px;
-    transition: width var(--el-transition-duration), padding var(--el-transition-duration-fast);
+    transition: width var(--el-transition-duration);
     width: 100%;
     flex-shrink: 0;
     position: relative;
-    z-index: 11;
     .fold_btn {
       height: 40px;
     }
@@ -243,10 +265,17 @@ defineExpose({
       transition: margin-right var(--el-transition-duration-fast);
     }
   }
+  .kz_left_nav_scroll {
+    transition: padding var(--el-transition-duration-fast);
+    padding: 20px 16px 50px;
+    position: relative;
+  }
   &.col_nav {
     .kz_left_nav {
       width: 64px;
-      padding: 20px 8px;
+      .kz_left_nav_scroll {
+        padding: 20px 8px 50px;
+      }
       .nav_item_lv1 {
         .all_text {
           margin-right: 0;

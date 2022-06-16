@@ -42,7 +42,7 @@
                       <div>企业版</div>
                     </div>
                     <el-link type="primary" @click="$router.push('/manage/user/authentication')"
-                      ><el-icon color="#2D68EB" size="14px"><Plus /></el-icon>新建企业</el-link
+                      ><el-icon color="#2D68EB" size="14px"><Plus /></el-icon>添加企业</el-link
                     >
                   </div>
                   <div

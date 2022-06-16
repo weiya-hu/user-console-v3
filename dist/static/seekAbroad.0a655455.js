@@ -1,0 +1,1 @@
+import{g as e,p as s}from"./index.e8eb8543.js";const d=s=>e("dmp","/dmp/overseas/demand.page",s),a=s=>e("dmp","/dmp/overseas/demand/detail.page",s),m=e=>s("dmp","/dmp/overseas/demand.del",e,!0),p=e=>s("dmp","/dmp/overseas/demand.in",e,!0),o=e=>s("dmp","/dmp/overseas/sync.do",e),n=()=>e("dmp","/dmp/overseas/sync.get");export{m as a,p as b,a as c,n as g,d as o,o as s};
