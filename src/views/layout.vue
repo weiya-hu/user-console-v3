@@ -141,7 +141,7 @@
         >
           <div v-if="$route.path !== '/console'" class="fsc layout_content_page_top">
             <KzDetailsHeader ref="detailsHeaderRef" />
-            <div v-if="cInsList.length" class="fcs">
+            <div v-if="$route.path.includes('/product/') && cInsList.length" class="fcs">
               <div class="fcs">
                 <img
                   :src="is_company_i"
@@ -646,7 +646,9 @@ onBeforeRouteUpdate((to, from) => {
 })
 
 router.afterEach((to) => {
-  hasInsPower(to)
+  if (to.path.includes('/product/')) {
+    hasInsPower(to)
+  }
 })
 
 onMounted(() => {

@@ -37,7 +37,7 @@
             </div>
           </div>
         </div>
-        <div v-if="showtime(v.left_time) > 0" class="time fsc">
+        <div v-if="new Date().getTime() < v.left_time" class="time fsc">
           <div class="lt fcs">
             <KzIcon
               href="#icon-riqi"
