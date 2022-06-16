@@ -37,7 +37,7 @@
             </div>
           </div>
         </div>
-        <div v-if="showtime(v.left_time) > 0" class="time fsc">
+        <div v-if="new Date().getTime() < v.left_time" class="time fsc">
           <div class="lt fcs">
             <KzIcon
               href="#icon-riqi"
@@ -56,47 +56,44 @@
           <KzIcon href="#icon-zhuyi-biankuang" size="14px" color="#FF4736" />
           <div class="time_tips">当前版本已过期，请联系客服续期</div>
         </div>
-        <div v-if="showtime(v.left_time) > 0" class="btns">
-          <el-button v-if="v.version_type === 1" type="danger" plain>购买</el-button>
-          <el-button v-else type="warning" plain>升级</el-button>
+        <div v-if="new Date().getTime() < v.left_time" class="btns">
+          <el-button v-if="v.version_type === 1" type="danger" plain @click="kfShow = true"
+            >购买</el-button
+          >
+          <el-button v-else type="warning" plain @click="kfShow = true">升级</el-button>
           <el-button type="primary" @click="goSystem(v.id, v.product_id, v.version_type)"
             >进入系统</el-button
           >
         </div>
-        <div v-else class="btns kf">
+        <div v-else class="btns kf" @click="kfShow = true">
           <KzIcon href="#icon-lanmu-kefu" size="14px" color="#2D68EB" />
           联系客服
         </div>
       </div>
     </div>
     <KzEmpty v-else />
+    <KzDialog v-model="kfShow" type="kf" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import trial_i from '@/assets/images/trial.png'
 import KzEmpty from '@/components/KzEmpty.vue'
 import { companyInstance_api, companySwitch_api } from '@/api/manage/company/companyService'
 import { formatDate } from '@/utils/date'
-import { KzProduct } from '@/utils/config'
 import { errMsg, getProduct } from '@/utils/index'
 import { Clock } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'
-import { useRouter } from 'vue-router'
-import { okMsg } from '@/utils'
-const router = useRouter()
-const totle = ref(100)
-const size = ref(10)
-const page = ref(1)
+import KzDialog from '@/components/KzDialog.vue'
+
 const store = mainStore()
-const cmsUrl = computed(() => store.state.yxtUrl.cms)
-const dmpUrl = store.state.yxtUrl.dmp
 
 const proList = ref<any>({})
 const productList = async () => {
   const { body, status } = await companyInstance_api()
   proList.value = body
+  console.log(body)
 }
 productList()
 
@@ -134,10 +131,8 @@ const userSystem = async () => {
     errMsg('操作失败!')
   }
 }
-</script>
 
-<script lang="ts">
-export default { name: 'MyProduct' }
+const kfShow = ref(false)
 </script>
 
 <style lang="scss" scoped>
