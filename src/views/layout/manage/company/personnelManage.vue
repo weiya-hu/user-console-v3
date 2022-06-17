@@ -370,6 +370,7 @@ const getName = async () => {
   const { status, message } = await getName_api()
   status && (conmpanyName.value = message)
 }
+//下载二维码
 const downloadQr = () => {
   const myCanvas = document.getElementById('qrImg') as HTMLCanvasElement
   const a = document.createElement('a')
@@ -399,6 +400,7 @@ const copyCode = async (val: any) => {
   }
   close()
 }
+//关闭添加部门弹窗
 const closeAdd = () => {
   group_input.value = ''
   dialogVisible.value = false
@@ -407,6 +409,7 @@ const closeEdit = () => {
   edit_input.value = ''
   edit_show.value = false
 }
+//添加部门
 const addGroup = async (name: string) => {
   const { status } = await addGroup_api({ name })
   status === 1 ? okMsg('分组添加成功') : errMsg('分组添加失败')
@@ -452,10 +455,8 @@ const editName = async (group_id: number, name: string) => {
 //删除表格分组
 const deleteData = async (group_id: number) => {
   const { status } = await deleteGroup_api({ group_id: editId.value })
-  // status === 1 ? okMsg('删除分组成功') : errMsg('删除分组失败')
-  // getGroup()
-  // getList()
   status === 1 ? okMsg('删除分组成功') : errMsg('删除分组失败')
+  //跳转全部部门 不然会缓存 不能刷新列表
   router.push(`/manage/company/personnelmanage`)
   getGroup()
 }
@@ -549,10 +550,12 @@ const getGroup = async () => {
   const { body, status } = await getGroup_api()
   if (status) {
     group.value = body
+    //添加id标识 跳转相应表格
     const id = getUrlParam('id') || null
     router.push(`/manage/company/personnelmanage?id=${id}`)
     editId.value = id
     console.log(id)
+    //没有id就是全部人员
     id ? getList(Number(id), body[id]) : getList()
   }
   getName()

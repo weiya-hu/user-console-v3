@@ -65,6 +65,7 @@ const getList = async () => {
   )
   if (status === 1) {
     tableList.value = body.id ? [body] : []
+    body.id ? (total.value = 1) : (total.value = 0)
   }
 }
 getList()
@@ -74,7 +75,6 @@ const del = (id: string) => {
 }
 const delImags = async () => {
   const { status } = await customVideoDel_api({ id: delId.value })
-  console.log(delId.value)
   if (status === 1) {
     getList()
     delShow.value = false

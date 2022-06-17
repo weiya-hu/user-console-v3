@@ -102,7 +102,6 @@ const getList = async () => {
     4
   )
   loading.value = false
-  console.log(res)
 
   if (res.status === 1) {
     total.value = res.body.total
