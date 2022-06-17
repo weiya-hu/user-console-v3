@@ -70,7 +70,8 @@
                     <div class="item_title">用户昵称</div>
                     <el-input
                       v-model="eidtForm.userName"
-                      placeholder="请输入用户昵称"
+                      placeholder="请输入用户昵称（24位以内）"
+                      minlength="1"
                       size="large"
                     />
                   </div>
@@ -629,6 +630,10 @@ interface IUserDate {
 }
 
 const editData = async () => {
+  if(!eidtForm.value.userName){
+    errMsg('昵称不能为空！')
+    return
+  }
   const data = {
     name: eidtForm.value.userName,
     sex: eidtForm.value.userSex,
@@ -644,6 +649,8 @@ const editData = async () => {
     editName.value = true
     upLoading.value = false
     editAvatershow.value = false
+    store.setUserCompany()
+ store.setUserinfo()
   }
 }
 const editCancel = () => {
@@ -656,6 +663,7 @@ const upLoading = ref(false)
 const imgUrl = ref('')
 const editAvator = () => {
   editAvatershow.value = true
+  store.setUserinfo()
 }
 
 const KzUpAvatarRef = ref()
