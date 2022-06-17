@@ -92,7 +92,7 @@
  * 左侧导航
  * @author chn
  */
-import { ref, onMounted, nextTick, computed } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useRouter, useRoute, RouteRecordRaw } from 'vue-router'
 import { routes } from '@/router/index'
 import { Menu as MyIconMenu } from '@element-plus/icons-vue'
@@ -189,9 +189,6 @@ defineExpose({
     align-items: center;
     justify-content: flex-end;
     padding-right: 25px;
-    .kzicon {
-      cursor: pointer;
-    }
     .text {
       color: #909399;
       margin-right: 9px;

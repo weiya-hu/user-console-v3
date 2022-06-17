@@ -4,6 +4,7 @@
       <el-icon color="#2150EC"><WarningFilled /></el-icon>
       <div class="tip_content">亲爱的用户，{{ contents[props.type].msg }}</div>
       <el-link type="primary" @click="show = true">{{ contents[props.type].link }}</el-link>
+      <el-link v-if="showChange && type === 3" type="primary" @click="handClick">切换版本</el-link>
     </div>
     <img :src="product ? noInsImg[product as keyof typeof noInsImg] : ''" alt="" />
     <KzDialog v-model="show" type="kf" />
@@ -24,6 +25,7 @@ const props = withDefaults(
     product: string // 产品名称，dmp cms ...
     showMsg?: boolean // 是否显示提示
     type?: 1 | 2 | 3 // 1：没有订购过，2：订购过到期了，3：没有权限
+    showChange?: boolean // type === 3 时是否显示切换版本按钮
   }>(),
   {
     showMsg: false,
@@ -53,6 +55,11 @@ const contents = ref({
     link: nowIdentity.value === 'user' ? '联系客服升级产品' : '',
   },
 })
+
+const emit = defineEmits(['changeIns'])
+const handClick = () => {
+  emit('changeIns')
+}
 </script>
 
 <style scoped lang="scss">

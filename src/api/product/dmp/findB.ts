@@ -78,7 +78,7 @@ export const setSync_api = (data: { list: (string | number)[] }): Promise<IRes> 
 }
 
 /**
- * @name 数据同步今日剩余条数
+ * @name 数据同步今日剩余条数（废弃，现不需要展示条数）
  */
 export const getSyncInfo_api = (): Promise<IRes> => {
   return get('dmp', '/dmp/business/sync.get')

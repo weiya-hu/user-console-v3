@@ -25,10 +25,10 @@
       <div v-loading="loading">
         <div class="fsc">
           <div class="lt">选择同步系统</div>
-          <div class="rt fcs">
+          <!-- <div class="rt fcs">
             每天同步上限<span>{{ syncInfo.surplus }}/{{ syncInfo.total }}</span
             >条数据
-          </div>
+          </div> -->
         </div>
         <div class="btn_list flex">
           <el-button
@@ -85,11 +85,12 @@ const emit = defineEmits(['add', 'sync'])
 
 const syncInfo = ref<any>({})
 const showSync = async () => {
-  const res = props.syncApi && (await props.syncApi())
-  if (res && res.status == 1) {
-    syncInfo.value = res.body
-    show.value = true
-  }
+  show.value = true
+  // const res = props.syncApi && (await props.syncApi())
+  // if (res && res.status == 1) {
+  //   syncInfo.value = res.body
+  //   show.value = true
+  // }
 }
 
 const loading = ref(false)

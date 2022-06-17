@@ -418,13 +418,7 @@ body .el-dialog {
     }
   }
 }
-@media screen and (min-width: 750px) {
-  html,
-  body {
-    min-width: 1440px;
-    overflow-y: hidden;
-  }
-}
+
 @media screen and (max-width: 750px) {
   html,
   body {

@@ -201,7 +201,13 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 const reset = () => {
   nowCondition.value = '条件组'
-  resetForm(formRef.value)
+  // resetForm(formRef.value)
+  form.ctype.length = 0
+  form.industry_id.length = 0
+  form.addr.length = 0
+  form.business_scope = ''
+  form.contact.length = 0
+
   showLables.business_scope = ''
   showLables.industry_id = ''
   showLables.addr = ''

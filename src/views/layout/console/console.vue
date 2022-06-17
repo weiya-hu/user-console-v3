@@ -78,6 +78,7 @@ import { SortDown } from '@element-plus/icons-vue'
 import { formatDate } from '@/utils/date'
 import { mainStore } from '@/store/index'
 import KzDialog from '@/components/KzDialog.vue'
+import { getHotList_api, getBuyList_api } from '@/api/index'
 
 const store = mainStore()
 const userInfo = computed(() => store.state.userInfo)
@@ -86,6 +87,19 @@ const nowUserIdentity = computed(() => store.state.nowUserIdentity)
 const userCompany = computed(() => store.state.userCompany)
 
 const kfShow = ref(false)
+
+const getHotList = async () => {
+  const res = await getHotList_api({
+    size: 10,
+    current: 1,
+  })
+}
+getHotList()
+
+const getBuyList = async () => {
+  const res = await getBuyList_api()
+}
+getBuyList()
 </script>
 
 <style lang="scss" scoped>

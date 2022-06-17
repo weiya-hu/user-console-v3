@@ -83,3 +83,17 @@ export const getNowInsList_api = (): Promise<IRes> => {
 export const getInsPowerList_api = (): Promise<IRes> => {
   return get('user ', '/user/permission.get')
 }
+
+/**
+ * @name 控制台获取热门推荐产品
+ */
+export const getHotList_api = (data: IPageParams): Promise<IRes> => {
+  return get('user ', '/web/console/recommend/product/version.list', data)
+}
+
+/**
+ * @name 控制台获取已订购产品列表
+ */
+export const getBuyList_api = (): Promise<IRes> => {
+  return get('user ', '/web/console/ordered/product.list')
+}

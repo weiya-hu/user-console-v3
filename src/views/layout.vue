@@ -41,8 +41,12 @@
                       <KzIcon href="#icon-banbenqiehuan-tuandui" size="12px" />
                       <div>企业版</div>
                     </div>
-                    <el-link type="primary" @click="$router.push('/manage/user/authentication')"
-                      ><el-icon color="#2D68EB" size="14px"><Plus /></el-icon>添加企业</el-link
+                    <el-link
+                      v-if="userCompanyList.company_list.length < 3"
+                      type="primary"
+                      @click="$router.push('/manage/user/authentication')"
+                    >
+                      <el-icon color="#2D68EB" size="14px"><Plus /></el-icon>添加企业</el-link
                     >
                   </div>
                   <div
@@ -124,14 +128,22 @@
           <KzLeftNav ref="leftNavRef" @change="onChangeLeftNav" />
         </el-col>
         <el-col
-          v-if="$route.path.includes('/product/') && (!$route.query.insid || noInsPower)"
+          v-if="
+            $route.path.includes('/product/') &&
+            (!$route.query.insid ||
+              noInsPower ||
+              !cInsList.length ||
+              cInsList.findIndex((v) => v.insid === Number($route.query.insid)) === -1)
+          "
           class="layout_content"
         >
           <el-scrollbar :noresize="true">
             <KzIntroduction
               :product="nowProduct"
-              :show-msg="!switchShow"
+              :show-msg="noInsPower ? true : !switchShow"
               :type="noInsPower ? 3 : insList && insList.length ? 2 : 1"
+              :show-change="cInsList.length > 1"
+              @change-ins="switchIns"
             />
           </el-scrollbar>
         </el-col>
@@ -300,7 +312,7 @@ import { ArrowRight, Plus } from '@element-plus/icons-vue'
 import KzLeftNav from '@/components/KzLeftNav.vue'
 import KzDetailsHeader from '@/components/KzDetailsHeader.vue'
 import { loginOut_api } from '@/api/login'
-import { errMsg } from '@/utils'
+import { errMsg, warnMsg } from '@/utils'
 import { changeIdentity_api } from '@/api/index'
 import { ElMessageBox } from 'element-plus'
 import { ArrowDown } from '@element-plus/icons-vue'
@@ -508,8 +520,16 @@ const switchShow = ref(false)
 const changeInsid = ref(0)
 const selectIns = () => {
   if (changeInsid.value) {
-    window.location.replace(`/product/${nowProduct.value}?insid=` + changeInsid.value)
+    if (changeInsid.value === Number(route.query.insid)) {
+      warnMsg('已经是当前版本')
+    } else {
+      window.location.replace(`/product/${nowProduct.value}?insid=` + changeInsid.value)
+    }
   }
+}
+const switchIns = () => {
+  changeInsid.value = Number(route.query.insid)
+  switchShow.value = true
 }
 
 const hasInsPower = (nowRoute: RouteLocationNormalizedLoaded) => {
@@ -679,6 +699,14 @@ emiter.on('lookVideo', (video: string) => {
 </script>
 
 <style lang="scss" scoped>
+:global(html) {
+  min-width: 1440px;
+  overflow-y: hidden;
+}
+:global(body) {
+  min-width: 1440px;
+  overflow-y: hidden;
+}
 .layout_page {
   height: 100%;
   .layout_top {

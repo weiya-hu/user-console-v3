@@ -2,7 +2,11 @@
   <div class="kz_card my_company_page">
     <div class="card_title fsc">
       <div>我的企业</div>
-      <el-button type="primary" :icon="Plus" @click="$router.push('authentication')"
+      <el-button
+        v-if="companyDate.length < 3"
+        type="primary"
+        :icon="Plus"
+        @click="$router.push('authentication')"
         >添加企业</el-button
       >
     </div>
@@ -141,7 +145,7 @@
 import { ref, computed } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { companyAdd_api, companyExam_api, delCompanyInfo_api } from '@/api/manage/user/myinfo'
-import { getKzComStatus, getHash, getHashStr, strToArr } from '@/utils/index'
+import { getKzComStatus, getHashStr, strToArr } from '@/utils/index'
 import { errMsg, okMsg } from '@/utils'
 import KzEmpty from '@/components/KzEmpty.vue'
 import { mainStore } from '@/store/index'

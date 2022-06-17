@@ -630,7 +630,7 @@ interface IUserDate {
 }
 
 const editData = async () => {
-  if(!eidtForm.value.userName){
+  if (!eidtForm.value.userName) {
     errMsg('昵称不能为空！')
     return
   }
@@ -650,7 +650,7 @@ const editData = async () => {
     upLoading.value = false
     editAvatershow.value = false
     store.setUserCompany()
- store.setUserinfo()
+    store.setUserinfo()
   }
 }
 const editCancel = () => {
