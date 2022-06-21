@@ -25,6 +25,7 @@
                 :on-error="upError"
                 accept=".jpg,.png,.jpeg,.JPG,.PNG,.JPEG"
                 class="flex"
+                drag
               >
                 <div class="upbox">
                   <img
@@ -190,6 +191,7 @@ const submit = async (type: number) => {
       editRef.value.clearImgs()
       if (!titleImg.value) {
         submitAddForm()
+        return
       }
       getAliToken_api({ site: 'cms_article' }).then((res: IRes) => {
         if (res.status === 1) {
@@ -289,11 +291,20 @@ const submit = async (type: number) => {
         display: none;
       }
     }
+    
+    :deep(.el-upload-dragger){
+      width: 250px;
+      height: 140px;
+      box-sizing: border-box;
+    }
     .upbox {
       width: 250px;
       height: 140px;
       border-radius: 4px;
-      border: 1px dashed rgba(221, 221, 221, 1);
+      // border: 1px dashed rgba(221, 221, 221, 1);
+      position: relative;
+      left: -10px;
+      top: -40px;
       img {
         background-color: #dddddd;
         width: 50px;

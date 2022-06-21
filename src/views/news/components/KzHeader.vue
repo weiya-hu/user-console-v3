@@ -128,6 +128,7 @@ const toUser = () => {
         color: #ffffff;
         line-height: 40px;
         margin-right: 24px;
+        text-decoration: none;
       }
       .hot-txt {
         color: red;

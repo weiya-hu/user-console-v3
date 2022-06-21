@@ -56,3 +56,25 @@ export const sourceObj: Record<number, string> = {
   9: '竞价获客',
   10: '短信获客',
 }
+
+/**
+ * 新闻随机默认封面
+ */
+import defaultCover1 from '@/assets/images/news/cover1.jpg'
+import defaultCover2 from '@/assets/images/news/cover2.jpg'
+import defaultCover3 from '@/assets/images/news/cover3.jpg'
+import defaultCover4 from '@/assets/images/news/cover4.jpg'
+import defaultCover5 from '@/assets/images/news/cover5.jpg'
+import defaultCover6 from '@/assets/images/news/cover6.jpg'
+import defaultCover7 from '@/assets/images/news/cover7.jpg'
+import defaultCover8 from '@/assets/images/news/cover8.jpg'
+export const newsDefaultCover:Record<number, string> = {
+  1:defaultCover1,
+  2:defaultCover2,
+  3:defaultCover3,
+  4:defaultCover4,
+  5:defaultCover5,
+  6:defaultCover6,
+  7:defaultCover7,
+  8:defaultCover8,
+}

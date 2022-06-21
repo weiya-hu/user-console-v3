@@ -1,9 +1,11 @@
 <template>
   <div class="flexb news_main">
     <div>
-      <NewsNav @navChange="navChange" />
+      <div class="nav_pre">
+        <NewsNav @navChange="navChange" />
+      </div>
       <el-scrollbar class="news_list">
-        <div v-infinite-scroll="load">
+        <div v-infinite-scroll="load" class="newses">
           <!-- <div v-for="i in count" :key="i" class="infinite-list-item">{{ i }}</div> -->
           <NewsItem v-for="(item, i) in newsList" :key="i" :item="item" />
         </div>
@@ -55,10 +57,15 @@ const getNewslist = async (id: any) => {
   > div:nth-child(1) {
     width: 890px;
     background: #ffffff;
-    padding: 0 30px;
     border-radius: 4px;
+    .nav_pre{
+      padding:0  30px;
+    }
     .news_list {
       height: calc(100vh - 127px);
+      .newses{
+        padding: 0 30px;
+      }
     }
     .infinite-list .infinite-list-item {
       display: flex;
