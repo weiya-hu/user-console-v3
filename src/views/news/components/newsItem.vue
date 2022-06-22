@@ -1,7 +1,11 @@
 <template>
   <div className="news-list-item flexb">
     <div className="fleximg coverimg">
-      <img :src="props.item.thumb_url ? props.item.thumb_url : defaultCover()" alt="cover" @error="coverImgError($event)"/>
+      <img
+        :src="props.item.thumb_url ? props.item.thumb_url : defaultCover()"
+        alt="cover"
+        @error="coverImgError($event)"
+      />
     </div>
     <div
       :className="
@@ -17,7 +21,9 @@
       <div className="flexb news-list-item-bottom">
         <div className="color3">{{ props.item.creator_name }}</div>
         <div className="flexr">
-          <div className="color3">{{formatDate( new Date(props.item.update_time),'yyyy年MM月dd日')}}</div>
+          <div className="color3">
+            {{ formatDate(new Date(props.item.update_time), 'yyyy年MM月dd日') }}
+          </div>
           <div className="flexl share">
             <!-- <Share css='justify' item={item}/> -->
           </div>
@@ -38,11 +44,9 @@
 </template>
 <script lang="ts" setup>
 import { nextTick } from 'vue'
-import falseimg from '@/assets/images/news/cover1.png'
-import {formatDate} from '@/utils/date'
+import { formatDate } from '@/utils/date'
 import { defaultCover } from '@/utils/index'
 
-console.log(falseimg)
 console.log(defaultCover())
 const props = withDefaults(
   defineProps<{
@@ -52,8 +56,8 @@ const props = withDefaults(
   { size: 'small' }
 )
 
-const coverImgError=(e:any )=>{
- e.target.src = defaultCover()
+const coverImgError = (e: any) => {
+  e.target.src = defaultCover()
 }
 </script>
 <style lang="scss" scoped>

@@ -58,12 +58,12 @@ const getNewslist = async (id: any) => {
     width: 890px;
     background: #ffffff;
     border-radius: 4px;
-    .nav_pre{
-      padding:0  30px;
+    .nav_pre {
+      padding: 0 30px;
     }
     .news_list {
       height: calc(100vh - 127px);
-      .newses{
+      .newses {
         padding: 0 30px;
       }
     }

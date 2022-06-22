@@ -2,7 +2,14 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 
 import emiter from '@/utils/bus'
 
-import { KZ_STATUS, KZ_MY_STATUS, KZ_COM_STATUS, sourceObj, KzProduct, newsDefaultCover } from '@/utils/config'
+import {
+  KZ_STATUS,
+  KZ_MY_STATUS,
+  KZ_COM_STATUS,
+  sourceObj,
+  KzProduct,
+  newsDefaultCover,
+} from '@/utils/config'
 
 export const getUrlParams = (search: string, name: string) => {
   //search方式跳转获取参数
@@ -448,7 +455,7 @@ export function shuffle(array: any[]): any[] {
   return result
 }
 
-export function defaultCover (){
-  let num = Math.floor(Math.random() * 8) + 1
+export function defaultCover() {
+  const num = Math.floor(Math.random() * 8) + 1
   return newsDefaultCover[num]
 }

@@ -291,8 +291,8 @@ const submit = async (type: number) => {
         display: none;
       }
     }
-    
-    :deep(.el-upload-dragger){
+
+    :deep(.el-upload-dragger) {
       width: 250px;
       height: 140px;
       box-sizing: border-box;

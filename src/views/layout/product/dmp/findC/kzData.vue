@@ -1,7 +1,7 @@
 <template>
   <el-scrollbar v-loading="loading" class="dmp_c_kzdata_page">
     <div class="top_search kz_card dmp_page mb16">
-      <el-form ref="formRef" :model="form">
+      <el-form ref="formRef" :model="form" @keyup.enter="goSearch">
         <div class="fcs">
           <el-form-item label="行业" prop="industry_id">
             <KzCascader ref="typeCRef" v-model="form.industry_id" type="type" />

@@ -172,7 +172,7 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/findb/otherdata',
                     name: 'BOtherData',
                     component: () => import('@/views/layout/product/dmp/findB/otherData.vue'),
-                    meta: { title: '第三方数据', insPower: insPowerHash.dmp_b_dsf },
+                    meta: { title: '第三方数据', scroll: true, insPower: insPowerHash.dmp_b_dsf },
                   },
                   {
                     path: '/product/dmp/findb/specificdata',
@@ -700,30 +700,30 @@ export const routes: RouteRecordRaw[] = [
           },
         ],
       },
-      {
-        path: '/report',
-        name: 'Report',
-        component: () => import('@/views/layout/rView.vue'),
-        redirect: '/report/reportcenter',
-        meta: { title: '数据报表' },
-        children: [
-          {
-            path: '/report/reportcenter',
-            name: 'Reportcenter',
-            component: () => import('@/views/layout/rView.vue'),
-            redirect: '/report/reportcenter/overview',
-            meta: { title: '报表中心', icon: '#icon-lanmu-baobiao' },
-            children: [
-              {
-                path: '/report/reportcenter/overview',
-                name: 'Overview',
-                component: () => import('@/views/layout/report/reportCenter/overview.vue'),
-                meta: { title: '概览' },
-              },
-            ],
-          },
-        ],
-      },
+      // {
+      //   path: '/report',
+      //   name: 'Report',
+      //   component: () => import('@/views/layout/rView.vue'),
+      //   redirect: '/report/reportcenter',
+      //   meta: { title: '数据报表' },
+      //   children: [
+      //     {
+      //       path: '/report/reportcenter',
+      //       name: 'Reportcenter',
+      //       component: () => import('@/views/layout/rView.vue'),
+      //       redirect: '/report/reportcenter/overview',
+      //       meta: { title: '报表中心', icon: '#icon-lanmu-baobiao' },
+      //       children: [
+      //         {
+      //           path: '/report/reportcenter/overview',
+      //           name: 'Overview',
+      //           component: () => import('@/views/layout/report/reportCenter/overview.vue'),
+      //           meta: { title: '概览' },
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // },
       {
         path: '/manage',
         name: 'Manage',

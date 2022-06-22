@@ -3,7 +3,7 @@
     <div class="height_searchbox">
       <el-icon class="closebtn rotate" size="18px" @click="closeTopSearch"><close-bold /></el-icon>
 
-      <el-form ref="formRef" class="myform" :model="form">
+      <el-form ref="formRef" class="myform" :model="form" @keyup.enter="goSearch">
         <div class="topitems fcs">
           <el-form-item label="经营范围" prop="business_scope">
             <el-input
@@ -110,7 +110,13 @@
     </div>
 
     <el-dialog v-model="addShow" title="新建筛选" width="500px" @close="closeAdd">
-      <el-form ref="addFormRef" class="myform no_margin" :model="Addform" :rules="addRules">
+      <el-form
+        ref="addFormRef"
+        class="myform no_margin"
+        :model="Addform"
+        :rules="addRules"
+        @submit.prevent
+      >
         <el-form-item label="条件组名称" prop="title">
           <el-input v-model="Addform.title" placeholder="请输入条件组名称"></el-input>
         </el-form-item>
@@ -201,7 +207,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 const reset = () => {
   nowCondition.value = '条件组'
-  // resetForm(formRef.value)
+  resetForm(formRef.value)
   form.ctype.length = 0
   form.industry_id.length = 0
   form.addr.length = 0
@@ -232,7 +238,7 @@ const addRules = reactive({
 const closeAdd = () => {
   //关闭保存条件组弹窗
   addShow.value = false
-  Addform.title = ''
+  // Addform.title = ''
   resetForm(addFormRef.value)
 }
 const getSearchParams = () => {

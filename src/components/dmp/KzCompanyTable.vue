@@ -68,7 +68,7 @@
       <el-table-column property="code" label="统一社会信用代码" width="165" />
       <el-table-column property="url" label="企业官网">
         <template #default="scope">
-          <el-link type="primary" target="_blank" :href="scope.row.url" :underline="false"
+          <el-link type="primary" target="_blank" :href="'//' + scope.row.url" :underline="false"
             ><span
               class="els2"
               @mouseenter="onShowToolTip($event, scope.row.url)"
@@ -109,10 +109,16 @@
       :virtual-ref="msgRef"
       virtual-triggering
       trigger="hover"
-      placement="top"
+      :placement="tooltipMsg.length > 300 ? 'left' : 'top'"
     >
       <template #content>
-        <div style="max-width: 200px">{{ tooltipMsg }}</div>
+        <div
+          style="max-width: 300px"
+          @mouseenter="tooltipShow = true"
+          @mouseleave="tooltipShow = false"
+        >
+          {{ tooltipMsg }}
+        </div>
       </template>
     </el-tooltip>
   </div>
