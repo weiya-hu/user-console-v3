@@ -1,1 +1,0 @@
-import{_ as e}from"./index.3ae4cc0f.js";import{o as r,I as a}from"./vue.fa004e33.js";import"./tinymce.50e98bcc.js";var o=e({},[["render",function(e,o){return r(),a("div",null,"我的服务详情")}]]);export{o as default};
