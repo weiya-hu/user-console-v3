@@ -141,6 +141,7 @@ import { ref } from 'vue'
 import { slServiceList_api, slRrecordIn_api } from '@/api/salon'
 import MessageVue from './message.vue'
 import '@/utils/rem.js'
+import { ElMessageBox } from 'element-plus'
 const messageTxt = ref('')
 const errorShow = ref(false)
 const messageSendFlag = ref()
@@ -203,7 +204,11 @@ const submit = async () => {
         ],
       }
       const res = await slRrecordIn_api(data)
-      res.status && message(res.message)
+      res.status &&
+        ElMessageBox.alert('提交成功', '操作提示', {
+          confirmButtonText: '我知道了',
+          customStyle: { width: '250px' },
+        })
     }
   })
 }

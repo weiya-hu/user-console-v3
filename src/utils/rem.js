@@ -16,10 +16,9 @@
   }
   set()
   window.addEventListener('resize', () => {
-    document.activeElement.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-    })
+    if (document.activeElement.attributes.placeholder) {
+      document.activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
     set()
   })
 })()
