@@ -140,7 +140,6 @@ const sumbit = () => {
       const res = await authenticate_api(data)
       if (res.status === 1) {
         router.replace('/manage/user/myinfo')
-        okMsg('恭喜你，实名认证已通过！')
       } else {
         showUp.value = 2
         showBtn.value = true
