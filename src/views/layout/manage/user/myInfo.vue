@@ -323,7 +323,7 @@
         <el-button type="primary" @click="quitCom">确定</el-button>
       </template>
     </el-dialog>
-    <!-- 修改账户 -->
+    <!-- 修改电话号码 -->
     <el-dialog
       v-model="telChange"
       custom-class="info_dialog"
@@ -351,9 +351,16 @@
                   placeholder="请输入验证码"
                   class="yzm_ipt"
                 ></el-input>
-                <el-button class="bdc_btn code_tips" :disabled="smsTime > 0" @click="getOldSms">{{
-                  smsTime === 0 ? '获取验证码' : smsTime + 'S后重新获取'
-                }}</el-button>
+                <el-button
+                  class="bdc_btn code_tips"
+                  :disabled="smsTimes.changeTelTime > 0"
+                  @click="getOldSms"
+                  >{{
+                    smsTimes.changeTelTime === 0
+                      ? '获取验证码'
+                      : smsTimes.changeTelTime + 'S后重新获取'
+                  }}</el-button
+                >
               </div>
             </el-form-item>
           </el-form>
@@ -390,9 +397,16 @@
                   placeholder="请输入验证码"
                   class="yzm_ipt"
                 ></el-input>
-                <el-button class="bdc_btn code_tips" :disabled="smsTime > 0" @click="getNewSms">{{
-                  smsTime === 0 ? '获取验证码' : smsTime + 'S后重新获取'
-                }}</el-button>
+                <el-button
+                  class="bdc_btn code_tips"
+                  :disabled="smsTimes.changeNewTelTime > 0"
+                  @click="getNewSms"
+                  >{{
+                    smsTimes.changeNewTelTime === 0
+                      ? '获取验证码'
+                      : smsTimes.changeNewTelTime + 'S后重新获取'
+                  }}</el-button
+                >
               </div>
             </el-form-item>
           </el-form>
@@ -432,9 +446,14 @@
                   placeholder="请输入验证码"
                   class="yzm_ipt"
                 ></el-input>
-                <el-button class="bdc_btn code_tips" :disabled="smsTime > 0" @click="getOldSms">{{
-                  smsTime === 0 ? '获取验证码' : smsTime + 'S后重新获取'
-                }}</el-button>
+                <el-button
+                  class="bdc_btn code_tips"
+                  :disabled="smsTimes.emaiTime > 0"
+                  @click="getOldSms"
+                  >{{
+                    smsTimes.emaiTime === 0 ? '获取验证码' : smsTimes.emaiTime + 'S后重新获取'
+                  }}</el-button
+                >
               </div>
             </el-form-item>
           </el-form>
@@ -468,9 +487,16 @@
                   placeholder="请输入验证码"
                   class="yzm_ipt"
                 ></el-input>
-                <el-button class="bdc_btn code_tips" :disabled="smsTime > 0" @click="getMmSms">{{
-                  smsTime === 0 ? '获取验证码' : smsTime + 'S后重新获取'
-                }}</el-button>
+                <el-button
+                  class="bdc_btn code_tips"
+                  :disabled="smsTimes.changeMmTime > 0"
+                  @click="getMmSms"
+                  >{{
+                    smsTimes.changeMmTime === 0
+                      ? '获取验证码'
+                      : smsTimes.changeMmTime + 'S后重新获取'
+                  }}</el-button
+                >
               </div>
             </el-form-item>
           </el-form>
@@ -762,6 +788,13 @@ const closeCom = () => {
 
 //修改手机号
 
+const smsTimes = ref({
+  changeTelTime: 0, // 修改手机号原号码时间
+  changeNewTelTime: 0, // 修改手机号新号码时间
+  changeMmTime: 0, // 修改密码发送短信时间
+  emaiTime: 0, // 修改邮箱短信时间
+})
+
 const oTelForm = reactive({
   yzm: '',
 })
@@ -769,25 +802,26 @@ const oTelFormRef = ref()
 const otelRules = reactive({
   yzm: [{ required: true, message: '请输入验证码！', trigger: 'blur' }],
 })
-const smsTime = ref(0)
-const changeTime = () => {
+// const smsTime = ref(0)
+
+const changeTime = (localString: keyof typeof smsTimes.value) => {
   const timer = setInterval(() => {
-    if (smsTime.value > 0) {
-      smsTime.value--
+    if (smsTimes.value[localString] > 0) {
+      smsTimes.value[localString]--
     } else {
       clearInterval(timer)
-      smsTime.value = 0
-      localStorage.removeItem('changePsssTime')
+      smsTimes.value[localString] = 0
+      localStorage.removeItem(localString)
     }
   }, 1000)
 }
 
 const acode = ref('86')
 
-const getOldSms = async () => {
-  smsTime.value = 120
-  changeTime()
-  localStorage.setItem('changePsssTime', new Date().getTime().toString())
+const getOldSms = async (localString: keyof typeof smsTimes.value) => {
+  smsTimes.value.changeTelTime = 120
+  changeTime(localString)
+  localStorage.setItem(localString, new Date().getTime().toString())
   //发送短信
   const res = await editOldTelSms_api()
 }
@@ -796,7 +830,7 @@ const telNext = () => {
   oTelFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
       editTel.value = 2
-      smsTime.value = 0
+      smsTimes.value.changeTelTime = 0
       const res = await editOldTel_api({
         sms: oTelForm.yzm,
       })
@@ -821,10 +855,10 @@ const ntelRules = reactive({
 const getNewSms = () => {
   nTelFormRef.value.validateField('tel', async (valid: boolean) => {
     if (valid) {
-      smsTime.value = 120
-      changeTime()
-      localStorage.setItem('changePsssTime', new Date().getTime().toString())
-      //发送短信
+      smsTimes.value.changeNewTelTime = 120
+      changeTime('changeNewTelTime')
+      localStorage.setItem('changeNewTelTime', new Date().getTime().toString())
+      //新号码发送短信
       const res = await editNewTelSms_api({
         mobile: nTelForm.tel,
         acode: '+' + acode.value,
@@ -863,9 +897,10 @@ const mTelRules = reactive({
 const getMmSms = () => {
   mmFormRef.value.validateField('tel', async (valid: boolean) => {
     if (valid) {
-      smsTime.value = 120
-      changeTime()
-      localStorage.setItem('changePsssTime', new Date().getTime().toString())
+      smsTimes.value.changeMmTime = 120
+      changeTime('changeMmTime')
+      localStorage.setItem('changeMmTime', new Date().getTime().toString())
+      //修改密码发送短信
       const res = await editMmSms_api()
     }
   })
@@ -875,23 +910,29 @@ const mmNext = () => {
   mmFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
       editMm.value = 2
-      smsTime.value = 0
+      smsTimes.value.changeMmTime = 0
       const res = await editMmTel_api({ sms: mTelForm.yzm })
     }
   })
 }
 
-const oldtime = Number(localStorage.getItem('changePsssTime'))
-if (oldtime) {
-  const now = new Date().getTime()
-  if (now - oldtime < 120000) {
-    const stime = (120 - (now - oldtime) / 1000).toFixed(0)
-    smsTime.value = Number(stime)
-    changeTime()
-  } else {
-    localStorage.removeItem('changePsssTime')
+const getTime = (localString: keyof typeof smsTimes.value) => {
+  const oldtime = Number(localStorage.getItem(localString))
+  if (oldtime) {
+    const now = new Date().getTime()
+    if (now - oldtime < 120000) {
+      const stime = (120 - (now - oldtime) / 1000).toFixed(0)
+      smsTimes.value[localString] = Number(stime)
+      changeTime(localString)
+    } else {
+      localStorage.removeItem(localString)
+    }
   }
 }
+getTime('changeTelTime')
+getTime('changeNewTelTime')
+getTime('changeMmTime')
+getTime('emaiTime')
 
 const passFormRef = ref<FormInstance>()
 const passForm = reactive({
@@ -977,7 +1018,7 @@ const emailComfirm = () => {
 }
 //取消按钮
 const closeEdit = () => {
-  smsTime.value = 0
+  // smsTime.value = 0
   editTel.value = 1
   telChange.value = false
   editMm.value = 1

@@ -111,17 +111,18 @@ const changeTime = () => {
     } else {
       clearInterval(timer)
       smsTime.value = 0
-      localStorage.removeItem('changePsssTime')
+      localStorage.removeItem('changeNameTime')
     }
   }, 1000)
 }
+
 
 const getSms = () => {
   realRef.value.validateField('mobile', async (valid: boolean) => {
     if (valid) {
       smsTime.value = 120
       changeTime()
-      localStorage.setItem('changePsssTime', new Date().getTime().toString())
+      localStorage.setItem('changeNameTime', new Date().getTime().toString())
       const res = await sendSms_api({
         mobile: realValue.value.mobile,
         acode: '+' + realValue.value.acode,
