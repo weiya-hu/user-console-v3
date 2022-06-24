@@ -6,6 +6,7 @@ import {
   KZ_STATUS,
   KZ_MY_STATUS,
   KZ_COM_STATUS,
+  KZ_MESSAGE_STATUS,
   sourceObj,
   KzProduct,
   newsDefaultCover,
@@ -346,6 +347,13 @@ export function getKzStatus(key: number) {
  */
 export function getKzMyStatus(key: any) {
   return getStatus(key, KZ_MY_STATUS)
+}
+
+/**
+ * 推送中心短信发送状态
+ */
+export function getKzMessageStatus(key: any) {
+  return getStatus(key, KZ_MESSAGE_STATUS)
 }
 
 /**

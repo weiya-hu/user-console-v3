@@ -172,7 +172,7 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/dmp/findb/otherdata',
                     name: 'BOtherData',
                     component: () => import('@/views/layout/product/dmp/findB/otherData.vue'),
-                    meta: { title: '第三方数据', scroll: true, insPower: insPowerHash.dmp_b_dsf },
+                    meta: { title: '第三方数据', insPower: insPowerHash.dmp_b_dsf },
                   },
                   {
                     path: '/product/dmp/findb/specificdata',
@@ -698,32 +698,69 @@ export const routes: RouteRecordRaw[] = [
               },
             ],
           },
+          {
+            path: '/product/sms',
+            name: 'Sms',
+            redirect: '/product/sms/message',
+            component: () => import('@/views/layout/rView.vue'),
+            meta: { title: '推送中心', icon: '#icon-lanmu-tuisongzhongxin' },
+            children: [
+              {
+                path: '/product/sms/message',
+                name: 'Message',
+                component: () => import('@/views/layout/rView.vue'),
+                meta: { title: '短信' },
+                redirect: '/product/sms/message/sendlist',
+                children: [
+                  {
+                    path: '/product/sms/message/sendlist',
+                    name: 'SendList',
+                    component: () => import('@/views/layout/product/sms/message/sendList.vue'),
+                    meta: { title: '发送列表' },
+                  },
+                  {
+                    path: '/product/sms/message/messagetemplete',
+                    name: 'MessageTemplete',
+                    component: () =>
+                      import('@/views/layout/product/sms/message/messageTemplete.vue'),
+                    meta: { title: '短信模板' },
+                  },
+                  {
+                    path: '/product/sms/message/contact',
+                    name: 'Contact',
+                    component: () => import('@/views/layout/product/sms/message/contact.vue'),
+                    meta: { title: '联系人' },
+                  },
+                ],
+              },
+            ],
+          },
         ],
       },
-      // {
-      //   path: '/report',
-      //   name: 'Report',
-      //   component: () => import('@/views/layout/rView.vue'),
-      //   redirect: '/report/reportcenter',
-      //   meta: { title: '数据报表' },
-      //   children: [
-      //     {
-      //       path: '/report/reportcenter',
-      //       name: 'Reportcenter',
-      //       component: () => import('@/views/layout/rView.vue'),
-      //       redirect: '/report/reportcenter/overview',
-      //       meta: { title: '报表中心', icon: '#icon-lanmu-baobiao' },
-      //       children: [
-      //         {
-      //           path: '/report/reportcenter/overview',
-      //           name: 'Overview',
-      //           component: () => import('@/views/layout/report/reportCenter/overview.vue'),
-      //           meta: { title: '概览' },
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // },
+      {
+        path: '/report',
+        name: 'Report',
+        component: () => import('@/views/layout/rView.vue'),
+        redirect: '/report/reportcenter',
+        meta: { title: '数据报表' },
+        children: [
+          {
+            path: '/report/reportcenter',
+            name: 'Reportcenter',
+            component: () => import('@/views/layout/rView.vue'),
+            redirect: '/report/reportcenter/overview',
+            meta: { title: '报表中心', icon: '#icon-lanmu-baobiao' },
+            children: [
+              {
+                path: '/report/reportcenter/overview',
+                name: 'Overview',
+                component: () => import('@/views/layout/report/reportCenter/overview.vue'),
+                meta: { title: '概览' },
+              },
+            ],
+          },
+        ],
+      },
       {
         path: '/manage',
         name: 'Manage',

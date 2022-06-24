@@ -6,135 +6,143 @@
         <div class="fleximg" @click="addRoleClick"><span>+</span>添加</div>
       </div>
       <div class="role_all">
-        <div
-          v-for="(item, index) in roleAll"
-          :key="index"
-          :class="
-            Number(roleId) === Number(index) ? 'role_item_active role_item els' : 'role_item els'
-          "
-          @click="roleChange(index)"
-        >
-          {{ item }}
-          <div class="flexr role_operate">
-            <div class="fleximg" @click="addPersonModel">
-              <img src="@/assets/images/role_add.png" />
-            </div>
-            <div class="fleximg" @click="changeRoleNameDialogoShow($event, item)">
-              <img src="@/assets/images/role_edit.png" />
-            </div>
-            <div class="fleximg" @click="deleteRole">
-              <img src="@/assets/images/role_delete.png" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="role_right">
-      <div class="flexb role_right_top">
-        <div>
-          <div v-if="!changeRoleShow" class="flexl">
-            <div class="role_name els">{{ roleAll[roleId] }}</div>
-            <div class="fleximg edit_img" @click="changeRoleNameToggle(roleAll[roleId])">
-              <img src="@/assets/images/role_edit.png" />
-            </div>
-          </div>
-          <div v-else class="flexl">
-            <el-input
-              ref="RoleNameRef"
-              v-model="roleName"
-              class="role_name_input"
-              placeholder="请输入角色名"
-            />
-            <el-button type="primary" @click="saveRoleName">保存</el-button>
-            <el-button type="info" plain @click="changeRoleShow = false">取消</el-button>
-          </div>
-        </div>
-        <div>
-          <el-button type="info" plain @click="deleteRole">删除角色</el-button>
-          <el-button type="primary" @click="addPersonModel"
-            ><KzIcon href="#icon-tianjia" size="14px" color="white" />添加人员</el-button
+        <div v-if="Object.keys(roleAll)[0]">
+          <div
+            v-for="(item, index) in roleAll"
+            :key="index"
+            :class="
+              Number(roleId) === Number(index) ? 'role_item_active role_item els' : 'role_item els'
+            "
+            @click="roleChange(index)"
           >
-        </div>
-      </div>
-      <div class="role_right_down">
-        <div class="flexb">
-          <el-button-group size="middle" class="btn_tab">
-            <el-button
-              v-for="(item, index) in roleManage"
-              :key="item"
-              :class="roleOrperm === index ? 'btn_tab_active role_toggle' : 'role_toggle'"
-              @click="permitOrPerson(index)"
-              >{{ item }}</el-button
-            >
-          </el-button-group>
-          <div v-if="!roleOrperm">
-            <el-button type="primary" @click="savePermitChange">保存</el-button>
-          </div>
-        </div>
-        <div class="role_perm">
-          <div v-if="!roleOrperm">
-            <div v-for="(item, index) in permitList" :key="index">
-              <el-checkbox
-                v-model="item.select"
-                :label="item.instance_name"
-                size="large"
-                :indeterminate="item.indeterminate"
-                @change="allCheckToggle($event, index)"
-              />
-              <div class="check_group_pre">
-                <KzCheckGroup
-                  v-model="userCheckList[item.instance_id]"
-                  :item="item.list"
-                  :ckecked-lists="permitCheckedListed[item.instance_id]"
-                  :all-checked="item.userSelect"
-                  :getchecked-list-flag="getcheckedListFlag"
-                  @allChecked="(val) => allChackChange(val, index)"
-                  @isIndeterminate="(val) => isIndeterminateChange(val, index)"
-                />
+            {{ item }}
+            <div class="flexr role_operate">
+              <div class="fleximg" @click="addPersonModel">
+                <img src="@/assets/images/role_add.png" />
+              </div>
+              <div class="fleximg" @click="changeRoleNameDialogoShow($event, item)">
+                <img src="@/assets/images/role_edit.png" />
+              </div>
+              <div class="fleximg" @click="deleteRole">
+                <img src="@/assets/images/role_delete.png" />
               </div>
             </div>
           </div>
-          <div v-else>
-            <el-table ref="multipleTableRef" :data="rolePersonList" style="width: 100%">
-              <el-table-column type="selection" width="70" align="center" />
-              <el-table-column label="姓名" min-width="120">
-                <template #default="{ row }">{{ row.user_name }}</template>
-              </el-table-column>
-              <el-table-column label="分组" min-width="120">
-                <template #default="{ row }">{{ row.group_name }}</template>
-              </el-table-column>
-              <el-table-column label="联系电话" min-width="120">
-                <template #default="{ row }">{{ row.mobile }}</template>
-              </el-table-column>
-              <el-table-column label="添加时间" min-width="150">
-                <template #default="{ row }">{{
-                  formatDate(new Date(row.create_time), 'yyyy-MM-dd')
-                }}</template>
-              </el-table-column>
-              <el-table-column label="操作" min-width="120" align="center">
-                <template #default="{ row }">
-                  <div class="fleximg">
-                    <el-button
-                      class="person_table_operate"
-                      type="text"
-                      @click="personChangeRole(row.id)"
-                      >变更角色</el-button
-                    >
-                    <el-button type="text" @click="roleDeletePerson(row.id)">删除</el-button>
-                  </div>
-                </template>
-              </el-table-column>
-            </el-table>
-            <KzPage
-              v-model:page="current"
-              v-model:size="size"
-              :total="total"
-              @change="roleTogglePerson()"
-            />
+        </div>
+        <KzEmpty v-else />
+      </div>
+    </div>
+
+    <div class="role_right">
+      <div v-if="Object.keys(roleAll)[0]">
+        <div class="flexb role_right_top">
+          <div>
+            <div v-if="!changeRoleShow" class="flexl">
+              <div class="role_name els">{{ roleAll[roleId] }}</div>
+              <div class="fleximg edit_img" @click="changeRoleNameToggle(roleAll[roleId])">
+                <img src="@/assets/images/role_edit.png" />
+              </div>
+            </div>
+            <div v-else class="flexl">
+              <el-input
+                ref="RoleNameRef"
+                v-model="roleName"
+                class="role_name_input"
+                placeholder="请输入角色名"
+              />
+              <el-button type="primary" @click="saveRoleName">保存</el-button>
+              <el-button type="info" plain @click="changeRoleShow = false">取消</el-button>
+            </div>
+          </div>
+          <div>
+            <el-button type="info" plain @click="deleteRole">删除角色</el-button>
+            <el-button type="primary" @click="addPersonModel"
+              ><KzIcon href="#icon-tianjia" size="14px" color="white" />添加人员</el-button
+            >
+          </div>
+        </div>
+        <div class="role_right_down">
+          <div class="flexb">
+            <el-button-group size="middle" class="btn_tab">
+              <el-button
+                v-for="(item, index) in roleManage"
+                :key="item"
+                :class="roleOrperm === index ? 'btn_tab_active role_toggle' : 'role_toggle'"
+                @click="permitOrPerson(index)"
+                >{{ item }}</el-button
+              >
+            </el-button-group>
+            <div v-if="!roleOrperm">
+              <el-button type="primary" @click="savePermitChange">保存</el-button>
+            </div>
+          </div>
+          <div class="role_perm">
+            <div v-if="!roleOrperm">
+              <div v-for="(item, index) in permitList" :key="index">
+                <el-checkbox
+                  v-model="item.select"
+                  :label="item.instance_name"
+                  size="large"
+                  :indeterminate="item.indeterminate"
+                  @change="allCheckToggle($event, index)"
+                />
+                <div class="check_group_pre">
+                  <KzCheckGroup
+                    v-model="userCheckList[item.instance_id]"
+                    :item="item.list"
+                    :ckecked-lists="permitCheckedListed[item.instance_id]"
+                    :all-checked="item.userSelect"
+                    :getchecked-list-flag="getcheckedListFlag"
+                    @allChecked="(val) => allChackChange(val, index)"
+                    @isIndeterminate="(val) => isIndeterminateChange(val, index)"
+                  />
+                </div>
+              </div>
+            </div>
+            <div v-else>
+              <el-table ref="multipleTableRef" :data="rolePersonList" style="width: 100%">
+                <el-table-column type="selection" width="70" align="center" />
+                <el-table-column label="姓名" min-width="120">
+                  <template #default="{ row }">{{ row.user_name }}</template>
+                </el-table-column>
+                <el-table-column label="分组" min-width="120">
+                  <template #default="{ row }">{{ row.group_name }}</template>
+                </el-table-column>
+                <el-table-column label="联系电话" min-width="120">
+                  <template #default="{ row }">{{ row.mobile }}</template>
+                </el-table-column>
+                <el-table-column label="添加时间" min-width="150">
+                  <template #default="{ row }">{{
+                    formatDate(new Date(row.create_time), 'yyyy-MM-dd')
+                  }}</template>
+                </el-table-column>
+                <el-table-column label="操作" min-width="120" align="center">
+                  <template #default="{ row }">
+                    <div class="fleximg">
+                      <el-button
+                        class="person_table_operate"
+                        type="text"
+                        @click="personChangeRole(row.id)"
+                        >变更角色</el-button
+                      >
+                      <el-button type="text" @click="roleDeletePerson(row.id)">删除</el-button>
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <KzPage
+                v-model:page="current"
+                v-model:size="size"
+                :total="total"
+                @change="roleTogglePerson()"
+              />
+            </div>
           </div>
         </div>
       </div>
+      <KzEmpty v-else />
     </div>
+
     <KzDialog v-model="changeRoleNameDialogo" title="修改角色名" @sure="saveRoleName">
       <div>
         <el-input
@@ -277,6 +285,7 @@ import { errMsg, getUrlParam, okMsg } from '@/utils/index'
 import KzCheckGroup from '@/components/KzCheckGroup.vue'
 import { useRouter } from 'vue-router'
 import { ElMessageBox } from 'element-plus'
+import KzEmpty from '@/components/KzEmpty.vue'
 import {
   companyRoleList_api,
   permitCompanyList_api,

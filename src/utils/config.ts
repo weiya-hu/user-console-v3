@@ -42,6 +42,17 @@ export const KZ_COM_STATUS: Record<number, { text: string; className: string }> 
 }
 
 /**
+ * 短信发送状态
+ */
+export const KZ_MESSAGE_STATUS: Record<number, { text: string; className: string }> = {
+  0: { text: '---', className: '' },
+  1: { text: '待发送', className: 'sdot_fe' },
+  2: { text: '发送中', className: 'sdot_g' },
+  3: { text: '发送完成', className: 'sdot_c0' },
+  4: { text: '发送失败', className: 'sdot_ff' },
+}
+
+/**
  * dmp来源
  */
 export const sourceObj: Record<number, string> = {
