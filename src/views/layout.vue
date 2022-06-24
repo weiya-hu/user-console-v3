@@ -129,11 +129,7 @@
         </el-col>
         <el-col
           v-if="
-            $route.path.includes('/product/') &&
-            (!$route.query.insid ||
-              noInsPower ||
-              !cInsList.length ||
-              cInsList.findIndex((v) => v.insid === Number($route.query.insid)) === -1)
+            $route.path.includes('/product/') && $route.meta.insPower && (!$route.query.insid || noInsPower || !cInsList.length ||cInsList.findIndex((v) => v.insid === Number($route.query.insid)) === -1)
           "
           class="layout_content"
         >
@@ -521,6 +517,7 @@ const changeInsid = ref(0)
 const selectIns = () => {
   if (changeInsid.value) {
     if (changeInsid.value === Number(route.query.insid)) {
+      switchShow.value = false
       warnMsg('已经是当前版本')
     } else {
       window.location.replace(`/product/${nowProduct.value}?insid=` + changeInsid.value)

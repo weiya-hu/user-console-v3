@@ -350,7 +350,7 @@ body .el-dialog {
     box-sizing: content-box;
     padding: 22px 24px;
     font-size: 18px;
-    height: 24px;
+    min-height: 24px;
     line-height: 24px;
     font-weight: bold;
     color: $color333;

@@ -719,6 +719,12 @@ export const routes: RouteRecordRaw[] = [
                     meta: { title: '发送列表' },
                   },
                   {
+                    path: '/product/notification/sms/addsend',
+                    name: 'AddSend',
+                    component: () => import('@/views/layout/product/notification/sms/addSend.vue'),
+                    meta: { title: '新建', father: '/product/notification/sms/sendlist' },
+                  },
+                  {
                     path: '/product/notification/sms/messagetemplete',
                     name: 'MessageTemplete',
                     component: () =>

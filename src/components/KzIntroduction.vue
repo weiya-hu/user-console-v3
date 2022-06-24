@@ -4,6 +4,7 @@
       <el-icon color="#2150EC"><WarningFilled /></el-icon>
       <div class="tip_content">亲爱的用户，{{ contents[props.type].msg }}</div>
       <el-link type="primary" @click="show = true">{{ contents[props.type].link }}</el-link>
+      <span v-if="showChange && type === 3 && nowIdentity === 'user'">，或者尝试</span>
       <el-link v-if="showChange && type === 3" type="primary" @click="changeIns">切换版本</el-link>
     </div>
     <img :src="product ? noInsImg[product as keyof typeof noInsImg] : ''" alt="" />
