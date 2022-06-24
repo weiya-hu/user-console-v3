@@ -699,36 +699,36 @@ export const routes: RouteRecordRaw[] = [
             ],
           },
           {
-            path: '/product/sms',
-            name: 'Sms',
-            redirect: '/product/sms/message',
+            path: '/product/notification',
+            name: 'Notification',
+            redirect: '/product/notification/sms',
             component: () => import('@/views/layout/rView.vue'),
             meta: { title: '推送中心', icon: '#icon-lanmu-tuisongzhongxin' },
             children: [
               {
-                path: '/product/sms/message',
-                name: 'Message',
+                path: '/product/notification/sms',
+                name: 'Sms',
                 component: () => import('@/views/layout/rView.vue'),
                 meta: { title: '短信' },
-                redirect: '/product/sms/message/sendlist',
+                redirect: '/product/notification/sms/sendlist',
                 children: [
                   {
-                    path: '/product/sms/message/sendlist',
+                    path: '/product/notification/sms/sendlist',
                     name: 'SendList',
-                    component: () => import('@/views/layout/product/sms/message/sendList.vue'),
+                    component: () => import('@/views/layout/product/notification/sms/sendList.vue'),
                     meta: { title: '发送列表' },
                   },
                   {
-                    path: '/product/sms/message/messagetemplete',
+                    path: '/product/notification/sms/messagetemplete',
                     name: 'MessageTemplete',
                     component: () =>
-                      import('@/views/layout/product/sms/message/messageTemplete.vue'),
+                      import('@/views/layout/product/notification/sms/messageTemplete.vue'),
                     meta: { title: '短信模板' },
                   },
                   {
-                    path: '/product/sms/message/contact',
+                    path: '/product/notification/sms/contact',
                     name: 'Contact',
-                    component: () => import('@/views/layout/product/sms/message/contact.vue'),
+                    component: () => import('@/views/layout/product/notification/sms/contact.vue'),
                     meta: { title: '联系人' },
                   },
                 ],
