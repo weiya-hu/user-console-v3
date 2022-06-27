@@ -116,7 +116,6 @@ const changeTime = () => {
   }, 1000)
 }
 
-
 const getSms = () => {
   realRef.value.validateField('mobile', async (valid: boolean) => {
     if (valid) {

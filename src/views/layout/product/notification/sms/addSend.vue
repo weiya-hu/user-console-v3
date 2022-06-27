@@ -37,23 +37,27 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="发送号码">
-          <div class="sedn_type mb16" :class="sendType === 1 && 'active'" @click="sendType = 1">手动输入</div>
-          <div class="sedn_type mb16" :class="sendType === 2 && 'active'" @click="sendType = 2">从联系人选择</div>
-          <KzTelInput v-model="telArr" v-show="sendType === 1"/>
+          <div class="sedn_type mb16" :class="sendType === 1 && 'active'" @click="sendType = 1">
+            手动输入
+          </div>
+          <div class="sedn_type mb16" :class="sendType === 2 && 'active'" @click="sendType = 2">
+            从联系人选择
+          </div>
+          <KzTelInput v-show="sendType === 1" v-model="telArr" />
         </el-form-item>
       </el-form>
     </div>
     <div class="kz_card rt fs0">
       <div class="card_title">短信预览</div>
-      <KzIphonePreview v-model="preview"/>
+      <KzIphonePreview v-model="preview" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import KzTelInput from "@/components/sms/KzTelInput.vue";
-import KzIphonePreview from "@/components/sms/KzIphonePreview.vue";
+import { ref } from 'vue'
+import KzTelInput from '@/components/sms/KzTelInput.vue'
+import KzIphonePreview from '@/components/sms/KzIphonePreview.vue'
 const telArr = ref([])
 
 const formRef = ref()
@@ -61,7 +65,9 @@ const formRef = ref()
 const page = ref(1)
 const total = ref(100)
 const sendType = ref(1)
-const preview = ref('短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览')
+const preview = ref(
+  '短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览'
+)
 
 const value = ref('')
 const options = [
@@ -87,18 +93,17 @@ const options = [
   },
 ]
 const radio1 = ref('1')
-
 </script>
 
 <style lang="scss" scoped>
-.add_send{
+.add_send {
   height: 100%;
-  .lt{
+  .lt {
     margin-right: 16px;
     width: calc(100% - 516px);
-    .add_form{
+    .add_form {
       padding: 0 24px 24px;
-      .sedn_type{
+      .sedn_type {
         height: 32px;
         line-height: 32px;
         padding: 0 12px;
@@ -107,14 +112,15 @@ const radio1 = ref('1')
         margin-right: 2px;
         cursor: pointer;
         color: #303133;
-        &.active,&:hover{
-          background-color: #EAF0FD;
-          color: $dfcolor
+        &.active,
+        &:hover {
+          background-color: #eaf0fd;
+          color: $dfcolor;
         }
       }
     }
   }
-  .rt{
+  .rt {
     height: 100%;
     width: 500px;
   }

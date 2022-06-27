@@ -5,8 +5,10 @@
       <div class="flexr">
         <el-input v-model="searchModel" placeholder="请输入模板名称搜索" class="search_inpt" />
         <el-button class="bdc_btn">查询一下</el-button>
-        <el-button class="bdc_btn">签名管理</el-button>
-        <el-button type="primary"
+        <el-button class="bdc_btn" @click="$router.push('/product/notification/sms/signature')"
+          >签名管理</el-button
+        >
+        <el-button type="primary" @click="$router.push('/product/notification/sms/addsend')"
           ><KzIcon
             href="#icon-tianjia"
             size="14px"
@@ -20,7 +22,7 @@
       <el-table :data="tableData" style="width: 100%">
         <el-table-column property="code" label="发送编码" min-width="130" />
         <el-table-column property="type" label="短信类型" min-width="100" />
-        <el-table-column property="message" label="短信模板" min-width="160">
+        <el-table-column property="message" label="模板名称" min-width="160">
           <template #default="{ row }">
             <div
               class="els2"

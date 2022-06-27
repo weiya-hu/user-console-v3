@@ -1,8 +1,8 @@
 <template>
   <div class="kz_iphone_preview">
-    <img :src="iphone_i" alt="">
+    <img :src="iphone_i" alt="" />
     <el-scrollbar :noresize="true" max-height="380px" class="preview_main">
-      <div class="preview_content">{{content}}</div>
+      <div class="preview_content">{{ content }}</div>
     </el-scrollbar>
   </div>
 </template>
@@ -12,8 +12,8 @@
  * 短信预览，苹果手机样式
  * @author chn
  */
-import iphone_i from "@/assets/images/iphone.png";
-import { computed } from "vue";
+import iphone_i from '@/assets/images/iphone.png'
+import { computed } from 'vue'
 const props = withDefaults(
   defineProps<{
     modelValue: string // 预览内容
@@ -21,19 +21,18 @@ const props = withDefaults(
   {}
 )
 const content = computed(() => props.modelValue)
-
 </script>
 
 <style scoped lang="scss">
-.kz_iphone_preview{
+.kz_iphone_preview {
   position: relative;
   padding: 20px 100px;
   user-select: none;
-  img{
+  img {
     width: 300px;
     height: 612px;
   }
-  .preview_main{
+  .preview_main {
     position: absolute;
     left: 100px;
     top: 180px;
@@ -41,9 +40,9 @@ const content = computed(() => props.modelValue)
     padding-left: 30px;
     height: 380px;
   }
-  .preview_content{
+  .preview_content {
     position: relative;
-    background-color: #F2F3F3;
+    background-color: #f2f3f3;
     width: 200px;
     padding: 12px;
     border-radius: 10px;
@@ -51,15 +50,15 @@ const content = computed(() => props.modelValue)
     font-weight: 500;
     line-height: 17px;
     font-size: 12px;
-    &::after{
+    &::after {
       content: '';
       position: absolute;
       left: -10px;
       bottom: -4px;
       border-top: 10px solid transparent;
       border-left: 10px solid transparent;
-      border-right: 10px solid #F2F3F3;
-      border-bottom: 10px solid #F2F3F3;
+      border-right: 10px solid #f2f3f3;
+      border-bottom: 10px solid #f2f3f3;
       border-radius: 4px;
       transform: rotate(-30deg);
     }

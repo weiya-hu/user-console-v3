@@ -1,5 +1,11 @@
 <template>
-  <div class="kz_tel_input fc fsc" @mousedown="onSelStar" @mouseup="onSelEnd" @mousemove="onTagsMove" @keydown.backspace="onDelTag">
+  <div
+    class="kz_tel_input fc fsc"
+    @mousedown="onSelStar"
+    @mouseup="onSelEnd"
+    @mousemove="onTagsMove"
+    @keydown.backspace="onDelTag"
+  >
     <div class="kz_tel_main w100">
       <el-scrollbar :noresize="true">
         <div class="tags">
@@ -19,19 +25,36 @@
               @click.stop="onSelOneTag(v)"
               @mousedown.stop
               @mouseup.stop="onTagMouseup"
-            >{{ v }}</el-tag>
+              >{{ v }}</el-tag
+            >
           </template>
           <input
+            v-if="!isDown"
             ref="tagIpt"
             v-model.trim="tel"
             type="text"
             class="tag_ipt"
-            :style="{ 'width': tel.length * 16 + 'px' }"
+            :style="{ width: tel.length * 16 + 'px' }"
             @keyup="onKeyTelIpt($event)"
             @change="onChangeTel"
-            v-if="!isDown"
           />
-          <input type="text" class="edit_tag_ipt" v-model.number="editTel" v-if="editShow" :style="{ 'top': editStyle.top + 'px', 'left': editStyle.left + 'px', 'width': editStyle.width + 'px' }" ref="editIpt" @change="changeEidt" @blur="onEditBlur" @mousedown.stop @mouseup.stop @keydown.stop/>
+          <input
+            v-if="editShow"
+            ref="editIpt"
+            v-model.number="editTel"
+            type="text"
+            class="edit_tag_ipt"
+            :style="{
+              top: editStyle.top + 'px',
+              left: editStyle.left + 'px',
+              width: editStyle.width + 'px',
+            }"
+            @change="changeEidt"
+            @blur="onEditBlur"
+            @mousedown.stop
+            @mouseup.stop
+            @keydown.stop
+          />
         </div>
         <el-tooltip
           v-model:visible="tooltipShow"
@@ -46,7 +69,7 @@
         </el-tooltip>
       </el-scrollbar>
     </div>
-    <div class="total w100">共输入号码：{{telArr.length}}</div>
+    <div class="total w100">共输入号码：{{ telArr.length }}</div>
   </div>
 </template>
 
@@ -77,7 +100,7 @@ const telArr = computed({
 })
 const splitReg = new RegExp(/,|，/) // 全/半角逗号
 const onKeyTelIpt = (e: KeyboardEvent) => {
-  if(e.key === ','){
+  if (e.key === ',') {
     // 输入逗号时触发
     const tels = tel.value.split(splitReg)
     if (tels.some((v) => v)) {
@@ -90,14 +113,14 @@ const onKeyTelIpt = (e: KeyboardEvent) => {
       tel.value = ''
     }
   }
-  if(selTags.value.length && e.key !== 'Backspace'){
+  if (selTags.value.length && e.key !== 'Backspace') {
     clearSel()
   }
 }
 const onChangeTel = debounce(() => {
   if (splitReg.test(tel.value)) {
     const tels = tel.value.split(splitReg)
-    if(tels.some((v) => v)){
+    if (tels.some((v) => v)) {
       tels.forEach((v) => {
         const value = v.replace(trimReg, '')
         if (value && !telArr.value.includes(value)) {
@@ -138,7 +161,7 @@ const onDblclickTag = (index: number) => {
   eidtIndex.value = index
   editTel.value = telArr.value[eidtIndex.value]
   const tagDom = document.querySelector('.tel_tag_' + index) as HTMLElement
-  if(tagDom){
+  if (tagDom) {
     editStyle.value.width = tagDom.offsetWidth
     editStyle.value.left = tagDom.offsetLeft
     editStyle.value.top = tagDom.offsetTop
@@ -160,7 +183,7 @@ const onEditBlur = () => {
 }
 
 const onTagMouseup = () => {
-  if(isDown.value){
+  if (isDown.value) {
     document.getSelection()?.removeAllRanges()
     isDown.value = false
     iptFocus()
@@ -180,13 +203,13 @@ const onSelTag = (tag: string) => {
   iptFocus()
 }
 const onDelTag = () => {
-  if(tel.value){
+  if (tel.value) {
     return
   }
-  if(selTags.value.length){
-    const arr:string[] = []
-    telArr.value.forEach(v => {
-      if(selTags.value.indexOf(v) === -1){
+  if (selTags.value.length) {
+    const arr: string[] = []
+    telArr.value.forEach((v) => {
+      if (selTags.value.indexOf(v) === -1) {
         arr.push(v)
       }
     })
@@ -198,7 +221,6 @@ const onDelTag = () => {
   if (telArr.value.length) {
     clearSel()
     onSelTag(telArr.value[telArr.value.length - 1])
-    return
   }
 }
 
@@ -211,15 +233,15 @@ const timer = ref()
 const isDown = ref(false)
 const onSelStar = () => {
   // onClickIpt() // 无效？
-  if(telArr.value.length){
+  if (telArr.value.length) {
     timer.value = setTimeout(() => {
       isDown.value = true
-    }, 200);
+    }, 200)
   }
 }
 const onSelEnd = async () => {
   clearTimeout(timer.value)
-  if(isDown.value){
+  if (isDown.value) {
     isDown.value = false
     iptFocus()
     return
@@ -228,11 +250,11 @@ const onSelEnd = async () => {
 }
 
 const onTagsMove = () => {
-  if(isDown.value && telArr.value.length){
+  if (isDown.value && telArr.value.length) {
     const nowSelection = document.getSelection()
-    if(nowSelection?.toString()){
-      const telStr = nowSelection?.toString().replace(/\n/g, ",")
-      selTags.value = telStr.split(',').map(v => v)
+    if (nowSelection?.toString()) {
+      const telStr = nowSelection?.toString().replace(/\n/g, ',')
+      selTags.value = telStr.split(',').map((v) => v)
     }
   }
 }
@@ -263,16 +285,16 @@ const iptFocus = () => {
 <style scoped lang="scss">
 .kz_tel_input {
   background-color: #fff;
-  border: 1px solid #DDDDDD;
+  border: 1px solid #dddddd;
   border-radius: 8px;
   width: 100%;
   height: 200px;
   cursor: text;
   padding: 10px 12px;
-  .kz_tel_main{
+  .kz_tel_main {
     height: calc(100% - 20px);
   }
-  .tags{
+  .tags {
     position: relative;
     width: 100%;
     line-height: 1;
@@ -283,34 +305,34 @@ const iptFocus = () => {
       border: none;
       font-size: 12px;
     }
-    .edit_tag_ipt{
+    .edit_tag_ipt {
       position: absolute;
       height: 24px;
       border: none;
     }
-    .tel_tag{
+    .tel_tag {
       cursor: default;
-      margin:2px;
+      margin: 2px;
       vertical-align: middle;
-      &.el-tag--danger:hover{
+      &.el-tag--danger:hover {
         --el-tag-bg-color: var(--el-color-danger-light-9);
         // --el-tag-border-color: var(--el-color-danger-light-8);
         --el-tag-hover-color: var(--el-color-danger);
         --el-tag-text-color: var(--el-color-danger);
       }
-      &.el-tag--danger.tel_tag_sel{
+      &.el-tag--danger.tel_tag_sel {
         --el-tag-bg-color: var(--el-color-danger);
         --el-tag-border-color: var(--el-color-danger);
         --el-tag-hover-color: var(--el-color-danger-light-3);
         --el-tag-text-color: var(--el-color-white);
       }
-      &.el-tag--success:hover{
-      --el-tag-bg-color: var(--el-color-success-light-9);
-      // --el-tag-border-color: var(--el-color-success-light-8);
-      --el-tag-hover-color: var(--el-color-success);
-      --el-tag-text-color: var(--el-color-success);
+      &.el-tag--success:hover {
+        --el-tag-bg-color: var(--el-color-success-light-9);
+        // --el-tag-border-color: var(--el-color-success-light-8);
+        --el-tag-hover-color: var(--el-color-success);
+        --el-tag-text-color: var(--el-color-success);
       }
-      &.el-tag--success.tel_tag_sel{
+      &.el-tag--success.tel_tag_sel {
         --el-tag-bg-color: var(--el-color-success);
         --el-tag-border-color: var(--el-color-success);
         --el-tag-hover-color: var(--el-color-success-light-3);
@@ -318,10 +340,10 @@ const iptFocus = () => {
       }
     }
   }
-  .total{
+  .total {
     font-size: 12px;
     line-height: 12px;
-    color: #C0C4CC;
+    color: #c0c4cc;
     text-align: right;
     margin-top: 8px;
   }

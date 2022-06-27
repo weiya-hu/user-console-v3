@@ -725,6 +725,13 @@ export const routes: RouteRecordRaw[] = [
                     meta: { title: '新建', father: '/product/notification/sms/sendlist' },
                   },
                   {
+                    path: '/product/notification/sms/signature',
+                    name: 'Signature',
+                    component: () =>
+                      import('@/views/layout/product/notification/sms/signature.vue'),
+                    meta: { title: '签名管理', father: '/product/notification/sms/sendlist' },
+                  },
+                  {
                     path: '/product/notification/sms/messagetemplete',
                     name: 'MessageTemplete',
                     component: () =>
