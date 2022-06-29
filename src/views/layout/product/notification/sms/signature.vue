@@ -41,8 +41,19 @@
       </el-table>
     </div>
   </div>
-  <KzDialog v-model="dialogShow" width="470px" title="新建签名">
-    <el-form> </el-form>
+  <KzDialog v-model="dialogShow" width="470px" title="新建签名" @sure="sureBtn">
+    <el-form ref="formRef" :model="formValue" :rules="formRule">
+      <el-form-item label="签名标题" prop="title">
+        <el-input v-model="formValue.title" placeholder="请输入标题" />
+      </el-form-item>
+      <el-form-item label="&nbsp&nbsp&nbsp使用场景">
+        <el-radio-group v-model="formValue.scene" class="ml-4 flexl">
+          <el-radio label="1" size="large">验证码</el-radio>
+          <el-radio label="2" size="large">通知短信</el-radio>
+          <el-radio label="3" size="large">营销短信</el-radio>
+        </el-radio-group>
+      </el-form-item>
+    </el-form>
   </KzDialog>
 </template>
 
@@ -53,6 +64,21 @@ import { formatDate } from '@/utils/date'
 import KzDialog from '@/components/KzDialog.vue'
 const tableData = ref()
 const dialogShow = ref(false)
+const formRef = ref()
+const formValue = ref({
+  title: '',
+  scene: null,
+})
+const formRule = ref({
+  title: [{ required: true, message: '请输入签名', trigger: 'change' }],
+})
+
+const sureBtn = () => {
+  console.log(formValue.value)
+  formRef.value.validate(async (valid: boolean, invalidFields: any) => {
+    console.log(valid, invalidFields)
+  })
+}
 </script>
 
 <style lang="scss" scoped>

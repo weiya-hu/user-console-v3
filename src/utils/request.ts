@@ -7,6 +7,7 @@ import axios from 'axios'
 //引入ui框架的弹窗组件
 import { ElMessage } from 'element-plus'
 import router from '@/router'
+import { type } from 'os'
 
 // 设置默认地址
 axios.defaults.baseURL = '/api'
@@ -110,6 +111,37 @@ export function post(module: string, url: string, params?: any, showmsg?: boolea
       })
       .catch((error) => {
         console.log(error, 'posterror')
+        reject(error)
+      })
+  })
+}
+
+//传入返回类型的get请求
+type IResponseType = 'arraybuffer' | 'blob' | 'document' | 'json' | 'text' | 'stream'
+export function getWithResponseType(
+  module: string,
+  url: string,
+  type: IResponseType,
+  params?: any,
+  showmsg?: boolean
+) {
+  return new Promise<IRes>((resolve, reject) => {
+    axios
+      .get(url, { headers: { MODULE: module }, responseType: type, params })
+      .then((res) => {
+        if (showmsg && res.data && res.data.status == 1) {
+          ElMessage({
+            showClose: true,
+            message: res.data.message,
+            type: 'success',
+            grouping: true,
+            customClass: 'el_message',
+          })
+        }
+        resolve(res.data)
+      })
+      .catch((error) => {
+        console.log(error, 'geterror')
         reject(error)
       })
   })
