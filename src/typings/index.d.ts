@@ -11,11 +11,12 @@ interface IRes {
 /**
  * @name 分页类型
  */
-interface IPageParams {
+type IPageParams<T = IKzObj> = {
+  [x in keyof T]: T[x]
+} & {
   size: number
   current: number
   source?: number
-  [propName: string]: any
 }
 
 /**

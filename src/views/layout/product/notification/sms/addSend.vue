@@ -110,6 +110,7 @@
                     ]"
                     :filter-method="filterType"
                     filter-placement="bottom-end"
+                    show-overflow-tooltip
                   >
                     <template #default="{ row }">
                       {{ row.type }}
@@ -117,6 +118,9 @@
                   </el-table-column>
                   <el-table-column prop="name" label="姓名" width="70" />
                   <el-table-column prop="tel" label="电话号码" width="110" />
+                  <template #append>
+                    <div class="fcc" style="color: #c0c4cc">没有更多了</div>
+                  </template>
                 </el-table>
                 <div style="width: 30px" class="fcc f0">
                   <KzIcon href="#icon-tiaozhuan-youxiantiao" />
@@ -150,6 +154,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import KzTelInput from '@/components/sms/KzTelInput.vue'
 import KzIphonePreview from '@/components/sms/KzIphonePreview.vue'
 import { telReg } from '@/utils/index'
+import { getContactList_api } from '@/api/product/cmsdemo'
 
 const telArr = ref([])
 const telRegArr = computed(() => telArr.value.filter((v) => telReg.test(v)))
@@ -261,7 +266,6 @@ const onChangeTels = () => {
 const searchContacts = ref('')
 const tableRef = ref()
 const contactsPage = ref(1)
-const contactsSize = ref(10)
 const contactsTotal = ref(0)
 const tableLoading = ref(false)
 const tableData = ref([
@@ -308,6 +312,17 @@ const tableData = ref([
     tel: '1234',
   },
 ])
+const getContactList = async () => {
+  const { status, body } = await getContactList_api({
+    size: 10,
+    current: contactsPage.value,
+  })
+  if (status) {
+    contactsTotal.value = body.total
+    contactsPage.value = contactsPage.value++
+    // tableData.value = tableData.value.concat(body.records)
+  }
+}
 
 onMounted(() => {
   tableRef.value &&
@@ -322,10 +337,13 @@ onUnmounted(() => {
       .removeEventListener('scroll', onContactsLoad)
 })
 const onContactsLoad = (e: Event) => {
+  if (tableData.value.length >= contactsTotal.value) {
+    return
+  }
   const { clientHeight, scrollTop, scrollHeight } = e.target as HTMLElement
   // 父容器高度 + 子容器距离父容器顶端的高度 = 子容器可滚动的高度
   if (clientHeight + scrollTop === scrollHeight) {
-    console.log('竖向滚动条已经滚动到底部')
+    getContactList()
   }
 }
 

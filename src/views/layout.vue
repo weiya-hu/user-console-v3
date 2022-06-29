@@ -559,7 +559,8 @@ const hasInsPower = (nowRoute: RouteLocationNormalizedLoaded) => {
 }
 store.setInstance().then(() => {
   if (route.path.includes('/product/')) {
-    nowProduct.value = route.path.split('/')[2]
+    const routePathArr = route.path.split('/')
+    nowProduct.value = routePathArr[2] === 'notification' ? routePathArr[3] : routePathArr[2]
     const oneInsid = changeIns(route)
     if (oneInsid) {
       router.replace({
@@ -623,12 +624,13 @@ onBeforeRouteUpdate((to, from) => {
   if (to.path.includes('/product/')) {
     const toPathArr = to.path.split('/')
     const fromPathArr = from.path.split('/')
-    nowProduct.value = toPathArr[2]
-    if (toPathArr[2] !== fromPathArr[2]) {
+    nowProduct.value = toPathArr[2] === 'notification' ? toPathArr[3] : toPathArr[2]
+    const fromProduct = fromPathArr[2] === 'notification' ? fromPathArr[3] : fromPathArr[2]
+    if (nowProduct.value !== fromProduct) {
       // 即类似dmp切换到cms，清空insid
       insid.value = ''
     }
-    if (!from.path.includes('/product/') || toPathArr[2] !== fromPathArr[2]) {
+    if (!from.path.includes('/product/') || nowProduct.value !== fromProduct) {
       const oneInsid = changeIns(to)
       if (oneInsid) {
         return {

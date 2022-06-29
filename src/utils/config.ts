@@ -6,6 +6,7 @@
 export const KzProduct = {
   1: 'cms',
   2: 'dmp',
+  3: 'sms',
 }
 
 /**
