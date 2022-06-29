@@ -28,6 +28,9 @@
               >{{ v }}</el-tag
             >
           </template>
+          <div v-show="!telArr.length && !tel" class="ipt_placeholder">
+            请输入手机号码，使用“ , ”隔开多个号码
+          </div>
           <input
             v-if="!isDown"
             ref="tagIpt"
@@ -88,7 +91,7 @@ const props = withDefaults(
   }>(),
   {}
 )
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'change'])
 
 const tagIpt = ref()
 const tel = ref('')
@@ -106,8 +109,15 @@ const onKeyTelIpt = (e: KeyboardEvent) => {
     if (tels.some((v) => v)) {
       tels.forEach((v) => {
         const value = v.replace(trimReg, '')
-        if (value && !telArr.value.includes(value)) {
-          telArr.value.push(value)
+        if (value) {
+          const index = telArr.value.indexOf(value)
+          if (index !== -1) {
+            telArr.value.splice(index, 1)
+            telArr.value.push(value)
+          } else {
+            telArr.value.push(value)
+          }
+          emit('change')
         }
       })
       tel.value = ''
@@ -123,31 +133,36 @@ const onChangeTel = debounce(() => {
     if (tels.some((v) => v)) {
       tels.forEach((v) => {
         const value = v.replace(trimReg, '')
-        if (value && !telArr.value.includes(value)) {
-          telArr.value.push(value)
+        if (value) {
+          const index = telArr.value.indexOf(value)
+          if (index !== -1) {
+            telArr.value.splice(index, 1)
+            telArr.value.push(value)
+          } else {
+            telArr.value.push(value)
+          }
+          emit('change')
         }
       })
       tel.value = ''
     }
   } else {
-    if (telReg.test(tel.value)) {
-      if (telArr.value.includes(tel.value)) {
-        msgRef.value = tagIpt.value
-        tooltipMsg.value = '重复号码'
-        tooltipShow.value = true
-        return
-      }
-    }
     const value = tel.value.replace(trimReg, '')
-    if (value && !telArr.value.includes(value)) {
+    const index = telArr.value.indexOf(value)
+    if (index !== -1) {
+      telArr.value.splice(index, 1)
+      telArr.value.push(value)
+    } else {
       telArr.value.push(value)
     }
+    emit('change')
     tel.value = ''
     tooltipShow.value = false
   }
 }, 500)
 const onCloseTag = (index: number) => {
   telArr.value.splice(index, 1)
+  emit('change')
   tooltipShow.value = false
   clearSel()
 }
@@ -173,9 +188,21 @@ const onDblclickTag = (index: number) => {
   }
 }
 const changeEidt = () => {
-  telArr.value[eidtIndex.value] = String(editTel.value) // editTel.value绑定的v-model.number会转换为number类型
-  editShow.value = false
-  iptFocus()
+  if (editTel.value) {
+    const eVal = String(editTel.value) // editTel.value绑定的v-model.number会转换为number类型
+    const value = eVal.replace(trimReg, '')
+    if (value) {
+      // 顺序不能变，先找index，再改，最后删除index
+      const index = telArr.value.indexOf(value)
+      telArr.value[eidtIndex.value] = value
+      if (index !== -1) {
+        telArr.value.splice(index, 1)
+      }
+      emit('change')
+      editShow.value = false
+      iptFocus()
+    }
+  }
 }
 const onEditBlur = () => {
   editShow.value = false
@@ -214,6 +241,7 @@ const onDelTag = () => {
       }
     })
     telArr.value = arr
+    emit('change')
     clearSel()
     iptFocus()
     return
@@ -294,6 +322,12 @@ const iptFocus = () => {
   .kz_tel_main {
     height: calc(100% - 20px);
   }
+  .ipt_placeholder {
+    font-size: 14px;
+    color: #c0c4cc;
+    position: absolute;
+    line-height: 24px;
+  }
   .tags {
     position: relative;
     width: 100%;
@@ -304,6 +338,7 @@ const iptFocus = () => {
       max-width: 100%;
       border: none;
       font-size: 12px;
+      height: 24px;
     }
     .edit_tag_ipt {
       position: absolute;
@@ -346,6 +381,11 @@ const iptFocus = () => {
     color: #c0c4cc;
     text-align: right;
     margin-top: 8px;
+  }
+}
+.is-error {
+  .kz_tel_input {
+    border-color: var(--el-color-danger);
   }
 }
 </style>

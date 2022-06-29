@@ -12,7 +12,7 @@
     <template #default>
       <slot>
         <div v-if="type === 'kf'" class="fcc fc">
-          <img :src="kf_code_i" alt="" />
+          <img :src="kf_qrcode_i" alt="" />
           <div class="tip">请扫描上方二维码，联系客服人员</div>
           <div class="kf_tel fcc">
             <img :src="kzkf_i" alt="" />
@@ -44,7 +44,7 @@
  * 通用弹窗 和 客服弹窗，默认slot，弹窗内容
  * @author chn
  */
-import kf_code_i from '@/assets/images/kf_code.png'
+import kf_qrcode_i from '@/assets/images/kf_qrcode.png'
 import kzkf_i from '@/assets/images/kzkf.png'
 import { computed } from 'vue'
 const props = withDefaults(

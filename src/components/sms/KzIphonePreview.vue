@@ -2,7 +2,7 @@
   <div class="kz_iphone_preview">
     <img :src="iphone_i" alt="" />
     <el-scrollbar :noresize="true" max-height="380px" class="preview_main">
-      <div class="preview_content">{{ content }}</div>
+      <div v-show="content" class="preview_content">{{ content }}</div>
     </el-scrollbar>
   </div>
 </template>
@@ -50,17 +50,18 @@ const content = computed(() => props.modelValue)
     font-weight: 500;
     line-height: 17px;
     font-size: 12px;
+    word-break: break-all;
     &::after {
       content: '';
       position: absolute;
       left: -10px;
-      bottom: -4px;
+      bottom: -2px;
       border-top: 10px solid transparent;
       border-left: 10px solid transparent;
-      border-right: 10px solid #f2f3f3;
+      border-right: 10px solid transparent;
       border-bottom: 10px solid #f2f3f3;
       border-radius: 4px;
-      transform: rotate(-30deg);
+      transform: rotate(-45deg);
     }
   }
 }

@@ -739,6 +739,16 @@ export const routes: RouteRecordRaw[] = [
                     meta: { title: '短信模板' },
                   },
                   {
+                    path: '/product/notification/sms/addtemplete',
+                    name: 'AddTemplete',
+                    component: () =>
+                      import('@/views/layout/product/notification/sms/addTemplete.vue'),
+                    meta: {
+                      title: '新建模板',
+                      father: '/product/notification/sms/messagetemplete',
+                    },
+                  },
+                  {
                     path: '/product/notification/sms/contact',
                     name: 'Contact',
                     component: () => import('@/views/layout/product/notification/sms/contact.vue'),
