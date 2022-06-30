@@ -7,7 +7,14 @@
         <el-button class="bdc_btn">查询</el-button>
         <el-button class="bdc_btn" @click="importShow = true">导入联系人</el-button>
         <el-button class="bdc_btn" @click="drawer2 = true">分组管理</el-button>
-        <el-button type="primary" @click="dialogShow = true"
+        <el-button
+          type="primary"
+          @click="
+            () => {
+              dialogShow = true
+              getGroupList()
+            }
+          "
           ><KzIcon
             href="#icon-tianjia"
             size="14px"
@@ -19,38 +26,35 @@
     </div>
     <div class="dmp_table">
       <el-table :data="tableData" style="width: 100%">
-        <el-table-column property="code" label="联系人姓名" min-width="100" />
-        <el-table-column property="type" label="联系人分组" min-width="100" />
-        <el-table-column property="message" label="电话号码" min-width="120"> </el-table-column>
+        <el-table-column property="name" label="联系人姓名" min-width="100" />
+        <el-table-column property="group_name" label="联系人分组" min-width="100" />
+        <el-table-column property="mobile" label="电话号码" min-width="120"> </el-table-column>
         <el-table-column property="create_time" label="添加时间" min-width="120">
           <template #default="{ row }">
             <div>{{ formatDate(new Date(row.create_time), 'yyyy-MM-dd hh:mm') }}</div>
           </template>
         </el-table-column>
-        <el-table-column property="success_count" label="短信发送记录" min-width="100" />
-        <el-table-column label="操作" fixed="right" width="150">
+        <el-table-column label="操作" fixed="right" width="250">
           <template #default="{ row }">
             <div class="fcs">
               <el-link
-                v-if="row.status == 1"
                 type="primary"
-                @click="$router.push('/product/cms/mywork/articleadd?id=' + row.id)"
+                @click="
+                  $router.push(
+                    '/product/notification/sms/addsend?mobile=' +
+                      row.mobile +
+                      '&name=' +
+                      row.name +
+                      '&contactId=' +
+                      row.id
+                  )
+                "
                 >发送短信</el-link
               >
               <div class="line"></div>
-              <el-link
-                v-if="row.status == 1"
-                type="primary"
-                @click="$router.push('/product/cms/mywork/articleadd?id=' + row.id)"
-                >修改</el-link
-              >
+              <el-link type="primary">修改</el-link>
               <div class="line"></div>
-              <el-link
-                v-if="row.status == 2 || row.status == 3"
-                type="primary"
-                @click="$router.push('/product/cms/mywork/articledetails?id=' + row.id)"
-                >删除</el-link
-              >
+              <el-link type="primary">删除</el-link>
             </div>
           </template>
         </el-table-column>
@@ -64,9 +68,15 @@
         <el-form-item label="联系人姓名" prop="name">
           <el-input v-model="formValue.name" placeholder="请输入姓名" />
         </el-form-item>
-        <el-form-item label="联系人分组" prop="group">
-          <el-select v-model="formValue.group" placeholder="请选择分组" class="group_select">
-            <el-option value="1" label="2">12</el-option>
+        <el-form-item label="联系人分组" prop="group_id">
+          <el-select v-model="formValue.group_id" placeholder="请选择分组" class="group_select">
+            <el-option
+              v-for="item in groupList"
+              :key="item.id"
+              :value="item.id"
+              :label="item.name"
+              >{{ item.name }}</el-option
+            >
           </el-select>
         </el-form-item>
         <el-form-item label="&nbsp&nbsp&nbsp电话号码" prop="mobile">
@@ -149,7 +159,7 @@
       <div class="flexl up_file">
         <div>上传附件</div>
         <div>
-          <KzUpload>
+          <KzUpload v-model="addFileName" :exname-list="['.xlsx']">
             <div class="up_file_describ">
               <div>
                 <div>1：下载模板，根据模板要求填写号码；</div>
@@ -175,31 +185,67 @@ import KzDialog from '@/components/KzDialog.vue'
 import { mobileCheck } from '@/utils/index'
 import { Edit, Delete } from '@element-plus/icons-vue'
 import KzUpload from '@/components/KzUpload.vue'
-import { contactTemplate_api } from '@/api/product/sms/contact'
+import {
+  contactTemplate_api,
+  contactPage_api,
+  contactGroupList_api,
+  contactIn_api,
+} from '@/api/product/sms/contact'
 
+const current = ref(1)
+const size = ref(10)
+const total = ref(0)
+const addFileName = ref()
 const searchModel = ref()
 const tableData = ref()
 const dialogShow = ref(false)
 const formRef = ref()
+const groupList = ref<any[]>()
 const formValue = ref({
   name: '',
-  group: '',
+  group_id: 7,
   mobile: '',
 })
 const formRule = ref({
   name: [{ required: true, message: '请输入姓名', trigger: 'change' }],
-  group: [{ required: true, message: '请选择分组', trigger: 'change' }],
+  group_id: [{ required: true, message: '请选择分组', trigger: 'change' }],
   mobile: [
     { required: true, message: '请输入电话号码', trigger: 'blur' },
     { validator: mobileCheck, trigger: 'blur' },
   ],
 })
 
+const gettList = async (name?: string, mobile?: string, groupId?: string) => {
+  const data = {
+    current: current.value,
+    size: size.value,
+    groupId,
+    mobile,
+    name,
+  }
+  const { status, body } = await contactPage_api(data)
+  status &&
+    (() => {
+      tableData.value = body.records
+    })()
+}
+gettList()
+//确认新建联系人按钮
 const sureBtn = () => {
   console.log(formValue.value)
-  formRef.value.validate(async (valid: boolean, invalidFields: any) => {
-    console.log(valid, invalidFields)
+  formRef.value.validate(async (valid: boolean) => {
+    const { status } = await contactIn_api(formValue.value)
+    status &&
+      (() => {
+        gettList()
+        dialogShow.value = false
+      })()
   })
+}
+
+const getGroupList = async () => {
+  const { status, body } = await contactGroupList_api()
+  status && (groupList.value = body)
 }
 
 //获取下载模板链接
