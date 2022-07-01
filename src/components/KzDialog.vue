@@ -6,7 +6,7 @@
     :custom-class="type ? 'no_header_dialog' : 'kz_dialog'"
     @close="close"
   >
-    <template #title>
+    <template #header>
       <div :class="type === 'kf' && 'fcc kf_title'">{{ type === 'kf' ? '联系客服' : title }}</div>
     </template>
     <template #default>

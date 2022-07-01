@@ -63,7 +63,7 @@
         </div>
         <div class="role_right_down">
           <div class="flexb">
-            <el-button-group size="middle" class="btn_tab">
+            <el-button-group class="btn_tab">
               <el-button
                 v-for="(item, index) in roleManage"
                 :key="item"

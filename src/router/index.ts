@@ -732,10 +732,10 @@ export const routes: RouteRecordRaw[] = [
                     meta: { title: '签名管理', father: '/product/notification/sms/sendlist' },
                   },
                   {
-                    path: '/product/notification/sms/messagetemplete',
-                    name: 'MessageTemplete',
+                    path: '/product/notification/sms/messagetemplate',
+                    name: 'MessageTemplate',
                     component: () =>
-                      import('@/views/layout/product/notification/sms/messageTemplete.vue'),
+                      import('@/views/layout/product/notification/sms/messageTemplate.vue'),
                     meta: { title: '短信模板' },
                   },
                   {
@@ -745,7 +745,7 @@ export const routes: RouteRecordRaw[] = [
                       import('@/views/layout/product/notification/sms/addTemplete.vue'),
                     meta: {
                       title: '新建模板',
-                      father: '/product/notification/sms/messagetemplete',
+                      father: '/product/notification/sms/messagetemplate',
                     },
                   },
                   {
