@@ -297,7 +297,7 @@ const getContactList = async () => {
   })
   if (status) {
     contactsTotal.value = body.total
-    contactsPage.value = contactsPage.value++
+    contactsPage.value++
     tableData.value = tableData.value.concat(body.records)
     tableLoading.value = false
   }
