@@ -21,7 +21,7 @@
           @click="
             () => {
               importShow = true
-              getTempleteUrl()
+              getTemplateUrl()
             }
           "
           >导入联系人</el-button
@@ -446,7 +446,7 @@ const sureEdit = async () => {
 //获取下载模板链接
 const downLink = ref()
 const importShow = ref(false)
-const getTempleteUrl = async () => {
+const getTemplateUrl = async () => {
   const res = await contactTemplate_api()
   downLink.value = URL.createObjectURL(res)
 }

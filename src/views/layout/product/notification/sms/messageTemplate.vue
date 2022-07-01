@@ -16,7 +16,7 @@
           @keydown="getList(searchModel)"
         />
         <el-button class="bdc_btn">查询</el-button>
-        <el-button type="primary" @click="$router.push('/product/notification/sms/addtemplete')"
+        <el-button type="primary" @click="$router.push('/product/notification/sms/addtemplate')"
           ><KzIcon
             href="#icon-tianjia"
             size="14px"
@@ -61,7 +61,7 @@
             <div class="fcs">
               <el-link
                 type="primary"
-                @click="$router.push('/product/notification/sms/addtemplete?id=' + row.id)"
+                @click="$router.push('/product/notification/sms/addtemplate?id=' + row.id)"
                 >编辑</el-link
               >
               <div class="line"></div>

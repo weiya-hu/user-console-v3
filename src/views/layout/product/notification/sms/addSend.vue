@@ -20,44 +20,50 @@
         <el-form-item label="短信模板" prop="tid">
           <div class="f1">
             <div class="flex">
-              <el-select v-model="addForm.tid" placeholder="请选择短信模板" class="f1">
+              <el-select
+                v-model="addForm.tid"
+                placeholder="请选择短信模板"
+                class="f1"
+                @change="onChangeTemplate"
+              >
                 <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="item in templates"
+                  :key="item.id"
+                  :label="item.title"
+                  :value="item.id"
+                  :disabled="item.template_status !== 3 || item.status === 0"
                 />
                 <el-pagination
-                  v-model:currentPage="page"
+                  v-model:currentPage="tPage"
                   layout="prev, pager, next"
-                  :total="total"
-                  :pager-count="5"
+                  :total="tTotal"
+                  :page-size="tSize"
                   small
+                  @current-change="getTemplateList"
                 >
                 </el-pagination>
               </el-select>
               <el-button class="bdc_btn" style="margin-left: 12px">新建模板</el-button>
             </div>
             <div v-show="addForm.tid" class="template_content">
-              <div class="template_text">
-                【xx京东店】亲，双十一即将来临！为感谢您一直以来的支持与厚爱，xx京东店酬谢活动开始了，全场xx商品8折起，两件以上6折起，详询xx退订回T
-              </div>
-              <div class="template_info">本条短信共计74个字，按2条计费</div>
+              <div class="template_text">{{ preview }}</div>
+              <div class="template_info">本条短信共计{{ preview.length }}个字，按1条计费</div>
             </div>
           </div>
         </el-form-item>
         <el-form-item label="发送方式" prop="sendType">
           <div>
             <el-radio-group v-model="addForm.sendType" @change="onChangeSendType">
-              <el-radio label="1">即时发送</el-radio>
-              <el-radio label="2">定时发送</el-radio>
+              <el-radio :label="1">即时发送</el-radio>
+              <el-radio :label="2">定时发送</el-radio>
             </el-radio-group>
-            <div v-show="addForm.sendType === '2'">
+            <div v-show="addForm.sendType === 2">
               <el-date-picker
                 v-model="addForm.sendTime"
                 type="datetime"
                 placeholder="请选择发送时间"
                 format="YYYY/MM/DD hh:mm"
+                value-format="x"
               />
             </div>
           </div>
@@ -72,7 +78,7 @@
                 从联系人选择
               </div>
             </div>
-            <KzTelInput v-show="selType === 1" v-model="telArr" @change="onChangeTels" />
+            <KzTelInput v-show="selType === 1" v-model="addForm.tels" @change="onChangeTels" />
             <div v-show="selType === 2" class="add_contacts">
               <div class="add_contacts_search fsc">
                 <div class="fcs fjend">
@@ -85,9 +91,9 @@
                       <KzIcon href="#icon-sousuo"></KzIcon>
                     </template>
                   </el-input>
-                  <el-button class="bdc_btn">查询</el-button>
+                  <el-button class="bdc_btn" @click="onSearchContact">查询</el-button>
                 </div>
-                <div class="contacts_total">共选择联系人：{{ contactsArr.length }}个</div>
+                <div class="contacts_total">共选择号码：{{ addForm.contactsArr.length }}个</div>
               </div>
               <div class="dmp_table mt16 fcs">
                 <el-table
@@ -97,28 +103,26 @@
                   :data="tableData"
                   height="250"
                   style="width: 310px"
-                  @selection-change="onChangeSel"
+                  @select-all="onSelAllTable"
+                  @select="onSelTable"
                 >
                   <el-table-column type="selection" width="50" />
                   <el-table-column
-                    prop="type"
+                    prop="group_name"
                     label="分组"
                     width="80"
-                    :filters="[
-                      { text: '分组一', value: '1' },
-                      { text: '分组二', value: '2' },
-                    ]"
-                    :filter-method="filterType"
+                    :filters="groupList"
+                    :filter-method="filterGroup"
                     filter-placement="bottom-end"
                     show-overflow-tooltip
                   >
                     <template #default="{ row }">
-                      {{ row.type }}
+                      {{ row.group_name || '-' }}
                     </template>
                   </el-table-column>
                   <el-table-column prop="name" label="姓名" width="70" />
-                  <el-table-column prop="tel" label="电话号码" width="110" />
-                  <template #append>
+                  <el-table-column prop="mobile" label="电话号码" width="110" />
+                  <template v-if="tableData.length >= contactsTotal && tableData.length" #append>
                     <div class="fcc" style="color: #c0c4cc">没有更多了</div>
                   </template>
                 </el-table>
@@ -127,12 +131,12 @@
                 </div>
                 <div class="is_sels f1">
                   <el-scrollbar :noresize="true">
-                    <div v-for="v in contactsArr" :key="v.id" class="is_sel_item fsc">
+                    <div v-for="(v, i) in addForm.contactsArr" :key="v.id" class="is_sel_item fsc">
                       <div class="fcs">
-                        <div class="is_sel_item_name">{{ v.name }}</div>
-                        <div>{{ v.tel }}</div>
+                        <div class="is_sel_item_name els">{{ v.name }}</div>
+                        <div>{{ v.mobile }}</div>
                       </div>
-                      <KzIcon href="#icon-suoxiao" size="16px" @click="onDelSel(v.id)" />
+                      <KzIcon href="#icon-suoxiao" size="16px" @click="onDelSel(v.mobile, i)" />
                     </div>
                   </el-scrollbar>
                 </div>
@@ -154,25 +158,36 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import KzTelInput from '@/components/sms/KzTelInput.vue'
 import KzIphonePreview from '@/components/sms/KzIphonePreview.vue'
 import { telReg } from '@/utils/index'
-import { getContactList_api } from '@/api/product/cmsdemo'
+import { contactPage_api, contactGroupList_api } from '@/api/product/sms/contact'
+import {
+  addSend_api,
+  saveSend_api,
+  templateSearchPage_api,
+  getSendDetail_api,
+} from '@/api/product/sms/message'
+import { useRoute, useRouter } from 'vue-router'
 
-const telArr = ref([])
-const telRegArr = computed(() => telArr.value.filter((v) => telReg.test(v)))
-const preview = ref(
-  '短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览短信预览'
-)
+const router = useRouter()
+const route = useRoute()
+
+const id = route.query.id ? String(route.query.id) : ''
+
+// const telArr = ref([])
+const preview = ref('')
 
 const addFormRef = ref()
 const addForm = ref({
   tid: '',
-  sendType: '',
+  sendType: 1,
   sendTime: '',
   tels: [],
+  contactsArr: [] as any[],
 })
+const telRegArr = computed(() => addForm.value.tels.filter((v) => telReg.test(v)))
 
 const telsPass = (rule: any, value: any, callback: any) => {
   if (selType.value === 1) {
-    if (!telArr.value.length) {
+    if (!addForm.value.tels.length) {
       callback(new Error('请输入号码!'))
       return
     }
@@ -180,9 +195,10 @@ const telsPass = (rule: any, value: any, callback: any) => {
       callback(new Error('请输入正确号码!'))
       return
     }
+    callback()
     return
   }
-  if (selType.value === 2 && !contactsArr.value.length) {
+  if (selType.value === 2 && !addForm.value.contactsArr.length) {
     callback(new Error('请选择联系人!'))
     return
   }
@@ -190,7 +206,7 @@ const telsPass = (rule: any, value: any, callback: any) => {
 }
 
 const sendTimePass = (rule: any, value: any, callback: any) => {
-  if (addForm.value.sendType === '2' && !addForm.value.sendTime) {
+  if (addForm.value.sendType === 2 && !addForm.value.sendTime) {
     callback(new Error('请选择发送时间!'))
     return
   }
@@ -223,30 +239,25 @@ const addRules = {
   ],
 }
 
-const options = [
-  {
-    value: 'Option1',
-    label: 'Option1',
-  },
-  {
-    value: 'Option2',
-    label: 'Option2',
-  },
-  {
-    value: 'Option3',
-    label: 'Option3',
-  },
-  {
-    value: 'Option4',
-    label: 'Option4',
-  },
-  {
-    value: 'Option5',
-    label: 'Option5',
-  },
-]
-const page = ref(1)
-const total = ref(100)
+const getTemplateList = async () => {
+  const { status, body } = await templateSearchPage_api({
+    size: tSize.value,
+    current: tPage.value,
+  })
+  if (status) {
+    tTotal.value = body.total
+    templates.value = body.records
+  }
+}
+const onChangeTemplate = (id: number) => {
+  const tItem = templates.value.find((v) => v.id === id)
+  preview.value = tItem ? '【' + tItem.signature + '】' + tItem.content : ''
+}
+
+const templates = ref<any[]>([])
+const tPage = ref(1)
+const tSize = ref(5)
+const tTotal = ref(0)
 const selType = ref(1)
 const onChangeSelType = (type: 1 | 2) => {
   selType.value = type
@@ -258,70 +269,44 @@ const onChangeSendType = () => {
 }
 
 const onChangeTels = () => {
-  console.log(1)
-
   addFormRef.value.validateField('tels')
 }
 
+const groupList = ref<{ text: string; value: number }[]>([])
+const getGroupList = async () => {
+  const { status, body } = await contactGroupList_api()
+  if (status) {
+    groupList.value = body.map((v: any) => {
+      return { text: v.name, value: v.id }
+    })
+  }
+}
+getGroupList()
 const searchContacts = ref('')
 const tableRef = ref()
 const contactsPage = ref(1)
 const contactsTotal = ref(0)
 const tableLoading = ref(false)
-const tableData = ref([
-  {
-    id: 1,
-    name: '张三',
-    type: '1',
-    tel: '123',
-  },
-  {
-    id: 2,
-    name: '李四',
-    type: '2',
-    tel: '1234',
-  },
-  {
-    id: 3,
-    name: '李四',
-    type: '2',
-    tel: '1234',
-  },
-  {
-    id: 4,
-    name: '李四',
-    type: '2',
-    tel: '1234',
-  },
-  {
-    id: 5,
-    name: '李四',
-    type: '2',
-    tel: '1234',
-  },
-  {
-    id: 6,
-    name: '李四',
-    type: '2',
-    tel: '1234',
-  },
-  {
-    id: 7,
-    name: '李四',
-    type: '2',
-    tel: '1234',
-  },
-])
+const tableData = ref<any[]>([])
 const getContactList = async () => {
-  const { status, body } = await getContactList_api({
+  tableLoading.value = true
+  const { status, body } = await contactPage_api({
     size: 10,
     current: contactsPage.value,
+    str: searchContacts.value,
   })
   if (status) {
     contactsTotal.value = body.total
     contactsPage.value = contactsPage.value++
-    // tableData.value = tableData.value.concat(body.records)
+    tableData.value = tableData.value.concat(body.records)
+    tableLoading.value = false
   }
+}
+getContactList()
+const onSearchContact = () => {
+  tableData.value.length = 0
+  contactsPage.value = 1
+  getContactList()
 }
 
 onMounted(() => {
@@ -347,17 +332,50 @@ const onContactsLoad = (e: Event) => {
   }
 }
 
-const filterType = (value: string, row: any) => {
-  return row.type === value
+const filterGroup = (value: string | number, row: any) => {
+  return Number(row.group_id) === Number(value)
 }
-const contactsArr = ref<any[]>([])
-const onChangeSel = (val: any) => {
-  contactsArr.value = val
-  console.log(contactsArr.value)
+// const contactsArr = ref<any[]>([])
+const oldAllselLen = ref(0)
+const onSelAllTable = (selection: any[]) => {
+  const flag = selection.length > oldAllselLen.value ? 'add' : 'del'
+  if (flag === 'add') {
+    selection.forEach((v) => {
+      const cindex = addForm.value.contactsArr.findIndex((j) => j.mobile === v.mobile)
+      if (cindex === -1) {
+        addForm.value.contactsArr.push(v)
+      }
+    })
+  }
+  if (flag === 'del') {
+    const delArr = tableData.value.filter((v) => !selection.find((j) => v.id === j.id)) // 都是表格的数据，用id查找
+    delArr.forEach((v) => {
+      const cindex = addForm.value.contactsArr.findIndex((j) => j.mobile === v.mobile)
+      if (cindex !== -1) {
+        addForm.value.contactsArr.splice(cindex, 1)
+      }
+    })
+  }
+  oldAllselLen.value = selection.length
 }
-const onDelSel = (id: number | string) => {
+const onSelTable = (selection: any[], row: any) => {
+  const flag = selection.find((v) => v.id === row.id) ? 'add' : 'del'
+  const i = addForm.value.contactsArr.findIndex((v) => v.mobile === row.mobile)
+  if (flag === 'add' && i === -1) {
+    addForm.value.contactsArr.push(row)
+  }
+  if (flag === 'del' && i !== -1) {
+    addForm.value.contactsArr.splice(i, 1)
+  }
+  oldAllselLen.value = selection.length
+}
+
+const onDelSel = (mobile: number | string, i: number) => {
+  // const i = addForm.value.contactsArr.findIndex(v => v.mobile === mobile)
+  addForm.value.contactsArr.splice(i, 1)
+  oldAllselLen.value--
   tableRef.value.toggleRowSelection(
-    tableData.value.find((v) => v.id === id),
+    tableData.value.find((v) => v.mobile === mobile),
     undefined
   )
 }
@@ -366,11 +384,75 @@ const saveType = ref(0)
 const onSendAdd = (type: 0 | 1) => {
   saveType.value = type
   if (type) {
-    addFormRef.value.validate((valid: boolean) => {
-      console.log(valid)
+    addFormRef.value.validate(async (valid: boolean) => {
+      if (valid) {
+        const { status } = await addSend_api({
+          tid: addForm.value.tid,
+          type: addForm.value.sendType,
+          send_time: addForm.value.sendType === 2 ? Number(addForm.value.sendTime) : 0,
+          contact_info:
+            selType.value === 2
+              ? addForm.value.contactsArr.map((v) => {
+                  return { name: v.name, mobile: v.mobile }
+                })
+              : [],
+          mobiles: selType.value === 1 ? telRegArr.value : [],
+          task_id: id,
+        })
+        if (status) {
+          router.back()
+        }
+      }
+    })
+  } else {
+    addFormRef.value.validateField('tid', async (valid: boolean) => {
+      if (valid) {
+        const { status } = await saveSend_api({
+          tid: addForm.value.tid,
+          type: addForm.value.sendType,
+          send_time: addForm.value.sendType === 2 ? Number(addForm.value.sendTime) : 0,
+          contact_info:
+            selType.value === 2
+              ? addForm.value.contactsArr.map((v) => {
+                  return { name: v.name, mobile: v.mobile }
+                })
+              : [],
+          mobiles: selType.value === 1 ? telRegArr.value : [],
+          task_id: id,
+        })
+        if (status) {
+          router.back()
+        }
+      }
     })
   }
 }
+
+const getEdit = async () => {
+  await getTemplateList()
+  if (id) {
+    getSendDetail_api({ taskId: id }).then(async (res) => {
+      addForm.value.tid = res.body.tid
+      addForm.value.sendType = res.body.type
+      addForm.value.sendTime = res.body.send_time
+      addForm.value.tels = res.body.mobiles || []
+      addForm.value.contactsArr = res.body.contact_info || []
+      selType.value = res.body.contact_info.length ? 2 : 1
+      const findTemplate = async () => {
+        const templateObj = templates.value.find((v) => v.id === Number(res.body.tid))
+        preview.value = templateObj ? '【' + templateObj.signature + '】' + templateObj.content : ''
+        if (templateObj || tPage.value * tSize.value >= tTotal.value) {
+        } else {
+          tPage.value++
+          await getTemplateList()
+          findTemplate()
+        }
+      }
+      await findTemplate()
+    })
+  }
+}
+getEdit()
 </script>
 
 <style lang="scss" scoped>
@@ -434,6 +516,7 @@ const onSendAdd = (type: 0 | 1) => {
           }
           .is_sel_item_name {
             margin-right: 12px;
+            max-width: 55px;
           }
           .kzicon {
             margin-left: 16px;

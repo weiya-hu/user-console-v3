@@ -1,5 +1,5 @@
 <template>
-  <div class="add_templete flex">
+  <div class="add_template flex">
     <div class="kz_card lt">
       <div class="card_title fsc">
         <div>新建模板</div>
@@ -18,33 +18,38 @@
       >
         <el-form-item label="短信类型" prop="smsType">
           <el-radio-group v-model="addForm.smsType">
-            <el-radio label="1">Option 1</el-radio>
-            <el-radio label="2">Option 2</el-radio>
+            <el-radio v-for="v in sendTypes" :key="v.label" :label="v.value">{{
+              v.label
+            }}</el-radio>
           </el-radio-group>
-        </el-form-item>
-        <el-form-item label="所属系统" prop="belong">
-          <el-select v-model="addForm.belong" placeholder="请选择所属系统" class="f1">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
         </el-form-item>
         <el-form-item label="模板名称" prop="name">
           <el-input v-model="addForm.name" placeholder="请输入模板名称"></el-input>
         </el-form-item>
         <el-form-item label="插入签名" prop="sign">
-          <el-select v-model="addForm.sign" placeholder="请选择签名" class="f1">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+          <el-select
+            v-model="addForm.sign"
+            placeholder="请选择签名"
+            class="f1"
+            @change="onChangeSign"
+          >
+            <el-option v-for="item in signs" :key="item.id" :label="item.name" :value="item.id" />
+            <el-pagination
+              v-model:currentPage="signPage"
+              layout="prev, pager, next"
+              :total="signTotal"
+              :page-size="signSize"
+              small
+              @current-change="onChangeSignPage"
+            >
+            </el-pagination>
           </el-select>
-          <el-button class="bdc_btn" style="margin-left: 12px">新建签名</el-button>
+          <el-button
+            class="bdc_btn"
+            style="margin-left: 12px"
+            @click="$router.push('/product/notification/sms/signature')"
+            >新建签名</el-button
+          >
         </el-form-item>
         <el-form-item label="模板内容" prop="content">
           <div class="f1">
@@ -58,6 +63,7 @@
                 :rows="6"
                 type="textarea"
                 placeholder="请输入模板内容"
+                :maxlength="500"
                 class="f1"
               />
               <div style="margin-left: 12px">
@@ -81,15 +87,26 @@
 import { ref, computed } from 'vue'
 import KzIphonePreview from '@/components/sms/KzIphonePreview.vue'
 import { Warning } from '@element-plus/icons-vue'
+import { useRoute, useRouter } from 'vue-router'
+import {
+  saveTemplate_api,
+  addTemplate_api,
+  signaturePage_api,
+  getTemplateDetail_api,
+} from '@/api/product/sms/message'
+const router = useRouter()
+const route = useRoute()
 
+const id = route.query.id ? String(route.query.id) : ''
+
+const signText = ref('')
 const preview = computed(
-  () => (addForm.value.sign ? '【' + addForm.value.sign + '】' : '') + addForm.value.content
+  () => (addForm.value.sign ? '【' + signText.value + '】' : '') + addForm.value.content
 )
 
 const addFormRef = ref()
 const addForm = ref({
-  smsType: '',
-  belong: '',
+  smsType: 1,
   name: '',
   sign: '',
   content: '',
@@ -100,13 +117,6 @@ const addRules = {
     {
       required: true,
       message: '请选择短信类型！',
-      trigger: 'change',
-    },
-  ],
-  belong: [
-    {
-      required: true,
-      message: '请选择所属系统！',
       trigger: 'change',
     },
   ],
@@ -133,42 +143,94 @@ const addRules = {
   ],
 }
 
-const options = [
-  {
-    value: 'Option1',
-    label: 'Option1',
-  },
-  {
-    value: 'Option2',
-    label: 'Option2',
-  },
-  {
-    value: 'Option3',
-    label: 'Option3',
-  },
-  {
-    value: 'Option4',
-    label: 'Option4',
-  },
-  {
-    value: 'Option5',
-    label: 'Option5',
-  },
+const sendTypes = [
+  { label: '事务类', value: 1 },
+  { label: '通用/运营类', value: 2 },
 ]
+
+const signPage = ref(1)
+const signSize = ref(5)
+const signTotal = ref(0)
+const signs = ref<any[]>([])
+const getSignList = async () => {
+  const { status, body } = await signaturePage_api({
+    size: signSize.value,
+    current: signPage.value,
+  })
+  if (status) {
+    signTotal.value = body.total
+    signs.value = body.records
+  }
+}
+const onChangeSign = (id: number) => {
+  signText.value = signs.value.find((v) => v.id === id)?.name
+}
+
+const onChangeSignPage = () => {
+  getSignList()
+}
 
 const saveType = ref(0)
 const onSendAdd = (type: 0 | 1) => {
   saveType.value = type
   if (type) {
-    addFormRef.value.validate((valid: boolean) => {
-      console.log(valid)
+    addFormRef.value.validate(async (valid: boolean) => {
+      if (valid) {
+        const { status } = await addTemplate_api({
+          content: addForm.value.content,
+          signature_id: addForm.value.sign,
+          title: addForm.value.name,
+          type: addForm.value.smsType,
+        })
+        if (status) {
+          router.back()
+        }
+      }
+    })
+  } else {
+    addFormRef.value.validateField('name', async (valid: boolean) => {
+      if (valid) {
+        const { status } = await saveTemplate_api({
+          content: addForm.value.content,
+          signature_id: addForm.value.sign,
+          title: addForm.value.name,
+          type: addForm.value.smsType,
+        })
+        if (status) {
+          router.back()
+        }
+      }
     })
   }
 }
+
+const getEdit = async () => {
+  await getSignList()
+  if (id) {
+    getTemplateDetail_api({ id }).then(async (res) => {
+      addForm.value.smsType = res.body.type
+      addForm.value.name = res.body.title
+      addForm.value.sign = res.body.signature_id
+      addForm.value.content = res.body.content
+      const findSign = async () => {
+        const signObj = signs.value.find((v) => v.id === Number(res.body.signature_id))
+        signText.value = signObj ? signObj.name : ''
+        if (signObj || signPage.value * signSize.value >= signTotal.value) {
+        } else {
+          signPage.value++
+          await getSignList()
+          findSign()
+        }
+      }
+      await findSign()
+    })
+  }
+}
+getEdit()
 </script>
 
 <style lang="scss" scoped>
-.add_templete {
+.add_template {
   height: 100%;
   .lt {
     margin-right: 16px;

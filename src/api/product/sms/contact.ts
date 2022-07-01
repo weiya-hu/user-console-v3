@@ -11,7 +11,7 @@ export const contactTemplate_api = (): Promise<any> => {
  * 获取联系人分页列表
  */
 export const contactPage_api = (
-  params: IPageParams<{ groupId?: string; mobile?: string; name?: string }>
+  params: IPageParams<{ groupId?: string; str?: string }>
 ): Promise<IRes> => {
   return get('message', '/sms/contact/query.page', params)
 }

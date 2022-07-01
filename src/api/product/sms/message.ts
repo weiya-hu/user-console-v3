@@ -57,3 +57,71 @@ export const templatedisableDo_api = (data: { id: number }): Promise<IRes> => {
 export const templateDel_api = (data: { id: number }): Promise<IRes> => {
   return post('message', '/sms/template.del', data, true)
 }
+
+/**
+ * @name 提交发送任务
+ */
+export const addSend_api = (data: {
+  tid: number | string
+  type: number
+  send_time?: number
+  contact_info?: { name: string; mobile: string }[]
+  mobiles?: string[]
+  task_id?: number | string
+}): Promise<IRes> => {
+  return post('message', '/sms/send.in', data, true)
+}
+
+/**
+ * @name 稍后编辑发送任务
+ */
+export const saveSend_api = (data: {
+  tid?: number | string
+  type?: number
+  send_time?: number
+  contact_info?: { name: string; mobile: string }[]
+  mobiles?: string[]
+  task_id?: number | string
+}): Promise<IRes> => {
+  return post('message', '/sms/send.do', data, true)
+}
+
+/**
+ * @name 保存短信模板
+ */
+export const saveTemplate_api = (data: {
+  content?: string
+  signature_id?: number | string
+  title?: string
+  type?: number
+  id?: number | string
+}): Promise<IRes> => {
+  return post('message', '/sms/template/save.do', data, true)
+}
+
+/**
+ * @name 提交短信模板
+ */
+export const addTemplate_api = (data: {
+  content: string
+  signature_id: number | string
+  title: string
+  type: number
+  id?: number | string
+}): Promise<IRes> => {
+  return post('message', '/sms/template/submit.do', data, true)
+}
+
+/**
+ * @name 获取编辑页面数据（短信）
+ */
+export const getSendDetail_api = (data: { taskId: number | string }): Promise<IRes> => {
+  return get('message', '/sms/send.get', data)
+}
+
+/**
+ * @name 获取短信模板详情
+ */
+export const getTemplateDetail_api = (data: { id: number | string }): Promise<IRes> => {
+  return get('message', '/sms/template/detail.get', data)
+}
