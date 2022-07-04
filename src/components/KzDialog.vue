@@ -4,11 +4,13 @@
     :width="width ? width : type === 'kf' ? '330px' : '430px'"
     :show-close="!type"
     :custom-class="type ? 'no_header_dialog' : 'kz_dialog'"
+    :center="type ? true : false"
+    :title="type === 'kf' ? '联系客服' : title"
     @close="close"
   >
-    <template #header>
+    <!-- <template #header>
       <div :class="type === 'kf' && 'fcc kf_title'">{{ type === 'kf' ? '联系客服' : title }}</div>
-    </template>
+    </template> -->
     <template #default>
       <slot>
         <div v-if="type === 'kf'" class="fcc fc">

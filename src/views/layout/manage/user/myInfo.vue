@@ -713,16 +713,6 @@ const goChangoTel = () => {
   telChange.value = true
 }
 
-// 会员信息
-const uMember = ref<any>('')
-
-const userMember = async () => {
-  const res = await userMember_api()
-  if (res.status === 1) {
-    uMember.value = res.body
-  }
-}
-userMember()
 //下载二维码
 
 const qrUrl = ref('')

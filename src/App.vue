@@ -198,12 +198,12 @@ body .el-dialog {
   .el-dialog__footer {
     padding: 20px 24px 24px;
   }
-  &.no_header_dialog {
-    .el-dialog__header {
-      border-bottom: none;
-      padding: 0;
-    }
-  }
+  // &.no_header_dialog {
+  //   .el-dialog__header {
+  //     border-bottom: none;
+  //     padding: 0;
+  //   }
+  // }
 }
 
 .fade-leave-from {

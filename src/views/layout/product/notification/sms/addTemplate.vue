@@ -2,7 +2,7 @@
   <div class="add_template flex">
     <div class="kz_card lt">
       <div class="card_title fsc">
-        <div>新建模板</div>
+        <div>{{ id ? '编辑' : '新建' }}模板</div>
         <div class="fcs">
           <el-button class="bdc_btn" @click="$router.back">&emsp;取消&emsp;</el-button>
           <el-button class="bdc_btn" @click="onSendAdd(0)">稍后编辑</el-button>
@@ -44,10 +44,7 @@
             >
             </el-pagination>
           </el-select>
-          <el-button
-            class="bdc_btn"
-            style="margin-left: 12px"
-            @click="$router.push('/product/notification/sms/signature')"
+          <el-button class="bdc_btn" style="margin-left: 12px" @click="dialogShow = true"
             >新建签名</el-button
           >
         </el-form-item>
@@ -80,6 +77,18 @@
       <div class="card_title">短信预览</div>
       <KzIphonePreview v-model="preview" />
     </div>
+    <KzDialog v-model="dialogShow" width="470px" title="新建签名" @sure="sureBtn">
+      <el-form ref="formRef" :model="formValue" :rules="formRule">
+        <el-form-item label="签名标题" prop="name">
+          <el-input
+            v-model="formValue.name"
+            placeholder="请输入签名"
+            :maxlength="10"
+            :minlength="2"
+          />
+        </el-form-item>
+      </el-form>
+    </KzDialog>
   </div>
 </template>
 
@@ -93,7 +102,43 @@ import {
   addTemplate_api,
   signaturePage_api,
   getTemplateDetail_api,
+  signatureIn_api,
 } from '@/api/product/sms/message'
+import KzDialog from '@/components/KzDialog.vue'
+
+const dialogShow = ref(false)
+const formRef = ref()
+const formValue = ref({
+  name: '',
+})
+const nameCheck = (rule: any, value: string, callback: any) => {
+  if (value.length < 2) {
+    callback(new Error('签名字数需在2~10之间'))
+  } else {
+    callback()
+  }
+}
+const formRule = ref({
+  name: [
+    { required: true, message: '请输入签名', trigger: 'change' },
+    { validator: nameCheck, trigger: 'blur' },
+  ],
+})
+const sureBtn = () => {
+  formRef.value.validate(async (valid: boolean) => {
+    if (valid) {
+      const { status } = await signatureIn_api(formValue.value)
+      status &&
+        (() => {
+          formRef.value.resetFields()
+          dialogShow.value = false
+          signPage.value = 1
+          getSignList()
+        })()
+    }
+  })
+}
+
 const router = useRouter()
 const route = useRoute()
 
@@ -181,6 +226,7 @@ const onSendAdd = (type: 0 | 1) => {
           signature_id: addForm.value.sign,
           title: addForm.value.name,
           type: addForm.value.smsType,
+          id,
         })
         if (status) {
           router.back()
@@ -195,6 +241,7 @@ const onSendAdd = (type: 0 | 1) => {
           signature_id: addForm.value.sign,
           title: addForm.value.name,
           type: addForm.value.smsType,
+          id,
         })
         if (status) {
           router.back()

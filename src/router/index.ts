@@ -722,7 +722,7 @@ export const routes: RouteRecordRaw[] = [
                     path: '/product/notification/sms/addsend',
                     name: 'AddSend',
                     component: () => import('@/views/layout/product/notification/sms/addSend.vue'),
-                    meta: { title: '新建', father: '/product/notification/sms/sendlist' },
+                    meta: { title: '新建/编辑', father: '/product/notification/sms/sendlist' },
                   },
                   {
                     path: '/product/notification/sms/signature',
@@ -744,7 +744,7 @@ export const routes: RouteRecordRaw[] = [
                     component: () =>
                       import('@/views/layout/product/notification/sms/addTemplate.vue'),
                     meta: {
-                      title: '新建模板',
+                      title: '新建/编辑模板',
                       father: '/product/notification/sms/messagetemplate',
                     },
                   },

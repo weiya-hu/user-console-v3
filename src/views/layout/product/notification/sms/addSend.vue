@@ -2,7 +2,7 @@
   <div class="add_send flex">
     <div class="kz_card lt">
       <div class="card_title fsc">
-        <div>新建短信</div>
+        <div>{{ id ? '编辑' : '新建' }}短信</div>
         <div class="fcs">
           <el-button class="bdc_btn" @click="$router.back">&emsp;取消&emsp;</el-button>
           <el-button class="bdc_btn" @click="onSendAdd(0)">稍后编辑</el-button>
@@ -452,7 +452,7 @@ const getEdit = async () => {
       addForm.value.sendTime = res.body.send_time
       addForm.value.tels = res.body.mobiles || []
       addForm.value.contactsArr = res.body.contact_info || []
-      selType.value = res.body.contact_info.length ? 2 : 1
+      selType.value = res.body.contact_info && res.body.contact_info.length ? 2 : 1
       const findTemplate = async () => {
         const templateObj = templates.value.find((v) => v.id === Number(res.body.tid))
         preview.value = templateObj ? '【' + templateObj.signature + '】' + templateObj.content : ''

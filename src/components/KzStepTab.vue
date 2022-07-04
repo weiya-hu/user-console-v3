@@ -62,18 +62,25 @@ const change = (index: number) => {
   }
   const itme = props.itemEl[index]
   if (!index) {
-    scrollbarRef.value!.setScrollTop(0)
+    // scrollbarRef.value!.setScrollTop(0)
+    scrollbarRef.value!.scrollTo({ top: 0, behavior: 'smooth' })
     return
   }
   if (index === props.itemEl.length - 1) {
-    scrollbarRef.value!.setScrollTop(props.totalHeight)
+    // scrollbarRef.value!.setScrollTop(props.totalHeight)
+    scrollbarRef.value!.scrollTo({ top: props.totalHeight, behavior: 'smooth' })
     return
   }
   if (itme.offsetHeight > props.viewHeight / 2) {
-    scrollbarRef.value!.setScrollTop(itme.offsetTop)
+    // scrollbarRef.value!.setScrollTop(itme.offsetTop)
+    scrollbarRef.value!.scrollTo({ top: itme.offsetTop, behavior: 'smooth' })
     return
   }
-  scrollbarRef.value!.setScrollTop(itme.offsetTop - itme.offsetHeight)
+  // scrollbarRef.value!.setScrollTop(itme.offsetTop - itme.offsetHeight)
+  scrollbarRef.value!.scrollTo({
+    top: itme.offsetTop - itme.offsetHeight,
+    behavior: 'smooth',
+  })
 }
 
 const scrollbarRef = ref()
