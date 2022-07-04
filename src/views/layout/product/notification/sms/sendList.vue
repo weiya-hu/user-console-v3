@@ -61,14 +61,14 @@
         <el-table-column label="操作" fixed="right" width="150">
           <template #default="{ row }">
             <div class="fcs">
+              <el-link type="primary">详情</el-link>
+              <div class="line"></div>
               <el-link
                 v-if="row.status === 1"
                 type="primary"
                 @click="$router.push('/product/notification/sms/addsend?id=' + +row.id)"
                 >编辑</el-link
               >
-              <div class="line"></div>
-              <el-link type="primary">详情</el-link>
             </div>
           </template>
         </el-table-column>
@@ -80,7 +80,7 @@
         v-model:page="current"
         v-model:size="size"
         :total="total"
-        @change="getList(searchModel)"
+        @change="getList(searchModel, true)"
       />
     </div>
   </div>
@@ -100,7 +100,8 @@ const total = ref(0)
 const searchModel = ref()
 const tableData = ref()
 
-const getList = async (name?: string) => {
+const getList = async (name?: string, pageMore?: boolean) => {
+  current.value = pageMore ? current.value : 1
   const data = {
     current: current.value,
     size: size.value,

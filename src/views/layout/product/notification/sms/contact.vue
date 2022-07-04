@@ -88,7 +88,7 @@
         v-model:page="current"
         v-model:size="size"
         :total="total"
-        @change="getList(searchModel)"
+        @change="getList(searchModel, true)"
       />
     </div>
     <KzDialog
@@ -299,13 +299,11 @@ const fileCheck = (rule: any, value: string, callback: any) => {
 }
 
 const upFileRules = ref({
-  addFile: [
-    // { required: true, message: '请上传文件', trigger: 'blur' },
-    { validator: fileCheck, trigger: 'change' },
-  ],
+  addFile: [{ validator: fileCheck, trigger: 'change' }],
 })
 
-const getList = async (str?: string) => {
+const getList = async (str?: string, pageMore?: boolean) => {
+  current.value = pageMore ? current.value : 1
   const data = {
     current: current.value,
     size: size.value,

@@ -77,7 +77,7 @@
         v-model:page="current"
         v-model:size="size"
         :total="total"
-        @change="getList(searchModel)"
+        @change="getList(searchModel, true)"
       />
     </div>
   </div>
@@ -107,7 +107,8 @@ const templateStatus = ref<Record<number, string>>({
   4: '未通过审核',
 })
 
-const getList = async (keyword?: string) => {
+const getList = async (keyword?: string, pageMore?: boolean) => {
+  current.value = pageMore ? current.value : 1
   const data = {
     current: current.value,
     size: size.value,
