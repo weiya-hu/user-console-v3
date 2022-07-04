@@ -270,10 +270,11 @@
           </div>
         </div>
       </div>
-      <div class="flexr">
+      <div class="flexr add_btns">
         <el-button plain @click="addPersonShow = false">取消</el-button>
         <el-button type="primary" @click="addPersons">添加</el-button>
       </div>
+      <div class="add_btns_after"></div>
     </el-dialog>
   </div>
 </template>
@@ -966,6 +967,9 @@ const addPersons = async () => {
     .person_change_role_select {
       width: 400px;
     }
+  }
+  .add_btns_after {
+    height: 16px;
   }
 }
 </style>

@@ -75,3 +75,10 @@ export const contactUp_api = (data: any): Promise<IRes> => {
 export const contactDel_api = (data: { id: number }): Promise<IRes> => {
   return post('message', '/sms/contact.del', data, true)
 }
+
+/**
+ * 删除短信联系人
+ */
+export const contactGet_api = (params: { id: number }): Promise<IRes> => {
+  return get('message', '/sms/contact.get', params)
+}

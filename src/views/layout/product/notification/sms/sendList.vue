@@ -13,9 +13,9 @@
               !searchModel && getList()
             }
           "
-          @keydown="getList(searchModel)"
+          @keydown.enter="getList(searchModel)"
         />
-        <el-button class="bdc_btn">查询一下</el-button>
+        <el-button class="bdc_btn" @click="getList(searchModel)">查询一下</el-button>
         <el-button class="bdc_btn" @click="$router.push('/product/notification/sms/signature')"
           >签名管理</el-button
         >
@@ -40,7 +40,7 @@
         <el-table-column property="template_name" label="模板名称" min-width="140" />
         <el-table-column property="send_type" label="发送方式" min-width="100">
           <template #default="{ row }">
-            <div>{{ row.send_type ? '定时发送' : '即时发送' }}</div>
+            <div>{{ row.type === 2 ? '定时发送' : '即时发送' }}</div>
           </template>
         </el-table-column>
         <el-table-column property="create_time" label="创建日期" min-width="120">

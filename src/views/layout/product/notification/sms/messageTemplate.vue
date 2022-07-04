@@ -13,9 +13,9 @@
               !searchModel && getList()
             }
           "
-          @keydown="getList(searchModel)"
+          @keydown.enter="getList(searchModel)"
         />
-        <el-button class="bdc_btn">查询</el-button>
+        <el-button class="bdc_btn" @click="getList()">查询</el-button>
         <el-button type="primary" @click="$router.push('/product/notification/sms/addtemplate')"
           ><KzIcon
             href="#icon-tianjia"

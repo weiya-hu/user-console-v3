@@ -13,7 +13,7 @@
               !searchModel && getList()
             }
           "
-          @keydown="getList(searchModel)"
+          @keydown.enter="getList(searchModel)"
         />
         <el-button class="bdc_btn" @click="getList(searchModel)">查询</el-button>
         <el-button
@@ -248,6 +248,7 @@ import {
   contactGroupDel_api,
   contactUp_api,
   contactDel_api,
+  contactGet_api,
 } from '@/api/product/sms/contact'
 
 const current = ref(1)
@@ -325,6 +326,7 @@ const addContactBtn = () => {
   getGroupList()
   nextTick(() => {
     formRef.value.resetFields()
+    clearContactForm()
   })
 }
 //确认新建/编辑联系人按钮
@@ -351,18 +353,20 @@ const getGroupList = async () => {
 //修改联系人按钮
 const editContact = (row: any) => {
   getGroupList()
-  formValue.value = row
-  contactTitle.value = '编辑联系人'
-  dialogShow.value = true
+  contactGet_api({ id: row.id }).then((res) => {
+    formValue.value = res.body
+    contactTitle.value = '编辑联系人'
+    dialogShow.value = true
+  })
 }
 //清空联系人表单
 const clearContactForm = () => {
+  // formRef.value.resetFields()
   formValue.value = {
     name: '',
     group_id: null,
     mobile: '',
   }
-  formRef.value.resetFields()
 }
 //删除联系人
 const cancelContact = (row: any) => {
