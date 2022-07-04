@@ -43,7 +43,12 @@
                 >
                 </el-pagination>
               </el-select>
-              <el-button class="bdc_btn" style="margin-left: 12px">新建模板</el-button>
+              <el-button
+                class="bdc_btn"
+                style="margin-left: 12px"
+                @click="$router.push('/product/notification/sms/addtemplate')"
+                >新建模板</el-button
+              >
             </div>
             <div v-show="addForm.tid" class="template_content">
               <div class="template_text">{{ preview }}</div>
@@ -171,6 +176,12 @@ const router = useRouter()
 const route = useRoute()
 
 const id = route.query.id ? String(route.query.id) : ''
+
+const sendOne = ref({
+  mobile: route.query.mobile ? String(route.query.mobile) : '',
+  name: route.query.name ? String(route.query.name) : '',
+  id: route.query.contactId ? String(route.query.contactId) : '',
+})
 
 // const telArr = ref([])
 const preview = ref('')
@@ -376,7 +387,7 @@ const onDelSel = (mobile: number | string, i: number) => {
   oldAllselLen.value--
   tableRef.value.toggleRowSelection(
     tableData.value.find((v) => v.mobile === mobile),
-    undefined
+    false
   )
 }
 
@@ -429,6 +440,10 @@ const onSendAdd = (type: 0 | 1) => {
 }
 
 const getEdit = async () => {
+  if (sendOne.value.mobile) {
+    addForm.value.contactsArr.push(sendOne.value)
+    selType.value = 2
+  }
   await getTemplateList()
   if (id) {
     getSendDetail_api({ taskId: id }).then(async (res) => {
