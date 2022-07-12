@@ -303,8 +303,8 @@ const submit = async (type: number) => {
       border-radius: 4px;
       // border: 1px dashed rgba(221, 221, 221, 1);
       position: relative;
-      left: -10px;
-      top: -40px;
+      // left: -10px;
+      // top: -40px;
       img {
         background-color: #dddddd;
         width: 50px;

@@ -62,7 +62,7 @@
           <template #default="{ row }">
             <div class="fcs">
               <el-link type="primary">详情</el-link>
-              <div class="line"></div>
+              <div v-if="row.status === 1" class="line"></div>
               <el-link
                 v-if="row.status === 1"
                 type="primary"

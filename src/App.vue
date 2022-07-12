@@ -418,6 +418,9 @@ body .el-dialog {
     }
   }
 }
+.el-upload-dragger {
+  padding: 0 !important;
+}
 
 @media screen and (max-width: 750px) {
   html,

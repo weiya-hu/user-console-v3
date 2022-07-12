@@ -600,12 +600,12 @@ const sureUpload = () => {
     align-items: flex-start;
     padding-top: 8px;
     & > div:nth-child(1) {
-      width: 56px;
+      width: 66px;
       height: 40px;
       font-size: 14px;
       color: #303133;
       line-height: 40px;
-      margin-right: 2px;
+      margin-right: 10px;
     }
     .upload_pre {
       width: 362px;
@@ -619,6 +619,7 @@ const sureUpload = () => {
         align-items: flex-start;
         justify-content: space-between;
         height: 100%;
+        margin-left: 10px;
         & div {
           font-size: 12px;
           color: #909399;
